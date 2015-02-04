@@ -2,11 +2,118 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="be8bb276-eede-41f5-a90e-5568f9f9da7a" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Generic Load Driver.iml" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Generic Load Driver.iml" afterPath="$PROJECT_DIR$/../gld.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Generic Load Driver.ipr" afterPath="$PROJECT_DIR$/Generic Load Driver.ipr" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/CacheService.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/CacheService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/CollectorBasedStatistics.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/CollectorBasedStatistics.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Command.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/Command.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Configuration.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/Configuration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/ConfigurationImpl.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/ConfigurationImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/EmbeddedNode.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/EmbeddedNode.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/KeyStore.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/KeyStore.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/LoadStrategy.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/LoadStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Main.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/Main.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/MultiThreadedRunner.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/MultiThreadedRunner.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Node.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/Node.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Operation.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/Operation.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/RedisFailure.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/RedisFailure.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/SampleHandler.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/SampleHandler.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/SamplingInterval.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/SamplingInterval.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/SingleThreadedRunner.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/SingleThreadedRunner.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Statistics.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/Statistics.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/StorageStrategy.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/StorageStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/ThrowableHandler.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/ThrowableHandler.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/UserErrorException.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/UserErrorException.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Util.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/Util.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/cca/Main.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/cca/Main.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/cca/package.html" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/cca/package.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/CommandBase.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/CommandBase.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Connect.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Connect.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Content.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Content.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Delete.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Delete.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/GenerateKeys.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/GenerateKeys.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Help.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Help.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Load.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Load.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Test.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Test.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Version.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Version.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/external/SystemStatistics.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/external/SystemStatistics.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/keystore/ExperimentalKeyStore.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/keystore/ExperimentalKeyStore.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/keystore/RandomKeyGenerator.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/keystore/RandomKeyGenerator.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/keystore/ReadOnlyFileKeyStore.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/keystore/ReadOnlyFileKeyStore.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/keystore/SetKeyStore.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/keystore/SetKeyStore.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/keystore/WriteOnlyFileKeyStore.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/keystore/WriteOnlyFileKeyStore.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/operations/Delete.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/Delete.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/operations/Read.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/Read.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/operations/Write.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/Write.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/service/EmbeddedCacheService.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/EmbeddedCacheService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/service/infinispan/InfinispanService.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/infinispan/InfinispanService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/service/redis/HARedisService.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/redis/HARedisService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/service/redis/ShardedJedisRedisService.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/redis/ShardedJedisRedisService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/service/redis/SimpleJedisProxyRedisService.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/redis/SimpleJedisProxyRedisService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/DeleteLoadStrategy.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/DeleteLoadStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/LoadStrategyBase.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/LoadStrategyBase.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/LoadStrategyFactory.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/LoadStrategyFactory.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/ReadThenWriteOnMissLoadStrategy.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/ReadThenWriteOnMissLoadStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/ReadWriteRatio.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/ReadWriteRatio.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/WriteThenReadLoadStrategy.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/WriteThenReadLoadStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/HierarchicalStorageStrategy.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/storage/HierarchicalStorageStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/StdoutStorageStrategy.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/storage/StdoutStorageStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/StorageStrategyBase.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/storage/StorageStrategyBase.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/StorageStrategyFactory.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/storage/StorageStrategyFactory.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/TextFileStorageStrategy.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/storage/TextFileStorageStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/util/Console.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/util/Console.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/CollectorBasedStatisticsTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/CollectorBasedStatisticsTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/ConfigurationImplTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/ConfigurationImplTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/NodeTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/NodeTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/RedisFailureTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/RedisFailureTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/SampleHandlerTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/SampleHandlerTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/SamplingIntervalTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/SamplingIntervalTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/SingleThreadedRunnerTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/SingleThreadedRunnerTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/UtilTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/UtilTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/CommandTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/command/CommandTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/ConnectTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/command/ConnectTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/ContentCommandTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/command/ContentCommandTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/DeleteCommandTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/command/DeleteCommandTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/GenerateKeysTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/command/GenerateKeysTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/HelpCommandTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/command/HelpCommandTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/LoadCommandTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/command/LoadCommandTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/VersionTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/command/VersionTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/keystore/RandomKeyGeneratorTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/keystore/RandomKeyGeneratorTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/keystore/ReadOnlyFileKeyStoreTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/keystore/ReadOnlyFileKeyStoreTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/keystore/SetKeyStoreTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/keystore/SetKeyStoreTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/keystore/WriteOnlyFileKeyStoreTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/keystore/WriteOnlyFileKeyStoreTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockCacheService.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockCacheService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockCollector.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockCollector.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockConfiguration.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockConfiguration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockHandler.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockHandler.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockInterface.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockInterface.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockInterface2.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockInterface2.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockKeyStore.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockKeyStore.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockStatistics.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockStatistics.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/mockpackage/NoNoArgConstructorStrategy.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/mockpackage/NoNoArgConstructorStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/mockpackage/PrivateNoArgConstructorStrategy.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/mockpackage/PrivateNoArgConstructorStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/mockpackage/WinningStrategy.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/mockpackage/WinningStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/operations/DeleteOperationTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/operations/DeleteOperationTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/operations/ReadTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/operations/ReadTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/DeleteLoadStrategyTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/DeleteLoadStrategyTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/FailureToInstantiateLoadStrategy.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/FailureToInstantiateLoadStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/LoadStrategyFactoryTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/LoadStrategyFactoryTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/LoadStrategyTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/LoadStrategyTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/MockLoadStrategy.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/MockLoadStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/MockOperation.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/MockOperation.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/NotALoadStrategy.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/NotALoadStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/ReadThenWriteOnMissLoadStrategyTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/ReadThenWriteOnMissLoadStrategyTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/ReadWriteRatioTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/ReadWriteRatioTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/WriteThenReadLoadStrategyTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/WriteThenReadLoadStrategyTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/HierarchicalStorageStrategyTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/storage/HierarchicalStorageStrategyTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/MockStorageStrategy.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/storage/MockStorageStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/StorageStrategyFactoryTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/storage/StorageStrategyFactoryTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/StorageStrategyTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/storage/StorageStrategyTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/TextFileStorageStrategyTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/storage/TextFileStorageStrategyTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/util/ConsoleTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/util/ConsoleTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Generic Load Driver.iws" afterPath="$PROJECT_DIR$/Generic Load Driver.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../pom.xml" afterPath="$PROJECT_DIR$/../pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/bash/cca" afterPath="$PROJECT_DIR$/../src/main/bash/cca" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../util/install-vsp-lab" afterPath="$PROJECT_DIR$/../util/install-vsp-lab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../util/local-install" afterPath="$PROJECT_DIR$/../util/local-install" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../util/local-j4-install" afterPath="$PROJECT_DIR$/../util/local-j4-install" />
     </list>
     <ignored path="Cache Load Driver.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -41,7 +148,7 @@
       <file leaf-file-name="pom.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.10769231" vertical-offset="28" max-vertical-offset="2562">
+            <state vertical-scroll-proportion="0.10750853" vertical-offset="28" max-vertical-offset="2562">
               <caret line="11" column="69" selection-start-line="11" selection-start-column="69" selection-end-line="11" selection-end-column="69" />
               <folding />
             </state>
@@ -134,8 +241,8 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="2690" />
-    <option name="y" value="99" />
+    <option name="x" value="1080" />
+    <option name="y" value="77" />
     <option name="width" value="1447" />
     <option name="height" value="1290" />
   </component>
@@ -177,6 +284,102 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="gld" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Generic Load Driver" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gld" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Generic Load Driver" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gld" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="novaordis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Generic Load Driver" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gld" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Generic Load Driver" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gld" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="novaordis" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -590,15 +793,16 @@
       <workItem from="1423022114491" duration="214000" />
       <workItem from="1423071003893" duration="90000" />
       <workItem from="1423071108442" duration="90000" />
-      <workItem from="1423071229307" duration="70000" />
+      <workItem from="1423071229307" duration="116000" />
+      <workItem from="1423071500986" duration="108000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="244420000" />
+    <option name="totallyTimeSpent" value="244574000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="2690" y="99" width="1447" height="1290" extended-state="0" />
+    <frame x="1080" y="77" width="1447" height="1290" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -607,6 +811,7 @@
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.48083332" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24972796" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -620,22 +825,21 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26548043" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29270947" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29270947" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2754591" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29309034" sideWeight="0.49945593" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
-      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24972796" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1904762" sideWeight="0.50031865" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -677,14 +881,14 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/HierarchicalStorageStrategyTest.java</url>
+          <url>file://$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/storage/HierarchicalStorageStrategyTest.java</url>
           <line>401</line>
           <properties />
           <option name="timeStamp" value="356" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <condition expression="s == null" language="JAVA" custom="" />
-          <url>file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/HierarchicalStorageStrategy.java</url>
+          <url>file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/storage/HierarchicalStorageStrategy.java</url>
           <line>53</line>
           <properties />
           <option name="timeStamp" value="357" />
@@ -719,114 +923,114 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../src/main/resources/HELP">
-      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.4535865" vertical-offset="1796" max-vertical-offset="2744">
           <caret line="159" column="0" selection-start-line="159" selection-start-column="0" selection-end-line="159" selection-end-column="0" />
         </state>
       </provider>
+      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/LoadStrategyFactory.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/LoadStrategyFactory.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="99" max-vertical-offset="1456">
           <caret line="18" column="16" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/MockLoadStrategy.java">
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/MockLoadStrategy.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="74" max-vertical-offset="1078">
           <caret line="48" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/LoadCommandTest.java">
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/gld/command/LoadCommandTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.4982079" vertical-offset="3503" max-vertical-offset="4438">
           <caret line="294" column="55" selection-start-line="294" selection-start-column="55" selection-end-line="294" selection-end-column="55" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/StorageStrategyFactory.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/storage/StorageStrategyFactory.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="126" max-vertical-offset="1372">
           <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/StorageStrategyFactoryTest.java">
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/storage/StorageStrategyFactoryTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1143" max-vertical-offset="2044">
           <caret line="119" column="22" selection-start-line="119" selection-start-column="22" selection-end-line="119" selection-end-column="22" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/StorageStrategyTest.java">
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/storage/StorageStrategyTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.4475761" vertical-offset="359" max-vertical-offset="1246">
           <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockConfiguration.java">
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockConfiguration.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.42609853" vertical-offset="534" max-vertical-offset="1876">
           <caret line="83" column="13" selection-start-line="83" selection-start-column="13" selection-end-line="83" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/ReadWriteRatio.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/ReadWriteRatio.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1300" max-vertical-offset="2716">
           <caret line="138" column="19" selection-start-line="138" selection-start-column="19" selection-end-line="138" selection-end-column="19" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/StorageStrategy.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/StorageStrategy.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="952">
           <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/StorageStrategyBase.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/storage/StorageStrategyBase.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1120">
           <caret line="6" column="54" selection-start-line="6" selection-start-column="54" selection-end-line="6" selection-end-column="54" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/StdoutStorageStrategy.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/storage/StdoutStorageStrategy.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1344">
           <caret line="77" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/TextFileStorageStrategyTest.java">
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/storage/TextFileStorageStrategyTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1764">
           <caret line="43" column="24" selection-start-line="43" selection-start-column="24" selection-end-line="43" selection-end-column="24" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/TextFileStorageStrategy.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/storage/TextFileStorageStrategy.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="979" max-vertical-offset="1918">
           <caret line="112" column="5" selection-start-line="112" selection-start-column="5" selection-end-line="112" selection-end-column="5" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/MockStorageStrategy.java">
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/storage/MockStorageStrategy.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="406" max-vertical-offset="1540">
           <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Configuration.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/Configuration.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1512">
           <caret line="12" column="17" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
@@ -840,14 +1044,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/WriteThenReadLoadStrategyTest.java">
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/WriteThenReadLoadStrategyTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-25.666666" vertical-offset="5551" max-vertical-offset="7112">
           <caret line="471" column="19" selection-start-line="471" selection-start-column="19" selection-end-line="471" selection-end-column="19" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/CommandBase.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/CommandBase.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="444" max-vertical-offset="1246">
           <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
@@ -868,7 +1072,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/HierarchicalStorageStrategyTest.java">
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/storage/HierarchicalStorageStrategyTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.60886073" vertical-offset="4881" max-vertical-offset="5684">
           <caret line="400" column="0" selection-start-line="400" selection-start-column="0" selection-end-line="400" selection-end-column="0" />
@@ -876,84 +1080,84 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/LoadStrategyBase.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/LoadStrategyBase.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1120">
           <caret line="8" column="49" selection-start-line="8" selection-start-column="49" selection-end-line="8" selection-end-column="49" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/LoadStrategy.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/LoadStrategy.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="658">
           <caret line="7" column="17" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/KeyStore.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/KeyStore.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="476">
           <caret line="25" column="11" selection-start-line="25" selection-start-column="11" selection-end-line="25" selection-end-column="11" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/WriteThenReadLoadStrategy.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/WriteThenReadLoadStrategy.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1545" max-vertical-offset="3402">
           <caret line="154" column="0" selection-start-line="154" selection-start-column="0" selection-end-line="154" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/service/EmbeddedCacheService.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/EmbeddedCacheService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="299" max-vertical-offset="1372">
           <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/operations/Write.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/Write.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="169" max-vertical-offset="1078">
           <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Main.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.21906117" vertical-offset="0" max-vertical-offset="742">
           <caret line="11" column="9" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="9" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Load.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Load.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="364" max-vertical-offset="1876">
           <caret line="80" column="23" selection-start-line="80" selection-start-column="23" selection-end-line="80" selection-end-column="23" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/MultiThreadedRunner.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/MultiThreadedRunner.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.9710145" vertical-offset="786" max-vertical-offset="2072">
           <caret line="110" column="0" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/SingleThreadedRunner.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/SingleThreadedRunner.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.93188405" vertical-offset="1779" max-vertical-offset="2856">
           <caret line="184" column="39" selection-start-line="184" selection-start-column="39" selection-end-line="184" selection-end-column="39" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/keystore/ExperimentalKeyStore.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/keystore/ExperimentalKeyStore.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1288">
           <caret line="31" column="51" selection-start-line="31" selection-start-column="51" selection-end-line="31" selection-end-column="51" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/HierarchicalStorageStrategy.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/storage/HierarchicalStorageStrategy.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="3422" max-vertical-offset="5642">
           <caret line="265" column="57" selection-start-line="265" selection-start-column="57" selection-end-line="265" selection-end-column="57" />
@@ -963,28 +1167,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/service/infinispan/InfinispanService.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/infinispan/InfinispanService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.30954227" vertical-offset="357" max-vertical-offset="1736">
           <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Version.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Version.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.043377228" vertical-offset="0" max-vertical-offset="1291">
           <caret line="5" column="13" selection-start-line="0" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Content.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Content.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2212">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Command.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/Command.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="826">
           <caret line="18" column="17" selection-start-line="18" selection-start-column="17" selection-end-line="18" selection-end-column="17" />
@@ -1005,14 +1209,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/cca/Main.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/cca/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="534" max-vertical-offset="1932">
           <caret line="26" column="13" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Statistics.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/Statistics.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="280">
           <caret line="22" column="7" selection-start-line="22" selection-start-column="7" selection-end-line="22" selection-end-column="7" />
@@ -1033,14 +1237,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/ConfigurationImpl.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/ConfigurationImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.25669837" vertical-offset="8537" max-vertical-offset="9730">
           <caret line="725" column="39" selection-start-line="725" selection-start-column="39" selection-end-line="725" selection-end-column="39" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/service/redis/HARedisService.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/redis/HARedisService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1568">
           <caret line="16" column="34" selection-start-line="16" selection-start-column="34" selection-end-line="16" selection-end-column="34" />
@@ -1054,7 +1258,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/keystore/ReadOnlyFileKeyStore.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/keystore/ReadOnlyFileKeyStore.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.947619" vertical-offset="730" max-vertical-offset="2198">
           <caret line="132" column="51" selection-start-line="132" selection-start-column="51" selection-end-line="132" selection-end-column="51" />
@@ -1063,7 +1267,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.10769231" vertical-offset="28" max-vertical-offset="2562">
+        <state vertical-scroll-proportion="0.10750853" vertical-offset="28" max-vertical-offset="2562">
           <caret line="11" column="69" selection-start-line="11" selection-start-column="69" selection-end-line="11" selection-end-column="69" />
           <folding />
         </state>

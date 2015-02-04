@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Script to install cld locally on the target host
+# Script to install gld locally on the target host
 #
 
 reldir=$(dirname $0)

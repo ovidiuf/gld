@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Script to install cld locally in J4.
+# Script to install gld locally in J4.
 #
 
 reldir=$(dirname $0)

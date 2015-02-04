@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Installs cld on /opt/mobileapps share available to PROD
+# Installs gld on /opt/mobileapps share available to PROD
 #
 
 [ -f $(dirname $0)/install.shlib ] && . $(dirname $0)/install.shlib || { echo "library file $(dirname $0)/install.shlib not found" 1>&2; exit 1; }
