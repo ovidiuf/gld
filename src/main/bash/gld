@@ -70,6 +70,6 @@ java_bin="java"
 [ "${java_home}" != "" ] && java_bin="${java_home}/bin/java"
 
 ${java_bin} -Xms1024m -Xmx1024m -cp ${classpath} ${debug_args} ${output_settings} \
-com.novaordis.cld.Main ${args} ${output_command_line_arg}
+com.novaordis.gld.Main ${args} ${output_command_line_arg}
 
 

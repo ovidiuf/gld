@@ -42,26 +42,26 @@ case "${command}" in
 
         version=$(get_version)
 
-        mkdir -p ${project_home}/target/cld-${version}/lib
-        mkdir ${project_home}/target/cld-${version}/bin
+        mkdir -p ${project_home}/target/gld-${version}/lib
+        mkdir ${project_home}/target/gld-${version}/bin
 
-        cp ${project_home}/target/cld-${version}.jar ${project_home}/target/cld-${version}/lib && echo "cld-${version}.jar copied" || exit 1;
+        cp ${project_home}/target/gld-${version}.jar ${project_home}/target/gld-${version}/lib && echo "gld-${version}.jar copied" || exit 1;
 
-        cp ${project_home}/src/main/bash/cld ${project_home}/target/cld-${version}/bin && echo "cld copied" || exit 1;
-        chmod a+rx ${project_home}/target/cld-${version}/bin/cld && echo "cld made executable" || exit 1;
+        cp ${project_home}/src/main/bash/gld ${project_home}/target/gld-${version}/bin && echo "gld copied" || exit 1;
+        chmod a+rx ${project_home}/target/gld-${version}/bin/gld && echo "gld made executable" || exit 1;
 
-        cp ${project_home}/src/main/bash/cca ${project_home}/target/cld-${version}/bin && echo "cca copied" || exit 1;
-        chmod a+rx ${project_home}/target/cld-${version}/bin/cca && echo "cca made executable" || exit 1;
+        cp ${project_home}/src/main/bash/cca ${project_home}/target/gld-${version}/bin && echo "cca copied" || exit 1;
+        chmod a+rx ${project_home}/target/gld-${version}/bin/cca && echo "cca made executable" || exit 1;
 
-        cp ${project_home}/README ${project_home}/target/cld-${version} && echo "README copied" || exit 1;
+        cp ${project_home}/README ${project_home}/target/gld-${version} && echo "README copied" || exit 1;
 
         dependencies=$(get_dependencies) || exit 1
         for i in ${dependencies}; do
             [ -f ${i} ] || { echo "dependency ${i} does not exist" 1>&2; exit 1; }
-            cp ${i} ${project_home}/target/cld-${version}/lib && echo $(basename ${i})" copied in ${project_home}/target/cld-${version}/lib" || exit 1;
+            cp ${i} ${project_home}/target/gld-${version}/lib && echo $(basename ${i})" copied in ${project_home}/target/gld-${version}/lib" || exit 1;
         done
 
-        (cd ${project_home}/target; zip -r ./cld-${version}.zip cld-${version}) && echo "${project_home}/target/cld-${version}.zip created" || exit 1
+        (cd ${project_home}/target; zip -r ./gld-${version}.zip gld-${version}) && echo "${project_home}/target/gld-${version}.zip created" || exit 1
         ;;
 
   install-locally)
@@ -70,29 +70,29 @@ case "${command}" in
         [ -d ${RUNTIME_DIR} ] || { echo "'RUNTIME_DIR' ${RUNTIME_DIR} does not exist" 1>&2; exit 1; }
 
         version=$(get_version) || exit 1
-        zip_file=${project_home}/target/cld-${version}.zip
+        zip_file=${project_home}/target/gld-${version}.zip
 
         [ -f ${zip_file} ] || { echo "no release zip ${zip_file} found - run ${reldir}/make-zip" 1>&2; exit 1; }
 
-        if [ -d ${RUNTIME_DIR}/cld-${version} ]; then
+        if [ -d ${RUNTIME_DIR}/gld-${version} ]; then
             if ${force}; then
-                rm -r ${RUNTIME_DIR}/cld-${version} && \
-                    echo "cld-${version} was installed already, but --force was used so it was removed" || \
-                    { echo "failed to remove existing ${RUNTIME_DIR}/cld-${version}" 1>&2; exit 1; }
+                rm -r ${RUNTIME_DIR}/gld-${version} && \
+                    echo "gld-${version} was installed already, but --force was used so it was removed" || \
+                    { echo "failed to remove existing ${RUNTIME_DIR}/gld-${version}" 1>&2; exit 1; }
             else
-                echo "cld-${version} already installed in ${RUNTIME_DIR} and --force flag was not used"
+                echo "gld-${version} already installed in ${RUNTIME_DIR} and --force flag was not used"
                 exit 1;
             fi
         fi
 
         unzip ${zip_file} -d ${RUNTIME_DIR} || { echo "failed to unzip into ${RUNTIME_DIR}" 1>&2; exit 1; }
 
-        if [ -h ${RUNTIME_DIR}/cld ]; then
-            rm ${RUNTIME_DIR}/cld && echo "existing link ${RUNTIME_DIR}/cld was deleted" || \
-                { echo "failed to delete the symbolic link ${RUNTIME_DIR}/cld"; exit 1; }
+        if [ -h ${RUNTIME_DIR}/gld ]; then
+            rm ${RUNTIME_DIR}/gld && echo "existing link ${RUNTIME_DIR}/gld was deleted" || \
+                { echo "failed to delete the symbolic link ${RUNTIME_DIR}/gld"; exit 1; }
         fi
 
-        (cd ${RUNTIME_DIR}; ln -s cld-${version} cld) && echo "installation successful"
+        (cd ${RUNTIME_DIR}; ln -s gld-${version} gld) && echo "installation successful"
         ;;
 
   *)

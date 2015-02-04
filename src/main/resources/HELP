@@ -10,9 +10,9 @@ getting it).
 
 Usage:
 
-    cld <command> --nodes node1:port1,node2:port2 [command-options]
+    gld <command> --nodes node1:port1,node2:port2 [command-options]
 
-    cld <command> --conf <configuration-file>
+    gld <command> --conf <configuration-file>
 
 Global Options:
 
@@ -20,15 +20,15 @@ Global Options:
       nodes to send requests into. There is no default, the node list must be explicitly specified.
       The traffic will be sharded amongst these nodes.
 
-      If "embedded" is used, cld will mock a cache internally. You can request the cache to come
+      If "embedded" is used, gld will mock a cache internally. You can request the cache to come
       pre-populated with random content by specifying "embedded[keyCount]".
-      Only use it for cld testing.
+      Only use it for gld testing.
 
     --password - if the Redis node(s) are password protected, read the password from the first line
-       of the current directory's .cld.password file. If the file does not exist, complain. Note that
+       of the current directory's .gld.password file. If the file does not exist, complain. Note that
        if you do set a password and the Redis node is not password protected, you'll get an error
        similar to "JedisDataException: ERR Client sent AUTH, but no password is set". In order to
-       protect the password, it's good practice to chmod go-rwx .cld.password and delete as soon as
+       protect the password, it's good practice to chmod go-rwx .gld.password and delete as soon as
        you don't need it.
 
     --conf <configuration-file> - the file to read configuration from. If the same configuration
@@ -56,7 +56,7 @@ Commands:
 
        Typical Usage Example:
 
-            cld content --nodes localhost:10001 --storage-strategy TextFile --output ./keys.txt
+            gld content --nodes localhost:10001 --storage-strategy TextFile --output ./keys.txt
 
        Storage Strategies:
 
@@ -76,7 +76,7 @@ Commands:
 
         Typical Usage Example:
 
-            cld generate-keys 10000 --key-size 70 --key-store ./keys.txt
+            gld generate-keys 10000 --key-size 70 --key-store ./keys.txt
 
     load - send load into nodes until it reaches --max-operations or a key is pressed.
 
@@ -88,7 +88,7 @@ Commands:
               the default strategy is "WriteThenRead".
 
             --output <filename> - the CSV file to write collected statistics into. If not explicitly
-              specified, cld will dump statistics at stdout.
+              specified, gld will dump statistics at stdout.
 
             --cache <cache-name> - the name of the cache. If not specified, the default cache will
               be used.
@@ -145,7 +145,7 @@ Commands:
 
        Typical Usage Example:
 
-            cld load --nodes localhost:10001,localhost:10002 \
+            gld load --nodes localhost:10001,localhost:10002 \
                 --threads 200 --max-total 192 --value-size 1024 --expiration 2 \
                 --output ./stats.csv
 
@@ -160,7 +160,7 @@ Commands:
 
        Typical Usage Example:
 
-            cld delete --key-count 10 \
+            gld delete --key-count 10 \
                 --nodes node1.example.com:10001 \
                 --threads 10 --output ./delete-stats.csv
 
