@@ -24,11 +24,13 @@
         <processorPath useClasspath="true" />
         <module name="Cache Load Driver" />
         <module name="cld" />
+        <module name="gld" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="Cache Load Driver" target="1.7" />
       <module name="cld" target="1.7" />
+      <module name="gld" target="1.7" />
     </bytecodeTargetLevel>
   </component>
   <component name="CopyrightManager" default="Apache 2.0">
@@ -201,7 +203,6 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Cache Load Driver.iml" filepath="$PROJECT_DIR$/Cache Load Driver.iml" />
       <module fileurl="file://$PROJECT_DIR$/../gld.iml" filepath="$PROJECT_DIR$/../gld.iml" />
     </modules>
   </component>
