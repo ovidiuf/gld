@@ -1,0 +1,75 @@
+#!/bin/bash
+#
+# Copyright (c) 2015 Nova Ordis LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Generic Load Driver
+#
+# Run ./rld for help.
+#
+#
+
+reldir=$(dirname $0)
+home_dir=${reldir}/..
+
+function get_java_home()
+{
+    # we cannot rely on JAVA_HOME in J4, so we hardcode
+    # local java_home="/usr/java/jdk64-1.7.0_45"
+    local java_home=""
+
+    local name;
+    name=$(uname -n)
+    name=${name##*.}
+
+    [ "${name}" = "local" -o "${name}" = "ovidius-mbp" ] && java_home="/Library/Java/JavaVirtualMachines/jdk1.7.0_60.jdk/Contents/Home"
+
+    echo ${java_home}
+}
+
+function get_classpath()
+{
+    local first=true
+    for i in ${home_dir}/lib/*.jar; do
+        ${first} && first=false || echo -n ":"
+        echo -n ${i}
+    done
+}
+
+java_home=$(get_java_home) || { echo "failed to get JAVA_HOME"; exit 1; }
+classpath=$(get_classpath) || { echo "failed to build classpath"; exit 1; }
+
+debug_args=""
+output_settings=""
+
+while [ "$1" != "" ]; do
+    if [ "$1" = "--debug" ]; then
+        debug_args="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5011"
+    elif [ "$1" = "--output" ]; then
+        shift
+        output_settings="-Dcollector.file=$1"
+        output_command_line_arg="--output $1"
+    else
+        args="${args} $1"
+    fi
+    shift;
+done
+
+java_bin="java"
+[ "${java_home}" != "" ] && java_bin="${java_home}/bin/java"
+
+${java_bin} -Xms1024m -Xmx1024m -cp ${classpath} ${debug_args} ${output_settings} \
+com.novaordis.cld.Main ${args} ${output_command_line_arg}
+
+

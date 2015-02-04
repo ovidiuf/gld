@@ -1,0 +1,1479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" readonly="true" id="be8bb276-eede-41f5-a90e-5568f9f9da7a" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../doc/Architecture.odg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../doc/Cache Load Driver User Manual.docx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../doc/Cache Load Driver User Manual.pdf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/CacheService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/CollectorBasedStatistics.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/CollectorBasedStatisticsTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Command.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/CommandBase.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/CommandTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Configuration.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/ConfigurationImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/ConfigurationImplTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Connect.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/ConnectTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/util/Console.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/util/ConsoleTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Content.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/ContentCommandTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Delete.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/operations/Delete.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/DeleteCommandTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/DeleteLoadStrategy.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/DeleteLoadStrategyTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/operations/DeleteOperationTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/service/EmbeddedCacheService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/EmbeddedNode.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/keystore/ExperimentalKeyStore.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/FailureToInstantiateLoadStrategy.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/GenerateKeys.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/GenerateKeysTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Generic Load Driver.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Generic Load Driver.ipr" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Generic Load Driver.iws" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/service/redis/HARedisService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/HELP" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Help.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/HelpCommandTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/HierarchicalStorageStrategy.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/HierarchicalStorageStrategyTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/service/infinispan/InfinispanService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/KeyStore.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Load.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/LoadCommandTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/LoadStrategy.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/LoadStrategyBase.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/LoadStrategyFactory.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/LoadStrategyFactoryTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/LoadStrategyTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Main.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/cca/Main.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockCacheService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockCollector.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockConfiguration.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockHandler.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockInterface.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockInterface2.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockKeyStore.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/MockLoadStrategy.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/MockOperation.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockStatistics.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/MockStorageStrategy.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/MultiThreadedRunner.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/mockpackage/NoNoArgConstructorStrategy.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Node.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/NodeTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/NotALoadStrategy.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Operation.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/mockpackage/PrivateNoArgConstructorStrategy.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../README" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/keystore/RandomKeyGenerator.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/keystore/RandomKeyGeneratorTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/operations/Read.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/keystore/ReadOnlyFileKeyStore.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/keystore/ReadOnlyFileKeyStoreTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/operations/ReadTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/ReadThenWriteOnMissLoadStrategy.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/ReadThenWriteOnMissLoadStrategyTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/ReadWriteRatio.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/ReadWriteRatioTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/RedisFailure.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/RedisFailureTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/SampleHandler.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/SampleHandlerTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/SamplingInterval.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/SamplingIntervalTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/keystore/SetKeyStore.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/keystore/SetKeyStoreTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/service/redis/ShardedJedisRedisService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/service/redis/SimpleJedisProxyRedisService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/SingleThreadedRunner.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/SingleThreadedRunnerTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Statistics.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/StdoutStorageStrategy.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/StorageStrategy.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/StorageStrategyBase.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/StorageStrategyFactory.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/StorageStrategyFactoryTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/StorageStrategyTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/external/SystemStatistics.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Test.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/TextFileStorageStrategy.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/TextFileStorageStrategyTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/ThrowableHandler.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/UserErrorException.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Util.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/UtilTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/VERSION" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Version.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/VersionTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/mockpackage/WinningStrategy.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/operations/Write.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/keystore/WriteOnlyFileKeyStore.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/keystore/WriteOnlyFileKeyStoreTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/WriteThenReadLoadStrategy.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/WriteThenReadLoadStrategyTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/bash/cca" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/bash/cld" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../util/install-locally" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../util/install-vsp-lab" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../util/install.shlib" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../doc/j4-d2.conf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../util/local-install" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../util/local-j4-install" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../doc/local.conf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/resources/log4j.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/resources/log4j.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../util/make-zip" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/cca/package.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../pom.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../util/tools.sh" />
+    </list>
+    <ignored path="Cache Load Driver.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <ignored path="$PROJECT_DIR$/out/" />
+    <ignored path=".idea/dataSources.local.xml" />
+    <ignored path="$PROJECT_DIR$/../target/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="Commander">
+    <leftPanel />
+    <rightPanel />
+    <splitter proportion="0.5" />
+  </component>
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="Cache Load Driver" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="HARedisService.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/service/redis/HARedisService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1568">
+              <caret line="16" column="34" selection-start-line="16" selection-start-column="34" selection-end-line="16" selection-end-column="34" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ConfigurationImpl.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/ConfigurationImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.33333334" vertical-offset="8630" max-vertical-offset="9730">
+              <caret line="725" column="39" selection-start-line="725" selection-start-column="39" selection-end-line="725" selection-end-column="39" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/ContentCommandTest.java" />
+        <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockStorageStrategy.java" />
+        <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/LoadStrategyFactoryTest.java" />
+        <option value="$MAVEN_REPOSITORY$/junit/junit/4.11/junit-4.11-sources.jar!/org/junit/internal/runners/statements/RunAfters.java" />
+        <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/LoadStrategyTest.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/ReadThenWriteOnMissLoadStrategy.java" />
+        <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/ReadThenWriteOnMissLoadStrategyTest.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/DeleteKeysLoadStrategy.java" />
+        <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/DeleteKeysLoadStrategyTest.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/LoadStrategyBase.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/ReadWriteRatio.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Delete.java" />
+        <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/ReadWriteRatioTest.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/CommandBase.java" />
+        <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/NodeTest.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/DeleteLoadStrategy.java" />
+        <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/DeleteLoadStrategyTest.java" />
+        <option value="$PROJECT_DIR$/../src/main/resources/HELP" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/LoadStrategyFactory.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Configuration.java" />
+        <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/MockLoadStrategy.java" />
+        <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/LoadCommandTest.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/KeyStore.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/StorageStrategyBase.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/StorageStrategyFactory.java" />
+        <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/TextFileStorageStrategyTest.java" />
+        <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/StorageStrategyFactoryTest.java" />
+        <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/StorageStrategyTest.java" />
+        <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockConfiguration.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/keystore/ReadOnlyKeyStore.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/StorageStrategy.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/StdoutStorageStrategy.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/TextFileStorageStrategy.java" />
+        <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/MockStorageStrategy.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Load.java" />
+        <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/WriteThenReadLoadStrategyTest.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/keystore/ExperimentalKeyStore.java" />
+        <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/HierarchicalStorageStrategyTest.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/LoadStrategy.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/WriteThenReadLoadStrategy.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/SingleThreadedRunner.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/HierarchicalStorageStrategy.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/service/infinispan/InfinispanService.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Content.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Command.java" />
+        <option value="$PROJECT_DIR$/../src/main/bash/cld" />
+        <option value="$PROJECT_DIR$/../README" />
+        <option value="$PROJECT_DIR$/../pom.xml" />
+        <option value="$PROJECT_DIR$/../src/main/bash/cca" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/service/redis/HARedisService.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/cld/ConfigurationImpl.java" />
+      </list>
+    </option>
+  </component>
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+  </component>
+  <component name="MavenProjectNavigator">
+    <treeState>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Generic Load Driver" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+      </PATH>
+    </treeState>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="2696" />
+    <option name="y" value="111" />
+    <option name="width" value="1447" />
+    <option name="height" value="1290" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages ProjectPane="false" />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Generic Load Driver" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Generic Load Driver" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gld" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Generic Load Driver" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gld" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Generic Load Driver" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gld" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Generic Load Driver" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gld" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="novaordis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cld" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Generic Load Driver" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gld" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="novaordis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cld" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Generic Load Driver" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gld" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="novaordis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cld" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="redis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="GoToClass.includeLibraries" value="false" />
+    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
+    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
+    <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="project.structure.last.edited" value="Problems" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Generic Load Driver.ipr" />
+    <property name="recentsLimit" value="5" />
+    <property name="restartRequiresConfirmation" value="true" />
+    <property name="FullScreen" value="false" />
+    <property name="OverrideImplement.combined" value="true" />
+    <property name="OverrideImplement.overriding.sorted" value="false" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/ovidiu/projects/cache-load-driver/src/main/java/com/novaordis/cld/Util.java" />
+    <property name="options.lastSelected" value="copyright" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.novaordis.cld.keystore" />
+      <recent name="com.novaordis.cld.strategy.load" />
+      <recent name="com.novaordis.cld.strategy.storage" />
+      <recent name="com.novaordis.cld.mock.mockpackage" />
+      <recent name="com.novaordis.cld.mock" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/../util" />
+      <recent name="$PROJECT_DIR$/../src/main/resources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.novaordis.cld.strategy.storage" />
+      <recent name="com.novaordis.cld.strategy.load" />
+      <recent name="com.novaordis.cld.strategy" />
+      <recent name="com.novaordis.cld.managers" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Remote.cld Command Line">
+    <configuration default="true" type="GrailsRunConfigurationType" factoryName="Grails">
+      <module name="" />
+      <setting name="vmparams" value="" />
+      <setting name="cmdLine" value="run-app" />
+      <setting name="depsClasspath" value="false" />
+      <setting name="passParentEnv" value="true" />
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <setting name="launchBrowser" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+      <option name="PROGRAM_PARAMETERS" />
+      <method />
+    </configuration>
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <pass-parent-envs>true</pass-parent-envs>
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="FlashRunConfigurationType" factoryName="Flash App">
+      <option name="BCName" value="" />
+      <option name="IOSSimulatorSdkPath" value="" />
+      <option name="adlOptions" value="" />
+      <option name="airProgramParameters" value="" />
+      <option name="appDescriptorForEmulator" value="Android" />
+      <option name="debugTransport" value="USB" />
+      <option name="debuggerSdkRaw" value="BC SDK" />
+      <option name="emulator" value="NexusOne" />
+      <option name="emulatorAdlOptions" value="" />
+      <option name="fastPackaging" value="true" />
+      <option name="fullScreenHeight" value="0" />
+      <option name="fullScreenWidth" value="0" />
+      <option name="launchUrl" value="false" />
+      <option name="launcherParameters">
+        <LauncherParameters>
+          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
+          <option name="launcherType" value="OSDefault" />
+          <option name="newPlayerInstance" value="false" />
+          <option name="playerPath" value="/Applications/Flash Player Debugger.app" />
+        </LauncherParameters>
+      </option>
+      <option name="mobileRunTarget" value="Emulator" />
+      <option name="moduleName" value="" />
+      <option name="overriddenMainClass" value="" />
+      <option name="overriddenOutputFileName" value="" />
+      <option name="overrideMainClass" value="false" />
+      <option name="runTrusted" value="true" />
+      <option name="screenDpi" value="0" />
+      <option name="screenHeight" value="0" />
+      <option name="screenWidth" value="0" />
+      <option name="url" value="http://" />
+      <option name="usbDebugPort" value="7936" />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
+      <module name="" />
+      <option name="TESTING_TYPE" value="0" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="BashConfigurationType" factoryName="Bash">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="INTERPRETER_PATH" value="/bin/bash" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <module name="Cache Load Driver" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JarApplication" factoryName="JAR Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="GradleRunConfiguration" factoryName="Gradle">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list />
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <method />
+    </configuration>
+    <configuration default="true" type="FlexUnitRunConfigurationType" factoryName="FlexUnit" appDescriptorForEmulator="Android" class_name="" emulatorAdlOptions="" method_name="" package_name="" scope="Class">
+      <option name="BCName" value="" />
+      <option name="launcherParameters">
+        <LauncherParameters>
+          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
+          <option name="launcherType" value="OSDefault" />
+          <option name="newPlayerInstance" value="false" />
+          <option name="playerPath" value="/Applications/Flash Player Debugger.app" />
+        </LauncherParameters>
+      </option>
+      <option name="moduleName" value="" />
+      <option name="trusted" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="myFilePath" />
+      <option name="GLUE" />
+      <option name="myNameFilter" />
+      <option name="myGeneratedName" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
+      <module name="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
+    <configuration default="false" name="cld Command Line" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5011" />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="5011" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="false" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <configuration default="false" name="lab 02" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="10.98.18.1" />
+      <option name="PORT" value="10002" />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="10002" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="false" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <configuration default="false" name="mvn" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="5005" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="false" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <list size="3">
+      <item index="0" class="java.lang.String" itemvalue="Remote.cld Command Line" />
+      <item index="1" class="java.lang.String" itemvalue="Remote.lab 02" />
+      <item index="2" class="java.lang.String" itemvalue="Remote.mvn" />
+    </list>
+    <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
+      <Host>localhost</Host>
+      <Port>5050</Port>
+    </configuration>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration" cleanupOnStartRun="true">
+    <configuration>$USER_HOME$/.subversion</configuration>
+    <supportedVersion>125</supportedVersion>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="be8bb276-eede-41f5-a90e-5568f9f9da7a" name="Default" comment="" />
+      <created>1420688972111</created>
+      <option name="number" value="Default" />
+      <updated>1420688972111</updated>
+      <workItem from="1420688973533" duration="8667000" />
+      <workItem from="1420699389595" duration="16000" />
+      <workItem from="1420699426513" duration="33000" />
+      <workItem from="1420734477087" duration="21628000" />
+      <workItem from="1420772704720" duration="384000" />
+      <workItem from="1420781319042" duration="18549000" />
+      <workItem from="1420830834577" duration="1796000" />
+      <workItem from="1420833438651" duration="786000" />
+      <workItem from="1421002466613" duration="38361000" />
+      <workItem from="1421057094948" duration="2000" />
+      <workItem from="1421057104803" duration="14000" />
+      <workItem from="1421098204402" duration="10616000" />
+      <workItem from="1421343552981" duration="16348000" />
+      <workItem from="1421372665450" duration="3975000" />
+      <workItem from="1421868177583" duration="138000" />
+      <workItem from="1421902625341" duration="7409000" />
+      <workItem from="1421947484645" duration="45000" />
+      <workItem from="1421962224503" duration="997000" />
+      <workItem from="1421963591606" duration="11535000" />
+      <workItem from="1421993678492" duration="13000" />
+      <workItem from="1421996194428" duration="277000" />
+      <workItem from="1421999561947" duration="138000" />
+      <workItem from="1422030618010" duration="25220000" />
+      <workItem from="1422060660431" duration="70000" />
+      <workItem from="1422061755337" duration="33000" />
+      <workItem from="1422061943352" duration="174000" />
+      <workItem from="1422292479662" duration="512000" />
+      <workItem from="1422302343726" duration="1929000" />
+      <workItem from="1422392090089" duration="33662000" />
+      <workItem from="1422474624392" duration="1742000" />
+      <workItem from="1422498891630" duration="24852000" />
+      <workItem from="1422551141627" duration="10353000" />
+      <workItem from="1422564367346" duration="7000" />
+      <workItem from="1422566167490" duration="703000" />
+      <workItem from="1422586995610" duration="25000" />
+      <workItem from="1422681364815" duration="40000" />
+      <workItem from="1423014069903" duration="1761000" />
+      <workItem from="1423016177214" duration="679000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="243489000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="2696" y="111" width="1447" height="1290" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.45492488" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24972796" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3383758" sideWeight="0.5005441" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24983607" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32811388" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26548043" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29270947" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29309034" sideWeight="0.49945593" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+    </layout>
+    <layout-to-restore>
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24972796" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1904762" sideWeight="0.50031865" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33025026" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29270947" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25796178" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33280253" sideWeight="0.49968132" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24983607" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32857144" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="myTodoPanelSettings">
+      <TodoPanelSettings />
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/HierarchicalStorageStrategyTest.java</url>
+          <line>401</line>
+          <properties />
+          <option name="timeStamp" value="356" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <condition expression="s == null" language="JAVA" custom="" />
+          <url>file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/HierarchicalStorageStrategy.java</url>
+          <line>53</line>
+          <properties />
+          <option name="timeStamp" value="357" />
+        </line-breakpoint>
+      </breakpoints>
+      <breakpoints-dialog>
+        <breakpoints-dialog />
+      </breakpoints-dialog>
+      <option name="time" value="361" />
+    </breakpoint-manager>
+    <watches-manager />
+  </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/DeleteLoadStrategy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="309" max-vertical-offset="1722">
+          <caret line="49" column="0" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/DeleteLoadStrategyTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-20.88889" vertical-offset="1606" max-vertical-offset="2730">
+          <caret line="172" column="0" selection-start-line="172" selection-start-column="0" selection-end-line="172" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/resources/HELP">
+      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4535865" vertical-offset="1796" max-vertical-offset="2744">
+          <caret line="159" column="0" selection-start-line="159" selection-start-column="0" selection-end-line="159" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/LoadStrategyFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="99" max-vertical-offset="1456">
+          <caret line="18" column="16" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/MockLoadStrategy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="74" max-vertical-offset="1078">
+          <caret line="48" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/command/LoadCommandTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4982079" vertical-offset="3503" max-vertical-offset="4438">
+          <caret line="294" column="55" selection-start-line="294" selection-start-column="55" selection-end-line="294" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/StorageStrategyFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="126" max-vertical-offset="1372">
+          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/StorageStrategyFactoryTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1143" max-vertical-offset="2044">
+          <caret line="119" column="22" selection-start-line="119" selection-start-column="22" selection-end-line="119" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/StorageStrategyTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4475761" vertical-offset="359" max-vertical-offset="1246">
+          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/mock/MockConfiguration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.42609853" vertical-offset="534" max-vertical-offset="1876">
+          <caret line="83" column="13" selection-start-line="83" selection-start-column="13" selection-end-line="83" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/ReadWriteRatio.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1300" max-vertical-offset="2716">
+          <caret line="138" column="19" selection-start-line="138" selection-start-column="19" selection-end-line="138" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/StorageStrategy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="952">
+          <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/StorageStrategyBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1120">
+          <caret line="6" column="54" selection-start-line="6" selection-start-column="54" selection-end-line="6" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/StdoutStorageStrategy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1344">
+          <caret line="77" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/TextFileStorageStrategyTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1764">
+          <caret line="43" column="24" selection-start-line="43" selection-start-column="24" selection-end-line="43" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/TextFileStorageStrategy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="979" max-vertical-offset="1918">
+          <caret line="112" column="5" selection-start-line="112" selection-start-column="5" selection-end-line="112" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/MockStorageStrategy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="406" max-vertical-offset="1540">
+          <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Configuration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1512">
+          <caret line="12" column="17" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.11/junit-4.11-sources.jar!/org/junit/Assert.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="8464" max-vertical-offset="11718">
+          <caret line="655" column="0" selection-start-line="655" selection-start-column="0" selection-end-line="655" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/load/WriteThenReadLoadStrategyTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-25.666666" vertical-offset="5551" max-vertical-offset="7112">
+          <caret line="471" column="19" selection-start-line="471" selection-start-column="19" selection-end-line="471" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/CommandBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="444" max-vertical-offset="1246">
+          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.11/junit-4.11-sources.jar!/org/junit/internal/runners/model/ReflectiveCallable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="336">
+          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.11/junit-4.11-sources.jar!/org/junit/internal/runners/statements/RunAfters.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4358655" vertical-offset="0" max-vertical-offset="803">
+          <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/cld/strategy/storage/HierarchicalStorageStrategyTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.60886073" vertical-offset="4881" max-vertical-offset="5684">
+          <caret line="400" column="0" selection-start-line="400" selection-start-column="0" selection-end-line="400" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/LoadStrategyBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1120">
+          <caret line="8" column="49" selection-start-line="8" selection-start-column="49" selection-end-line="8" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/LoadStrategy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="658">
+          <caret line="7" column="17" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/KeyStore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="476">
+          <caret line="25" column="11" selection-start-line="25" selection-start-column="11" selection-end-line="25" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/load/WriteThenReadLoadStrategy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1545" max-vertical-offset="3402">
+          <caret line="154" column="0" selection-start-line="154" selection-start-column="0" selection-end-line="154" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/service/EmbeddedCacheService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="299" max-vertical-offset="1372">
+          <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/operations/Write.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="169" max-vertical-offset="1078">
+          <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.21906117" vertical-offset="0" max-vertical-offset="742">
+          <caret line="11" column="9" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Load.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="364" max-vertical-offset="1876">
+          <caret line="80" column="23" selection-start-line="80" selection-start-column="23" selection-end-line="80" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/MultiThreadedRunner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.9710145" vertical-offset="786" max-vertical-offset="2072">
+          <caret line="110" column="0" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/SingleThreadedRunner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.93188405" vertical-offset="1779" max-vertical-offset="2856">
+          <caret line="184" column="39" selection-start-line="184" selection-start-column="39" selection-end-line="184" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/keystore/ExperimentalKeyStore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1288">
+          <caret line="31" column="51" selection-start-line="31" selection-start-column="51" selection-end-line="31" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/strategy/storage/HierarchicalStorageStrategy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="3422" max-vertical-offset="5642">
+          <caret line="265" column="57" selection-start-line="265" selection-start-column="57" selection-end-line="265" selection-end-column="57" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/service/infinispan/InfinispanService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.30954227" vertical-offset="357" max-vertical-offset="1736">
+          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Version.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.043377228" vertical-offset="0" max-vertical-offset="1291">
+          <caret line="5" column="13" selection-start-line="0" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/command/Content.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2212">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#1675#1676#0" expanded="false" />
+            <element signature="e#1699#1700#0" expanded="false" />
+            <element signature="e#2436#2437#0" expanded="false" />
+            <element signature="e#2482#2483#0" expanded="false" />
+            <element signature="e#3701#3702#0" expanded="false" />
+            <element signature="e#3738#3739#0" expanded="false" />
+            <element signature="e#3781#3782#0" expanded="false" />
+            <element signature="e#3816#3817#0" expanded="false" />
+            <element signature="e#3871#3872#0" expanded="false" />
+            <element signature="e#3909#3910#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Command.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="826">
+          <caret line="18" column="17" selection-start-line="18" selection-start-column="17" selection-end-line="18" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../doc/j4-d2.conf">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1157">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../doc/local.conf">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1170">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/bash/cld">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1134">
+          <caret line="15" column="1" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/cca/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="534" max-vertical-offset="1932">
+          <caret line="26" column="13" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/Statistics.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="280">
+          <caret line="22" column="7" selection-start-line="22" selection-start-column="7" selection-end-line="22" selection-end-column="7" />
+          <folding>
+            <element signature="e#0#990#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../README">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="308">
+          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2562">
+          <caret line="22" column="40" selection-start-line="22" selection-start-column="40" selection-end-line="22" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Generic Load Driver.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.11965812" vertical-offset="0" max-vertical-offset="1170">
+          <caret line="10" column="19" selection-start-line="10" selection-start-column="19" selection-end-line="10" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/bash/cca">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4928" vertical-offset="0" max-vertical-offset="826">
+          <caret line="22" column="19" selection-start-line="22" selection-start-column="19" selection-end-line="22" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/service/redis/HARedisService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1568">
+          <caret line="16" column="34" selection-start-line="16" selection-start-column="34" selection-end-line="16" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/cld/ConfigurationImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334" vertical-offset="8630" max-vertical-offset="9730">
+          <caret line="725" column="39" selection-start-line="725" selection-start-column="39" selection-end-line="725" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="Copyright.UI">
+        <settings>
+          <last-edited>Apache 2.0</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>tomcat-coyote-7.0.35</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.7</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>Cache Load Driver</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.7</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>infinispan-core-6.0.3.Final-redhat-3</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

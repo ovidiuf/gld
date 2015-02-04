@@ -1,0 +1,37 @@
+#!/bin/bash
+#
+# Script to install cld locally in J4.
+#
+
+reldir=$(dirname $0)
+force=false
+
+while [ "$1" != "" ]; do
+    if [ "$1" = "--force" ]; then
+        force=true
+    else
+        version=$1
+    fi
+    shift;
+done
+
+[ "${version}" = "" ] && { echo "version not specified" 1>&2; exit 1; }
+
+zip_file=${reldir}/rld-${version}.zip
+
+[ -f ${zip_file} ] || { echo "${zip_file} not found, make sure to upload it first"; exit 1; }
+
+if [ -d ${reldir}/rld-${version} ]; then
+    ${force} || { echo "rld-${version} is already installed and --force flag not used, aborting installation"; exit 1; }
+    rm -rf  ${reldir}/rld-${version}.old
+    mv -f ${reldir}/rld-${version} ${reldir}/rld-${version}.old
+fi
+
+unzip ${zip_file} -d ${reldir} || { echo "failed to unzip ${zip_file}" 1>&2; exit 1; }
+rm ${zip_file} || { echo "failed to delete ${zip_file}" 1>&2; exit 1; }
+rm -f ${reldir}/current  || { echo "failed to remove link ${reldir}/current" 1>&2; exit 1; }
+(cd ${reldir}; ln -s ./rld-${version} current)
+
+echo "rld version ${version} installed in J4"
+
+

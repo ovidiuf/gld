@@ -1,0 +1,190 @@
+
+Cache Load Driver ${version}
+
+A program that sends operations into cache nodes and collects client-side statistics. The program
+can also be used for HA testing, content queries and in general for any client-side cache interaction.
+Please note that until this sentence disappears from the help, the program should be used with caution
+as it was initially not intended for use by the general public (essentially, if you find a bug, the
+author will immediately claim that what you found is not a bug, but a feature, and you're simply not
+getting it).
+
+Usage:
+
+    cld <command> --nodes node1:port1,node2:port2 [command-options]
+
+    cld <command> --conf <configuration-file>
+
+Global Options:
+
+    --nodes <node1:port1,node2:port2,...> - the list of host:port values for the backend cache
+      nodes to send requests into. There is no default, the node list must be explicitly specified.
+      The traffic will be sharded amongst these nodes.
+
+      If "embedded" is used, cld will mock a cache internally. You can request the cache to come
+      pre-populated with random content by specifying "embedded[keyCount]".
+      Only use it for cld testing.
+
+    --password - if the Redis node(s) are password protected, read the password from the first line
+       of the current directory's .cld.password file. If the file does not exist, complain. Note that
+       if you do set a password and the Redis node is not password protected, you'll get an error
+       similar to "JedisDataException: ERR Client sent AUTH, but no password is set". In order to
+       protect the password, it's good practice to chmod go-rwx .cld.password and delete as soon as
+       you don't need it.
+
+    --conf <configuration-file> - the file to read configuration from. If the same configuration
+       parameter is specified both on command linea and the configuration file, the command line value
+       takes precedence.
+
+       WARNING - configuration file support not fully implemented yet.
+
+Commands:
+
+    help
+
+    version
+
+    content - dumps the key-value space into local storage (stdout, single flat file, hierarchical
+      directory structure or other format). The default behavior is to dump key-value pairs at stdout.
+
+      Options:
+
+            --key-count-only - returns just the key count, don't retrieve the corresponding values.
+
+            --storage-strategy <local-storage-strategy-name>. The local storage strategy. If not
+            specified, the default storage strategy is Stdout - the utility dumps key-value pairs
+            at stdout. For available storage strategies, see "Storage Strategies" below.
+
+       Typical Usage Example:
+
+            cld content --nodes localhost:10001 --storage-strategy TextFile --output ./keys.txt
+
+       Storage Strategies:
+
+            stdout
+
+            TextFile - writes the key-value pairs in a local text file. Configuration options:
+
+                --output <file-name>
+
+            Hierarchical - a strategy that stores each key/value pair in its own separated file.
+                The files are maintained in a hierarchical directory structure to avoid overloading
+                the file table of a single flat directory in case of a large number of keys.
+
+                --root <root-directory>
+
+    generate-keys - generates random keys into a local file. No attempt is made to connect to a cache node.
+
+        Typical Usage Example:
+
+            cld generate-keys 10000 --key-size 70 --key-store ./keys.txt
+
+    load - send load into nodes until it reaches --max-operations or a key is pressed.
+
+      Options:
+
+            --load-strategy <strategy-name> - the name of the load strategy. The load driver searches its
+              classpath for a class with the same name, which must implement the LoadStrategy interface.
+              For a list of available strategies, see "Load Strategies" section below. If not specified
+              the default strategy is "WriteThenRead".
+
+            --output <filename> - the CSV file to write collected statistics into. If not explicitly
+              specified, cld will dump statistics at stdout.
+
+            --cache <cache-name> - the name of the cache. If not specified, the default cache will
+              be used.
+
+            --max-operations - the total number of Redis operations to send. If not specifies, the
+              default is "unlimited", meaning the driver will execute until explicitly stopped.
+
+            --threads <thread-count> - the number of threads to send concurrent operations.
+              Default value 1.
+
+            --max-total <count> - the Apache pool "MaxTotal" parameter. Default value 100.
+
+            --max-wait-millis <timeout> - the Apache pool "MaxWaitMillis" parameter. Default value
+              1000 ms (1 second).
+
+            --sleep <ms> - the number of milliseconds to sleep after each operation. Default is 0,
+              meaning "send continuously".
+
+            --key-size <number-of-characters>. Default is 70.
+
+            --value-size <number-of-characters>. Default is 6000.
+
+            --expiration <seconds>. Key expiration time in seconds. By default, keys don't expire.
+
+            --use-different-values If specified, every time a value is sent it will be generated.
+              Otherwise the same value will be reused.
+
+            --exception-file <file-name>. If specified, dump details about exceptions in that file.
+              If not specified, the exceptions will only be reflected as failure counters.
+
+            --read-to-write <ratio>. The positive or zero integer read to write ratio. Default is 1:
+              for each write there is a read. Zero means only writes, no reads. If you want more writes
+              than reads, use --write-to-read (described below). --read-to-write and --write-to-read are
+              mutually exclusive (unless they're both 1).
+
+            --write-to-read <ratio>. The positive or zero integer write to read ratio. Default is 1:
+              for each read there is a write. Zero means only reads, no writes. If you want more reads
+              than writes, use --read-to-write (described above). --read-to-write and --write-to-read are
+              mutually exclusive (unless they're both 1).
+
+            --keystore-file <file-name>. Optional. If specified, the name of the file to read/write keys
+              from/to. The current implementation works as follows:
+
+              If no key store is specified, nothing is written and nothing is read locally. All keys
+              are randomly generated.
+
+              If a key store is specified and the load run writes (all operation are writes or only some
+              of the operations are writes), then all the keys to be written are randomly generated,
+              written into the cache, then written into the key store, and then used for successive read
+              operations.
+
+              If a key store is specified and there are no writes, only reads, then the keys are
+              read cyclically from the local key store.
+
+       Typical Usage Example:
+
+            cld load --nodes localhost:10001,localhost:10002 \
+                --threads 200 --max-total 192 --value-size 1024 --expiration 2 \
+                --output ./stats.csv
+
+    delete - delete keys from the cache.
+
+      Options:
+
+            --key-count <key-count> - the number of keys to delete. The keys will be chosen randomly from
+              the entire key set maintained by the cache at the moment the command is run. If not specified,
+              the default value is 1.
+
+
+       Typical Usage Example:
+
+            cld delete --key-count 10 \
+                --nodes node1.example.com:10001 \
+                --threads 10 --output ./delete-stats.csv
+
+
+Load Strategies:
+
+    WriteThenRead
+
+        This strategy can be used to populate the cache with random key-value pairs.
+
+    ReadThenWriteOnMiss
+
+        Attempts to read keys specified in a local store, and if it encounters a miss, writes a random
+        value (whose size can be specified) for that key, back into the cluster.
+
+    Delete
+
+        This strategy can be used to read a number of keys from the cache and then distribute them to
+        concurrent threads to be deleted. It is the underlying strategy used by the "delete" command,
+        but it can also be used with the "load" command (and --load-strategy Delete qualifier).
+
+
+Authors:
+
+    Ovidiu Feodorov <ovidiu@novaordis.com>
+
+

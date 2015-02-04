@@ -1,0 +1,67 @@
+#!/bin/bash
+
+function install_j4()
+{
+    local jump_box=$1;
+    local target_host=$2;
+    local user=$3
+    shift;
+    shift;
+    shift;
+
+    local debug=false
+
+    while [ "$1" != "" ]; do
+        if [ "$1" = "--force" ]; then
+            force_flag="--force"
+        elif [ "$1" = "--debug" ]; then
+            debug=true
+        else
+            version=$1
+        fi
+        shift
+    done
+
+    [ "${version}" = "" ] && { echo "you must specify a version"; exit 1; }
+
+    local zip_file_basename=rld-${version}.zip
+    local zip_file=$(dirname $0)/../target/${zip_file_basename}
+
+    [ -f ${zip_file} ] || { echo "no ${zip_file}, build it first"; exit 1; }
+
+    scp ${zip_file} ${user}@${jump_box}:/tmp
+    ssh ${user}@${jump_box} "scp /tmp/${zip_file_basename} ${target_host}:/opt/mobileapps/ovidiu/rld; rm /tmp/${zip_file_basename}"
+    ssh ${user}@${jump_box} "ssh ${target_host} \"/opt/mobileapps/ovidiu/rld/local-j4-install ${version} ${force_flag}\""
+}
+
+
+function install_over_ssh()
+{
+    local target_host=$1;
+    local user=$2
+    shift;
+    shift;
+
+    local debug=false
+
+    while [ "$1" != "" ]; do
+        if [ "$1" = "--force" ]; then
+            force_flag="--force"
+        elif [ "$1" = "--debug" ]; then
+            debug=true
+        else
+            version=$1
+        fi
+        shift
+    done
+
+    [ "${version}" = "" ] && { echo "you must specify a version"; exit 1; }
+
+    local zip_file_basename=cld-${version}.zip
+    local zip_file=$(dirname $0)/../target/${zip_file_basename}
+
+    [ -f ${zip_file} ] || { echo "no ${zip_file}, build it first"; exit 1; }
+
+    scp ${zip_file} ${user}@${target_host}:/opt/cld
+    ssh ${user}@${target_host} "/opt/cld/local-install ${version} ${force_flag}"
+}
