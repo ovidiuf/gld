@@ -17,6 +17,7 @@
 package com.novaordis.gld.util;
 
 import com.novaordis.gld.MultiThreadedRunner;
+import com.novaordis.gld.Util;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -106,6 +107,14 @@ public class CommandLineConsole implements Runnable
                     {
                         log.error("failed to stop the multi-threaded runner", e);
                     }
+                    return;
+                }
+                else if ("td".equals(line.toLowerCase()))
+                {
+                    //
+                    // 'td' - thread dump
+                    //
+                    Util.nativeThreadDump();
                     return;
                 }
                 else if ("bg".equals(line.toLowerCase()))

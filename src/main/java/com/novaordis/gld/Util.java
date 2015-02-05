@@ -16,9 +16,15 @@
 
 package com.novaordis.gld;
 
+import org.apache.log4j.Logger;
+
 import java.io.BufferedReader;
+import java.io.Console;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadInfo;
+import java.lang.management.ThreadMXBean;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -27,6 +33,8 @@ import java.util.UUID;
 public class Util
 {
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(Util.class);
 
     private static int UUID_STRING_SIZE = UUID.randomUUID().toString().length();
 
@@ -274,6 +282,63 @@ public class Util
         return result;
     }
 
+    /**
+     * TODO put this in NovaOrdis Utilities
+     */
+    public static String threadDump()
+    {
+        final StringBuilder sb = new StringBuilder();
+
+        final ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+        final ThreadInfo[] threadInfos = threadMXBean.getThreadInfo((threadMXBean.getAllThreadIds()));
+        for(ThreadInfo ti: threadInfos)
+        {
+            sb.append('"');
+            sb.append(ti.getThreadName());
+            sb.append("\" ");
+
+            final Thread.State state = ti.getThreadState();
+            sb.append("\n java.lang.Thread.State: ");
+            sb.append(state);
+
+            final StackTraceElement[] stackTraceElements = ti.getStackTrace();
+            for(final StackTraceElement ste: stackTraceElements)
+            {
+                sb.append("\n      at ");
+                sb.append(ste);
+            }
+
+            sb.append("\n\n");
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * TODO put this in NovaOrdis Utilities
+     */
+    public static void nativeThreadDump()
+    {
+        // get pid
+
+        String s = ManagementFactory.getRuntimeMXBean().getName();
+
+        int i = s.indexOf('@');
+
+        String pid = s.substring(0, i);
+
+        Runtime runtime = Runtime.getRuntime();
+
+        try
+        {
+            runtime.exec("kill -3 " + pid);
+        }
+        catch(Exception e)
+        {
+            log.error("failed to take thread dump", e);
+        }
+    }
+
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -282,11 +347,9 @@ public class Util
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
-
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 
