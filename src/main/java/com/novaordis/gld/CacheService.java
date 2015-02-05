@@ -18,13 +18,8 @@ package com.novaordis.gld;
 
 import java.util.Set;
 
-public interface CacheService
+public interface CacheService extends Service
 {
-    void start() throws Exception;
-    void stop() throws Exception;
-
-    boolean isStarted();
-
     void set(String key, String value) throws Exception;
 
     String get(String key) throws Exception;

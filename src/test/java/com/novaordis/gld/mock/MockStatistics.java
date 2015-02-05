@@ -77,6 +77,19 @@ public class MockStatistics implements Statistics
         }
     }
 
+    @Override
+    public void close()
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void annotate(String line)
+    {
+        // noop for the time being
+        log.info("annotating with " + line);
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     public void setDoneAfterNRecords(int countOfRecordsAfterWhichWeAreDone)

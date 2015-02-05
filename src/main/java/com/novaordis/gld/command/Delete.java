@@ -19,10 +19,9 @@ package com.novaordis.gld.command;
 import com.novaordis.gld.CacheService;
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.LoadStrategy;
-import com.novaordis.gld.MultiThreadedRunner;
+import com.novaordis.gld.MultiThreadedRunnerImpl;
 import com.novaordis.gld.UserErrorException;
-import com.novaordis.gld.strategy.load.DeleteLoadStrategy;
-import com.novaordis.gld.strategy.load.WriteThenReadLoadStrategy;
+import com.novaordis.gld.strategy.load.cache.DeleteLoadStrategy;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,8 +30,6 @@ import java.util.List;
 public class Delete extends CommandBase
 {
     // Constants -------------------------------------------------------------------------------------------------------
-
-    public static final LoadStrategy DEFAULT_LOAD_STRATEGY = new WriteThenReadLoadStrategy();
 
     /**
      * Keep us as low as possible, to limit the damage if used incorrectly.
@@ -44,7 +41,6 @@ public class Delete extends CommandBase
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private LoadStrategy loadStrategy;
-    private CacheService cacheService;
 
     private int keysToDelete;
 
@@ -65,7 +61,7 @@ public class Delete extends CommandBase
         processCommandSpecificArguments(getArguments());
 
         Configuration config = getConfiguration();
-        cacheService = config.getCacheService();
+        CacheService cacheService = (CacheService) config.getService();
 
         // we need to have a valid cache service
         if (cacheService == null)
@@ -98,7 +94,7 @@ public class Delete extends CommandBase
     {
         insureInitialized();
 
-        new MultiThreadedRunner(getConfiguration()).runConcurrently();
+        new MultiThreadedRunnerImpl(getConfiguration()).runConcurrently();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

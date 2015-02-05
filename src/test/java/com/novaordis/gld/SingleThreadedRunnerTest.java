@@ -20,7 +20,8 @@ import com.novaordis.gld.mock.MockCacheService;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.mock.MockKeyStore;
 import com.novaordis.gld.mock.MockStatistics;
-import com.novaordis.gld.strategy.load.MockLoadStrategy;
+import com.novaordis.gld.statistics.CollectorBasedStatistics;
+import com.novaordis.gld.strategy.load.cache.MockLoadStrategy;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
@@ -101,7 +102,7 @@ public class SingleThreadedRunnerTest
     {
         MockConfiguration mc = new MockConfiguration();
 
-        assertNull(mc.getCacheService());
+        assertNull(mc.getService());
 
         try
         {

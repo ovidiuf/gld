@@ -21,8 +21,29 @@ public interface Statistics
     boolean areWeDone();
 
     /**
-     * As per Java documentation, we don't use t0Nano and t1Nano to get absolute time information, we're using them only
-     * to calculate deltas. Absolute timestamp for the sample is provided by t0Ms.
+     * As per Java documentation, we don't use t0Nano and t1Nano to get absolute time information, we're using them
+     * only to calculate deltas. Absolute timestamp for the sample is provided by t0Ms.
+     *
+     * @param t0Ms - the time (in milliseconds) when the operation that is being recorded started.
+     *
+     * @param t0Nano - the time (in nanoseconds) when the operation that is being recorded started. Logically, it
+     *        should be the same as t0Ms, but Java documentation advises against using nano-second precision time
+     *        to get absolute time information, so we are only using it to calculate delta in conjunction with 't1Nano'.
+     *
+     * @param t1Nano - the time (in nanoseconds) when the operation that is being recorded ended. Java documentation
+     *        advises against using nano-second precision time to get absolute time information, so we are only using
+     *        this value to calculate delta in conjunction with 't0Nano'.
      */
     void record(long t0Ms, long t0Nano, long t1Nano, Operation op, Throwable t);
+
+    /**
+     * Flushes the in-flight information and prevent new recordings (record will throw an IllegalStateException if
+     * invoked).
+     */
+    void close();
+
+    /**
+     * Annotate the statistics, using the current time stamp.
+     */
+    void annotate(String line);
 }

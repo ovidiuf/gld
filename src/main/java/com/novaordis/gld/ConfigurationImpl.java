@@ -24,8 +24,9 @@ import com.novaordis.gld.command.Help;
 import com.novaordis.gld.command.Load;
 import com.novaordis.gld.command.Test;
 import com.novaordis.gld.command.Version;
-import com.novaordis.gld.service.EmbeddedCacheService;
-import com.novaordis.gld.service.infinispan.InfinispanService;
+import com.novaordis.gld.service.cache.EmbeddedCacheService;
+import com.novaordis.gld.service.jms.activemq.ActiveMQService;
+import com.novaordis.gld.service.cache.infinispan.InfinispanService;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -75,7 +76,7 @@ public class ConfigurationImpl implements Configuration
 
     private String exceptionFile;
 
-    private CacheService cacheService;
+    private Service service;
 
     private String cacheName;
 
@@ -84,6 +85,10 @@ public class ConfigurationImpl implements Configuration
     private LoadStrategy loadStrategy;
 
     private StorageStrategy storageStrategy;
+
+    private ContentType contentType;
+
+    private String username;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -95,12 +100,12 @@ public class ConfigurationImpl implements Configuration
     // Configuration implementation ------------------------------------------------------------------------------------
 
     /**
-     * @see Configuration#getCacheService() ()
+     * @see Configuration#getService()
      */
     @Override
-    public CacheService getCacheService()
+    public Service getService()
     {
-        return cacheService;
+        return service;
     }
 
     /**
@@ -271,6 +276,18 @@ public class ConfigurationImpl implements Configuration
         this.storageStrategy = storageStrategy;
     }
 
+    @Override
+    public ContentType getContentType()
+    {
+        return contentType;
+    }
+
+    @Override
+    public String getUsername()
+    {
+        return username;
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Override
@@ -290,7 +307,7 @@ public class ConfigurationImpl implements Configuration
                 "useDifferentValues=" + useDifferentValues + ", " +
                 "output=" + output + ", " +
                 "password=" + (password == null ? "N/A" : "***") + ", " +
-                "cache service=" + cacheService;
+                "cache service=" + service;
 
     }
 
@@ -462,6 +479,10 @@ public class ConfigurationImpl implements Configuration
             }
             else if ("--max-operations".equals(crt))
             {
+                if (i == args.length - 1)
+                {
+                    throw new UserErrorException("a positive integer should follow --max-operations");
+                }
                 if (i < args.length - 1)
                 {
                     maxOperations = Long.parseLong(args[++i]);
@@ -548,6 +569,25 @@ public class ConfigurationImpl implements Configuration
                     {
                         throw new UserErrorException("a file name (and not another option) must follow --keystore-file");
                     }
+                }
+            }
+            else if ("--type".equals(crt))
+            {
+                if (i < args.length - 1)
+                {
+                    String stype  = args[++i];
+                    contentType = ContentType.fromString(stype);
+                }
+            }
+            else if ("--username".equals(crt))
+            {
+                if (i == args.length - 1)
+                {
+                    throw new UserErrorException("a user name should follow --username");
+                }
+                if (i < args.length - 1)
+                {
+                    username = args[++i];
                 }
             }
             else if (command != null)
@@ -716,6 +756,11 @@ public class ConfigurationImpl implements Configuration
             proxyString = (String)configurationFileContent.get("proxies");
         }
 
+        if (contentType == null)
+        {
+            contentType = ContentType.KEYVALUE;
+        }
+
         if (command != null && command.isRemote())
         {
             if (proxyString != null)
@@ -723,7 +768,7 @@ public class ConfigurationImpl implements Configuration
                 // we-re proxy-based
 
                 //List<Node> proxies = Node.toNodeList(proxyString);
-                //cacheService = new HARedisService(proxies, getKeyExpirationSecs(), getMaxTotal());
+                //service = new HARedisService(proxies, getKeyExpirationSecs(), getMaxTotal());
 
                 throw new RuntimeException("NOT YET IMPLEMENTED - RETURN TO THIS");
             }
@@ -755,16 +800,28 @@ public class ConfigurationImpl implements Configuration
             }
 
 
-            if (nodes.get(0) instanceof EmbeddedNode)
+            // TODO we handle embedded situation differently for cache and for JMS for historical reasons
+            //      (for cache, we have a top-level EmbeddedCacheService, while for JMS, we have an ActiveMQ
+            //      service that delegates to an EmbeddedJMSConnection factory). We need to unify to one
+            //      consistent solution.
+
+            if (nodes.get(0) instanceof EmbeddedNode && !ContentType.MESSAGE.equals(getContentType()))
             {
                 EmbeddedNode en = (EmbeddedNode)nodes.get(0);
-                cacheService = new EmbeddedCacheService(en.getCapacity());
+                service = new EmbeddedCacheService(en.getCapacity());
             }
             else
             {
-                cacheService =
-                    new InfinispanService(getNodes(), getPassword(), getMaxTotal(),
-                        getMaxWaitMillis(), getKeyExpirationSecs(), getCacheName());
+                if (ContentType.KEYVALUE.equals(getContentType()))
+                {
+                    service =
+                        new InfinispanService(getNodes(), getPassword(), getMaxTotal(),
+                            getMaxWaitMillis(), getKeyExpirationSecs(), getCacheName());
+                }
+                else
+                {
+                    service = new ActiveMQService(this, nodes);
+                }
             }
         }
 

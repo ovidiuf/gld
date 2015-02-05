@@ -53,6 +53,4 @@ public interface LoadStrategy
      * @return the key store used by this load strategy. May return null.
      */
     KeyStore getKeyStore();
-
-
 }

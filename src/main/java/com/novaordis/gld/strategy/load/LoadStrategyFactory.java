@@ -17,6 +17,7 @@
 package com.novaordis.gld.strategy.load;
 
 import com.novaordis.gld.Configuration;
+import com.novaordis.gld.ContentType;
 import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.Util;
@@ -30,7 +31,7 @@ public class LoadStrategyFactory
     // Static ----------------------------------------------------------------------------------------------------------
 
     /**
-     * Processes the argument list provided by the upper layer, removing from the liat all the arguments pertaining
+     * Processes the argument list provided by the upper layer, removing from the list all the arguments pertaining
      * to us, including the --load-strategy argument, and downward recursively, to whatever StorageFactory we're
      * building.
      *
@@ -72,10 +73,14 @@ public class LoadStrategyFactory
             strategyName = Character.toUpperCase(strategyName.charAt(0)) + strategyName.substring(1);
         }
 
+        ContentType contentType = configuration.getContentType();
+
+        String subPackage = ContentType.MESSAGE.equals(contentType) ? "jms" : "cache";
+
         try
         {
             result = Util.getInstance(LoadStrategy.class,
-                "com.novaordis.gld.strategy.load", strategyName, "LoadStrategy");
+                "com.novaordis.gld.strategy.load." + subPackage, strategyName, "LoadStrategy");
         }
         catch(Exception e)
         {

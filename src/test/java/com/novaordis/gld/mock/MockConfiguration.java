@@ -19,6 +19,7 @@ package com.novaordis.gld.mock;
 
 import com.novaordis.gld.Command;
 import com.novaordis.gld.Configuration;
+import com.novaordis.gld.ContentType;
 import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.CacheService;
@@ -48,6 +49,10 @@ public class MockConfiguration implements Configuration
 
     private Command command;
 
+    private ContentType contentType;
+
+    private String username;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockConfiguration()
@@ -57,12 +62,13 @@ public class MockConfiguration implements Configuration
         this.sleep = -1;
         this.useDifferentValues = false;
         this.exceptionFile = null;
+        this.contentType = ContentType.KEYVALUE;
     }
 
     // Configuration implementation ------------------------------------------------------------------------------------
 
     @Override
-    public CacheService getCacheService()
+    public CacheService getService()
     {
         return cacheService;
     }
@@ -187,6 +193,17 @@ public class MockConfiguration implements Configuration
         return keyStoreFile;
     }
 
+    @Override
+    public ContentType getContentType()
+    {
+        return contentType;
+    }
+
+    @Override
+    public String getUsername()
+    {
+        return username;
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 

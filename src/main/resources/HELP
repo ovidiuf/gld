@@ -16,6 +16,11 @@ Usage:
 
 Global Options:
 
+    --type <load-type>. Specifies the type of load to be sent into the service provider. Valid
+      values are key-value (suitable for loading cache providers), jms (suitable for loading JMS
+      providers), http, etc. Default is "key-value". The default load strategy for caches is
+      "WriteThenRead" and for JMS providers is "DefaultJMS".
+
     --nodes <node1:port1,node2:port2,...> - the list of host:port values for the backend cache
       nodes to send requests into. There is no default, the node list must be explicitly specified.
       The traffic will be sharded amongst these nodes.
@@ -23,6 +28,8 @@ Global Options:
       If "embedded" is used, gld will mock a cache internally. You can request the cache to come
       pre-populated with random content by specifying "embedded[keyCount]".
       Only use it for gld testing.
+
+    --username <username>
 
     --password - if the Redis node(s) are password protected, read the password from the first line
        of the current directory's .gld.password file. If the file does not exist, complain. Note that
@@ -167,20 +174,30 @@ Commands:
 
 Load Strategies:
 
-    WriteThenRead
+    Cache
 
-        This strategy can be used to populate the cache with random key-value pairs.
+        WriteThenRead
 
-    ReadThenWriteOnMiss
+            This strategy can be used to populate the cache with random key-value pairs.
 
-        Attempts to read keys specified in a local store, and if it encounters a miss, writes a random
-        value (whose size can be specified) for that key, back into the cluster.
+        ReadThenWriteOnMiss
 
-    Delete
+            Attempts to read keys specified in a local store, and if it encounters a miss, writes
+            a random value (whose size can be specified) for that key, back into the cluster.
 
-        This strategy can be used to read a number of keys from the cache and then distribute them to
-        concurrent threads to be deleted. It is the underlying strategy used by the "delete" command,
-        but it can also be used with the "load" command (and --load-strategy Delete qualifier).
+        Delete
+
+            This strategy can be used to read a number of keys from the cache and then distribute them
+            to concurrent threads to be deleted. It is the underlying strategy used by the "delete"
+            command, but it can also be used with the "load" command (and --load-strategy Delete qualifier).
+
+     JMS
+
+        DefaultJMS
+
+            --queue|--topic <destination-name>
+
+
 
 
 Authors:

@@ -27,5 +27,11 @@
     <orderEntry type="library" name="Maven: org.jboss.marshalling:jboss-marshalling-river:1.4.5.Final-redhat-1" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.marshalling:jboss-marshalling:1.4.5.Final-redhat-1" level="project" />
     <orderEntry type="library" name="Maven: commons-pool:commons-pool:1.6.redhat-6" level="project" />
+    <orderEntry type="library" name="Maven: javax.jms:jms:1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.activemq:activemq-client:5.10.1" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.5" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.fusesource.hawtbuf:hawtbuf:1.10" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:1.0.1" level="project" />
   </component>
 </module>

@@ -298,6 +298,109 @@ public class ConfigurationImplTest extends Assert
         }
     }
 
+    // ContentType -----------------------------------------------------------------------------------------------------
+
+    @Test
+    public void keyValueDefault() throws Exception
+    {
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--nodes",
+                "embedded"
+            });
+
+        assertEquals(ContentType.KEYVALUE, c.getContentType());
+    }
+
+    @Test
+    public void keyValueExplicit() throws Exception
+    {
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--type",
+                "keyvalue",
+                "--nodes",
+                "embedded"
+            });
+
+        assertEquals(ContentType.KEYVALUE, c.getContentType());
+    }
+
+    @Test
+    public void message() throws Exception
+    {
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--type",
+                "message",
+                "--nodes",
+                "embedded",
+                "--queue",
+                "test"
+            });
+
+        assertEquals(ContentType.MESSAGE, c.getContentType());
+    }
+
+    // --max-operations ------------------------------------------------------------------------------------------------
+
+    @Test
+    public void missingMaxOperations() throws Exception
+    {
+        try
+        {
+            new ConfigurationImpl(new String[]
+                {
+                    "load",
+                    "--nodes",
+                    "embedded",
+                    "--max-operations"
+                });
+
+            fail("should fail with UserErrorException, missing --max-operations value");
+
+        }
+        catch(UserErrorException e)
+        {
+            log.info(e.getMessage());
+        }
+    }
+
+    @Test
+    public void maxOperations() throws Exception
+    {
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--nodes",
+                "embedded",
+                "--max-operations",
+                "100"
+            });
+
+        assertEquals(100, c.getMaxOperations());
+    }
+
+    // --username -----------------------------------------------------------------------------------------------------
+
+    @Test
+    public void username() throws Exception
+    {
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--nodes",
+                "embedded",
+                "--username",
+                "something"
+            });
+
+        assertEquals("something", c.getUsername());
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

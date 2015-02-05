@@ -30,6 +30,11 @@ public class EmbeddedNode extends Node
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public EmbeddedNode()
+    {
+        this(EMBEDDED_LABEL);
+    }
+
     public EmbeddedNode(String tok)
     {
         super(EMBEDDED_LABEL, 0);

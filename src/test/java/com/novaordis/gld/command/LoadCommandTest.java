@@ -21,7 +21,7 @@ import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.mock.MockCacheService;
 import com.novaordis.gld.mock.MockConfiguration;
-import com.novaordis.gld.strategy.load.MockLoadStrategy;
+import com.novaordis.gld.strategy.load.cache.MockLoadStrategy;
 import com.novaordis.gld.strategy.storage.MockStorageStrategy;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -62,7 +62,7 @@ public class LoadCommandTest extends CommandTest
 
         LoadStrategy s = load.getLoadStrategy();
 
-        assertEquals(Load.DEFAULT_LOAD_STRATEGY, s);
+        assertEquals(Load.DEFAULT_CACHE_LOAD_STRATEGY, s);
 
         // make sure the load strategy is also installed in the configuration
         LoadStrategy s2 = mc.getLoadStrategy();
@@ -220,7 +220,7 @@ public class LoadCommandTest extends CommandTest
         assertTrue(load.isInitialized());
 
         LoadStrategy ls = load.getLoadStrategy();
-        assertEquals(ls, Load.DEFAULT_LOAD_STRATEGY);
+        assertEquals(ls, Load.DEFAULT_CACHE_LOAD_STRATEGY);
 
         MockStorageStrategy mss = (MockStorageStrategy)mc.getStorageStrategy();
         assertEquals("blah", mss.getMockArgument());

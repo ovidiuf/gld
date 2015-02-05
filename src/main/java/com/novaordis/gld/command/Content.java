@@ -55,7 +55,7 @@ public class Content extends CommandBase
         processArguments();
 
         Configuration c = getConfiguration();
-        cacheService = c.getCacheService();
+        cacheService = (CacheService)c.getService();
 
         if (cacheService == null)
         {

@@ -22,7 +22,7 @@ import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.keystore.SetKeyStore;
 import com.novaordis.gld.mock.MockCacheService;
 import com.novaordis.gld.mock.MockConfiguration;
-import com.novaordis.gld.strategy.load.DeleteLoadStrategy;
+import com.novaordis.gld.strategy.load.cache.DeleteLoadStrategy;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 

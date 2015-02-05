@@ -18,6 +18,7 @@ package com.novaordis.gld.strategy.load;
 
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.mock.MockConfiguration;
+import com.novaordis.gld.strategy.load.cache.MockLoadStrategy;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 

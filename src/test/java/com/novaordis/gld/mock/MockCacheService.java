@@ -17,6 +17,7 @@
 package com.novaordis.gld.mock;
 
 import com.novaordis.gld.CacheService;
+import com.novaordis.gld.Operation;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -52,7 +53,13 @@ public class MockCacheService implements CacheService
         started = true;
     }
 
-    // CacheService implementation -------------------------------------------------------------------------------------
+    // Service implementation ------------------------------------------------------------------------------------------
+
+    @Override
+    public void perform(Operation o) throws Exception
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
 
     @Override
     public void start() throws Exception
@@ -73,6 +80,8 @@ public class MockCacheService implements CacheService
     {
         return started;
     }
+
+    // CacheService implementation -------------------------------------------------------------------------------------
 
     @Override
     public void set(String key, String value) throws Exception

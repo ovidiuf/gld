@@ -22,7 +22,7 @@ import com.novaordis.gld.LoadStrategy;
 
 import java.util.List;
 
-abstract class LoadStrategyBase implements LoadStrategy
+public abstract class LoadStrategyBase implements LoadStrategy
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -89,12 +89,12 @@ abstract class LoadStrategyBase implements LoadStrategy
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    void setKeyStore(KeyStore keyStore)
+    // Protected -------------------------------------------------------------------------------------------------------
+
+    protected void setKeyStore(KeyStore keyStore)
     {
         this.keyStore = keyStore;
     }
-
-    // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -17,7 +17,7 @@
 package com.novaordis.gld.command;
 
 import com.novaordis.gld.ConfigurationImpl;
-import com.novaordis.gld.CollectorBasedStatistics;
+import com.novaordis.gld.statistics.CollectorBasedStatistics;
 import com.novaordis.gld.Util;
 
 import java.util.concurrent.ThreadLocalRandom;

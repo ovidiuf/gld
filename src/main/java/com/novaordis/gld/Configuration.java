@@ -20,7 +20,7 @@ import java.util.List;
 
 public interface Configuration
 {
-    CacheService getCacheService();
+    Service getService();
 
     LoadStrategy getLoadStrategy();
 
@@ -114,5 +114,9 @@ public interface Configuration
      * The name of the file to read keys from.
      */
     String getKeyStoreFile();
+
+    ContentType getContentType();
+
+    String getUsername();
 
 }

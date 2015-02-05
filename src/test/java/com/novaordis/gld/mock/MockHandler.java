@@ -17,7 +17,7 @@
 package com.novaordis.gld.mock;
 
 import com.novaordis.ac.Handler;
-import com.novaordis.gld.SamplingInterval;
+import com.novaordis.gld.statistics.SamplingInterval;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;

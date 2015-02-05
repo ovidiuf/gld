@@ -16,13 +16,16 @@
 
 package com.novaordis.gld;
 
-import com.novaordis.gld.operations.Write;
+import com.novaordis.gld.operations.cache.Write;
+import org.apache.log4j.Logger;
 
 import java.util.concurrent.CyclicBarrier;
 
 public class SingleThreadedRunner implements Runnable
 {
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(SingleThreadedRunner.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -32,9 +35,9 @@ public class SingleThreadedRunner implements Runnable
 
     final private LoadStrategy loadStrategy;
     final private Statistics statistics;
-    final private CyclicBarrier barrier;
+    final private CyclicBarrier allSingleThreadedRunnersBarrier;
 
-    final private CacheService cacheService;
+    final private Service service;
 
     private long sleep;
 
@@ -67,16 +70,16 @@ public class SingleThreadedRunner implements Runnable
         }
 
         this.name = name;
-        this.barrier = barrier;
+        this.allSingleThreadedRunnersBarrier = barrier;
         this.statistics = statistics;
         this.sleep = config.getSleep();
         this.loadStrategy = loadStrategy;
         this.keyStore = loadStrategy.getKeyStore();
-        this.cacheService = config.getCacheService();
+        this.service = config.getService();
 
-        if (cacheService == null)
+        if (service == null)
         {
-            throw new IllegalArgumentException("a cache service cannot be obtained from configuration " + config);
+            throw new IllegalArgumentException("a service cannot be obtained from configuration " + config);
         }
 
         thread = new Thread(this, name + " Thread");
@@ -92,13 +95,13 @@ public class SingleThreadedRunner implements Runnable
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            log.error(this + " failed", e);
         }
         finally
         {
             try
             {
-                barrier.await();
+                allSingleThreadedRunnersBarrier.await();
             }
             catch(Exception e)
             {
@@ -185,7 +188,7 @@ public class SingleThreadedRunner implements Runnable
 
             try
             {
-                op.perform(cacheService);
+                op.perform(service);
                 t1 = System.nanoTime();
 
                 if (op instanceof Write && keyStore != null && !keyStore.isReadOnly())

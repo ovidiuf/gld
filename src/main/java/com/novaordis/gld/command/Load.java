@@ -16,14 +16,16 @@
 
 package com.novaordis.gld.command;
 
-import com.novaordis.gld.CacheService;
 import com.novaordis.gld.Configuration;
+import com.novaordis.gld.ContentType;
 import com.novaordis.gld.KeyStore;
 import com.novaordis.gld.LoadStrategy;
-import com.novaordis.gld.MultiThreadedRunner;
+import com.novaordis.gld.MultiThreadedRunnerImpl;
+import com.novaordis.gld.Service;
 import com.novaordis.gld.StorageStrategy;
 import com.novaordis.gld.strategy.load.LoadStrategyFactory;
-import com.novaordis.gld.strategy.load.WriteThenReadLoadStrategy;
+import com.novaordis.gld.strategy.load.cache.WriteThenReadLoadStrategy;
+import com.novaordis.gld.strategy.load.jms.DefaultJmsLoadStrategy;
 import com.novaordis.gld.strategy.storage.StorageStrategyFactory;
 
 import java.util.List;
@@ -32,7 +34,8 @@ public class Load extends CommandBase
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    public static final LoadStrategy DEFAULT_LOAD_STRATEGY = new WriteThenReadLoadStrategy();
+    public static final LoadStrategy DEFAULT_CACHE_LOAD_STRATEGY = new WriteThenReadLoadStrategy();
+    public static final LoadStrategy DEFAULT_JMS_LOAD_STRATEGY = new DefaultJmsLoadStrategy();
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -58,16 +61,16 @@ public class Load extends CommandBase
 
         processArguments();
 
-        CacheService cacheService = configuration.getCacheService();
+        Service service = configuration.getService();
 
-        if (cacheService == null)
+        if (service == null)
         {
             throw new IllegalStateException("null cache service");
         }
 
-        if (!cacheService.isStarted())
+        if (!service.isStarted())
         {
-            cacheService.start();
+            service.start();
         }
 
         if (storageStrategy != null)
@@ -94,7 +97,7 @@ public class Load extends CommandBase
     {
         insureInitialized();
 
-        new MultiThreadedRunner(getConfiguration()).runConcurrently();
+        new MultiThreadedRunnerImpl(getConfiguration()).runConcurrently();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -137,7 +140,19 @@ public class Load extends CommandBase
 
         if (loadStrategy == null)
         {
-            loadStrategy = DEFAULT_LOAD_STRATEGY;
+            if (ContentType.KEYVALUE.equals(getConfiguration().getContentType()))
+            {
+                loadStrategy = DEFAULT_CACHE_LOAD_STRATEGY;
+            }
+            else if (ContentType.MESSAGE.equals(getConfiguration().getContentType()))
+            {
+                loadStrategy = DEFAULT_JMS_LOAD_STRATEGY;
+            }
+            else
+            {
+                throw new IllegalStateException("we don't know the content type, we can't initialize the load strategy");
+            }
+
             // give the default strategy a chance to pick up configuration from command line
             loadStrategy.configure(configuration, getArguments(), 0);
         }

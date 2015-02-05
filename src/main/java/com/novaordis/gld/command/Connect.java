@@ -25,7 +25,6 @@ import java.io.InputStreamReader;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-
 public class Connect extends CommandBase
 {
     // Constants -------------------------------------------------------------------------------------------------------
@@ -54,8 +53,9 @@ public class Connect extends CommandBase
     {
         insureInitialized();
 
-        CacheService cs = getConfiguration().getCacheService();
+        CacheService cs = (CacheService)getConfiguration().getService();
         cs.start();
+        //noinspection unchecked
         RemoteCache<String, String> rc = (RemoteCache<String, String>)cs.getCache();
         cliLoop(rc);
     }

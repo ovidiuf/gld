@@ -17,6 +17,7 @@
 package com.novaordis.gld;
 
 import com.novaordis.ac.Handler;
+import com.novaordis.gld.statistics.CollectorBasedStatistics;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;

@@ -54,7 +54,7 @@ public class ContentCommandTest extends CommandTest
         StdoutStorageStrategy ss = (StdoutStorageStrategy)content.getStorageStrategy();
         assertNotNull(ss);
 
-        CacheService cs = mc.getCacheService();
+        CacheService cs = mc.getService();
         assertTrue(cs.isStarted());
     }
 

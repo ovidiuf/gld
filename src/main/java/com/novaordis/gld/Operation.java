@@ -23,5 +23,5 @@ public interface Operation
      * else, especially time consuming tasks that are irrelevant to what we measure, must be performed outside this
      * method.
      */
-    void perform(CacheService cs) throws Exception;
+    void perform(Service s) throws Exception;
 }
