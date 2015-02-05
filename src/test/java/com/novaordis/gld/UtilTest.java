@@ -202,7 +202,7 @@ public class UtilTest extends Assert
 
             Throwable t = e.getCause();
 
-            assertTrue(t instanceof NoClassDefFoundError);
+            assertTrue((t instanceof NoClassDefFoundError) || (t instanceof ClassNotFoundException));
 
             log.info(t.getMessage());
         }
