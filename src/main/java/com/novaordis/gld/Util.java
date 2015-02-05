@@ -19,7 +19,6 @@ package com.novaordis.gld;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
-import java.io.Console;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
@@ -85,10 +84,6 @@ public class Util
             {
                 r += 10;
             }
-//            else if ((r >=48 && r <=57) || (r >=65 && r <=90) || (r >=97 && r <=122))
-//            {
-//                // nothing, we're good
-//            }
 
             randomSection += ((char)r);
         }
