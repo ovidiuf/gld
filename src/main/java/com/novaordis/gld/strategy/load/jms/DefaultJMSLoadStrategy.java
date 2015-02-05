@@ -38,6 +38,8 @@ public class DefaultJmsLoadStrategy extends LoadStrategyBase
     private Destination destination;
     private boolean send = true;
 
+    private Long receiveTimeoutMs;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
@@ -88,7 +90,14 @@ public class DefaultJmsLoadStrategy extends LoadStrategyBase
         }
         else
         {
-            return new Receive(destination);
+            Receive receive = new Receive(destination);
+
+            if (receiveTimeoutMs != null)
+            {
+                receive.setTimeoutMs(receiveTimeoutMs);
+            }
+
+            return receive;
         }
     }
 
@@ -103,6 +112,14 @@ public class DefaultJmsLoadStrategy extends LoadStrategyBase
     public Destination getDestination()
     {
         return destination;
+    }
+
+    /**
+     * @return null if no timeout was specified
+     */
+    public Long getReceiveTimeoutMs()
+    {
+        return receiveTimeoutMs;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -147,6 +164,17 @@ public class DefaultJmsLoadStrategy extends LoadStrategyBase
                 arguments.remove(i);
                 i --;
                 send = false;
+            }
+            else if ("--receive-timeout".equals(crt))
+            {
+                if (i == arguments.size() - 1)
+                {
+                    throw new UserErrorException("a positive integer must follow the '--receive-timeout' option");
+                }
+
+                arguments.remove(i);
+                receiveTimeoutMs = Long.parseLong(arguments.remove(i));
+                i --;
             }
         }
 

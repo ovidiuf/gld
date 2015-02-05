@@ -30,6 +30,8 @@ public class Receive extends JmsOperation
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private Long timeoutMs;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public Receive(Destination destination)
@@ -44,10 +46,33 @@ public class Receive extends JmsOperation
     {
         javax.jms.Destination jmsDestination = getJmsDestination(session);
         MessageConsumer c = session.createConsumer(jmsDestination);
-        Message m = c.receive();
+
+        Message m;
+
+        if (timeoutMs == null)
+        {
+            m = c.receive();
+        }
+        else
+        {
+            m = c.receive(timeoutMs);
+        }
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    /**
+     * @return null if there is no receive timeout
+     */
+    public Long getTimeoutMs()
+    {
+        return timeoutMs;
+    }
+
+    public void setTimeoutMs(Long timeoutMs)
+    {
+        this.timeoutMs = timeoutMs;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

@@ -19,15 +19,19 @@ package com.novaordis.gld.strategy.load.jms;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.mock.MockConfiguration;
+import com.novaordis.gld.operations.jms.Receive;
+import com.novaordis.gld.operations.jms.Send;
 import com.novaordis.gld.strategy.load.LoadStrategyTest;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 public class DefaultJmsLoadStrategyTest extends LoadStrategyTest
@@ -60,19 +64,54 @@ public class DefaultJmsLoadStrategyTest extends LoadStrategyTest
     }
 
     @Test
-    public void next() throws Exception
+    public void send() throws Exception
     {
         DefaultJmsLoadStrategy s = getLoadStrategyToTest();
-        List<String> args = new ArrayList<>();
-        args.add("--queue");
-        args.add("test");
-        s.configure(new MockConfiguration(), args, 0);
+
+        s.configure(new MockConfiguration(), new ArrayList<>(Arrays.asList("--queue", "test")), 0);
 
         Queue queue = (Queue)s.getDestination();
 
         assertEquals("test", queue.getName());
 
-        Operation o = s.next(null, null);
+        Send send = (Send)s.next(null, null);
+
+        assertEquals(queue, send.getDestination());
+    }
+
+    @Test
+    public void receiveNoTimeout() throws Exception
+    {
+        DefaultJmsLoadStrategy s = getLoadStrategyToTest();
+
+        s.configure(new MockConfiguration(), new ArrayList<>(Arrays.asList("--queue", "test", "--tmp-receive")), 0);
+
+        Queue queue = (Queue)s.getDestination();
+
+        assertEquals("test", queue.getName());
+
+        Receive receive = (Receive)s.next(null, null);
+
+        assertEquals(queue, receive.getDestination());
+        assertNull(receive.getTimeoutMs());
+    }
+
+    @Test
+    public void receiveWithTimeout() throws Exception
+    {
+        DefaultJmsLoadStrategy s = getLoadStrategyToTest();
+
+        s.configure(new MockConfiguration(),
+            new ArrayList<>(Arrays.asList("--queue", "test", "--tmp-receive", "--receive-timeout", "1000")), 0);
+
+        Queue queue = (Queue)s.getDestination();
+
+        assertEquals("test", queue.getName());
+
+        Receive receive = (Receive)s.next(null, null);
+
+        assertEquals(queue, receive.getDestination());
+        assertEquals(new Long(1000L), receive.getTimeoutMs());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

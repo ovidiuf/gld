@@ -2,95 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="be8bb276-eede-41f5-a90e-5568f9f9da7a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/jms/activemq/ActiveMQService.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/service/jms/activemq/ActiveMQServiceTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/ContentType.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/ContentTypeTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/jms/DefaultJmsLoadStrategyTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/jms/Destination.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/jms/DestinationBase.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/jms/embedded/EmbeddedConnection.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/jms/embedded/EmbeddedConnectionFactory.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/jms/embedded/EmbeddedProducer.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/jms/embedded/EmbeddedSession.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/jms/embedded/EmbeddedTextMessage.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/statistics/Headers.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/JmsOperation.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockMultiThreadRunner.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/MultiThreadedRunnerImplTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/MultiThreadedRunnerTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/jms/Queue.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/Receive.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/Send.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/Service.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/ServiceTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/jms/Topic.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/CollectorBasedStatistics.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/statistics/CollectorBasedStatistics.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/MultiThreadedRunner.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/MultiThreadedRunnerImpl.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/SampleHandler.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/statistics/SampleHandler.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/SamplingInterval.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/statistics/SamplingInterval.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/Delete.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/cache/Delete.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/Read.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/cache/Read.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/Write.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/cache/Write.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/EmbeddedCacheService.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/cache/EmbeddedCacheService.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/infinispan/InfinispanService.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/cache/infinispan/InfinispanService.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/redis/HARedisService.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/cache/redis/HARedisService.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/redis/ShardedJedisRedisService.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/cache/redis/ShardedJedisRedisService.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/redis/SimpleJedisProxyRedisService.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/cache/redis/SimpleJedisProxyRedisService.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/DeleteLoadStrategy.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/cache/DeleteLoadStrategy.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/ReadThenWriteOnMissLoadStrategy.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/cache/ReadThenWriteOnMissLoadStrategy.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/ReadWriteRatio.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/cache/ReadWriteRatio.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/WriteThenReadLoadStrategy.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/cache/WriteThenReadLoadStrategy.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/util/Console.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/util/CommandLineConsole.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/CollectorBasedStatisticsTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/statistics/CollectorBasedStatisticsTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/SampleHandlerTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/statistics/SampleHandlerTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/SamplingIntervalTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/statistics/SamplingIntervalTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/operations/DeleteOperationTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/operations/cache/DeleteOperationTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/operations/ReadTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/operations/cache/ReadTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/DeleteLoadStrategyTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/cache/DeleteLoadStrategyTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/FailureToInstantiateLoadStrategy.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/cache/FailureToInstantiateLoadStrategy.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/MockLoadStrategy.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/cache/MockLoadStrategy.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/MockOperation.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/cache/MockOperation.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/NotALoadStrategy.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/cache/NotALoadStrategy.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/ReadThenWriteOnMissLoadStrategyTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/cache/ReadThenWriteOnMissLoadStrategyTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/ReadWriteRatioTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/cache/ReadWriteRatioTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/WriteThenReadLoadStrategyTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/cache/WriteThenReadLoadStrategyTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/util/ConsoleTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/util/CommandLineConsoleTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../doc/Architecture.odg" afterPath="$PROJECT_DIR$/../doc/Architecture.odg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../doc/Generic Load Driver User Manual.docx" afterPath="$PROJECT_DIR$/../doc/Generic Load Driver User Manual.docx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/CacheService.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/CacheService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/Configuration.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/Configuration.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/ConfigurationImpl.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/ConfigurationImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/ConfigurationImplTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/ConfigurationImplTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Connect.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Connect.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Content.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Content.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/command/ContentCommandTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/command/ContentCommandTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Delete.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Delete.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/command/DeleteCommandTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/command/DeleteCommandTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/EmbeddedNode.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/EmbeddedNode.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Generic Load Driver.ipr" afterPath="$PROJECT_DIR$/Generic Load Driver.ipr" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/jms/DefaultJMSLoadStrategy.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/jms/DefaultJmsLoadStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/jms/DefaultJMSLoadStrategyTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/jms/DefaultJmsLoadStrategyTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Generic Load Driver.iws" afterPath="$PROJECT_DIR$/Generic Load Driver.iws" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/resources/HELP" afterPath="$PROJECT_DIR$/../src/main/resources/HELP" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Load.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Load.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/command/LoadCommandTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/command/LoadCommandTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/LoadStrategy.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/LoadStrategy.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/LoadStrategyBase.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/LoadStrategyBase.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/LoadStrategyFactory.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/LoadStrategyFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/LoadStrategyFactoryTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/LoadStrategyFactoryTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockCacheService.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockCacheService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockConfiguration.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockConfiguration.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockHandler.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockStatistics.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockStatistics.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/MultiThreadedRunner.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/MultiThreadedRunner.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/Operation.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/Operation.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/SingleThreadedRunner.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/SingleThreadedRunner.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/SingleThreadedRunnerTest.java" afterPath="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/SingleThreadedRunnerTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/Statistics.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/Statistics.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Test.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/command/Test.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/ThrowableHandler.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/ThrowableHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../gld.iml" afterPath="$PROJECT_DIR$/../gld.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/resources/log4j.xml" afterPath="$PROJECT_DIR$/../src/main/resources/log4j.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../pom.xml" afterPath="$PROJECT_DIR$/../pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/Receive.java" afterPath="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/Receive.java" />
     </list>
     <ignored path="Cache Load Driver.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -125,14 +41,12 @@
       <file leaf-file-name="DefaultJmsLoadStrategy.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/jms/DefaultJmsLoadStrategy.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1025" max-vertical-offset="2296">
-              <caret line="133" column="43" selection-start-line="133" selection-start-column="43" selection-end-line="133" selection-end-column="43" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="861" max-vertical-offset="2604">
+              <caret line="99" column="0" selection-start-line="99" selection-start-column="0" selection-end-line="99" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#2988#2989#0" expanded="true" />
-                <element signature="e#3015#3016#0" expanded="true" />
-                <element signature="e#3184#3185#0" expanded="true" />
-                <element signature="e#3218#3219#0" expanded="true" />
+                <element signature="e#3530#3531#0" expanded="true" />
+                <element signature="e#3569#3570#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -141,8 +55,8 @@
       <file leaf-file-name="ActiveMQService.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/jms/activemq/ActiveMQService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1411" max-vertical-offset="2534">
-              <caret line="143" column="0" selection-start-line="143" selection-start-column="0" selection-end-line="143" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1463" max-vertical-offset="2534">
+              <caret line="142" column="0" selection-start-line="142" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -150,25 +64,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="JmsOperation.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/JmsOperation.java">
+      <file leaf-file-name="Long.java" pinned="false" current-in-tab="false">
+        <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.7.0_60.jdk/Contents/Home/src.zip!/java/lang/Long.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="31" max-vertical-offset="1092">
-              <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1541#1542#0" expanded="true" />
-                <element signature="e#1587#1588#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.0" vertical-offset="6041" max-vertical-offset="16072">
+              <caret line="481" column="23" selection-start-line="481" selection-start-column="23" selection-end-line="481" selection-end-column="23" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SingleThreadedRunner.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/SingleThreadedRunner.java">
+      <file leaf-file-name="Send.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/Send.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1583" max-vertical-offset="2954">
-              <caret line="208" column="56" selection-start-line="208" selection-start-column="56" selection-end-line="208" selection-end-column="56" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="700">
+              <caret line="32" column="20" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="20" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -179,61 +89,15 @@
       <file leaf-file-name="Receive.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/Receive.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.495283" vertical-offset="0" max-vertical-offset="848">
-              <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.7886179" vertical-offset="7" max-vertical-offset="1036">
+              <caret line="66" column="30" selection-start-line="66" selection-start-column="30" selection-end-line="66" selection-end-column="30" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#2182#2183#0" expanded="true" />
+                <element signature="e#2214#2215#0" expanded="true" />
+                <element signature="e#2266#2267#0" expanded="true" />
+                <element signature="e#2308#2309#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Send.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/Send.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="742">
-              <caret line="48" column="0" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1364#1365#0" expanded="true" />
-                <element signature="e#1398#1399#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Queue.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/jms/Queue.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="420" max-vertical-offset="504">
-              <caret line="44" column="0" selection-start-line="18" selection-start-column="19" selection-end-line="44" selection-end-column="0" />
-              <folding>
-                <element signature="e#1219#1220#0" expanded="true" />
-                <element signature="e#1246#1247#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DestinationBase.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/jms/DestinationBase.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="336" max-vertical-offset="574">
-              <caret line="41" column="5" selection-start-line="41" selection-start-column="5" selection-end-line="41" selection-end-column="5" />
-              <folding>
-                <element signature="e#1257#1258#0" expanded="true" />
-                <element signature="e#1289#1290#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Destination.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/jms/Destination.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="84" max-vertical-offset="196">
-              <caret line="20" column="21" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -241,12 +105,9 @@
       <file leaf-file-name="DefaultJmsLoadStrategyTest.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/jms/DefaultJmsLoadStrategyTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="616" max-vertical-offset="1008">
-              <caret line="70" column="26" selection-start-line="70" selection-start-column="26" selection-end-line="70" selection-end-column="26" />
-              <folding>
-                <element signature="e#3020#3021#0" expanded="true" />
-                <element signature="e#3071#3072#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.0" vertical-offset="399" max-vertical-offset="1456">
+              <caret line="79" column="5" selection-start-line="79" selection-start-column="5" selection-end-line="79" selection-end-column="5" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -259,7 +120,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/LoadStrategyFactory.java" />
         <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/LoadStrategy.java" />
         <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/LoadStrategyTest.java" />
         <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/LoadStrategyBase.java" />
@@ -297,7 +157,6 @@
         <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/service/jms/activemq/ActiveMQServiceTest.java" />
         <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/ServiceTest.java" />
         <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockConfiguration.java" />
-        <option value="$PROJECT_DIR$/../src/main/resources/HELP" />
         <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/ConfigurationImplTest.java" />
         <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/jms/DefaultJMSLoadStrategyTest.java" />
         <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/jms/Destination.java" />
@@ -307,9 +166,11 @@
         <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/JMSOperation.java" />
         <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/JmsOperation.java" />
         <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/Send.java" />
-        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/Receive.java" />
         <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/jms/DefaultJMSLoadStrategy.java" />
+        <option value="$PROJECT_DIR$/../src/main/resources/HELP" />
         <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/jms/DefaultJmsLoadStrategy.java" />
+        <option value="$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/jms/DefaultJmsLoadStrategyTest.java" />
+        <option value="$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/Receive.java" />
       </list>
     </option>
   </component>
@@ -941,7 +802,7 @@
       <recent name="com.novaordis.gld.service.cache" />
     </key>
   </component>
-  <component name="RunManager" selected="Remote.gld Command Line">
+  <component name="RunManager" selected="Remote.mvn">
     <configuration default="true" type="GrailsRunConfigurationType" factoryName="Grails">
       <module name="" />
       <setting name="vmparams" value="" />
@@ -1303,16 +1164,16 @@
       <workItem from="1423071229307" duration="116000" />
       <workItem from="1423071500986" duration="887000" />
       <workItem from="1423072931149" duration="43690000" />
-      <workItem from="1423120380214" duration="840000" />
+      <workItem from="1423120380214" duration="2213000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="289883000" />
+    <option name="totallyTimeSpent" value="291256000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="974" y="23" width="1583" height="1357" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1322,7 +1183,7 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24972796" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29834256" sideWeight="0.49945593" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29834256" sideWeight="0.49945593" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3383758" sideWeight="0.5005441" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -1333,7 +1194,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32706034" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30694354" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2861778" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29201818" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -1403,7 +1264,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/Receive.java</url>
-          <line>44</line>
+          <line>46</line>
           <properties />
           <option name="timeStamp" value="426" />
         </line-breakpoint>
@@ -1411,7 +1272,7 @@
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="427" />
+      <option name="time" value="431" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1420,13 +1281,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/gld/mock/MockHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="910">
-          <caret line="56" column="0" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/com/novaordis/ac/async-collector/1.4.2/async-collector-1.4.2-sources.jar!/com/novaordis/ac/CollectorImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1260" max-vertical-offset="2548">
@@ -1464,7 +1318,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="518" max-vertical-offset="6328">
           <caret line="33" column="25" selection-start-line="33" selection-start-column="25" selection-end-line="33" selection-end-column="25" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1539,6 +1393,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="336">
           <caret line="18" column="1" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1546,6 +1401,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="152" max-vertical-offset="2492">
           <caret line="70" column="13" selection-start-line="70" selection-start-column="13" selection-end-line="70" selection-end-column="13" />
+          <folding>
+            <element signature="e#1317#1512#0" expanded="false" />
+            <element signature="e#1511#1512#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1607,8 +1466,8 @@
         <state vertical-scroll-proportion="0.15391879" vertical-offset="1601" max-vertical-offset="2660">
           <caret line="126" column="0" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
           <folding>
-            <element signature="e#0#5626#0" expanded="true" />
-            <element signature="imports" expanded="true" />
+            <element signature="e#0#5626#0" expanded="false" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1650,8 +1509,8 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="985" max-vertical-offset="2044">
           <caret line="159" column="13" selection-start-line="159" selection-start-column="13" selection-end-line="159" selection-end-column="13" />
           <folding>
-            <element signature="e#4576#4577#0" expanded="true" />
-            <element signature="e#4607#4608#0" expanded="true" />
+            <element signature="e#4576#4577#0" expanded="false" />
+            <element signature="e#4607#4608#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1712,17 +1571,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/resources/HELP">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="55.3" vertical-offset="1953" max-vertical-offset="2982">
-          <caret line="21" column="59" selection-start-line="21" selection-start-column="59" selection-end-line="21" selection-end-column="59" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/cache/ReadThenWriteOnMissLoadStrategy.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1806">
@@ -1747,22 +1595,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/jms/DefaultJmsLoadStrategyTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1008">
-          <caret line="70" column="26" selection-start-line="70" selection-start-column="26" selection-end-line="70" selection-end-column="26" />
-          <folding>
-            <element signature="e#3020#3021#0" expanded="true" />
-            <element signature="e#3071#3072#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/jms/Destination.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="196">
           <caret line="20" column="21" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
-          <folding />
+          <folding>
+            <element signature="e#0#704#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1771,8 +1610,9 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="574">
           <caret line="41" column="5" selection-start-line="41" selection-start-column="5" selection-end-line="41" selection-end-column="5" />
           <folding>
-            <element signature="e#1257#1258#0" expanded="true" />
-            <element signature="e#1289#1290#0" expanded="true" />
+            <element signature="e#0#1980#0" expanded="false" />
+            <element signature="e#1460#1461#0" expanded="false" />
+            <element signature="e#1487#1488#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1793,62 +1633,25 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="504">
           <caret line="44" column="0" selection-start-line="18" selection-start-column="19" selection-end-line="44" selection-end-column="0" />
           <folding>
-            <element signature="e#1219#1220#0" expanded="true" />
-            <element signature="e#1246#1247#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/Send.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="742">
-          <caret line="48" column="0" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1364#1365#0" expanded="true" />
-            <element signature="e#1398#1399#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/jms/activemq/ActiveMQService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1411" max-vertical-offset="2534">
-          <caret line="143" column="0" selection-start-line="143" selection-start-column="0" selection-end-line="143" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#0#1861#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/SingleThreadedRunner.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1583" max-vertical-offset="2954">
-          <caret line="208" column="56" selection-start-line="208" selection-start-column="56" selection-end-line="208" selection-end-column="56" />
+        <state vertical-scroll-proportion="0.33254716" vertical-offset="2056" max-vertical-offset="2954">
+          <caret line="190" column="0" selection-start-line="190" selection-start-column="0" selection-end-line="190" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/jms/DefaultJmsLoadStrategy.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1025" max-vertical-offset="2296">
-          <caret line="133" column="43" selection-start-line="133" selection-start-column="43" selection-end-line="133" selection-end-column="43" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2988#2989#0" expanded="true" />
-            <element signature="e#3015#3016#0" expanded="true" />
-            <element signature="e#3184#3185#0" expanded="true" />
-            <element signature="e#3218#3219#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/JmsOperation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="31" max-vertical-offset="1092">
-          <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.3495935" vertical-offset="231" max-vertical-offset="1092">
+          <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1541#1542#0" expanded="true" />
@@ -1857,12 +1660,75 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/Receive.java">
+    <entry file="file://$PROJECT_DIR$/../src/main/resources/HELP">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.495283" vertical-offset="0" max-vertical-offset="848">
-          <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.8905473" vertical-offset="2098" max-vertical-offset="3052">
+          <caret line="201" column="43" selection-start-line="201" selection-start-column="43" selection-end-line="201" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.7.0_60.jdk/Contents/Home/src.zip!/java/lang/Long.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="6041" max-vertical-offset="16072">
+          <caret line="481" column="23" selection-start-line="481" selection-start-column="23" selection-end-line="481" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/Send.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="700">
+          <caret line="32" column="20" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="20" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/strategy/load/jms/DefaultJmsLoadStrategy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="861" max-vertical-offset="2604">
+          <caret line="99" column="0" selection-start-line="99" selection-start-column="0" selection-end-line="99" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3530#3531#0" expanded="true" />
+            <element signature="e#3569#3570#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/test/java/com/novaordis/gld/strategy/load/jms/DefaultJmsLoadStrategyTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="399" max-vertical-offset="1456">
+          <caret line="79" column="5" selection-start-line="79" selection-start-column="5" selection-end-line="79" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/service/jms/activemq/ActiveMQService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1463" max-vertical-offset="2534">
+          <caret line="142" column="0" selection-start-line="142" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../src/main/java/com/novaordis/gld/operations/jms/Receive.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7886179" vertical-offset="7" max-vertical-offset="1036">
+          <caret line="66" column="30" selection-start-line="66" selection-start-column="30" selection-end-line="66" selection-end-column="30" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2182#2183#0" expanded="true" />
+            <element signature="e#2214#2215#0" expanded="true" />
+            <element signature="e#2266#2267#0" expanded="true" />
+            <element signature="e#2308#2309#0" expanded="true" />
           </folding>
         </state>
       </provider>

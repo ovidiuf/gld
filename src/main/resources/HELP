@@ -19,7 +19,7 @@ Global Options:
     --type <load-type>. Specifies the type of load to be sent into the service provider. Valid
       values are key-value (suitable for loading cache providers), jms (suitable for loading JMS
       providers), http, etc. Default is "key-value". The default load strategy for caches is
-      "WriteThenRead" and for JMS providers is "DefaultJMS".
+      "WriteThenRead" and for JMS providers is "DefaultJms.
 
     --nodes <node1:port1,node2:port2,...> - the list of host:port values for the backend cache
       nodes to send requests into. There is no default, the node list must be explicitly specified.
@@ -193,9 +193,14 @@ Load Strategies:
 
      JMS
 
-        DefaultJMS
+        DefaultJms
 
             --queue|--topic <destination-name>
+
+            --tmp-receive - will configure gld to receive. Default is "send"
+
+            --receive-timeout <timeout-ms>
+
 
 
 
