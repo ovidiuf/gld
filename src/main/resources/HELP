@@ -1,5 +1,5 @@
 
-Cache Load Driver ${version}
+Generic Load Driver ${version}
 
 A program that sends operations into cache nodes and collects client-side statistics. The program
 can also be used for HA testing, content queries and in general for any client-side cache interaction.
@@ -200,6 +200,10 @@ Load Strategies:
             --tmp-receive - will configure gld to receive. Default is "send"
 
             --receive-timeout <timeout-ms>
+
+            --session-per-operation - the default is to maintain a session per thread and reuse it to send
+              multiple messages. When specifying --session-per-messages, a new session will be created for
+              each message to be sent or received.
 
 
 

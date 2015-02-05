@@ -18,6 +18,7 @@ package com.novaordis.gld.operations.jms;
 
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.Service;
+import com.novaordis.gld.strategy.load.jms.DefaultJmsLoadStrategy;
 import com.novaordis.gld.strategy.load.jms.Destination;
 import com.novaordis.gld.strategy.load.jms.Queue;
 import com.novaordis.gld.strategy.load.jms.Topic;
@@ -33,13 +34,13 @@ public abstract class JmsOperation implements Operation
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Destination destination;
+    private DefaultJmsLoadStrategy loadStrategy;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    protected JmsOperation(Destination destination)
+    protected JmsOperation(DefaultJmsLoadStrategy loadStrategy)
     {
-        this.destination = destination;
+        this.loadStrategy = loadStrategy;
     }
 
     // Operation implementation ----------------------------------------------------------------------------------------
@@ -53,13 +54,19 @@ public abstract class JmsOperation implements Operation
         s.perform(this);
     }
 
+    @Override
+    public DefaultJmsLoadStrategy getLoadStrategy()
+    {
+        return loadStrategy;
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     public abstract void perform(Session jmsSession) throws Exception;
 
     public Destination getDestination()
     {
-        return destination;
+        return loadStrategy.getDestination();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -68,6 +75,8 @@ public abstract class JmsOperation implements Operation
 
     protected javax.jms.Destination getJmsDestination(Session session) throws Exception
     {
+        Destination destination = getDestination();
+
         if (destination instanceof Queue)
         {
             return session.createQueue(destination.getName());

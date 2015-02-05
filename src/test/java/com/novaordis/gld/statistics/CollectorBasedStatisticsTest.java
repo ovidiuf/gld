@@ -168,7 +168,7 @@ public class CollectorBasedStatisticsTest extends Assert
 
         assertTrue(mh.getSamplingIntervals().isEmpty());
 
-        Write w = new Write(0, 0, false);
+        Write w = new Write("TEST-KEY", "TEST-VALUE");
 
         s.record(2L, 20L, 22L, w, null);
 
@@ -180,7 +180,7 @@ public class CollectorBasedStatisticsTest extends Assert
 
         assertTrue(mh.getSamplingIntervals().isEmpty());
 
-        Write w2 = new Write(0, 0, false);
+        Write w2 = new Write("TEST-KEY2", "TEST-VALUE2");
 
         // this goes over the sampling interval boundaries so it triggers sending a sample to the collector
         s.record(6L, 10L, 20L, w2, null);
@@ -207,26 +207,26 @@ public class CollectorBasedStatisticsTest extends Assert
 
         CollectorBasedStatistics s = new CollectorBasedStatistics(mc, 4L);
 
-        Write w = new Write(0, 0, false);
+        Write w = new Write("TEST-KEY", "TEST-VALUE");
 
         s.record(0L, 10L, 11L, w, null);
 
         assertTrue(mh.getSamplingIntervals().isEmpty());
 
-        Write w2 = new Write(0, 0, false);
+        Write w2 = new Write("TEST-KEY2", "TEST-VALUE2");
 
         s.record(2L, 20L, 22L, w2, null);
 
         assertTrue(mh.getSamplingIntervals().isEmpty());
 
-        Write w3 = new Write(0, 0, false);
+        Write w3 = new Write("TEST-KEY3", "TEST-VALUE3");
 
         // this is the edge of the interval
         s.record(4L, 30L, 33L, w3, null);
 
         assertTrue(mh.getSamplingIntervals().isEmpty());
 
-        Write w4 = new Write(0, 0, false);
+        Write w4 = new Write("TEST-KEY4", "TEST-VALUE4");
 
         // this goes over the sampling interval boundaries so it triggers sending a sample to the collector
         s.record(6L, 40L, 44L, w4, null);
@@ -247,7 +247,7 @@ public class CollectorBasedStatisticsTest extends Assert
 
         samplingIntervals.clear();
 
-        Write w5 = new Write(0, 0, false);
+        Write w5 = new Write("TEST-KEY5", "TEST-VALUE5");
 
         // make sure the 6 ms sample is counted
         s.record(9L, 50L, 55L, w5, null);
@@ -504,18 +504,18 @@ public class CollectorBasedStatisticsTest extends Assert
         @SuppressWarnings("ThrowableInstanceNeverThrown")
         Throwable t = new redis.clients.jedis.exceptions.JedisConnectionException("Unknown reply: something");
 
-        Write w = new Write(0, 0, false);
+        Write w = new Write("TEST-KEY", "TEST-VALUE");
 
         s.record(0L, 1L, 2L, w, t);
 
         @SuppressWarnings("ThrowableInstanceNeverThrown")
         Throwable t2 = new RuntimeException("SYNTHETIC");
 
-        Write w2 = new Write(0, 0, false);
+        Write w2 = new Write("TEST-KEY2", "TEST-VALUE2");
 
         s.record(5L, 3L, 4L, w2, t2);
 
-        Write w3 = new Write(0, 0, false);
+        Write w3 = new Write("TEST-KEY3", "TEST-VALUE3");
 
         s.record(11L, -1L, -1L, w3, null);
 
@@ -559,7 +559,6 @@ public class CollectorBasedStatisticsTest extends Assert
                 assertEquals(0, tfc[i]);
             }
         }
-
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

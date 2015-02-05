@@ -17,6 +17,7 @@
 package com.novaordis.gld.statistics;
 
 import com.novaordis.ac.Collector;
+import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.RedisFailure;
 import com.novaordis.gld.Service;
@@ -428,6 +429,12 @@ public class CollectorBasedStatistics implements Statistics
         public void perform(Service s) throws Exception
         {
             // noop
+        }
+
+        @Override
+        public LoadStrategy getLoadStrategy()
+        {
+            return null;
         }
     }
 

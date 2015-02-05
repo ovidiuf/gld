@@ -16,7 +16,6 @@
 
 package com.novaordis.gld.strategy.load.jms;
 
-import com.novaordis.gld.Operation;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.operations.jms.Receive;
@@ -31,7 +30,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class DefaultJmsLoadStrategyTest extends LoadStrategyTest
@@ -68,7 +69,11 @@ public class DefaultJmsLoadStrategyTest extends LoadStrategyTest
     {
         DefaultJmsLoadStrategy s = getLoadStrategyToTest();
 
-        s.configure(new MockConfiguration(), new ArrayList<>(Arrays.asList("--queue", "test")), 0);
+        List<String> args = new ArrayList<>(Arrays.asList("--queue", "test"));
+
+        s.configure(new MockConfiguration(), args, 0);
+
+        assertTrue(args.isEmpty());
 
         Queue queue = (Queue)s.getDestination();
 
@@ -84,7 +89,11 @@ public class DefaultJmsLoadStrategyTest extends LoadStrategyTest
     {
         DefaultJmsLoadStrategy s = getLoadStrategyToTest();
 
-        s.configure(new MockConfiguration(), new ArrayList<>(Arrays.asList("--queue", "test", "--tmp-receive")), 0);
+        List<String> args = new ArrayList<>(Arrays.asList("--queue", "test", "--tmp-receive"));
+
+        s.configure(new MockConfiguration(), args, 0);
+
+        assertTrue(args.isEmpty());
 
         Queue queue = (Queue)s.getDestination();
 
@@ -101,8 +110,12 @@ public class DefaultJmsLoadStrategyTest extends LoadStrategyTest
     {
         DefaultJmsLoadStrategy s = getLoadStrategyToTest();
 
-        s.configure(new MockConfiguration(),
-            new ArrayList<>(Arrays.asList("--queue", "test", "--tmp-receive", "--receive-timeout", "1000")), 0);
+        List<String> args = new ArrayList<>(Arrays.asList(
+            "--queue", "test", "--tmp-receive", "--receive-timeout", "1000"));
+
+        s.configure(new MockConfiguration(), args, 0);
+
+        assertTrue(args.isEmpty());
 
         Queue queue = (Queue)s.getDestination();
 
@@ -112,6 +125,34 @@ public class DefaultJmsLoadStrategyTest extends LoadStrategyTest
 
         assertEquals(queue, receive.getDestination());
         assertEquals(new Long(1000L), receive.getTimeoutMs());
+    }
+
+    @Test
+    public void sessionPerOperationDefault() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList("--queue", "test"));
+
+        DefaultJmsLoadStrategy s = getLoadStrategyToTest();
+
+        s.configure(new MockConfiguration(), args, 0);
+
+        assertTrue(args.isEmpty());
+
+        assertFalse(s.isSessionPerOperation());
+    }
+
+    @Test
+    public void sessionPerOperation() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList("--queue", "test", "--session-per-operation"));
+
+        DefaultJmsLoadStrategy s = getLoadStrategyToTest();
+
+        s.configure(new MockConfiguration(), args, 0);
+
+        assertTrue(args.isEmpty());
+
+        assertTrue(s.isSessionPerOperation());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.operations.cache;
+package com.novaordis.gld.service.jms.embedded;
 
-import com.novaordis.gld.LoadStrategy;
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.CacheService;
-import com.novaordis.gld.Service;
+import javax.jms.JMSException;
+import javax.jms.Topic;
 
-public class Write implements Operation
+public class EmbeddedTopic implements Topic
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -29,62 +27,24 @@ public class Write implements Operation
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String key;
-    private String value;
-
-    private boolean successful;
+    private String name;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Write(String key, String value)
+    public EmbeddedTopic(String name)
     {
-        this.key = key;
-        this.value = value;
+        this.name = name;
     }
 
-    // Operation implementation ----------------------------------------------------------------------------------------
-
-    /**
-     * @see Operation#perform(com.novaordis.gld.Service)
-     */
-    @Override
-    public void perform(Service s) throws Exception
-    {
-        ((CacheService)s).set(key, value);
-        this.successful = true;
-    }
+    // Queue implementation --------------------------------------------------------------------------------------------
 
     @Override
-    public LoadStrategy getLoadStrategy()
+    public String getTopicName() throws JMSException
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        return name;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public boolean isSuccessful()
-    {
-        return successful;
-    }
-
-    public String getValue()
-    {
-        return value;
-    }
-
-    /**
-     * May return null if the instance was not initialized.
-     */
-    public String getKey()
-    {
-        return key;
-    }
-
-    @Override
-    public String toString()
-    {
-        return key + "=" + value;
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

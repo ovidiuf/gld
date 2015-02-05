@@ -16,7 +16,7 @@
 
 package com.novaordis.gld.operations.jms;
 
-import com.novaordis.gld.strategy.load.jms.Destination;
+import com.novaordis.gld.strategy.load.jms.DefaultJmsLoadStrategy;
 
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
@@ -34,9 +34,9 @@ public class Receive extends JmsOperation
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Receive(Destination destination)
+    public Receive(DefaultJmsLoadStrategy loadStrategy)
     {
-        super(destination);
+        super(loadStrategy);
     }
 
     // JMSOperation overrides ------------------------------------------------------------------------------------------

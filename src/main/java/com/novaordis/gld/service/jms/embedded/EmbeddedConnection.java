@@ -25,6 +25,8 @@ import javax.jms.JMSException;
 import javax.jms.ServerSessionPool;
 import javax.jms.Session;
 import javax.jms.Topic;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmbeddedConnection implements Connection
 {
@@ -39,12 +41,15 @@ public class EmbeddedConnection implements Connection
     // a closed connection cannot be reused
     private boolean closed;
 
+    private List<EmbeddedSession> createdSessions;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public EmbeddedConnection()
     {
         this.started = false;
         this.closed = false;
+        this.createdSessions = new ArrayList<>();
     }
 
     // Connection implementation ---------------------------------------------------------------------------------------
@@ -52,7 +57,9 @@ public class EmbeddedConnection implements Connection
     @Override
     public Session createSession(boolean b, int i) throws JMSException
     {
-        return new EmbeddedSession(b, i);
+        EmbeddedSession s = new EmbeddedSession(b, i);
+        createdSessions.add(s);
+        return s;
     }
 
     @Override
@@ -117,6 +124,11 @@ public class EmbeddedConnection implements Connection
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public List<EmbeddedSession> getCreatedSessions()
+    {
+        return createdSessions;
+    }
 
     @Override
     public String toString()

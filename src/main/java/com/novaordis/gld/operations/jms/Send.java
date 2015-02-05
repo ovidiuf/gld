@@ -16,7 +16,7 @@
 
 package com.novaordis.gld.operations.jms;
 
-import com.novaordis.gld.strategy.load.jms.Destination;
+import com.novaordis.gld.strategy.load.jms.DefaultJmsLoadStrategy;
 
 import javax.jms.Message;
 import javax.jms.MessageProducer;
@@ -32,9 +32,9 @@ public class Send extends JmsOperation
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Send(Destination destination)
+    public Send(DefaultJmsLoadStrategy loadStrategy)
     {
-        super(destination);
+        super(loadStrategy);
     }
 
     // JMSOperation overrides ------------------------------------------------------------------------------------------

@@ -26,7 +26,7 @@ public class Queue extends DestinationBase
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    protected Queue(String name)
+    public Queue(String name)
     {
         super(name);
     }

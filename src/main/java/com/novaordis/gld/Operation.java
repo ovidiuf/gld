@@ -24,4 +24,6 @@ public interface Operation
      * method.
      */
     void perform(Service s) throws Exception;
+
+    LoadStrategy getLoadStrategy();
 }

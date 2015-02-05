@@ -26,7 +26,7 @@ public class Topic extends DestinationBase
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    protected Topic(String name)
+    public Topic(String name)
     {
         super(name);
     }

@@ -149,7 +149,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
 
         rtwom.configure(mc, Collections.<String>emptyList(), 0);
 
-        Write w = new Write(-1, -1, false);
+        Write w = new Write("TEST-KEY", "TEST-VALUE");
 
         Operation o = rtwom.next(w, null);
 
@@ -260,7 +260,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
 
         rtwom.configure(mc, Collections.<String>emptyList(), 0);
 
-        Write w = new Write(-1, -1, false);
+        Write w = new Write("TEST-KEY", "TEST-VALUE");
 
         Operation o = rtwom.next(w, null);
 

@@ -46,13 +46,15 @@ public class EmbeddedSession implements Session
 
     private boolean transacted;
     private int acknowledgment;
+    private boolean closed;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public EmbeddedSession(boolean transacted, int acknowledgment)
     {
-        this.transacted = false;
+        this.transacted = transacted;
         this.acknowledgment = acknowledgment;
+        this.closed = false;
     }
 
     // Session implementation ------------------------------------------------------------------------------------------
@@ -114,13 +116,13 @@ public class EmbeddedSession implements Session
     @Override
     public boolean getTransacted() throws JMSException
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        return transacted;
     }
 
     @Override
     public int getAcknowledgeMode() throws JMSException
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        return acknowledgment;
     }
 
     @Override
@@ -138,7 +140,7 @@ public class EmbeddedSession implements Session
     @Override
     public void close() throws JMSException
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        this.closed = true;
     }
 
     @Override
@@ -192,13 +194,13 @@ public class EmbeddedSession implements Session
     @Override
     public Queue createQueue(String s) throws JMSException
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        return new EmbeddedQueue(s);
     }
 
     @Override
     public Topic createTopic(String s) throws JMSException
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        return new EmbeddedTopic(s);
     }
 
     @Override
@@ -244,6 +246,11 @@ public class EmbeddedSession implements Session
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public boolean isClosed()
+    {
+        return closed;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

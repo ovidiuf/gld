@@ -39,8 +39,15 @@ public class DefaultJmsLoadStrategy extends LoadStrategyBase
     private boolean send = true;
 
     private Long receiveTimeoutMs;
+    private boolean sessionPerOperation;
 
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public DefaultJmsLoadStrategy()
+    {
+        this.sessionPerOperation = false; // by default we reuse sessions for the duration of the run (each thread
+                                          // has its own session)
+    }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
 
@@ -86,11 +93,11 @@ public class DefaultJmsLoadStrategy extends LoadStrategyBase
 
         if (send)
         {
-            return new Send(destination);
+            return new Send(this);
         }
         else
         {
-            Receive receive = new Receive(destination);
+            Receive receive = new Receive(this);
 
             if (receiveTimeoutMs != null)
             {
@@ -114,12 +121,27 @@ public class DefaultJmsLoadStrategy extends LoadStrategyBase
         return destination;
     }
 
+    public void setDestination(Destination d)
+    {
+        this.destination = d;
+    }
+
     /**
      * @return null if no timeout was specified
      */
     public Long getReceiveTimeoutMs()
     {
         return receiveTimeoutMs;
+    }
+
+    public boolean isSessionPerOperation()
+    {
+        return sessionPerOperation;
+    }
+
+    public void setSessionPerOperation(boolean b)
+    {
+        sessionPerOperation = b;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -145,8 +167,7 @@ public class DefaultJmsLoadStrategy extends LoadStrategyBase
                 }
 
                 arguments.remove(i);
-                queue = arguments.remove(i);
-                i --;
+                queue = arguments.remove(i --);
             }
             else if ("--topic".equals(crt))
             {
@@ -156,13 +177,11 @@ public class DefaultJmsLoadStrategy extends LoadStrategyBase
                 }
 
                 arguments.remove(i);
-                topic = arguments.remove(i);
-                i --;
+                topic = arguments.remove(i --);
             }
             else if ("--tmp-receive".equals(crt))
             {
-                arguments.remove(i);
-                i --;
+                arguments.remove(i --);
                 send = false;
             }
             else if ("--receive-timeout".equals(crt))
@@ -173,8 +192,12 @@ public class DefaultJmsLoadStrategy extends LoadStrategyBase
                 }
 
                 arguments.remove(i);
-                receiveTimeoutMs = Long.parseLong(arguments.remove(i));
-                i --;
+                receiveTimeoutMs = Long.parseLong(arguments.remove(i --));
+            }
+            else if ("--session-per-operation".equals(crt))
+            {
+                arguments.remove(i --);
+                setSessionPerOperation(true);
             }
         }
 
@@ -190,11 +213,11 @@ public class DefaultJmsLoadStrategy extends LoadStrategyBase
 
         if (queue != null)
         {
-            destination = new Queue(queue);
+            setDestination(new Queue(queue));
         }
         else
         {
-            destination = new Topic(topic);
+            setDestination(new Topic(topic));
         }
     }
 

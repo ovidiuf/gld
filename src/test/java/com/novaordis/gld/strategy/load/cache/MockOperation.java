@@ -16,6 +16,7 @@
 
 package com.novaordis.gld.strategy.load.cache;
 
+import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.Service;
 import org.apache.log4j.Logger;
@@ -38,6 +39,12 @@ public class MockOperation implements Operation
     public void perform(Service cs) throws Exception
     {
         log.info("mock \"performing\" " + this);
+    }
+
+    @Override
+    public LoadStrategy getLoadStrategy()
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

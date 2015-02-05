@@ -23,6 +23,7 @@ import com.novaordis.gld.Operation;
 import com.novaordis.gld.Service;
 import com.novaordis.gld.operations.jms.JmsOperation;
 import com.novaordis.gld.service.jms.embedded.EmbeddedConnectionFactory;
+import com.novaordis.gld.strategy.load.jms.DefaultJmsLoadStrategy;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
@@ -100,8 +101,8 @@ public class ActiveMQService implements Service
         else
         {
             connection = cf.createConnection(username, configuration.getPassword());
-
         }
+
         connection.start();
     }
 
@@ -130,6 +131,11 @@ public class ActiveMQService implements Service
     @Override
     public void perform(Operation o) throws Exception
     {
+        if (!isStarted())
+        {
+            throw new IllegalStateException(this + " not started");
+        }
+
         if (!(o instanceof JmsOperation))
         {
             throw new IllegalArgumentException(o + " is not a JMS operation");
@@ -137,13 +143,33 @@ public class ActiveMQService implements Service
 
         JmsOperation jmsOp = (JmsOperation)o;
 
-        // lookup the corresponding session
-        Session s = getSession();
+        DefaultJmsLoadStrategy jmsLoadStrategy = jmsOp.getLoadStrategy();
 
-        jmsOp.perform(s);
+        boolean sessionPerOperation = jmsLoadStrategy.isSessionPerOperation();
+
+        // lookup the corresponding session
+        Session s = getSession(sessionPerOperation);
+
+        try
+        {
+            jmsOp.perform(s);
+        }
+        finally
+        {
+            // if it's sessionPerOperation, close the session after we've performed the operation
+            if (sessionPerOperation)
+            {
+                s.close();
+            }
+        }
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public Connection getConnection()
+    {
+        return connection;
+    }
 
     @Override
     public String toString()
@@ -168,8 +194,13 @@ public class ActiveMQService implements Service
         return new ActiveMQConnectionFactory(brokerUrl);
     }
 
-    private Session getSession() throws Exception
+    private Session getSession(boolean sessionPerOperation) throws Exception
     {
+        if (sessionPerOperation)
+        {
+            return createNewSession();
+        }
+
         // if this thread has already a Session associated with it, use that
 
         String threadName = Thread.currentThread().getName();
@@ -182,12 +213,17 @@ public class ActiveMQService implements Service
 
             if (session == null)
             {
-                session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+                session = createNewSession();
                 sessions.put(threadName, session);
             }
         }
 
         return session;
+    }
+
+    private Session createNewSession() throws Exception
+    {
+        return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
     }
 
     // Inner classes ---------------------------------------------------------------------------------------------------

@@ -17,6 +17,7 @@
 package com.novaordis.gld.operations.cache;
 
 import com.novaordis.gld.CacheService;
+import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.Service;
 
@@ -57,6 +58,12 @@ public class Delete implements Operation
         {
             this.successful = true;
         }
+    }
+
+    @Override
+    public LoadStrategy getLoadStrategy()
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

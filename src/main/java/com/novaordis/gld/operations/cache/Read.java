@@ -16,6 +16,7 @@
 
 package com.novaordis.gld.operations.cache;
 
+import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.CacheService;
 import com.novaordis.gld.Service;
@@ -49,6 +50,12 @@ public class Read implements Operation
     {
         performed = true;
         value = ((CacheService)s).get(key);
+    }
+
+    @Override
+    public LoadStrategy getLoadStrategy()
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

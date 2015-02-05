@@ -17,6 +17,7 @@
 package com.novaordis.gld;
 
 import com.novaordis.gld.mock.MockConfiguration;
+import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
@@ -75,6 +76,24 @@ public abstract class ServiceTest
         s.stop();
 
         assertFalse(s.isStarted());
+    }
+
+    @Test
+    public void cannotPerformIfNotStarted() throws Exception
+    {
+        Service s = getServiceToTest(new MockConfiguration(), Arrays.asList(getTestNode()));
+
+        assertFalse(s.isStarted());
+
+        try
+        {
+            s.perform(new MockOperation());
+            fail("should fail with IllegalStateException because the service is not started");
+        }
+        catch(IllegalStateException e)
+        {
+            log.info(e.getMessage());
+        }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
