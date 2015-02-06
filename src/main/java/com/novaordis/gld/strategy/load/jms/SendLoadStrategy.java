@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms.embedded;
+package com.novaordis.gld.strategy.load.jms;
 
-import javax.jms.JMSException;
-import javax.jms.Topic;
+import com.novaordis.gld.operations.jms.Send;
 
-public class EmbeddedTopic implements Topic
+public class SendLoadStrategy extends JmsLoadStrategy
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -27,21 +26,14 @@ public class EmbeddedTopic implements Topic
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String name;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedTopic(String name)
-    {
-        this.name = name;
-    }
-
-    // Queue implementation --------------------------------------------------------------------------------------------
+    // JmsLoadStrategy overrides ---------------------------------------------------------------------------------------
 
     @Override
-    public String getTopicName() throws JMSException
+    protected Send createInstance()
     {
-        return name;
+        return new Send(this);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -49,7 +41,9 @@ public class EmbeddedTopic implements Topic
     @Override
     public String toString()
     {
-        return name;
+        long remainingOperations = getRemainingOperations();
+        return "SendLoadStrategy[remaining=" +
+            (remainingOperations == Long.MAX_VALUE ? "unlimited" : remainingOperations ) + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

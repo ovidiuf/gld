@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.load.jms;
+package com.novaordis.gld.service.jms;
 
-public interface Destination
+public enum EndpointPolicy
 {
-    String getName();
-
-    boolean isQueue();
-
-    boolean isTopic();
+    NEW_SESSION_AND_ENDPOINT_PER_OPERATION
 }

@@ -14,47 +14,57 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms.embedded;
+package com.novaordis.gld.operations.jms;
 
-import javax.jms.JMSException;
-import javax.jms.Topic;
+import com.novaordis.gld.service.jms.Producer;
+import com.novaordis.gld.service.jms.embedded.EmbeddedProducer;
+import com.novaordis.gld.service.jms.embedded.EmbeddedQueue;
+import com.novaordis.gld.service.jms.embedded.EmbeddedSession;
+import com.novaordis.gld.strategy.load.jms.JmsLoadStrategy;
+import com.novaordis.gld.strategy.load.jms.SendLoadStrategy;
+import org.apache.log4j.Logger;
+import org.junit.Test;
 
-public class EmbeddedTopic implements Topic
+import javax.jms.Session;
+
+public class SendTest extends JmsOperationTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(SendTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String name;
-
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    public EmbeddedTopic(String name)
-    {
-        this.name = name;
-    }
-
-    // Queue implementation --------------------------------------------------------------------------------------------
-
-    @Override
-    public String getTopicName() throws JMSException
-    {
-        return name;
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Override
-    public String toString()
+    @Test
+    public void perform() throws Exception
     {
-        return name;
+        SendLoadStrategy loadStrategy = new SendLoadStrategy();
+        Send send = getJmsOperationToTest(loadStrategy);
+
+        EmbeddedQueue jmsQueue = new EmbeddedQueue("TEST");
+        EmbeddedSession jmsSession = new EmbeddedSession(false, Session.AUTO_ACKNOWLEDGE);
+        EmbeddedProducer jmsProducer = (EmbeddedProducer)jmsSession.createProducer(jmsQueue);
+
+        Producer endpoint = new Producer(jmsProducer, jmsSession);
+
+        send.perform(endpoint);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected Send getJmsOperationToTest(JmsLoadStrategy loadStrategy)
+    {
+        return new Send(loadStrategy);
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

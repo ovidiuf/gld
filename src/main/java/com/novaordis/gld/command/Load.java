@@ -25,7 +25,7 @@ import com.novaordis.gld.Service;
 import com.novaordis.gld.StorageStrategy;
 import com.novaordis.gld.strategy.load.LoadStrategyFactory;
 import com.novaordis.gld.strategy.load.cache.WriteThenReadLoadStrategy;
-import com.novaordis.gld.strategy.load.jms.DefaultJmsLoadStrategy;
+import com.novaordis.gld.strategy.load.jms.SendLoadStrategy;
 import com.novaordis.gld.strategy.storage.StorageStrategyFactory;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class Load extends CommandBase
     // Constants -------------------------------------------------------------------------------------------------------
 
     public static final LoadStrategy DEFAULT_CACHE_LOAD_STRATEGY = new WriteThenReadLoadStrategy();
-    public static final LoadStrategy DEFAULT_JMS_LOAD_STRATEGY = new DefaultJmsLoadStrategy();
+    public static final LoadStrategy DEFAULT_JMS_LOAD_STRATEGY = new SendLoadStrategy();
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -118,6 +118,9 @@ public class Load extends CommandBase
 
     // Private ---------------------------------------------------------------------------------------------------------
 
+    /**
+     * Parse context-relevant command line arguments and removes them from the list.
+     */
     private void processArguments() throws Exception
     {
         List<String> arguments = getArguments();

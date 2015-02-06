@@ -193,17 +193,22 @@ Load Strategies:
 
      JMS
 
-        DefaultJms
+        Common to all JMS load strategies:
 
             --queue|--topic <destination-name>
 
-            --tmp-receive - will configure gld to receive. Default is "send"
+        All JMS strategies use a "new session and new endpoint per message" endpoint allocation
+        policy, where a new JMS session and the corresponding JMS MessageProducer or MessageConsumer
+        are created before each operation and closed after each operation.
 
-            --receive-timeout <timeout-ms>
+        Send (--load-strategy send)
 
-            --session-per-operation - the default is to maintain a session per thread and reuse it to send
-              multiple messages. When specifying --session-per-messages, a new session will be created for
-              each message to be sent or received.
+            This is the default JMS load strategy.
+
+        Receive (--load-strategy receive)
+
+            --timeout <timeout-ms> - receive timeout. Default is 0 (never timeout).
+
 
 
 

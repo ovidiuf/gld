@@ -16,8 +16,11 @@
 
 package com.novaordis.gld.operations.jms;
 
-import com.novaordis.gld.strategy.load.jms.DefaultJmsLoadStrategy;
+import com.novaordis.gld.service.jms.JmsEndpoint;
+import com.novaordis.gld.service.jms.Producer;
+import com.novaordis.gld.strategy.load.jms.JmsLoadStrategy;
 
+import javax.jms.Destination;
 import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
@@ -32,7 +35,7 @@ public class Send extends JmsOperation
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Send(DefaultJmsLoadStrategy loadStrategy)
+    public Send(JmsLoadStrategy loadStrategy)
     {
         super(loadStrategy);
     }
@@ -40,12 +43,13 @@ public class Send extends JmsOperation
     // JMSOperation overrides ------------------------------------------------------------------------------------------
 
     @Override
-    public void perform(Session session) throws Exception
+    public void perform(JmsEndpoint endpoint) throws Exception
     {
-        javax.jms.Destination jmsDestination = getJmsDestination(session);
-        MessageProducer p = session.createProducer(jmsDestination);
+        Producer producerEndpoint = (Producer)endpoint;
+        Session session = producerEndpoint.getSession();
+        MessageProducer jmsProducer = producerEndpoint.getProducer();
         Message m = session.createTextMessage();
-        p.send(m);
+        jmsProducer.send(m);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

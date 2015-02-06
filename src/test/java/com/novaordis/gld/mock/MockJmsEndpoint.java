@@ -14,42 +14,51 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms.embedded;
+package com.novaordis.gld.mock;
 
-import javax.jms.JMSException;
-import javax.jms.Topic;
+import com.novaordis.gld.service.jms.JmsEndpoint;
+import org.apache.log4j.Logger;
 
-public class EmbeddedTopic implements Topic
+import javax.jms.Session;
+
+public class MockJmsEndpoint implements JmsEndpoint
 {
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(MockJmsEndpoint.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String name;
+    private boolean closed;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedTopic(String name)
+    public MockJmsEndpoint()
     {
-        this.name = name;
+        this.closed = false;
     }
 
-    // Queue implementation --------------------------------------------------------------------------------------------
+    // JmsEndpoint implementation --------------------------------------------------------------------------------------
 
     @Override
-    public String getTopicName() throws JMSException
+    public void close() throws Exception
     {
-        return name;
+        this.closed = true;
+    }
+
+    @Override
+    public Session getSession()
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Override
-    public String toString()
+    public boolean isClosed()
     {
-        return name;
+        return closed;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

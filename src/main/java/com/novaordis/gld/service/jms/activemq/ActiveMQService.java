@@ -22,16 +22,15 @@ import com.novaordis.gld.Node;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.Service;
 import com.novaordis.gld.operations.jms.JmsOperation;
+import com.novaordis.gld.service.jms.EndpointPolicy;
+import com.novaordis.gld.service.jms.JmsEndpoint;
+import com.novaordis.gld.service.jms.JmsResourceManager;
 import com.novaordis.gld.service.jms.embedded.EmbeddedConnectionFactory;
-import com.novaordis.gld.strategy.load.jms.DefaultJmsLoadStrategy;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
-import javax.jms.Session;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ActiveMQService implements Service
 {
@@ -67,9 +66,9 @@ public class ActiveMQService implements Service
 
     private Connection connection;
 
-    private final Map<String, Session> sessions;
-
     private Configuration configuration;
+
+    private JmsResourceManager resourceManager;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -77,7 +76,6 @@ public class ActiveMQService implements Service
     {
         this.nodes = nodes;
         this.configuration = configuration;
-        this.sessions = new HashMap<>();
     }
 
     // Service implementation ------------------------------------------------------------------------------------------
@@ -104,6 +102,7 @@ public class ActiveMQService implements Service
         }
 
         connection.start();
+        resourceManager = new JmsResourceManager(connection, EndpointPolicy.NEW_SESSION_AND_ENDPOINT_PER_OPERATION);
     }
 
     @Override
@@ -111,6 +110,7 @@ public class ActiveMQService implements Service
     {
         if (connection != null)
         {
+            resourceManager.close();
             connection.stop();
             connection.close();
             connection = null;
@@ -141,26 +141,18 @@ public class ActiveMQService implements Service
             throw new IllegalArgumentException(o + " is not a JMS operation");
         }
 
-        JmsOperation jmsOp = (JmsOperation)o;
+        // figure what session to use based on the current policy in place
+        JmsOperation jmsOperation = (JmsOperation)o;
 
-        DefaultJmsLoadStrategy jmsLoadStrategy = jmsOp.getLoadStrategy();
-
-        boolean sessionPerOperation = jmsLoadStrategy.isSessionPerOperation();
-
-        // lookup the corresponding session
-        Session s = getSession(sessionPerOperation);
+        JmsEndpoint endpoint = resourceManager.checkOutEndpoint(jmsOperation);
 
         try
         {
-            jmsOp.perform(s);
+            jmsOperation.perform(endpoint);
         }
         finally
         {
-            // if it's sessionPerOperation, close the session after we've performed the operation
-            if (sessionPerOperation)
-            {
-                s.close();
-            }
+            resourceManager.returnEndpoint(endpoint);
         }
     }
 
@@ -192,38 +184,6 @@ public class ActiveMQService implements Service
 
         String brokerUrl = toBrokerUrl(nodes);
         return new ActiveMQConnectionFactory(brokerUrl);
-    }
-
-    private Session getSession(boolean sessionPerOperation) throws Exception
-    {
-        if (sessionPerOperation)
-        {
-            return createNewSession();
-        }
-
-        // if this thread has already a Session associated with it, use that
-
-        String threadName = Thread.currentThread().getName();
-
-        Session session;
-
-        synchronized (sessions)
-        {
-            session = sessions.get(threadName);
-
-            if (session == null)
-            {
-                session = createNewSession();
-                sessions.put(threadName, session);
-            }
-        }
-
-        return session;
-    }
-
-    private Session createNewSession() throws Exception
-    {
-        return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
     }
 
     // Inner classes ---------------------------------------------------------------------------------------------------

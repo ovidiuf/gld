@@ -23,6 +23,9 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -309,6 +312,419 @@ public class UtilTest extends Assert
 
         assertNotNull(ws);
     }
+
+    // command line processing utilities -------------------------------------------------------------------------------
+
+    @Test
+    public void extractOption_emptyLine() throws Exception
+    {
+        List<String> args = new ArrayList<>();
+        String result = Util.extractOption("--something", true, args, -1);
+        assertNull(result);
+        assertTrue(args.isEmpty());
+    }
+
+    @Test
+    public void extractOption_NoArgumentFound() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList("--something", "blah", "--something-else", "blah"));
+        String result = Util.extractOption("--no-such-thing", true, args, 0);
+        assertNull(result);
+        assertEquals(4, args.size());
+        assertEquals("--something", args.get(0));
+        assertEquals("blah", args.get(1));
+        assertEquals("--something-else", args.get(2));
+        assertEquals("blah", args.get(3));
+    }
+
+    @Test
+    public void extractOption_ArgumentOnFromPosition_Boolean() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList("--something", "blah", "--something-else", "blah"));
+        String result = Util.extractOption("--something", true, args, 0);
+        assertEquals("--something", result);
+        assertEquals(3, args.size());
+        assertEquals("blah", args.get(0));
+        assertEquals("--something-else", args.get(1));
+        assertEquals("blah", args.get(2));
+    }
+
+    @Test
+    public void extractOption_ArgumentOnFromPosition_String() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList("--something", "blah", "--something-else", "blah"));
+        String result = Util.extractOption("--something", false, args, 0);
+        assertEquals("blah", result);
+        assertEquals(2, args.size());
+        assertEquals("--something-else", args.get(0));
+        assertEquals("blah", args.get(1));
+    }
+
+    @Test
+    public void extractOption_ArgumentBetweenFromPositionAndEndOfList_Boolean() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList(
+            "--something", "blah", "--something-else", "blah2", "--last", "etc"));
+
+        String result = Util.extractOption("--something-else", true, args, 0);
+        assertEquals("--something-else", result);
+        assertEquals(5, args.size());
+        assertEquals("--something", args.get(0));
+        assertEquals("blah", args.get(1));
+        assertEquals("blah2", args.get(2));
+        assertEquals("--last", args.get(3));
+        assertEquals("etc", args.get(4));
+    }
+
+    @Test
+    public void extractOption_ArgumentBetweenFromPositionAndEndOfList_String() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList(
+            "--something", "blah", "--something-else", "blah2", "--last", "etc"));
+
+        String result = Util.extractOption("--something-else", false, args, 0);
+        assertEquals("blah2", result);
+        assertEquals(4, args.size());
+        assertEquals("--something", args.get(0));
+        assertEquals("blah", args.get(1));
+        assertEquals("--last", args.get(2));
+        assertEquals("etc", args.get(3));
+    }
+
+    @Test
+    public void extractOption_ArgumentOnTheLastPositionInList_Boolean() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList(
+            "--something", "blah", "--something-else", "blah2", "--last"));
+
+        String result = Util.extractOption("--last", true, args, 0);
+        assertEquals("--last", result);
+        assertEquals(4, args.size());
+        assertEquals("--something", args.get(0));
+        assertEquals("blah", args.get(1));
+        assertEquals("--something-else", args.get(2));
+        assertEquals("blah2", args.get(3));
+    }
+
+    @Test
+    public void extractOption_ArgumentOnTheLastPositionInList_String() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList(
+            "--something", "blah", "--something-else", "blah2", "--last", "etc"));
+
+        String result = Util.extractOption("--last", false, args, 0);
+        assertEquals("etc", result);
+        assertEquals(4, args.size());
+        assertEquals("--something", args.get(0));
+        assertEquals("blah", args.get(1));
+        assertEquals("--something-else", args.get(2));
+        assertEquals("blah2", args.get(3));
+    }
+
+    @Test
+    public void extractOption_OptionFollowsImmediatelyAfterTheStringOption_Boolean() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList("--something", "--something-else"));
+
+        String result = Util.extractOption("--something", true, args, 0);
+        assertEquals("--something", result);
+
+        assertEquals(1, args.size());
+        assertEquals("--something-else", args.get(0));
+    }
+
+    @Test
+    public void extractOption_OptionFollowsImmediatelyAfterTheStringOption_String() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList("--something", "--something-else"));
+
+        try
+        {
+            Util.extractOption("--something", false, args, 0);
+            fail("should fail as another option follows immediately after a string option");
+        }
+        catch(UserErrorException e)
+        {
+            log.info(e.getMessage());
+        }
+    }
+
+    @Test
+    public void extractOption_OptionOnTheLastPosition_Boolean() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList("--something", "--something-else"));
+
+        String result = Util.extractOption("--something-else", true, args, 0);
+        assertEquals("--something-else", result);
+
+        assertEquals(1, args.size());
+        assertEquals("--something", args.get(0));
+    }
+
+    @Test
+    public void extractOption_OptionOnTheLastPosition_String() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList("--something", "--something-else"));
+
+        try
+        {
+            Util.extractOption("--something-else", false, args, 0);
+            fail("should fail as another option is the last position in the list");
+        }
+        catch(UserErrorException e)
+        {
+            log.info(e.getMessage());
+        }
+    }
+
+    @Test
+    public void extractString_emptyLine() throws Exception
+    {
+        List<String> args = new ArrayList<>();
+        String result = Util.extractString("--something", args, -1);
+        assertNull(result);
+        assertTrue(args.isEmpty());
+    }
+
+    @Test
+    public void extractString_NoArgumentFound() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList("--something", "blah", "--something-else", "blah"));
+        String result = Util.extractString("--no-such-thing", args, 0);
+        assertNull(result);
+        assertEquals(4, args.size());
+        assertEquals("--something", args.get(0));
+        assertEquals("blah", args.get(1));
+        assertEquals("--something-else", args.get(2));
+        assertEquals("blah", args.get(3));
+    }
+
+    @Test
+    public void extractString_ArgumentOnFromPosition() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList("--something", "blah", "--something-else", "blah"));
+        String result = Util.extractString("--something", args, 0);
+        assertEquals("blah", result);
+        assertEquals(2, args.size());
+        assertEquals("--something-else", args.get(0));
+        assertEquals("blah", args.get(1));
+    }
+
+    @Test
+    public void extractString_ArgumentBetweenFromPositionAndEndOfList() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList(
+            "--something", "blah", "--something-else", "blah2", "--last", "etc"));
+
+        String result = Util.extractString("--something-else", args, 0);
+        assertEquals("blah2", result);
+        assertEquals(4, args.size());
+        assertEquals("--something", args.get(0));
+        assertEquals("blah", args.get(1));
+        assertEquals("--last", args.get(2));
+        assertEquals("etc", args.get(3));
+    }
+
+    @Test
+    public void extractString_ArgumentOnTheLastPositionInList() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList(
+            "--something", "blah", "--something-else", "blah2", "--last", "etc"));
+
+        String result = Util.extractString("--last", args, 0);
+        assertEquals("etc", result);
+        assertEquals(4, args.size());
+        assertEquals("--something", args.get(0));
+        assertEquals("blah", args.get(1));
+        assertEquals("--something-else", args.get(2));
+        assertEquals("blah2", args.get(3));
+    }
+
+    @Test
+    public void extractString_OptionFollowsImmediatelyAfterTheStringOption() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList("--something", "--something-else"));
+
+        try
+        {
+            Util.extractString("--something", args, 0);
+            fail("should fail as another option follows immediately after a string option");
+        }
+        catch(UserErrorException e)
+        {
+            log.info(e.getMessage());
+        }
+    }
+
+    @Test
+    public void extractString_OptionOnTheLastPosition() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList("--something", "--something-else"));
+
+        try
+        {
+            Util.extractString("--something-else", args, 0);
+            fail("should fail as another option is the last position in the list");
+        }
+        catch(UserErrorException e)
+        {
+            log.info(e.getMessage());
+        }
+    }
+
+    @Test
+    public void extractString_OutOfBounds() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList("--a", "a", "--b", "b", "--c", "c", "--d", "d"));
+
+        assertNull(Util.extractString("--a", args, 3));
+
+        assertEquals(8, args.size());
+    }
+
+    @Test
+    public void extractString_succession() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList("--a", "a", "--b", "b", "--c", "c", "--d", "d"));
+
+        int from = 2;
+
+        assertNull(Util.extractString("--a", args, from));
+
+        assertEquals(8, args.size());
+
+        assertEquals("b", Util.extractString("--b", args, from));
+
+        assertEquals(6, args.size());
+        assertEquals("--a", args.get(0));
+        assertEquals("a", args.get(1));
+        assertEquals("--c", args.get(2));
+        assertEquals("c", args.get(3));
+        assertEquals("--d", args.get(4));
+        assertEquals("d", args.get(5));
+
+        assertEquals("d", Util.extractString("--d", args, from));
+
+        assertEquals(4, args.size());
+        assertEquals("--a", args.get(0));
+        assertEquals("a", args.get(1));
+        assertEquals("--c", args.get(2));
+        assertEquals("c", args.get(3));
+
+        assertEquals("c", Util.extractString("--c", args, from));
+
+        assertEquals(2, args.size());
+        assertEquals("--a", args.get(0));
+        assertEquals("a", args.get(1));
+
+        assertNull(Util.extractString("--e", args, from));
+
+        assertEquals(2, args.size());
+        assertEquals("--a", args.get(0));
+        assertEquals("a", args.get(1));
+    }
+
+    @Test
+    public void extractBoolean() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList(
+            "--something", "blah", "--some-flag", "blah2", "--last", "etc"));
+
+        assertTrue(Util.extractBoolean("--some-flag", args, 0));
+
+        assertEquals(5, args.size());
+        assertEquals("--something", args.get(0));
+        assertEquals("blah", args.get(1));
+        assertEquals("blah2", args.get(2));
+        assertEquals("--last", args.get(3));
+        assertEquals("etc", args.get(4));
+
+        assertFalse(Util.extractBoolean("--does-not-exist", args, 0));
+        assertEquals(5, args.size());
+    }
+
+    @Test
+    public void extractLong() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList(
+            "--something", "blah", "--some-flag", "blah2", "--last", "5"));
+
+        Long l = Util.extractLong("--last", args, 0);
+
+        assertEquals(5L, l.longValue());
+
+        assertEquals(4, args.size());
+        assertEquals("--something", args.get(0));
+        assertEquals("blah", args.get(1));
+        assertEquals("--some-flag", args.get(2));
+        assertEquals("blah2", args.get(3));
+
+        assertNull(Util.extractLong("--does-not-exist", args, 0));
+
+        assertEquals(4, args.size());
+    }
+
+    @Test
+    public void extractLong_InvalidNumber() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList(
+            "--something", "blah", "--some-flag", "blah2", "--last", "thisisnotaLong"));
+
+        try
+        {
+            Util.extractLong("--last", args, 0);
+        }
+        catch(UserErrorException e)
+        {
+            log.info(e.getMessage());
+
+            Throwable t = e.getCause();
+
+            assertTrue(t instanceof NumberFormatException);
+        }
+    }
+
+    @Test
+    public void extractInteger() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList(
+            "--something", "blah", "--some-flag", "blah2", "--last", "5"));
+
+        Integer i = Util.extractInteger("--last", args, 0);
+
+        assertEquals(5, i.intValue());
+
+        assertEquals(4, args.size());
+        assertEquals("--something", args.get(0));
+        assertEquals("blah", args.get(1));
+        assertEquals("--some-flag", args.get(2));
+        assertEquals("blah2", args.get(3));
+
+        assertNull(Util.extractLong("--does-not-exist", args, 0));
+
+        assertEquals(4, args.size());
+    }
+
+    @Test
+    public void extractInteger_InvalidNumber() throws Exception
+    {
+        List<String> args = new ArrayList<>(Arrays.asList(
+            "--something", "blah", "--some-flag", "blah2", "--last", "thisisnotanInt"));
+
+        try
+        {
+            Util.extractInteger("--last", args, 0);
+        }
+        catch(UserErrorException e)
+        {
+            log.info(e.getMessage());
+
+            Throwable t = e.getCause();
+
+            assertTrue(t instanceof NumberFormatException);
+        }
+    }
+
 
     // Package protected -----------------------------------------------------------------------------------------------
 

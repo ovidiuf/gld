@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.load.jms;
+package com.novaordis.gld.service.jms;
 
-public interface Destination
+import javax.jms.Session;
+
+/**
+ * A wrapper for a MessageProducer or a MessageConsumer.
+ *
+ * @see com.novaordis.gld.service.jms.JmsResourceManager
+ */
+public interface JmsEndpoint
 {
-    String getName();
+    void close() throws Exception;
 
-    boolean isQueue();
+    Session getSession();
 
-    boolean isTopic();
 }

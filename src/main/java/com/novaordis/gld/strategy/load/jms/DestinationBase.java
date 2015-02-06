@@ -16,7 +16,7 @@
 
 package com.novaordis.gld.strategy.load.jms;
 
-class DestinationBase implements Destination
+abstract class DestinationBase implements Destination
 {
     // Constants -------------------------------------------------------------------------------------------------------
 

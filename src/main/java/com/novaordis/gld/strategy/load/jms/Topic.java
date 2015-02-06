@@ -31,7 +31,27 @@ public class Topic extends DestinationBase
         super(name);
     }
 
+    // Destination implementation --------------------------------------------------------------------------------------
+
+    @Override
+    public boolean isQueue()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean isTopic()
+    {
+        return true;
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString()
+    {
+        return getName();
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

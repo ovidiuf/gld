@@ -227,7 +227,7 @@ public class WriteThenReadLoadStrategy extends LoadStrategyBase
     // Private ---------------------------------------------------------------------------------------------------------
 
     /**
-     * Extracts write/read configuration.
+     * Parse context-relevant command line arguments and removes them from the list.
      */
     private void processArguments(List<String> arguments, int from) throws Exception
     {

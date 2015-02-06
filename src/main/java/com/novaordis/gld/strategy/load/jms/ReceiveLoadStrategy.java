@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms.embedded;
+package com.novaordis.gld.strategy.load.jms;
 
-import javax.jms.JMSException;
-import javax.jms.Topic;
+import com.novaordis.gld.Configuration;
+import com.novaordis.gld.UserErrorException;
+import com.novaordis.gld.Util;
+import com.novaordis.gld.operations.jms.Receive;
 
-public class EmbeddedTopic implements Topic
+import java.util.List;
+
+public class ReceiveLoadStrategy extends JmsLoadStrategy
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -27,36 +31,64 @@ public class EmbeddedTopic implements Topic
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String name;
+    // null means no timeout
+    private Long timeoutMs;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedTopic(String name)
-    {
-        this.name = name;
-    }
+    // LoadStrategy implementation -------------------------------------------------------------------------------------
 
-    // Queue implementation --------------------------------------------------------------------------------------------
+    // LoadStrategy implementation -------------------------------------------------------------------------------------
 
+    /**
+     * @see com.novaordis.gld.LoadStrategy#configure(com.novaordis.gld.Configuration, java.util.List, int)
+     */
     @Override
-    public String getTopicName() throws JMSException
+    public void configure(Configuration configuration, List<String> arguments, int from) throws Exception
     {
-        return name;
+        super.configure(configuration, arguments, from);
+        processContextRelevantArguments(arguments, from);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    public Long getTimeoutMs()
+    {
+        return timeoutMs;
+    }
+
+    public void setTimeoutMs(Long timeoutMs)
+    {
+        this.timeoutMs = timeoutMs;
+    }
+
     @Override
     public String toString()
     {
-        return name;
+        long remainingOperations = getRemainingOperations();
+        return "ReceiveLoadStrategy[remaining=" +
+            (remainingOperations == Long.MAX_VALUE ? "unlimited" : remainingOperations ) + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
+    @Override
+    protected Receive createInstance()
+    {
+        return new Receive(this);
+    }
+
     // Private ---------------------------------------------------------------------------------------------------------
+
+    /**
+     * Parse context-relevant command line arguments and removes them from the list.
+     */
+    private void processContextRelevantArguments(List<String> arguments, int from) throws UserErrorException
+    {
+        timeoutMs = Util.extractLong("--timeout", arguments, from);
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

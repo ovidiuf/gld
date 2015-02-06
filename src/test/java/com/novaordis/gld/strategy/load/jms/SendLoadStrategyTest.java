@@ -14,12 +14,21 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms.embedded;
+package com.novaordis.gld.strategy.load.jms;
 
-import javax.jms.JMSException;
-import javax.jms.Topic;
+import com.novaordis.gld.mock.MockConfiguration;
+import com.novaordis.gld.operations.jms.Send;
+import org.junit.Test;
 
-public class EmbeddedTopic implements Topic
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+public class SendLoadStrategyTest extends JmsLoadStrategyTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -27,34 +36,45 @@ public class EmbeddedTopic implements Topic
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String name;
-
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    public EmbeddedTopic(String name)
-    {
-        this.name = name;
-    }
-
-    // Queue implementation --------------------------------------------------------------------------------------------
-
-    @Override
-    public String getTopicName() throws JMSException
-    {
-        return name;
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Override
-    public String toString()
+    @Test
+    public void next() throws Exception
     {
-        return name;
+        SendLoadStrategy sls = getLoadStrategyToTest();
+
+        List<String> args = new ArrayList<>(Arrays.asList("--queue", "test"));
+
+        MockConfiguration mc = new MockConfiguration();
+        mc.setMaxOperations(2L);
+
+        sls.configure(mc, args, 0);
+
+        assertTrue(args.isEmpty());
+        Queue queue = (Queue)sls.getDestination();
+        assertEquals("test", queue.getName());
+
+        Send send = (Send)sls.next(null, null);
+        assertEquals(queue, send.getDestination());
+
+        Send send2 = (Send) sls.next(null, null);
+        assertEquals(queue, send2.getDestination());
+
+        Send send3 = (Send) sls.next(null, null);
+        assertNull(send3);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected SendLoadStrategy getLoadStrategyToTest()
+    {
+        return new SendLoadStrategy();
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -14,47 +14,31 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms.embedded;
+package com.novaordis.gld.operations.jms;
 
-import javax.jms.JMSException;
-import javax.jms.Topic;
+import com.novaordis.gld.strategy.load.jms.JmsLoadStrategy;
+import org.apache.log4j.Logger;
+import org.junit.Test;
 
-public class EmbeddedTopic implements Topic
+public abstract class JmsOperationTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(JmsOperationTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String name;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedTopic(String name)
-    {
-        this.name = name;
-    }
-
-    // Queue implementation --------------------------------------------------------------------------------------------
-
-    @Override
-    public String getTopicName() throws JMSException
-    {
-        return name;
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
-
-    @Override
-    public String toString()
-    {
-        return name;
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected abstract JmsOperation getJmsOperationToTest(JmsLoadStrategy loadStrategy);
 
     // Private ---------------------------------------------------------------------------------------------------------
 

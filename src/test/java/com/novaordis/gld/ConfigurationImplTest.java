@@ -381,7 +381,7 @@ public class ConfigurationImplTest extends Assert
                 "100"
             });
 
-        assertEquals(100, c.getMaxOperations());
+        assertEquals(new Long(100), c.getMaxOperations());
     }
 
     // --username -----------------------------------------------------------------------------------------------------

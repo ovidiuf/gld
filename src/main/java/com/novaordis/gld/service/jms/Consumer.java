@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms.embedded;
+package com.novaordis.gld.service.jms;
 
-import javax.jms.JMSException;
-import javax.jms.Topic;
+import javax.jms.MessageConsumer;
+import javax.jms.Session;
 
-public class EmbeddedTopic implements Topic
+public class Consumer implements JmsEndpoint
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -27,29 +27,41 @@ public class EmbeddedTopic implements Topic
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String name;
+    private Session session;
+    private MessageConsumer consumer;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedTopic(String name)
+    public Consumer(MessageConsumer consumer, Session session)
     {
-        this.name = name;
+        this.consumer = consumer;
+        this.session = session;
     }
 
-    // Queue implementation --------------------------------------------------------------------------------------------
+    // JmsEndpoint implementation --------------------------------------------------------------------------------------
 
     @Override
-    public String getTopicName() throws JMSException
+    public void close() throws Exception
     {
-        return name;
+    }
+
+    @Override
+    public Session getSession()
+    {
+        return session;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    public MessageConsumer getConsumer()
+    {
+        return consumer;
+    }
+
     @Override
     public String toString()
     {
-        return name;
+        return "Consumer[" + consumer + ", " + session + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

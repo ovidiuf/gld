@@ -35,6 +35,8 @@ import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.jms.TopicSubscriber;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmbeddedSession implements Session
 {
@@ -48,6 +50,9 @@ public class EmbeddedSession implements Session
     private int acknowledgment;
     private boolean closed;
 
+    private List<EmbeddedProducer> createdProducers;
+    private List<EmbeddedConsumer> createdConsumers;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public EmbeddedSession(boolean transacted, int acknowledgment)
@@ -55,6 +60,8 @@ public class EmbeddedSession implements Session
         this.transacted = transacted;
         this.acknowledgment = acknowledgment;
         this.closed = false;
+        this.createdProducers = new ArrayList<>();
+        this.createdConsumers = new ArrayList<>();
     }
 
     // Session implementation ------------------------------------------------------------------------------------------
@@ -170,13 +177,17 @@ public class EmbeddedSession implements Session
     @Override
     public MessageProducer createProducer(Destination destination) throws JMSException
     {
-        return new EmbeddedProducer(destination);
+        EmbeddedProducer p = new EmbeddedProducer(destination);
+        createdProducers.add(p);
+        return p;
     }
 
     @Override
     public MessageConsumer createConsumer(Destination destination) throws JMSException
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        EmbeddedConsumer c = new EmbeddedConsumer(destination);
+        createdConsumers.add(c);
+        return c;
     }
 
     @Override
@@ -251,6 +262,17 @@ public class EmbeddedSession implements Session
     {
         return closed;
     }
+
+    public List<EmbeddedProducer> getCreatedProducers()
+    {
+        return createdProducers;
+    }
+
+    public List<EmbeddedConsumer> getCreatedConsumers()
+    {
+        return createdConsumers;
+    }
+
 
     // Package protected -----------------------------------------------------------------------------------------------
 

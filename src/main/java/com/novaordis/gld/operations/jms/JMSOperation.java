@@ -18,8 +18,9 @@ package com.novaordis.gld.operations.jms;
 
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.Service;
-import com.novaordis.gld.strategy.load.jms.DefaultJmsLoadStrategy;
+import com.novaordis.gld.service.jms.JmsEndpoint;
 import com.novaordis.gld.strategy.load.jms.Destination;
+import com.novaordis.gld.strategy.load.jms.JmsLoadStrategy;
 import com.novaordis.gld.strategy.load.jms.Queue;
 import com.novaordis.gld.strategy.load.jms.Topic;
 
@@ -34,13 +35,13 @@ public abstract class JmsOperation implements Operation
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private DefaultJmsLoadStrategy loadStrategy;
+    private JmsLoadStrategy jmsLoadStrategy;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    protected JmsOperation(DefaultJmsLoadStrategy loadStrategy)
+    protected JmsOperation(JmsLoadStrategy jmsLoadStrategy)
     {
-        this.loadStrategy = loadStrategy;
+        this.jmsLoadStrategy = jmsLoadStrategy;
     }
 
     // Operation implementation ----------------------------------------------------------------------------------------
@@ -55,41 +56,47 @@ public abstract class JmsOperation implements Operation
     }
 
     @Override
-    public DefaultJmsLoadStrategy getLoadStrategy()
+    public JmsLoadStrategy getLoadStrategy()
     {
-        return loadStrategy;
+        return jmsLoadStrategy;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public abstract void perform(Session jmsSession) throws Exception;
+    /**
+     * Externalize the job of choosing what endpoint to use for operation to JmsResourceManager.
+     *
+     * @see com.novaordis.gld.service.jms.JmsEndpoint
+     * @see com.novaordis.gld.service.jms.JmsResourceManager
+     */
+    public abstract void perform(JmsEndpoint endpoint) throws Exception;
 
     public Destination getDestination()
     {
-        return loadStrategy.getDestination();
+        return jmsLoadStrategy.getDestination();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected javax.jms.Destination getJmsDestination(Session session) throws Exception
-    {
-        Destination destination = getDestination();
-
-        if (destination instanceof Queue)
-        {
-            return session.createQueue(destination.getName());
-        }
-        else if (destination instanceof Topic)
-        {
-            return session.createTopic(destination.getName());
-        }
-        else
-        {
-            throw new IllegalStateException("unknown destination type " + destination);
-        }
-    }
+//    protected javax.jms.Destination getJmsDestination(Session session) throws Exception
+//    {
+//        Destination destination = getDestination();
+//
+//        if (destination instanceof Queue)
+//        {
+//            return session.createQueue(destination.getName());
+//        }
+//        else if (destination instanceof Topic)
+//        {
+//            return session.createTopic(destination.getName());
+//        }
+//        else
+//        {
+//            throw new IllegalStateException("unknown destination type " + destination);
+//        }
+//    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

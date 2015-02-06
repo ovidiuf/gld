@@ -149,6 +149,9 @@ public class Content extends CommandBase
 
     // Private ---------------------------------------------------------------------------------------------------------
 
+    /**
+     * Parse context-relevant command line arguments and removes them from the list.
+     */
     private void processArguments() throws Exception
     {
         List<String> arguments = getArguments();

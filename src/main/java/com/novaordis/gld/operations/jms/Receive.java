@@ -16,11 +16,13 @@
 
 package com.novaordis.gld.operations.jms;
 
-import com.novaordis.gld.strategy.load.jms.DefaultJmsLoadStrategy;
+import com.novaordis.gld.service.jms.Consumer;
+import com.novaordis.gld.service.jms.JmsEndpoint;
+import com.novaordis.gld.strategy.load.jms.Destination;
+import com.novaordis.gld.strategy.load.jms.ReceiveLoadStrategy;
 
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
-import javax.jms.Session;
 
 public class Receive extends JmsOperation
 {
@@ -34,28 +36,29 @@ public class Receive extends JmsOperation
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Receive(DefaultJmsLoadStrategy loadStrategy)
+    public Receive(ReceiveLoadStrategy loadStrategy)
     {
         super(loadStrategy);
+        this.timeoutMs = loadStrategy.getTimeoutMs();
     }
 
     // JMSOperation overrides ------------------------------------------------------------------------------------------
 
     @Override
-    public void perform(Session session) throws Exception
+    public void perform(JmsEndpoint endpoint) throws Exception
     {
-        javax.jms.Destination jmsDestination = getJmsDestination(session);
-        MessageConsumer c = session.createConsumer(jmsDestination);
+        Consumer consumer = (Consumer)endpoint;
+        MessageConsumer jmsConsumer = consumer.getConsumer();
 
         Message m;
 
         if (timeoutMs == null)
         {
-            m = c.receive();
+            m = jmsConsumer.receive();
         }
         else
         {
-            m = c.receive(timeoutMs);
+            m = jmsConsumer.receive(timeoutMs);
         }
     }
 
@@ -69,9 +72,17 @@ public class Receive extends JmsOperation
         return timeoutMs;
     }
 
-    public void setTimeoutMs(Long timeoutMs)
+    @Override
+    public String toString()
     {
-        this.timeoutMs = timeoutMs;
+        Destination d = getDestination();
+        String name = d.getName();
+
+        return
+            "receive[" +
+                ((d.isQueue() ? "queue=" : "topic=") + name) +
+                (", timeout=" + (getTimeoutMs() == null ? "0" : getTimeoutMs())) + "]";
+
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -25,6 +25,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
@@ -331,6 +332,169 @@ public class Util
         catch(Exception e)
         {
             log.error("failed to take thread dump", e);
+        }
+    }
+
+    // command line processing utilities -------------------------------------------------------------------------------
+
+    /**
+     * @param isBoolean if true, the method return the option itself if present, or null if not present. Otherwise
+     *                  it returns the following string.
+     *
+     * @return null if the option is not found in list.
+     */
+    public static String extractOption(String optionName, boolean isBoolean, List<String> arguments, int from)
+        throws UserErrorException
+    {
+        if (arguments == null)
+        {
+            throw new IllegalArgumentException("null argument list");
+        }
+
+        if (optionName == null)
+        {
+            throw new IllegalArgumentException("null option name");
+        }
+
+        if (arguments.isEmpty())
+        {
+            return null;
+        }
+
+        String result = null;
+
+        for(int i = from; i < arguments.size(); i ++)
+        {
+            String crt = arguments.get(i);
+
+            if (optionName.equals(crt))
+            {
+                if (isBoolean)
+                {
+                    result = arguments.remove(i);
+                    break;
+                }
+
+                if (i == arguments.size() - 1)
+                {
+                    throw new UserErrorException("a string should follow '" + optionName + "'");
+                }
+
+                arguments.remove(i);
+                result = arguments.remove(i);
+                break;
+            }
+        }
+
+        if (!isBoolean && result != null && result.startsWith("--"))
+        {
+            throw new UserErrorException("a string, and not another option should follow '" + optionName + "'");
+        }
+
+        return result;
+    }
+
+    /**
+     * @return true or false if the option is found (or not) in the list.
+     */
+    public static boolean extractBoolean(String optionName, List<String> arguments, int from)
+        throws UserErrorException
+    {
+        String s = extractOption(optionName, true, arguments, from);
+        return s != null;
+    }
+
+    /**
+     * @return null if the option is not found in list.
+     */
+    public static String extractString(String optionName, List<String> arguments, int from)
+        throws UserErrorException
+    {
+        if (arguments == null)
+        {
+            throw new IllegalArgumentException("null argument list");
+        }
+
+        if (optionName == null)
+        {
+            throw new IllegalArgumentException("null option name");
+        }
+
+        if (arguments.isEmpty())
+        {
+            return null;
+        }
+
+        String result = null;
+
+        for(int i = from; i < arguments.size(); i ++)
+        {
+            String crt = arguments.get(i);
+
+            if (optionName.equals(crt))
+            {
+                if (i == arguments.size() - 1)
+                {
+                    throw new UserErrorException("a string should follow '" + optionName + "'");
+                }
+
+                arguments.remove(i);
+                result = arguments.remove(i);
+                break;
+            }
+        }
+
+        if (result != null && result.startsWith("--"))
+        {
+            throw new UserErrorException("a string, and not another option should follow '" + optionName + "'");
+        }
+
+        return result;
+    }
+
+    /**
+     * @return null if the option is not found in list.
+     */
+    public static Long extractLong(String optionName, List<String> arguments, int from)
+        throws UserErrorException
+    {
+        String s = extractOption(optionName, false, arguments, from);
+
+        if (s == null)
+        {
+            return null;
+        }
+
+        try
+        {
+            return new Long(s);
+        }
+        catch(Exception e)
+        {
+            throw new UserErrorException("a long should follow '" + optionName + "' but we got \"" + s + "\"", e);
+        }
+    }
+
+    /**
+     * @return null if the option is not found in list.
+     */
+    public static Integer extractInteger(String optionName, List<String> arguments, int from)
+        throws UserErrorException
+    {
+        String s = extractOption(optionName, false, arguments, from);
+
+        if (s == null)
+        {
+            return null;
+        }
+
+        try
+        {
+            return new Integer(s);
+        }
+        catch(Exception e)
+        {
+            throw new UserErrorException("an integer should follow '" + optionName + "' but we got \"" + s + "\"", e);
         }
     }
 

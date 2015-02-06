@@ -31,7 +31,27 @@ public class Queue extends DestinationBase
         super(name);
     }
 
+    // Destination implementation --------------------------------------------------------------------------------------
+
+    @Override
+    public boolean isQueue()
+    {
+        return true;
+    }
+
+    @Override
+    public boolean isTopic()
+    {
+        return false;
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString()
+    {
+        return getName();
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

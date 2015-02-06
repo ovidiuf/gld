@@ -148,7 +148,7 @@ public class ConfigurationImpl implements Configuration
      * @see Configuration#getMaxOperations()
      */
     @Override
-    public long getMaxOperations()
+    public Long getMaxOperations()
     {
         return maxOperations;
     }

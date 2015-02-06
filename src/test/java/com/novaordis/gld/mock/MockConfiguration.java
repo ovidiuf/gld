@@ -53,6 +53,8 @@ public class MockConfiguration implements Configuration
 
     private String username;
 
+    private Long maxOperations;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockConfiguration()
@@ -122,9 +124,9 @@ public class MockConfiguration implements Configuration
     }
 
     @Override
-    public long getMaxOperations()
+    public Long getMaxOperations()
     {
-        return -1L;
+        return maxOperations;
     }
 
     @Override
@@ -230,6 +232,11 @@ public class MockConfiguration implements Configuration
     public void setUseDifferentValues(boolean b)
     {
         this.useDifferentValues = b;
+    }
+
+    public void setMaxOperations(long mo)
+    {
+        this.maxOperations = mo;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

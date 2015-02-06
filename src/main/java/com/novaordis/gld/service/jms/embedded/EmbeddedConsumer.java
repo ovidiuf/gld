@@ -19,10 +19,12 @@ package com.novaordis.gld.service.jms.embedded;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.jms.MessageProducer;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
 
-public class EmbeddedProducer implements MessageProducer
+public class EmbeddedConsumer implements MessageConsumer
 {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
@@ -33,74 +35,45 @@ public class EmbeddedProducer implements MessageProducer
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedProducer(Destination destination)
+    public EmbeddedConsumer(Destination destination)
     {
         this.destination = destination;
     }
 
-    // MessageProducer implementation ----------------------------------------------------------------------------------
+    // MessageConsumer implementation ----------------------------------------------------------------------------------
+
     @Override
-    public void setDisableMessageID(boolean b) throws JMSException
+    public String getMessageSelector() throws JMSException
     {
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public boolean getDisableMessageID() throws JMSException
+    public MessageListener getMessageListener() throws JMSException
     {
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void setDisableMessageTimestamp(boolean b) throws JMSException
+    public void setMessageListener(MessageListener messageListener) throws JMSException
     {
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public boolean getDisableMessageTimestamp() throws JMSException
+    public Message receive() throws JMSException
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        return new EmbeddedTextMessage("TEST");
     }
 
     @Override
-    public void setDeliveryMode(int i) throws JMSException
+    public Message receive(long l) throws JMSException
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        return new EmbeddedTextMessage("TEST");
     }
 
     @Override
-    public int getDeliveryMode() throws JMSException
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void setPriority(int i) throws JMSException
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public int getPriority() throws JMSException
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void setTimeToLive(long l) throws JMSException
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public long getTimeToLive() throws JMSException
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Destination getDestination() throws JMSException
+    public Message receiveNoWait() throws JMSException
     {
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
@@ -111,36 +84,12 @@ public class EmbeddedProducer implements MessageProducer
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
-    @Override
-    public void send(Message message) throws JMSException
-    {
-        // noop for the time being
-    }
-
-    @Override
-    public void send(Message message, int i, int i1, long l) throws JMSException
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void send(Destination destination, Message message) throws JMSException
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void send(Destination destination, Message message, int i, int i1, long l) throws JMSException
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString()
     {
-        return "EmbeddedProducer[" + destination + "]";
+        return "EmbeddedConsumer[" + destination + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
