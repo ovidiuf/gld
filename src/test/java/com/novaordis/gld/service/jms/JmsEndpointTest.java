@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.operations.jms;
+package com.novaordis.gld.service.jms;
 
-import com.novaordis.gld.service.jms.Producer;
-import com.novaordis.gld.service.jms.embedded.EmbeddedMessageProducer;
 import com.novaordis.gld.service.jms.embedded.EmbeddedQueue;
 import com.novaordis.gld.service.jms.embedded.EmbeddedSession;
-import com.novaordis.gld.strategy.load.jms.JmsLoadStrategy;
-import com.novaordis.gld.strategy.load.jms.SendLoadStrategy;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import javax.jms.Session;
 
-public class SendTest extends JmsOperationTest
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
+public abstract class JmsEndpointTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(SendTest.class);
+    private static final Logger log = Logger.getLogger(JmsEndpointTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -41,30 +40,28 @@ public class SendTest extends JmsOperationTest
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    // close -----------------------------------------------------------------------------------------------------------
+
     @Test
-    public void perform() throws Exception
+    public void closeDoesNotCloseSession() throws Exception
     {
-        SendLoadStrategy loadStrategy = new SendLoadStrategy();
-        Send send = getJmsOperationToTest(loadStrategy);
+        EmbeddedSession session = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
 
-        EmbeddedQueue jmsQueue = new EmbeddedQueue("TEST");
-        EmbeddedSession jmsSession = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
-        EmbeddedMessageProducer jmsProducer = (EmbeddedMessageProducer)jmsSession.createProducer(jmsQueue);
+        JmsEndpoint e = getEndpointToTest(session, new EmbeddedQueue("TEST"));
 
-        Producer endpoint = new Producer(jmsProducer, jmsSession);
+        e.close();
 
-        send.perform(endpoint);
+        assertEquals(session, e.getSession());
+
+        assertFalse(session.isClosed());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    @Override
-    protected Send getJmsOperationToTest(JmsLoadStrategy loadStrategy)
-    {
-        return new Send(loadStrategy);
-    }
+    protected abstract JmsEndpoint getEndpointToTest(Session session, javax.jms.Destination jmsDestination)
+        throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

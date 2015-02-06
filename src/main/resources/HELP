@@ -197,17 +197,30 @@ Load Strategies:
 
             --queue|--topic <destination-name>
 
-        All JMS strategies use a "new session and new endpoint per message" endpoint allocation
-        policy, where a new JMS session and the corresponding JMS MessageProducer or MessageConsumer
-        are created before each operation and closed after each operation.
+        All JMS strategies use a "new endpoint per message but reuse the session" endpoint allocation
+        policy (REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION), where a new JMS MessageProducer or MessageConsumer
+        are created before each operation and closed after each operation but the JMS sessions are cached and
+        reused (on the same threads). The endpoint policy can be changed with:
 
-        Send (--load-strategy send)
+            --endpoint-policy <REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION|NEW_SESSION_NEW_ENDPOINT_PER_OPERATION>
+
+        Send
 
             This is the default JMS load strategy.
 
-        Receive (--load-strategy receive)
+            It can be explicitly configured with:
 
-            --timeout <timeout-ms> - receive timeout. Default is 0 (never timeout).
+                --load-strategy send
+
+        Receive
+
+            This strategy can be explicitly configured with:
+
+                --load-strategy receive
+
+            Options:
+
+                --timeout <timeout-ms> - receive timeout. Default is 0 (never timeout).
 
 
 

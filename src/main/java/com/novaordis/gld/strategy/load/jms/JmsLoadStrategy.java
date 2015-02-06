@@ -23,6 +23,7 @@ import com.novaordis.gld.Util;
 import com.novaordis.gld.service.jms.EndpointPolicy;
 import com.novaordis.gld.strategy.load.LoadStrategyBase;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -34,7 +35,6 @@ public abstract class JmsLoadStrategy extends LoadStrategyBase
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private boolean reuseSession;
     private Destination destination;
 
     private AtomicLong remainingOperations;
@@ -45,7 +45,7 @@ public abstract class JmsLoadStrategy extends LoadStrategyBase
 
     protected JmsLoadStrategy()
     {
-        this.reuseSession = false;
+        this.endpointPolicy = EndpointPolicy.REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION;
     }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
@@ -75,19 +75,6 @@ public abstract class JmsLoadStrategy extends LoadStrategyBase
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    /**
-     * @return whether to reuse the session for successive operations. The default behavior is to create a session
-     *         instance and then a producer/consumer instance per each message to be sent/received, and then tear
-     *         those instances down.
-     *
-     *         Setting "reuseSession" to true instructs gld to keep the session and reuse it (on the same thread,
-     *         in compliance with JMS specifications).
-     */
-    public boolean isReuseSession()
-    {
-        return reuseSession;
-    }
-
     public Destination getDestination()
     {
         return destination;
@@ -106,6 +93,11 @@ public abstract class JmsLoadStrategy extends LoadStrategyBase
         }
 
         return remainingOperations.get();
+    }
+
+    public void setEndpointPolicy(EndpointPolicy endpointPolicy)
+    {
+        this.endpointPolicy = endpointPolicy;
     }
 
     public EndpointPolicy getEndpointPolicy()
@@ -172,14 +164,28 @@ public abstract class JmsLoadStrategy extends LoadStrategyBase
             setDestination(new Topic(topicName));
         }
 
+        String endpointPolicy = Util.extractString("--endpoint-policy", arguments, from);
+
+        if (endpointPolicy != null)
+        {
+            try
+            {
+                this.endpointPolicy = EndpointPolicy.valueOf(endpointPolicy);
+            }
+            catch(Exception e)
+            {
+                throw new UserErrorException(
+                    "invalid --endpoint-policy value \"" + endpointPolicy + "\"; valid options: " +
+                        Arrays.asList(EndpointPolicy.values()), e);
+            }
+        }
+
         Long mo = getConfiguration().getMaxOperations();
 
         if (mo != null)
         {
             remainingOperations = new AtomicLong(mo);
         }
-
-        endpointPolicy = EndpointPolicy.NEW_SESSION_AND_ENDPOINT_PER_OPERATION;
     }
 
     // Inner classes ---------------------------------------------------------------------------------------------------

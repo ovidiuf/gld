@@ -50,13 +50,16 @@ public class EmbeddedSession implements Session
     private int acknowledgment;
     private boolean closed;
 
-    private List<EmbeddedProducer> createdProducers;
-    private List<EmbeddedConsumer> createdConsumers;
+    private List<EmbeddedMessageProducer> createdProducers;
+    private List<EmbeddedMessageConsumer> createdConsumers;
+
+    private int sessionId;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedSession(boolean transacted, int acknowledgment)
+    public EmbeddedSession(int sessionId, boolean transacted, int acknowledgment)
     {
+        this.sessionId = sessionId;
         this.transacted = transacted;
         this.acknowledgment = acknowledgment;
         this.closed = false;
@@ -65,12 +68,6 @@ public class EmbeddedSession implements Session
     }
 
     // Session implementation ------------------------------------------------------------------------------------------
-
-    @Override
-    public String toString()
-    {
-        return "EmbeddedSession[" + "]";
-    }
 
     @Override
     public BytesMessage createBytesMessage() throws JMSException
@@ -147,6 +144,18 @@ public class EmbeddedSession implements Session
     @Override
     public void close() throws JMSException
     {
+        // close all created producers and consumers
+
+        for(EmbeddedMessageConsumer c: createdConsumers)
+        {
+            c.close();
+        }
+
+        for(EmbeddedMessageProducer p: createdProducers)
+        {
+            p.close();
+        }
+
         this.closed = true;
     }
 
@@ -177,7 +186,7 @@ public class EmbeddedSession implements Session
     @Override
     public MessageProducer createProducer(Destination destination) throws JMSException
     {
-        EmbeddedProducer p = new EmbeddedProducer(destination);
+        EmbeddedMessageProducer p = new EmbeddedMessageProducer(destination);
         createdProducers.add(p);
         return p;
     }
@@ -185,7 +194,7 @@ public class EmbeddedSession implements Session
     @Override
     public MessageConsumer createConsumer(Destination destination) throws JMSException
     {
-        EmbeddedConsumer c = new EmbeddedConsumer(destination);
+        EmbeddedMessageConsumer c = new EmbeddedMessageConsumer(destination);
         createdConsumers.add(c);
         return c;
     }
@@ -263,16 +272,21 @@ public class EmbeddedSession implements Session
         return closed;
     }
 
-    public List<EmbeddedProducer> getCreatedProducers()
+    public List<EmbeddedMessageProducer> getCreatedProducers()
     {
         return createdProducers;
     }
 
-    public List<EmbeddedConsumer> getCreatedConsumers()
+    public List<EmbeddedMessageConsumer> getCreatedConsumers()
     {
         return createdConsumers;
     }
 
+    @Override
+    public String toString()
+    {
+        return "EmbeddedSession[" + sessionId + "]";
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

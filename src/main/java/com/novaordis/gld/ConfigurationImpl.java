@@ -64,31 +64,22 @@ public class ConfigurationImpl implements Configuration
     private int keySize;
     private int valueSize;
     private boolean useDifferentValues;
-
     private String output;
-
     private List<Node> nodes;
     private String password;
-
     private long keyExpirationSecs;
-
     private Properties configurationFileContent;
-
     private String exceptionFile;
-
-    private Service service;
-
     private String cacheName;
-
     private String keyStoreFile;
+    private ContentType contentType;
+    private String username;
 
     private LoadStrategy loadStrategy;
 
     private StorageStrategy storageStrategy;
 
-    private ContentType contentType;
-
-    private String username;
+    private Service service;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 

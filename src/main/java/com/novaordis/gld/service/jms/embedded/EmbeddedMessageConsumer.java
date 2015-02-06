@@ -22,7 +22,7 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 
-public class EmbeddedConsumer implements MessageConsumer
+public class EmbeddedMessageConsumer implements MessageConsumer
 {
 
     // Constants -------------------------------------------------------------------------------------------------------
@@ -33,11 +33,14 @@ public class EmbeddedConsumer implements MessageConsumer
 
     private Destination destination;
 
+    private boolean closed;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedConsumer(Destination destination)
+    public EmbeddedMessageConsumer(Destination destination)
     {
         this.destination = destination;
+        this.closed = false;
     }
 
     // MessageConsumer implementation ----------------------------------------------------------------------------------
@@ -81,7 +84,7 @@ public class EmbeddedConsumer implements MessageConsumer
     @Override
     public void close() throws JMSException
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        closed = true;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -90,6 +93,11 @@ public class EmbeddedConsumer implements MessageConsumer
     public String toString()
     {
         return "EmbeddedConsumer[" + destination + "]";
+    }
+
+    public boolean isClosed()
+    {
+        return closed;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

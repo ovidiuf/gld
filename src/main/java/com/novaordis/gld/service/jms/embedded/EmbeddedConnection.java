@@ -43,6 +43,8 @@ public class EmbeddedConnection implements Connection
 
     private List<EmbeddedSession> createdSessions;
 
+    private int sessionCounter;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public EmbeddedConnection()
@@ -50,6 +52,7 @@ public class EmbeddedConnection implements Connection
         this.started = false;
         this.closed = false;
         this.createdSessions = new ArrayList<>();
+        this.sessionCounter = 0;
     }
 
     // Connection implementation ---------------------------------------------------------------------------------------
@@ -57,7 +60,7 @@ public class EmbeddedConnection implements Connection
     @Override
     public Session createSession(boolean b, int i) throws JMSException
     {
-        EmbeddedSession s = new EmbeddedSession(b, i);
+        EmbeddedSession s = new EmbeddedSession(sessionCounter++, b, i);
         createdSessions.add(s);
         return s;
     }

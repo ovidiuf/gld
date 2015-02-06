@@ -21,11 +21,7 @@ import com.novaordis.gld.Service;
 import com.novaordis.gld.service.jms.JmsEndpoint;
 import com.novaordis.gld.strategy.load.jms.Destination;
 import com.novaordis.gld.strategy.load.jms.JmsLoadStrategy;
-import com.novaordis.gld.strategy.load.jms.Queue;
-import com.novaordis.gld.strategy.load.jms.Topic;
 
-
-import javax.jms.Session;
 
 public abstract class JmsOperation implements Operation
 {

@@ -40,9 +40,15 @@ public class Consumer implements JmsEndpoint
 
     // JmsEndpoint implementation --------------------------------------------------------------------------------------
 
+    /**
+     * @see com.novaordis.gld.service.jms.JmsEndpoint#close()
+     */
     @Override
     public void close() throws Exception
     {
+        // do not close the session, it may be reused
+
+        consumer.close();
     }
 
     @Override

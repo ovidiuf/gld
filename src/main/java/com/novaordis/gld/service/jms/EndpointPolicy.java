@@ -18,5 +18,6 @@ package com.novaordis.gld.service.jms;
 
 public enum EndpointPolicy
 {
-    NEW_SESSION_AND_ENDPOINT_PER_OPERATION
+    NEW_SESSION_NEW_ENDPOINT_PER_OPERATION,
+    REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION
 }

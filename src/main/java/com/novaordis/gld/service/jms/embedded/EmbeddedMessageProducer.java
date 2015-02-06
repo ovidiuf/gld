@@ -21,7 +21,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageProducer;
 
-public class EmbeddedProducer implements MessageProducer
+public class EmbeddedMessageProducer implements MessageProducer
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -30,12 +30,14 @@ public class EmbeddedProducer implements MessageProducer
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private Destination destination;
+    private boolean closed;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedProducer(Destination destination)
+    public EmbeddedMessageProducer(Destination destination)
     {
         this.destination = destination;
+        this.closed = false;
     }
 
     // MessageProducer implementation ----------------------------------------------------------------------------------
@@ -108,7 +110,7 @@ public class EmbeddedProducer implements MessageProducer
     @Override
     public void close() throws JMSException
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        closed = true;
     }
 
     @Override
@@ -141,6 +143,11 @@ public class EmbeddedProducer implements MessageProducer
     public String toString()
     {
         return "EmbeddedProducer[" + destination + "]";
+    }
+
+    public boolean isClosed()
+    {
+        return closed;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

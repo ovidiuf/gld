@@ -25,6 +25,10 @@ import javax.jms.Session;
  */
 public interface JmsEndpoint
 {
+    /**
+     * Closes the endpoint and the endpoint only - does not close the associated session, because we may be in a
+     * situation where we want to reuse the session for further work.
+     */
     void close() throws Exception;
 
     Session getSession();

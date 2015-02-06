@@ -26,6 +26,7 @@ import com.novaordis.gld.service.jms.EndpointPolicy;
 import com.novaordis.gld.service.jms.JmsEndpoint;
 import com.novaordis.gld.service.jms.JmsResourceManager;
 import com.novaordis.gld.service.jms.embedded.EmbeddedConnectionFactory;
+import com.novaordis.gld.strategy.load.jms.JmsLoadStrategy;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
@@ -102,7 +103,12 @@ public class ActiveMQService implements Service
         }
 
         connection.start();
-        resourceManager = new JmsResourceManager(connection, EndpointPolicy.NEW_SESSION_AND_ENDPOINT_PER_OPERATION);
+
+        // we get our endpoint policy from the load strategy; it can only be a JMS load strategy
+
+        JmsLoadStrategy loadStrategy = (JmsLoadStrategy)configuration.getLoadStrategy();
+        EndpointPolicy endpointPolicy = loadStrategy.getEndpointPolicy();
+        resourceManager = new JmsResourceManager(connection, endpointPolicy);
     }
 
     @Override

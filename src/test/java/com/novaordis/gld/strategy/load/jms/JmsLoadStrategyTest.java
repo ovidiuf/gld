@@ -18,6 +18,7 @@ package com.novaordis.gld.strategy.load.jms;
 
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.mock.MockConfiguration;
+import com.novaordis.gld.service.jms.EndpointPolicy;
 import com.novaordis.gld.strategy.load.LoadStrategyTest;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -27,7 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public abstract class JmsLoadStrategyTest extends LoadStrategyTest
@@ -45,10 +46,10 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void defaultReuseSessionIsFalse()
+    public void defaultReuseSessionIsTrue()
     {
         JmsLoadStrategy jms = getLoadStrategyToTest();
-        assertFalse(jms.isReuseSession());
+        assertEquals(EndpointPolicy.REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION, jms.getEndpointPolicy());
         log.debug(jms);
     }
 
@@ -135,6 +136,56 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
         jms.configure(mc, new ArrayList<>(Arrays.asList("--queue", "test")), 0);
 
         assertEquals(777L, jms.getRemainingOperations());
+    }
+
+    // endpoint-policy -------------------------------------------------------------------------------------------------
+
+    @Test
+    public void defaultEndpointPolicy() throws Exception
+    {
+        JmsLoadStrategy jms = getLoadStrategyToTest();
+        assertEquals(EndpointPolicy.REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION, jms.getEndpointPolicy());
+    }
+
+    @Test
+    public void setEndpointPolicy() throws Exception
+    {
+        MockConfiguration mc = new MockConfiguration();
+
+        JmsLoadStrategy jms = getLoadStrategyToTest();
+
+        List<String> args = new ArrayList<>(Arrays.asList(
+            "--endpoint-policy", "NEW_SESSION_NEW_ENDPOINT_PER_OPERATION", "--topic", "test"));
+
+        jms.configure(mc, args, 0);
+
+        assertEquals(EndpointPolicy.NEW_SESSION_NEW_ENDPOINT_PER_OPERATION, jms.getEndpointPolicy());
+    }
+
+    @Test
+    public void invalidEndpointPolicy() throws Exception
+    {
+        MockConfiguration mc = new MockConfiguration();
+
+        JmsLoadStrategy jms = getLoadStrategyToTest();
+
+        List<String> args = new ArrayList<>(Arrays.asList(
+            "--queue", "test", "--endpoint-policy", "THERE-IS-NO-SUCH-ENDPOINT-POLICY"));
+
+        try
+        {
+            jms.configure(mc, args, 0);
+            fail("should have failed with UserErrorException");
+        }
+        catch(UserErrorException e)
+        {
+            log.info(e.getMessage());
+
+            Throwable cause = e.getCause();
+            assertTrue(cause instanceof IllegalArgumentException);
+
+            log.info(cause.getMessage());
+        }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

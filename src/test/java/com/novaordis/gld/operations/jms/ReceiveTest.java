@@ -17,12 +17,11 @@
 package com.novaordis.gld.operations.jms;
 
 import com.novaordis.gld.service.jms.Consumer;
-import com.novaordis.gld.service.jms.embedded.EmbeddedConsumer;
+import com.novaordis.gld.service.jms.embedded.EmbeddedMessageConsumer;
 import com.novaordis.gld.service.jms.embedded.EmbeddedQueue;
 import com.novaordis.gld.service.jms.embedded.EmbeddedSession;
 import com.novaordis.gld.strategy.load.jms.JmsLoadStrategy;
 import com.novaordis.gld.strategy.load.jms.ReceiveLoadStrategy;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import javax.jms.Session;
@@ -30,8 +29,6 @@ import javax.jms.Session;
 public class ReceiveTest extends JmsOperationTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = Logger.getLogger(ReceiveTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -48,8 +45,8 @@ public class ReceiveTest extends JmsOperationTest
         Receive receive = getJmsOperationToTest(loadStrategy);
 
         EmbeddedQueue jmsQueue = new EmbeddedQueue("TEST");
-        EmbeddedSession jmsSession = new EmbeddedSession(false, Session.AUTO_ACKNOWLEDGE);
-        EmbeddedConsumer jmsConsumer = (EmbeddedConsumer)jmsSession.createConsumer(jmsQueue);
+        EmbeddedSession jmsSession = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
+        EmbeddedMessageConsumer jmsConsumer = (EmbeddedMessageConsumer)jmsSession.createConsumer(jmsQueue);
 
         Consumer endpoint = new Consumer(jmsConsumer, jmsSession);
 
@@ -65,8 +62,8 @@ public class ReceiveTest extends JmsOperationTest
         Receive receive = getJmsOperationToTest(loadStrategy);
 
         EmbeddedQueue jmsQueue = new EmbeddedQueue("TEST");
-        EmbeddedSession jmsSession = new EmbeddedSession(false, Session.AUTO_ACKNOWLEDGE);
-        EmbeddedConsumer jmsConsumer = (EmbeddedConsumer)jmsSession.createConsumer(jmsQueue);
+        EmbeddedSession jmsSession = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
+        EmbeddedMessageConsumer jmsConsumer = (EmbeddedMessageConsumer)jmsSession.createConsumer(jmsQueue);
 
         Consumer endpoint = new Consumer(jmsConsumer, jmsSession);
 
