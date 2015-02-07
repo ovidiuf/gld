@@ -33,6 +33,8 @@ public interface Configuration
 
     Command getCommand();
 
+    void setCommand(Command c);
+
     /**
      * Set with --threads
      */
@@ -114,8 +116,6 @@ public interface Configuration
      * The name of the file to read keys from.
      */
     String getKeyStoreFile();
-
-    ContentType getContentType();
 
     String getUsername();
 

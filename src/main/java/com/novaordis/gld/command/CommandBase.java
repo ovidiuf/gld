@@ -39,6 +39,10 @@ abstract class CommandBase implements Command
     protected CommandBase(Configuration conf)
     {
         this.conf = conf;
+
+        // establish bidirectional relationship
+        conf.setCommand(this);
+
         this.arguments = new ArrayList<>();
     }
 

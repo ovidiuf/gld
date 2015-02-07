@@ -17,6 +17,7 @@
 package com.novaordis.gld.strategy.load;
 
 import com.novaordis.gld.UserErrorException;
+import com.novaordis.gld.command.Load;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.strategy.load.cache.MockLoadStrategy;
 import org.apache.log4j.Logger;
@@ -24,6 +25,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -91,7 +93,10 @@ public class LoadStrategyFactoryTest
         List<String> args = new ArrayList<>(Arrays.asList(
             "something", "--load-strategy", name, "--mock-argument", "blah", "something-else"));
 
-        MockLoadStrategy mls = (MockLoadStrategy)LoadStrategyFactory.fromArguments(new MockConfiguration(), args, 1);
+        MockConfiguration mc = new MockConfiguration();
+        new Load(mc, Collections.<String>emptyList(), 0); // Load install itself in the configuration
+
+        MockLoadStrategy mls = (MockLoadStrategy)LoadStrategyFactory.fromArguments(mc, args, 1);
 
         assertNotNull(mls);
 
@@ -110,7 +115,10 @@ public class LoadStrategyFactoryTest
         List<String> args = new ArrayList<>(Arrays.asList(
             "something", "--load-strategy", name, "--mock-argument", "blah", "something-else"));
 
-        MockLoadStrategy mls = (MockLoadStrategy)LoadStrategyFactory.fromArguments(new MockConfiguration(), args, 1);
+        MockConfiguration mc = new MockConfiguration();
+        new Load(mc, Collections.<String>emptyList(), 0); // Load install itself in the configuration
+
+        MockLoadStrategy mls = (MockLoadStrategy)LoadStrategyFactory.fromArguments(mc, args, 1);
 
         assertNotNull(mls);
 

@@ -1,12 +1,9 @@
 
 Generic Load Driver ${version}
 
-A program that sends operations into cache nodes and collects client-side statistics. The program
-can also be used for HA testing, content queries and in general for any client-side cache interaction.
-Please note that until this sentence disappears from the help, the program should be used with caution
-as it was initially not intended for use by the general public (essentially, if you find a bug, the
-author will immediately claim that what you found is not a bug, but a feature, and you're simply not
-getting it).
+gld (Generic Load Driver) is a program that sends operations into services (caches, JMS providers,
+etc. and collects client-side statistics.  The program can also be used for  HA testing,  content
+queries and in general for any client-side activity simulation.
 
 Usage:
 
@@ -16,10 +13,11 @@ Usage:
 
 Global Options:
 
-    --type <load-type>. Specifies the type of load to be sent into the service provider. Valid
-      values are key-value (suitable for loading cache providers), jms (suitable for loading JMS
-      providers), http, etc. Default is "key-value". The default load strategy for caches is
-      "WriteThenRead" and for JMS providers is "DefaultJms.
+    --type <load-type>.    Specifies the type of load to be sent into the service provider.  Valid
+      values are "key-value" (suitable for loading cache providers),  "jms"  (suitable for loading
+      JMS providers),  "http", etc.  The default is "key-value".  The default  load strategy   for
+      caches is "WriteThenRead" and for JMS load is "Send". More details about load strategies can
+      be found below under the "Load Strategies" section.
 
     --nodes <node1:port1,node2:port2,...> - the list of host:port values for the backend cache
       nodes to send requests into. There is no default, the node list must be explicitly specified.
@@ -172,7 +170,7 @@ Commands:
                 --threads 10 --output ./delete-stats.csv
 
 
-Load Strategies:
+Load Strategies
 
     Cache
 
@@ -212,6 +210,13 @@ Load Strategies:
 
                 --load-strategy send
 
+            Example:
+
+            gld load --type jms --threads 10 --load-strategy send \
+                 --nodes node1.example.com:61616 --username admin --password \
+                 --queue TEST --endpoint-policy REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION \
+                 --max-operations 1
+
         Receive
 
             This strategy can be explicitly configured with:
@@ -222,13 +227,13 @@ Load Strategies:
 
                 --timeout <timeout-ms> - receive timeout. Default is 0 (never timeout).
 
+            Example:
 
-
-
-
+            gld load --type jms --threads 10 --load-strategy receive \
+                 --nodes node1.example.com:61616 --username admin --password \
+                 --queue TEST --endpoint-policy REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION \
+                 --max-operations 1
 
 Authors:
 
     Ovidiu Feodorov <ovidiu@novaordis.com>
-
-

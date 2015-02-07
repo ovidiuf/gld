@@ -72,7 +72,6 @@ public class ConfigurationImpl implements Configuration
     private String exceptionFile;
     private String cacheName;
     private String keyStoreFile;
-    private ContentType contentType;
     private String username;
 
     private LoadStrategy loadStrategy;
@@ -106,6 +105,12 @@ public class ConfigurationImpl implements Configuration
     public Command getCommand()
     {
         return command;
+    }
+
+    @Override
+    public void setCommand(Command c)
+    {
+        this.command = c;
     }
 
     /**
@@ -268,12 +273,6 @@ public class ConfigurationImpl implements Configuration
     }
 
     @Override
-    public ContentType getContentType()
-    {
-        return contentType;
-    }
-
-    @Override
     public String getUsername()
     {
         return username;
@@ -370,14 +369,14 @@ public class ConfigurationImpl implements Configuration
                 command.initialize();
                 return;
             }
-            else if ("test".equals(crt))
+            else if (command == null && "test".equals(crt))
             {
                 command = new Test(this);
                 return;
             }
             else if ("load".equals(crt))
             {
-                command = new Load(this);
+                command = new Load(this, arguments, i + 1);
             }
             else if ("content".equals(crt))
             {
@@ -562,14 +561,6 @@ public class ConfigurationImpl implements Configuration
                     }
                 }
             }
-            else if ("--type".equals(crt))
-            {
-                if (i < args.length - 1)
-                {
-                    String stype  = args[++i];
-                    contentType = ContentType.fromString(stype);
-                }
-            }
             else if ("--username".equals(crt))
             {
                 if (i == args.length - 1)
@@ -747,11 +738,6 @@ public class ConfigurationImpl implements Configuration
             proxyString = (String)configurationFileContent.get("proxies");
         }
 
-        if (contentType == null)
-        {
-            contentType = ContentType.KEYVALUE;
-        }
-
         if (command != null && command.isRemote())
         {
             if (proxyString != null)
@@ -790,20 +776,28 @@ public class ConfigurationImpl implements Configuration
                 throw new IllegalStateException("empty nodes list after non-null string: " + nodesString);
             }
 
-
             // TODO we handle embedded situation differently for cache and for JMS for historical reasons
             //      (for cache, we have a top-level EmbeddedCacheService, while for JMS, we have an ActiveMQ
             //      service that delegates to an EmbeddedJMSConnection factory). We need to unify to one
             //      consistent solution.
 
-            if (nodes.get(0) instanceof EmbeddedNode && !ContentType.MESSAGE.equals(getContentType()))
+            if (!(command instanceof Load))
+            {
+                throw new RuntimeException(
+                    "NOT YET IMPLEMENTED (1): we temporarily disabled support for ContentType for all commands, except Load. Need to refactor this.");
+            }
+
+            Load loadCommand = (Load)command;
+            ContentType contentType = loadCommand.getContentType();
+
+            if (nodes.get(0) instanceof EmbeddedNode && !ContentType.JMS.equals(contentType))
             {
                 EmbeddedNode en = (EmbeddedNode)nodes.get(0);
                 service = new EmbeddedCacheService(en.getCapacity());
             }
             else
             {
-                if (ContentType.KEYVALUE.equals(getContentType()))
+                if (ContentType.KEYVALUE.equals(contentType))
                 {
                     service =
                         new InfinispanService(getNodes(), getPassword(), getMaxTotal(),

@@ -19,7 +19,7 @@ package com.novaordis.gld;
 public enum ContentType
 {
     KEYVALUE,
-    MESSAGE;
+    JMS;
 
     /**
      * @throws java.lang.IllegalArgumentException on null argument.
@@ -33,6 +33,10 @@ public enum ContentType
         }
 
         String ucs = s.toUpperCase();
+
+        // get rid of dashes (to allow for 'key-value')
+
+        ucs = ucs.replace("-", "");
 
         try
         {

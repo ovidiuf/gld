@@ -16,10 +16,8 @@
 
 package com.novaordis.gld.mock;
 
-
 import com.novaordis.gld.Command;
 import com.novaordis.gld.Configuration;
-import com.novaordis.gld.ContentType;
 import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.CacheService;
@@ -27,7 +25,6 @@ import com.novaordis.gld.StorageStrategy;
 
 import java.util.List;
 
-// TODO replace with a Mockito mock
 public class MockConfiguration implements Configuration
 {
     // Constants -------------------------------------------------------------------------------------------------------
@@ -49,8 +46,6 @@ public class MockConfiguration implements Configuration
 
     private Command command;
 
-    private ContentType contentType;
-
     private String username;
 
     private Long maxOperations;
@@ -59,12 +54,13 @@ public class MockConfiguration implements Configuration
 
     public MockConfiguration()
     {
+        this.command = null;
+        this.username = null;
         this.keySize = 1;
         this.valueSize = 1;
         this.sleep = -1;
         this.useDifferentValues = false;
         this.exceptionFile = null;
-        this.contentType = ContentType.KEYVALUE;
     }
 
     // Configuration implementation ------------------------------------------------------------------------------------
@@ -103,6 +99,12 @@ public class MockConfiguration implements Configuration
     public Command getCommand()
     {
         return command;
+    }
+
+    @Override
+    public void setCommand(Command c)
+    {
+        this.command = c;
     }
 
     @Override
@@ -193,12 +195,6 @@ public class MockConfiguration implements Configuration
     public String getKeyStoreFile()
     {
         return keyStoreFile;
-    }
-
-    @Override
-    public ContentType getContentType()
-    {
-        return contentType;
     }
 
     @Override

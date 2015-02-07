@@ -17,6 +17,8 @@
 package com.novaordis.gld.command;
 
 import com.novaordis.gld.Configuration;
+import com.novaordis.gld.ConfigurationImpl;
+import com.novaordis.gld.ContentType;
 import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.mock.MockCacheService;
@@ -25,6 +27,11 @@ import com.novaordis.gld.strategy.load.cache.MockLoadStrategy;
 import com.novaordis.gld.strategy.storage.MockStorageStrategy;
 import org.apache.log4j.Logger;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
@@ -54,7 +61,7 @@ public class LoadCommandTest extends CommandTest
         MockConfiguration mc = new MockConfiguration();
         mc.setCacheService(new MockCacheService());
 
-        Load load = new Load(mc);
+        Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
         assertNull(load.getLoadStrategy());
 
@@ -76,7 +83,7 @@ public class LoadCommandTest extends CommandTest
         MockConfiguration mc = new MockConfiguration();
         mc.setCacheService(new MockCacheService());
 
-        Load load = new Load(mc);
+        Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
         load.addArgument("--strategy");
 
@@ -99,7 +106,7 @@ public class LoadCommandTest extends CommandTest
         MockConfiguration mc = new MockConfiguration();
         mc.setCacheService(new MockCacheService());
 
-        Load load = new Load(mc);
+        Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
         load.addArgument("--strategy");
         load.addArgument("IAmQuiteSureThisStrategyDoesNotExist");
@@ -125,7 +132,7 @@ public class LoadCommandTest extends CommandTest
         MockConfiguration mc = new MockConfiguration();
         mc.setCacheService(new MockCacheService());
 
-        Load load = new Load(mc);
+        Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
         load.addArgument("--strategy");
         load.addArgument("FailureToInstantiate");
@@ -152,7 +159,7 @@ public class LoadCommandTest extends CommandTest
         MockConfiguration mc = new MockConfiguration();
         mc.setCacheService(new MockCacheService());
 
-        Load load = new Load(mc);
+        Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
         load.addArgument("--strategy");
         load.addArgument("NotA");
@@ -181,7 +188,7 @@ public class LoadCommandTest extends CommandTest
         MockConfiguration mc = new MockConfiguration();
         mc.setCacheService(new MockCacheService());
 
-        Load load = new Load(mc);
+        Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
         load.addArgument("--strategy");
         load.addArgument("Mock");
@@ -205,7 +212,7 @@ public class LoadCommandTest extends CommandTest
         MockConfiguration mc = new MockConfiguration();
         mc.setCacheService(new MockCacheService());
 
-        Load load = new Load(mc);
+        Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
         load.addArgument("--storage-strategy");
         load.addArgument("Mock");
@@ -233,7 +240,7 @@ public class LoadCommandTest extends CommandTest
         MockConfiguration mc = new MockConfiguration();
         mc.setCacheService(new MockCacheService());
 
-        Load load = new Load(mc);
+        Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
         load.addArgument("--load-strategy");
         load.addArgument("Mock");
@@ -268,7 +275,7 @@ public class LoadCommandTest extends CommandTest
         MockConfiguration mc = new MockConfiguration();
         mc.setCacheService(new MockCacheService());
 
-        Load load = new Load(mc);
+        Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
         load.addArgument("--read-to-write");
 
@@ -289,7 +296,7 @@ public class LoadCommandTest extends CommandTest
         MockConfiguration mc = new MockConfiguration();
         mc.setCacheService(new MockCacheService());
 
-        Load load = new Load(mc);
+        Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
         load.addArgument("--write-to-read");
 
@@ -310,7 +317,7 @@ public class LoadCommandTest extends CommandTest
         MockConfiguration mc = new MockConfiguration();
         mc.setCacheService(new MockCacheService());
 
-        Load load = new Load(mc);
+        Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
         load.addArgument("--write-toread");
         load.addArgument("66");
@@ -326,6 +333,100 @@ public class LoadCommandTest extends CommandTest
         }
     }
 
+    // content type ----------------------------------------------------------------------------------------------------
+
+    @Test
+    public void type_default_KeyValue() throws Exception
+    {
+        MockConfiguration mc = new MockConfiguration();
+        List<String> args = new ArrayList<>(Arrays.asList("load"));
+        Load load = new Load(mc, args, 0);
+        assertEquals(ContentType.KEYVALUE, load.getContentType());
+    }
+
+    @Test
+    public void type_KeyValue() throws Exception
+    {
+        MockConfiguration mc = new MockConfiguration();
+        List<String> args = new ArrayList<>(Arrays.asList("load", "--type", "key-value"));
+        Load load = new Load(mc, args, 0);
+        assertEquals(ContentType.KEYVALUE, load.getContentType());
+    }
+
+    @Test
+    public void type_JMS() throws Exception
+    {
+        MockConfiguration mc = new MockConfiguration();
+        List<String> args = new ArrayList<>(Arrays.asList("load", "--type", "jms"));
+        Load load = new Load(mc, args, 0);
+        assertEquals(ContentType.JMS, load.getContentType());
+    }
+
+    @Test
+    public void invalidType() throws Exception
+    {
+        MockConfiguration mc = new MockConfiguration();
+        List<String> args = new ArrayList<>(Arrays.asList("load", "--type", "blah"));
+
+        try
+        {
+            new Load(mc, args, 0);
+            fail("should fail on invalid content type");
+        }
+        catch(UserErrorException e)
+        {
+            log.info(e.getMessage());
+        }
+    }
+
+    @Test
+    public void keyValueDefault() throws Exception
+    {
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--nodes",
+                "embedded"
+            });
+
+        Load command = (Load)c.getCommand();
+        assertEquals(ContentType.KEYVALUE, command.getContentType());
+    }
+
+    @Test
+    public void keyValueExplicit() throws Exception
+    {
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--type",
+                "keyvalue",
+                "--nodes",
+                "embedded"
+            });
+
+        Load command = (Load)c.getCommand();
+        assertEquals(ContentType.KEYVALUE, command.getContentType());
+    }
+
+    @Test
+    public void jms() throws Exception
+    {
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--type",
+                "jms",
+                "--nodes",
+                "embedded",
+                "--queue",
+                "test"
+            });
+
+        Load command = (Load)c.getCommand();
+        assertEquals(ContentType.JMS, command.getContentType());
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
@@ -333,7 +434,7 @@ public class LoadCommandTest extends CommandTest
     @Override
     protected Load getCommandToTest(Configuration c)
     {
-        return new Load(c);
+        return new Load(c, Collections.<String>emptyList(), 0);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

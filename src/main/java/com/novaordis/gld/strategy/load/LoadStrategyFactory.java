@@ -16,11 +16,13 @@
 
 package com.novaordis.gld.strategy.load;
 
+import com.novaordis.gld.Command;
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.ContentType;
 import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.Util;
+import com.novaordis.gld.command.Load;
 
 import java.util.List;
 
@@ -73,9 +75,18 @@ public class LoadStrategyFactory
             strategyName = Character.toUpperCase(strategyName.charAt(0)) + strategyName.substring(1);
         }
 
-        ContentType contentType = configuration.getContentType();
+        Command command = configuration.getCommand();
 
-        String subPackage = ContentType.MESSAGE.equals(contentType) ? "jms" : "cache";
+        if (!(command instanceof Load))
+        {
+            throw new RuntimeException(
+                "NOT YET IMPLEMENTED (2): we temporarily disabled support for ContentType for all commands, except Load. Need to refactor this.");
+        }
+
+        Load loadCommand = (Load)command;
+        ContentType contentType = loadCommand.getContentType();
+
+        String subPackage = ContentType.JMS.equals(contentType) ? "jms" : "cache";
 
         try
         {

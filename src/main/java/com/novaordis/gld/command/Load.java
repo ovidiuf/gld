@@ -23,6 +23,8 @@ import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.MultiThreadedRunnerImpl;
 import com.novaordis.gld.Service;
 import com.novaordis.gld.StorageStrategy;
+import com.novaordis.gld.UserErrorException;
+import com.novaordis.gld.Util;
 import com.novaordis.gld.strategy.load.LoadStrategyFactory;
 import com.novaordis.gld.strategy.load.cache.WriteThenReadLoadStrategy;
 import com.novaordis.gld.strategy.load.jms.SendLoadStrategy;
@@ -41,15 +43,17 @@ public class Load extends CommandBase
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Configuration configuration;
+    private ContentType contentType;
     private LoadStrategy loadStrategy;
     private StorageStrategy storageStrategy;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Load(Configuration c)
+    public Load(Configuration c, List<String> arguments, int from) throws UserErrorException
     {
         super(c);
+        contentType = ContentType.KEYVALUE;
+        processContextRelevantArguments(arguments, from);
     }
 
     // Command implementation ------------------------------------------------------------------------------------------
@@ -57,11 +61,9 @@ public class Load extends CommandBase
     @Override
     public void initialize() throws Exception
     {
-        configuration = getConfiguration();
+        processContextRelevantArguments2_ToRefactor(getArguments(), 0);
 
-        processArguments();
-
-        Service service = configuration.getService();
+        Service service = getConfiguration().getService();
 
         if (service == null)
         {
@@ -112,6 +114,11 @@ public class Load extends CommandBase
         return loadStrategy;
     }
 
+    public ContentType getContentType()
+    {
+        return contentType;
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
@@ -121,11 +128,24 @@ public class Load extends CommandBase
     /**
      * Parse context-relevant command line arguments and removes them from the list.
      */
-    private void processArguments() throws Exception
+    private void processContextRelevantArguments(List<String> arguments, int from) throws UserErrorException
     {
-        List<String> arguments = getArguments();
+        String contentTypeAsString = Util.extractString("--type", arguments, from);
 
-        for(int i = 0; i < arguments.size(); i ++)
+        if (contentTypeAsString != null)
+        {
+            this.contentType = ContentType.fromString(contentTypeAsString);
+        }
+    }
+
+    /**
+     * Parse context-relevant command line arguments and removes them from the list.
+     */
+    private void processContextRelevantArguments2_ToRefactor(List<String> arguments, int from) throws Exception
+    {
+        Configuration configuration = getConfiguration();
+
+        for(int i = from; i < arguments.size(); i ++)
         {
             String crt = arguments.get(i);
 
@@ -143,11 +163,11 @@ public class Load extends CommandBase
 
         if (loadStrategy == null)
         {
-            if (ContentType.KEYVALUE.equals(getConfiguration().getContentType()))
+            if (ContentType.KEYVALUE.equals(getContentType()))
             {
                 loadStrategy = DEFAULT_CACHE_LOAD_STRATEGY;
             }
-            else if (ContentType.MESSAGE.equals(getConfiguration().getContentType()))
+            else if (ContentType.JMS.equals(getContentType()))
             {
                 loadStrategy = DEFAULT_JMS_LOAD_STRATEGY;
             }

@@ -71,9 +71,15 @@ public class ContentTypeTest
     }
 
     @Test
-    public void message() throws Exception
+    public void keyDashvalue() throws Exception
     {
-        assertEquals(ContentType.MESSAGE, ContentType.fromString("message"));
+        assertEquals(ContentType.KEYVALUE, ContentType.fromString("key-value"));
+    }
+
+    @Test
+    public void jms() throws Exception
+    {
+        assertEquals(ContentType.JMS, ContentType.fromString("jms"));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
