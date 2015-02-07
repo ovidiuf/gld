@@ -1,23 +1,8 @@
 #!/bin/bash
 
-reldir=$(dirname $0)
-project_home=${reldir}/..
 
 command=${0##*/}
 
-function get_version()
-{
-    local pom_file=${project_home}/pom.xml
-    [ -f ${pom_file} ] || { echo "no ${pom_file} found" 1>&2; exit 1; }
-    local first_version_line;
-    first_version_line=$(cat ${pom_file} | grep "^ *<version>" | head -1) || { echo "failed to get <version> from ${pom_file}" 1>&2; exit 1; }
-    [ "${first_version_line}" = "" ] && { echo "empty version from ${pom_file}" 1>&2; exit 1; }
-    local version;
-    version=${first_version_line#*>}
-    version=${version%%\<*}
-    [ "${version}" = "" ] && { echo "could not extract version from ${pom_file}" 1>&2; exit 1; }
-    echo ${version}
-}
 
 function get_dependencies()
 {
@@ -64,36 +49,6 @@ case "${command}" in
         (cd ${project_home}/target; zip -r ./gld-${version}.zip gld-${version}) && echo "${project_home}/target/gld-${version}.zip created" || exit 1
         ;;
 
-  install-locally)
-
-        [ "${RUNTIME_DIR}" = "" ] && { echo "'RUNTIME_DIR' environment variable not set. Set it and try again" 1>&2; exit 1; }
-        [ -d ${RUNTIME_DIR} ] || { echo "'RUNTIME_DIR' ${RUNTIME_DIR} does not exist" 1>&2; exit 1; }
-
-        version=$(get_version) || exit 1
-        zip_file=${project_home}/target/gld-${version}.zip
-
-        [ -f ${zip_file} ] || { echo "no release zip ${zip_file} found - run ${reldir}/make-zip" 1>&2; exit 1; }
-
-        if [ -d ${RUNTIME_DIR}/gld-${version} ]; then
-            if ${force}; then
-                rm -r ${RUNTIME_DIR}/gld-${version} && \
-                    echo "gld-${version} was installed already, but --force was used so it was removed" || \
-                    { echo "failed to remove existing ${RUNTIME_DIR}/gld-${version}" 1>&2; exit 1; }
-            else
-                echo "gld-${version} already installed in ${RUNTIME_DIR} and --force flag was not used"
-                exit 1;
-            fi
-        fi
-
-        unzip ${zip_file} -d ${RUNTIME_DIR} || { echo "failed to unzip into ${RUNTIME_DIR}" 1>&2; exit 1; }
-
-        if [ -h ${RUNTIME_DIR}/gld ]; then
-            rm ${RUNTIME_DIR}/gld && echo "existing link ${RUNTIME_DIR}/gld was deleted" || \
-                { echo "failed to delete the symbolic link ${RUNTIME_DIR}/gld"; exit 1; }
-        fi
-
-        (cd ${RUNTIME_DIR}; ln -s gld-${version} gld) && echo "installation successful"
-        ;;
 
   *)
         echo "unknown command ${command}"

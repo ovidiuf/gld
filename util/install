@@ -1,0 +1,249 @@
+#!/bin/bash
+#
+
+function display_help
+{
+cat <<EOF
+
+Installs gld locally or into a remote enviornment.
+
+    ./install [version] [--force] [environment-name]
+
+Where:
+
+     version - the version to install. Only required if the installation
+         is done in a remote environment. The logic  behind this  choice
+         is  that we  always want to install the  latest  version in the
+         local environment,  for testing,  so we  do not need to specify
+         it.  If the installation is done locally,  the script  will use
+         the current version being built in the work area.
+
+     --force -  if the version being installed is already installed, the
+         script will stop, unless --force is specified.
+
+     environment-name -  the name of the environment to install into. If
+         missing, install locally.
+
+EOF
+}
+
+reldir=$(dirname $0)
+project_home=${reldir}/..
+debug=false
+
+function debug
+{
+    ${debug} && echo "$1" 1>&2
+    return 0
+}
+
+function install
+{
+    local collocated=$1
+    local source=$2
+    local target_dir=$3
+    local force=$4
+
+    debug "install_locally(collocated: '${collocated}' source: '${source}' target: '${target_dir}' force: '${force}')"
+
+    [ "${target_dir}" = "" ] && { echo "'target_dir' not specified" 1>&2; exit 1; }
+    [ -d ${target_dir} ] || { echo "'target_dir' ${target_dir} does not exist" 1>&2; exit 1; }
+
+    gld_home=${target_dir}/$(basename ${source} .zip)
+    gld_home_basename=$(basename ${gld_home})
+
+    debug "gld_home: ${gld_home}"
+
+    if [ -d ${gld_home} ]; then
+
+        if ${force}; then
+            rm -r ${gld_home} && \
+                debug "${gld_home_basename} was installed already, but --force was used so it was removed" || \
+                { echo "failed to remove existing ${gld_home}" 1>&2; exit 1; }
+        else
+            echo "${gld_home_basename} already installed in ${target_dir}. Use '--force' to overwrite"
+            exit 1;
+        fi
+    fi
+
+    unzip -q ${source} -d ${target_dir} || { echo "failed to unzip ${source} into ${target_dir}" 1>&2; exit 1; }
+
+    local link_name
+    ${collocated} && link_name=gld || link_name=current
+
+    if [ -h ${target_dir}/${link_name} ]; then
+        rm ${target_dir}/${link_name} && \
+            debug "existing link ${target_dir}/${link_name} was deleted" || \
+            { echo "failed to delete the symbolic link ${target_dir}/${link_name}"; exit 1; }
+    fi
+
+    ${collocated} && location_label="in ${target_dir}" || location_label="remotely on $(uname -n):${target_dir}"
+
+    (cd ${target_dir}; ln -s ${gld_home_basename} ${link_name}) && \
+        echo "${gld_home_basename} successfully installed ${location_label}"
+}
+
+function get_version()
+{
+    local pom_file=${project_home}/pom.xml
+    [ -f ${pom_file} ] || { echo "no ${pom_file} found" 1>&2; exit 1; }
+    local first_version_line;
+
+    first_version_line=$(cat ${pom_file} | grep "^ *<version>" | head -1) || \
+        { echo "failed to get <version> from ${pom_file}" 1>&2; exit 1; }
+
+    [ "${first_version_line}" = "" ] && { echo "empty version from ${pom_file}" 1>&2; exit 1; }
+
+    local version;
+    version=${first_version_line#*>}
+    version=${version%%\<*}
+
+    [ "${version}" = "" ] && { echo "could not extract version from ${pom_file}" 1>&2; exit 1; }
+
+    echo ${version}
+}
+
+function remote_environment_install
+{
+    local version=$1
+    local environment=$2
+    local force=$3
+
+    debug "install_in_remote_environment(version: ${version}, environment: ${environment}, force: ${force})"
+
+    [ "${version}" = "" ] && { echo "'version' not specified" 1>&2; exit 1; }
+    [ "${environment}" = "" ] && { echo "'environment' not specified" 1>&2; exit 1; }
+
+    local zip_file=${project_home}/target/gld-${version}.zip
+
+    [ -f ${zip_file} ] || \
+        { echo "no release zip ${zip_file} found. Specify the correct version, or if the version '${version}' is correct, run ${reldir}/make-zip" 1>&2; exit 1; }
+
+    local environment_file=${reldir}/environments/${environment}
+
+    [ -f ${environment_file} ] || { echo "environment configuration file ${environment_file} does not exist" 1>&2; exit 1; }
+
+    local environment_user
+    local environment_installation_dir
+    local environment_hosts
+
+    . ${environment_file}
+
+    [ "${environment_user}" = "" ] && \
+        { echo "environment incorrectly configured: 'environment_user' not specfied in ${environment_file}" 1>&2; exit 1; }
+    [ "${environment_installation_dir}" = "" ] && \
+        { echo "environment incorrectly configured: 'environment_installation_dir' not specfied in ${environment_file}" 1>&2; exit 1; }
+    [ "${environment_hosts}" = "" ] && \
+        { echo "environment incorrectly configured: 'environment_hosts' not specfied in ${environment_file}" 1>&2; exit 1; }
+
+    for host in ${environment_hosts}; do
+        install_over_ssh ${environment_user} ${host} ${environment_installation_dir} ${zip_file} ${force} || exit 1
+    done
+
+    echo "gld-${version} installed in environment ${environment}"
+}
+
+function install_over_ssh
+{
+    local user=$1
+    local host=$2
+    local installation_dir=$3
+    local zip_file=$4
+    local force=$5
+
+    debug "installing into ${user}@${host}"
+
+    [ "${user}" = "" ] && { echo "'user' not specified" 1>&2; exit 1; }
+    [ "${host}" = "" ] && { echo "'host' not specified" 1>&2; exit 1; }
+    [ "${installation_dir}" = "" ] && { echo "'installation_dir' not specified" 1>&2; exit 1; }
+    [ "${zip_file}" = "" ] && { echo "'zip_file' not specified" 1>&2; exit 1; }
+    [ -f ${zip_file} ] || { echo "${zip_file} does not exist" 1>&2; exit 1; }
+
+    echo "uploading artifacts to ${user}@${host} ..."
+    scp ${zip_file} $0 ${user}@${host}:${installation_dir} || \
+        { echo "failed to scp to ${user}@${host}:${installation_dir}" 1>2; exit 1; }
+
+    ${force} && force_flag="--force"
+    ${debug} && debug_flag="--debug"
+
+    ssh ${user}@${host} "${installation_dir}/$(basename $0) ${debug_flag} --source ${installation_dir}/$(basename ${zip_file}) --target ${installation_dir} ${force_flag}" || \
+        { echo "failed to execute the remote installation script on ${user}@${host}" 1>2; exit 1; }
+}
+
+function main
+{
+    local force=false
+    local help=false
+    local debug=false
+    local version
+    local enviornment
+    local source
+    local target
+
+    while [ "$1" != "" ]; do
+
+        if [ "$1" = "--force" ]; then
+            force=true
+        elif [ "$1" = "?" -o "$1" = "--help" ]; then
+            help=true
+        elif [ "$1" = "--debug" ]; then
+            debug=true
+        elif [ "$1" = "--source" ]; then
+            shift
+            source=$1
+        elif [ "$1" = "--target" ]; then
+            shift
+            target=$1
+        elif [ "${version}" = "" ]; then
+            version=$1
+        elif [ "${enviornment}" = "" ]; then
+            enviornment=$1
+        fi
+        shift
+    done
+
+    ${help} && { display_help; exit 0; }
+
+    local remote_enviornment_install=false
+    local collocated=true
+
+    debug "source: ${source}, version: ${version}"
+
+    if [ "${source}" != "" ]; then
+
+        # this is an installation started remotely; the zip file was uploaded and it is
+        # available locally
+        collocated=false
+
+    elif [ "${version}" != "" ]; then
+
+         remote_enviornment_install=true
+         source=${project_home}/target/gld-${version}.zip
+
+    else
+
+        # local installation, the source is the just built zip
+        version=$(get_version) || exit 1
+        source=${project_home}/target/gld-${version}.zip
+
+    fi
+
+    [ -f ${source} ] || \
+        { echo "source file ${source} does not exist - either upload it or run ${reldir}/make-zip" 1>&2; exit 1; }
+
+    if [ "${target}" != "" ]; then
+        [ ! -d ${target} ] && { echo "--target directory ${target} does not exist" 1>&2; exit 2; }
+    else
+        [ "${RUNTIME_DIR}" = "" ] && { echo "neither --target nor RUNTIME_DIR defined" 1>&2; exit 1; }
+        [ ! -d ${RUNTIME_DIR} ] && { echo "RUNTIME_DIR ${RUNTIME_DIR} does not exist" 1>&2; exit 1; }
+        target=${RUNTIME_DIR}
+    fi
+
+    if ${remote_enviornment_install}; then
+        remote_environment_install "${version}" "${enviornment}" ${force}
+    else
+        install ${collocated} ${source} ${target} ${force}
+    fi
+}
+
+main $@
