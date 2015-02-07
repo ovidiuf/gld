@@ -298,45 +298,6 @@ public class ConfigurationImplTest extends Assert
         }
     }
 
-    // --max-operations ------------------------------------------------------------------------------------------------
-
-    @Test
-    public void missingMaxOperations() throws Exception
-    {
-        try
-        {
-            new ConfigurationImpl(new String[]
-                {
-                    "load",
-                    "--nodes",
-                    "embedded",
-                    "--max-operations"
-                });
-
-            fail("should fail with UserErrorException, missing --max-operations value");
-
-        }
-        catch(UserErrorException e)
-        {
-            log.info(e.getMessage());
-        }
-    }
-
-    @Test
-    public void maxOperations() throws Exception
-    {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--nodes",
-                "embedded",
-                "--max-operations",
-                "100"
-            });
-
-        assertEquals(new Long(100), c.getMaxOperations());
-    }
-
     // --username -----------------------------------------------------------------------------------------------------
 
     @Test

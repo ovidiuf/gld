@@ -20,6 +20,7 @@ import com.novaordis.gld.Configuration;
 import com.novaordis.gld.EmbeddedNode;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.ServiceTest;
+import com.novaordis.gld.command.Load;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.operations.jms.Send;
 import com.novaordis.gld.service.jms.EndpointPolicy;
@@ -32,6 +33,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -121,6 +123,7 @@ public class ActiveMQServiceTest extends ServiceTest
     public void endpointPolicy_NEW_SESSION_AND_ENDPOINT_PER_OPERATION() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
+        new Load(mc, Collections.<String>emptyList(), 0);
 
         // test for send
 
@@ -162,6 +165,7 @@ public class ActiveMQServiceTest extends ServiceTest
     public void endpointPolicy_defaultBehavior_REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
+        new Load(mc, Collections.<String>emptyList(), 0);
 
         // test for send
 

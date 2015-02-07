@@ -16,6 +16,7 @@
 
 package com.novaordis.gld.strategy.load.jms;
 
+import com.novaordis.gld.command.Load;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.operations.jms.Send;
 import org.junit.Test;
@@ -48,7 +49,9 @@ public class SendLoadStrategyTest extends JmsLoadStrategyTest
         List<String> args = new ArrayList<>(Arrays.asList("--queue", "test"));
 
         MockConfiguration mc = new MockConfiguration();
-        mc.setMaxOperations(2L);
+
+        // load will register itself with configuration
+        new Load(mc, new ArrayList<>(Arrays.asList("--max-operations", "2")), 0);
 
         sls.configure(mc, args, 0);
 

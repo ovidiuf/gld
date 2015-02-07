@@ -427,6 +427,88 @@ public class LoadCommandTest extends CommandTest
         assertEquals(ContentType.JMS, command.getContentType());
     }
 
+    // --max-operations ------------------------------------------------------------------------------------------------
+
+    @Test
+    public void missingMaxOperations() throws Exception
+    {
+        try
+        {
+            new ConfigurationImpl(new String[]
+                {
+                    "load",
+                    "--nodes",
+                    "embedded",
+                    "--max-operations"
+                });
+
+            fail("should fail with UserErrorException, missing --max-operations value");
+
+        }
+        catch(UserErrorException e)
+        {
+            log.info(e.getMessage());
+        }
+    }
+
+    @Test
+    public void maxOperations() throws Exception
+    {
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--nodes",
+                "embedded",
+                "--max-operations",
+                "100"
+            });
+
+        Load load = (Load)c.getCommand();
+        assertEquals(new Long(100), load.getMaxOperations());
+    }
+
+    @Test
+    public void maxOperations_default() throws Exception
+    {
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--nodes",
+                "embedded",
+            });
+
+        Load load = (Load)c.getCommand();
+
+        assertNull(load.getMaxOperations());
+    }
+
+    @Test
+    public void maxOperations_InvalidValue() throws Exception
+    {
+        try
+        {
+            new ConfigurationImpl(new String[]
+                {
+                    "load",
+                    "--nodes",
+                    "embedded",
+                    "--max-operations",
+                    "blah"
+                });
+
+            fail("should fail with UserErrorException, wrong --max-operations value");
+
+        }
+        catch(UserErrorException e)
+        {
+            log.info(e.getMessage());
+
+            Throwable cause = e.getCause();
+
+            assertTrue(cause instanceof NumberFormatException);
+        }
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

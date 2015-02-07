@@ -18,6 +18,7 @@ package com.novaordis.gld;
 
 import com.novaordis.ac.Collector;
 import com.novaordis.ac.CollectorFactory;
+import com.novaordis.gld.command.Load;
 import com.novaordis.gld.statistics.CollectorBasedStatistics;
 import com.novaordis.gld.statistics.SampleHandler;
 import com.novaordis.gld.util.CommandLineConsole;
@@ -82,6 +83,7 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
         Collector collector = null;
         LoadStrategy loadStrategy = config.getLoadStrategy();
         Service service = config.getService();
+        Load command = (Load)config.getCommand();
 
         running = true;
 
@@ -98,9 +100,9 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
 
             statistics = new CollectorBasedStatistics(collector);
 
-            if (config.getMaxOperations() > 0)
+            if (command.getMaxOperations() != null)
             {
-                statistics.setMaxOperations(config.getMaxOperations());
+                statistics.setMaxOperations(command.getMaxOperations());
             }
 
             // config.getThreads() + the main thread that runs this code

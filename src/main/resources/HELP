@@ -59,11 +59,11 @@ Commands:
             specified, the default storage strategy is Stdout - the utility dumps key-value pairs
             at stdout. For available storage strategies, see "Storage Strategies" below.
 
-       Typical Usage Example:
+      Typical Usage Example:
 
             gld content --nodes localhost:10001 --storage-strategy TextFile --output ./keys.txt
 
-       Storage Strategies:
+      Storage Strategies:
 
             stdout
 
@@ -87,54 +87,56 @@ Commands:
 
       Options:
 
-            --load-strategy <strategy-name> - the name of the load strategy. The load driver searches its
-              classpath for a class with the same name, which must implement the LoadStrategy interface.
-              For a list of available strategies, see "Load Strategies" section below. If not specified
-              the default strategy is "WriteThenRead".
+        --load-strategy <strategy-name> - the name of the load strategy. The load driver searches its
+          classpath for a class with the same name, which must implement the LoadStrategy interface.
+          For a list of available strategies, see "Load Strategies" section below. If not specified
+          the default strategy is "WriteThenRead".
 
-            --output <filename> - the CSV file to write collected statistics into. If not explicitly
+        --output <filename> - the CSV file to write collected statistics into. If not explicitly
               specified, gld will dump statistics at stdout.
 
-            --cache <cache-name> - the name of the cache. If not specified, the default cache will
+        --cache <cache-name> - the name of the cache. If not specified, the default cache will
               be used.
 
-            --max-operations - the total number of Redis operations to send. If not specifies, the
-              default is "unlimited", meaning the driver will execute until explicitly stopped.
+        --max-operations  -  the total number of operations  (cache reads or writes,  JMS messages
+          sent or received)  to send into the target service.  If not specifies,  the  default  is
+          "unlimited",  meaning  the driver  will continuously send  operations  until  explicitly
+          stopped.
 
-            --threads <thread-count> - the number of threads to send concurrent operations.
+        --threads <thread-count> - the number of threads to send concurrent operations.
               Default value 1.
 
-            --max-total <count> - the Apache pool "MaxTotal" parameter. Default value 100.
+        --max-total <count> - the Apache pool "MaxTotal" parameter. Default value 100.
 
-            --max-wait-millis <timeout> - the Apache pool "MaxWaitMillis" parameter. Default value
+        --max-wait-millis <timeout> - the Apache pool "MaxWaitMillis" parameter. Default value
               1000 ms (1 second).
 
-            --sleep <ms> - the number of milliseconds to sleep after each operation. Default is 0,
+        --sleep <ms> - the number of milliseconds to sleep after each operation. Default is 0,
               meaning "send continuously".
 
-            --key-size <number-of-characters>. Default is 70.
+        --key-size <number-of-characters>. Default is 70.
 
-            --value-size <number-of-characters>. Default is 6000.
+        --value-size <number-of-characters>. Default is 6000.
 
-            --expiration <seconds>. Key expiration time in seconds. By default, keys don't expire.
+        --expiration <seconds>. Key expiration time in seconds. By default, keys don't expire.
 
-            --use-different-values If specified, every time a value is sent it will be generated.
+        --use-different-values If specified, every time a value is sent it will be generated.
               Otherwise the same value will be reused.
 
-            --exception-file <file-name>. If specified, dump details about exceptions in that file.
+        --exception-file <file-name>. If specified, dump details about exceptions in that file.
               If not specified, the exceptions will only be reflected as failure counters.
 
-            --read-to-write <ratio>. The positive or zero integer read to write ratio. Default is 1:
+        --read-to-write <ratio>. The positive or zero integer read to write ratio. Default is 1:
               for each write there is a read. Zero means only writes, no reads. If you want more writes
               than reads, use --write-to-read (described below). --read-to-write and --write-to-read are
               mutually exclusive (unless they're both 1).
 
-            --write-to-read <ratio>. The positive or zero integer write to read ratio. Default is 1:
+        --write-to-read <ratio>. The positive or zero integer write to read ratio. Default is 1:
               for each read there is a write. Zero means only reads, no writes. If you want more reads
               than writes, use --read-to-write (described above). --read-to-write and --write-to-read are
               mutually exclusive (unless they're both 1).
 
-            --keystore-file <file-name>. Optional. If specified, the name of the file to read/write keys
+        --keystore-file <file-name>. Optional. If specified, the name of the file to read/write keys
               from/to. The current implementation works as follows:
 
               If no key store is specified, nothing is written and nothing is read locally. All keys

@@ -46,6 +46,7 @@ public class Load extends CommandBase
     private ContentType contentType;
     private LoadStrategy loadStrategy;
     private StorageStrategy storageStrategy;
+    private Long maxOperations;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -53,6 +54,7 @@ public class Load extends CommandBase
     {
         super(c);
         contentType = ContentType.KEYVALUE;
+        maxOperations = null; // unlimited
         processContextRelevantArguments(arguments, from);
     }
 
@@ -119,6 +121,15 @@ public class Load extends CommandBase
         return contentType;
     }
 
+    /**
+     * @return the total number of operations to send to server. A null value means "unlimited ", the load driver will
+     * send for as long as it is allowed.
+     */
+    public Long getMaxOperations()
+    {
+        return maxOperations;
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
@@ -131,6 +142,7 @@ public class Load extends CommandBase
     private void processContextRelevantArguments(List<String> arguments, int from) throws UserErrorException
     {
         String contentTypeAsString = Util.extractString("--type", arguments, from);
+        maxOperations = Util.extractLong("--max-operations", arguments, from);
 
         if (contentTypeAsString != null)
         {

@@ -59,11 +59,6 @@ public interface Configuration
      */
     long getMaxWaitMillis();
 
-    /**
-     * The total number of operations to send to server. null means unlimited (send for as long as the program loops)
-     */
-    Long getMaxOperations();
-
     List<Node> getNodes();
 
     /**

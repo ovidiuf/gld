@@ -16,12 +16,14 @@
 
 package com.novaordis.gld.strategy.load.jms;
 
+import com.novaordis.gld.command.Load;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.operations.jms.Receive;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -47,7 +49,10 @@ public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest
 
         List<String> args = new ArrayList<>(Arrays.asList("--queue", "test", "--timeout", "7"));
 
-        rld.configure(new MockConfiguration(), args, 0);
+        MockConfiguration mc = new MockConfiguration();
+        new Load(mc, Collections.<String>emptyList(), 0);
+
+        rld.configure(mc, args, 0);
 
         assertEquals(7L, rld.getTimeoutMs().longValue());
     }
@@ -59,7 +64,10 @@ public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest
 
         List<String> args = new ArrayList<>(Arrays.asList("--queue", "test"));
 
-        rld.configure(new MockConfiguration(), args, 0);
+        MockConfiguration mc = new MockConfiguration();
+        new Load(mc, Collections.<String>emptyList(), 0);
+
+        rld.configure(mc, args, 0);
 
         assertNull(rld.getTimeoutMs());
     }
@@ -72,7 +80,9 @@ public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest
         List<String> args = new ArrayList<>(Arrays.asList("--queue", "test", "--timeout", "7"));
 
         MockConfiguration mc = new MockConfiguration();
-        mc.setMaxOperations(2L);
+
+        // load will register itself with configuration
+        new Load(mc, new ArrayList<>(Arrays.asList("--max-operations", "2")), 0);
 
         rld.configure(mc, args, 0);
         assertTrue(args.isEmpty());

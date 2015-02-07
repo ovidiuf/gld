@@ -59,7 +59,6 @@ public class ConfigurationImpl implements Configuration
     private int threads;
     private int maxTotal;
     private long maxWaitMillis;
-    private long maxOperations;
     private long sleep;
     private int keySize;
     private int valueSize;
@@ -138,15 +137,6 @@ public class ConfigurationImpl implements Configuration
     public long getMaxWaitMillis()
     {
         return maxWaitMillis;
-    }
-
-    /**
-     * @see Configuration#getMaxOperations()
-     */
-    @Override
-    public Long getMaxOperations()
-    {
-        return maxOperations;
     }
 
     /**
@@ -289,7 +279,6 @@ public class ConfigurationImpl implements Configuration
                 "threads=" + threads + ", " +
                 "maxTotal="  + maxTotal + ", " +
                 "maxWaitMillis="  + maxWaitMillis + ", " +
-                "maxOperations=" + (maxOperations == -1 ? "UNLIMITED" : maxOperations) + ", " +
                 "sleep=" + (sleep > 0 ? (sleep + " ms") : "no") + ", " +
                 "keySize=" + keySize + ", " +
                 "valueSize=" + valueSize + ", " +
@@ -322,7 +311,6 @@ public class ConfigurationImpl implements Configuration
         threads = -1;
         maxTotal = -1;
         maxWaitMillis = -1L;
-        maxOperations = -1L; // unlimited
         sleep = -1L;
         keySize = -1;
         valueSize = -1;
@@ -465,17 +453,6 @@ public class ConfigurationImpl implements Configuration
                 if (i < args.length - 1)
                 {
                     maxWaitMillis = Long.parseLong(args[++i]);
-                }
-            }
-            else if ("--max-operations".equals(crt))
-            {
-                if (i == args.length - 1)
-                {
-                    throw new UserErrorException("a positive integer should follow --max-operations");
-                }
-                if (i < args.length - 1)
-                {
-                    maxOperations = Long.parseLong(args[++i]);
                 }
             }
             else if ("--sleep".equals(crt))
@@ -676,11 +653,6 @@ public class ConfigurationImpl implements Configuration
         if (maxWaitMillis == -1)
         {
             maxWaitMillis = DEFAULT_MAX_WAIT_MILLIS;
-        }
-
-        if (maxOperations == -1 && configurationFileContent != null && configurationFileContent.get("max-operations") != null)
-        {
-            maxOperations = Long.parseLong((String)configurationFileContent.get("max-operations"));
         }
 
         if (sleep == -1 && configurationFileContent != null && configurationFileContent.get("sleep") != null)

@@ -17,6 +17,7 @@
 package com.novaordis.gld.strategy.load.jms;
 
 import com.novaordis.gld.UserErrorException;
+import com.novaordis.gld.command.Load;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.service.jms.EndpointPolicy;
 import com.novaordis.gld.strategy.load.LoadStrategyTest;
@@ -25,6 +26,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -80,7 +82,10 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
 
         List<String> args = new ArrayList<>(Arrays.asList("--queue", "blah"));
 
-        jms.configure(new MockConfiguration(), args, 0);
+        MockConfiguration mc = new MockConfiguration();
+        new Load(mc, Collections.<String>emptyList(), 0);
+
+        jms.configure(mc, args, 0);
 
         Queue q = (Queue)jms.getDestination();
         assertEquals("blah", q.getName());
@@ -93,7 +98,10 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
 
         List<String> args = new ArrayList<>(Arrays.asList("--topic", "blah"));
 
-        jms.configure(new MockConfiguration(), args, 0);
+        MockConfiguration mc = new MockConfiguration();
+        new Load(mc, Collections.<String>emptyList(), 0);
+
+        jms.configure(mc, args, 0);
 
         Topic t = (Topic)jms.getDestination();
         assertEquals("blah", t.getName());
@@ -130,7 +138,9 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
     public void maxOperations() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        mc.setMaxOperations(777L);
+
+        // load will register itself with configuration
+        new Load(mc, new ArrayList<>(Arrays.asList("--max-operations", "777")), 0);
 
         JmsLoadStrategy jms = getLoadStrategyToTest();
         jms.configure(mc, new ArrayList<>(Arrays.asList("--queue", "test")), 0);
@@ -151,6 +161,7 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
     public void setEndpointPolicy() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
+        new Load(mc, Collections.<String>emptyList(), 0);
 
         JmsLoadStrategy jms = getLoadStrategyToTest();
 

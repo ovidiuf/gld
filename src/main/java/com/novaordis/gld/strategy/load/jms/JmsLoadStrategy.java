@@ -20,6 +20,7 @@ import com.novaordis.gld.Configuration;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.Util;
+import com.novaordis.gld.command.Load;
 import com.novaordis.gld.service.jms.EndpointPolicy;
 import com.novaordis.gld.strategy.load.LoadStrategyBase;
 
@@ -93,11 +94,6 @@ public abstract class JmsLoadStrategy extends LoadStrategyBase
         }
 
         return remainingOperations.get();
-    }
-
-    public void setEndpointPolicy(EndpointPolicy endpointPolicy)
-    {
-        this.endpointPolicy = endpointPolicy;
     }
 
     public EndpointPolicy getEndpointPolicy()
@@ -180,11 +176,13 @@ public abstract class JmsLoadStrategy extends LoadStrategyBase
             }
         }
 
-        Long mo = getConfiguration().getMaxOperations();
+        Load load = (Load)getConfiguration().getCommand();
 
-        if (mo != null)
+        Long maxOperations = load.getMaxOperations();
+
+        if (maxOperations != null)
         {
-            remainingOperations = new AtomicLong(mo);
+            remainingOperations = new AtomicLong(maxOperations);
         }
     }
 
