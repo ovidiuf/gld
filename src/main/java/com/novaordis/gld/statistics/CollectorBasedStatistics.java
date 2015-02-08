@@ -115,9 +115,18 @@ public class CollectorBasedStatistics implements Statistics
 
     public CollectorBasedStatistics(Collector collector, long samplingIntervalMs)
     {
+        this(collector, samplingIntervalMs, null);
+    }
+
+    /**
+     * @param maxOperations  - we're using the Statistics instance to enforce max operations for efficiency reasons.
+     *        We seek to minimize the number of places where we synchronize. null means unlimited.
+     *        TODO - this proved not to be such a good idea, swap this out and replace it with LoadStrategy control.
+     */
+    public CollectorBasedStatistics(Collector collector, long samplingIntervalMs, Long maxOperations)
+    {
         this.firstSample = true;
         this.done = false;
-        this.operationsLeft = Long.MAX_VALUE;
         this.csvStatsCollector = collector;
         this.samplingIntervalMs = samplingIntervalMs;
 
@@ -145,6 +154,8 @@ public class CollectorBasedStatistics implements Statistics
         this.totalFailureCounters = new long[RedisFailure.FAILURE_TYPES_COUNT];
 
         this.systemStats = new SystemStatistics();
+
+        this.operationsLeft = maxOperations == null ? Long.MAX_VALUE : maxOperations;
     }
 
     // Statistics implementation ---------------------------------------------------------------------------------------
@@ -318,15 +329,6 @@ public class CollectorBasedStatistics implements Statistics
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    /**
-     * We're using the Statistics instance to enforce max operations for efficiency reasons: we seek to minimize the
-     * number of places where we synchronize. -1 means unlimited.
-     */
-    public void setMaxOperations(long mo)
-    {
-        this.operationsLeft = mo;
-    }
 
     public String aggregatesToString()
     {

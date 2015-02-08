@@ -35,11 +35,11 @@ public class CommandLineConsole implements Runnable
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private MultiThreadedRunner multiThreadedRunner;
-    private BufferedReader in;
     private Thread thread;
+    private BufferedReader inBufferedReader;
     private volatile boolean running;
-    private InputStream originalInputStream;
+    private MultiThreadedRunner multiThreadedRunner;
+    private String line;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -47,6 +47,7 @@ public class CommandLineConsole implements Runnable
     {
         this.multiThreadedRunner = multiThreadedRunner;
         this.thread = new Thread(this, "gld command line console");
+        thread.setDaemon(true);
         setIn(System.in);
     }
 
@@ -54,19 +55,15 @@ public class CommandLineConsole implements Runnable
 
     public void run()
     {
-        String line;
-
         try
         {
-            running = true;
-
-            while (true)
+            while (running)
             {
-                System.out.print("['q'|message]> ");
+                System.out.print("['q'|'td'|comment]> ");
 
                 try
                 {
-                    line = in.readLine();
+                    line = inBufferedReader.readLine();
                 }
                 catch (IOException e)
                 {
@@ -84,6 +81,15 @@ public class CommandLineConsole implements Runnable
                         // other kind of console failure
                         log.error("console read failed", e);
                     }
+
+                    return;
+                }
+
+                if (!running)
+                {
+                    // this means the console was closed concurrently from another thread while the reader
+                    // thread was blocked in reading; since the console was closed explicitly, we are not
+                    // interested in content, so we discard it
                     return;
                 }
 
@@ -125,7 +131,7 @@ public class CommandLineConsole implements Runnable
 
                     try
                     {
-                        in.close();
+                        inBufferedReader.close();
                     }
                     catch (Exception e)
                     {
@@ -153,28 +159,38 @@ public class CommandLineConsole implements Runnable
 
     public void start()
     {
+        running = true;
         thread.start();
+        log.debug(thread + " started");
     }
 
     public void stop()
     {
-//        try
-//        {
-//            originalInputStream.close();
-//        }
-//        catch(Exception e)
-//        {
-//            log.debug(e);
-//        }
+        // if the console reading thread is attempting to read from the buffered, it acquires an internal
+        // monitor that won't allow this tread to do anything, so an attempt to close the inBufferReader
+        // from this thread will also block; we simply mark this console as closed, which means that
+        // anything coming from the underlying input stream will be discarded, and attempt to close the underlying thread asynchronously, so stop() can
+        // complete
 
-        try
+        running = false;
+
+        Thread closer = new Thread(new Runnable()
         {
-            in.close();
-        }
-        catch(Exception e)
-        {
-            log.debug(e);
-        }
+            @Override
+            public void run()
+            {
+                try
+                {
+                    inBufferedReader.close();
+                }
+                catch(Exception e)
+                {
+                    log.debug(e);
+                }
+            }
+        }, "gld command line console closer thread");
+        closer.setDaemon(true);
+        closer.start();
     }
 
     boolean isRunning()
@@ -186,9 +202,17 @@ public class CommandLineConsole implements Runnable
 
     void setIn(InputStream is)
     {
-        this.originalInputStream = is;
-        in = new BufferedReader(new InputStreamReader(is));
+        inBufferedReader = new BufferedReader(new InputStreamReader(is));
     }
+
+    /**
+     * May return null
+     */
+    String getLastReadLine()
+    {
+        return line;
+    }
+
 
     // Protected -------------------------------------------------------------------------------------------------------
 

@@ -80,14 +80,11 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
 
     public void runConcurrently() throws Exception
     {
+        running = true;
         Collector collector = null;
-        LoadStrategy loadStrategy = config.getLoadStrategy();
         Service service = config.getService();
         Load command = (Load)config.getCommand();
-
-        running = true;
-
-        //System.out.println(config);
+        LoadStrategy loadStrategy = config.getLoadStrategy();
 
         try
         {
@@ -98,12 +95,7 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
                 collector.registerHandler(new ThrowableHandler(config.getExceptionFile()));
             }
 
-            statistics = new CollectorBasedStatistics(collector);
-
-            if (command.getMaxOperations() != null)
-            {
-                statistics.setMaxOperations(command.getMaxOperations());
-            }
+            statistics = new CollectorBasedStatistics(collector, command.getMaxOperations());
 
             // config.getThreads() + the main thread that runs this code
             final CyclicBarrier runnerThreadsBarrier = new CyclicBarrier(config.getThreads() + 1);
@@ -128,8 +120,7 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
 
             log.debug(singleThreadedRunners.size() + " SingleThreadedRunner(s) have finished");
 
-            // no more input needed from the console
-            commandLineConsole.stop();
+            commandLineConsole.stop(); // no more input needed from the console so dispose of it
 
             statistics.close();
 
