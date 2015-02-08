@@ -20,7 +20,7 @@ import com.novaordis.gld.mock.MockCacheService;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.mock.MockKeyStore;
 import com.novaordis.gld.mock.MockStatistics;
-import com.novaordis.gld.statistics.CollectorBasedStatistics;
+import com.novaordis.gld.statistics.CollectorBasedCsvStatistics;
 import com.novaordis.gld.strategy.load.cache.MockLoadStrategy;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -58,7 +58,7 @@ public class SingleThreadedRunnerTest
         try
         {
             new SingleThreadedRunner(
-                "TEST", null, new MockLoadStrategy(), new CollectorBasedStatistics(null), new CyclicBarrier(1));
+                "TEST", null, new MockLoadStrategy(), new CollectorBasedCsvStatistics(null), new CyclicBarrier(1));
             fail("should fail with IllegalArgumentException, null config");
         }
         catch(IllegalArgumentException e)

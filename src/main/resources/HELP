@@ -13,19 +13,22 @@ Usage:
 
 Global Options:
 
-    --type <load-type>.    Specifies the type of load to be sent into the service provider.  Valid
+    --type <load-type>     Specifies the type of load to be sent into the service provider.  Valid
       values are "key-value" (suitable for loading cache providers),  "jms"  (suitable for loading
       JMS providers),  "http", etc.  The default is "key-value".  The default  load strategy   for
       caches is "WriteThenRead" and for JMS load is "Send". More details about load strategies can
       be found below under the "Load Strategies" section.
 
-    --nodes <node1:port1,node2:port2,...> - the list of host:port values for the backend cache
+    --nodes <node1:port1,node2:port2,...>    The list of  host:port values for the backend service
       nodes to send requests into. There is no default, the node list must be explicitly specified.
-      The traffic will be sharded amongst these nodes.
 
-      If "embedded" is used, gld will mock a cache internally. You can request the cache to come
-      pre-populated with random content by specifying "embedded[keyCount]".
-      Only use it for gld testing.
+      If "embedded" is used, gld will mock the service (a cache or a JMS provider) internally. You
+      can request the embedded service to initialize itself - for example the embedded cache could
+      be pre-populated with random content by specifying "embedded[keyCount]". Only use it for gld
+      testing.
+
+    --statistics <csv|none>.  By default, the load driver produces CSV statistics.  Statistics can
+      be turned of by specifying 'node'.
 
     --username <username>
 

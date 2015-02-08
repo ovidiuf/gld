@@ -16,12 +16,11 @@
 
 package com.novaordis.gld.util;
 
+import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.mock.MockMultiThreadRunner;
-import com.novaordis.gld.mock.MockStatistics;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import javax.sound.sampled.AudioInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,7 +50,7 @@ public class CommandLineConsoleTest
     public void stopTheMultiThreadRunnerOnQ() throws Exception
     {
         MockMultiThreadRunner mmtr = new MockMultiThreadRunner();
-        CommandLineConsole commandLineConsole = new CommandLineConsole(mmtr);
+        CommandLineConsole commandLineConsole = new CommandLineConsole(new MockConfiguration(), mmtr);
 
         byte[] buffer = new byte[10];
         buffer[0] = 'q';
@@ -70,7 +69,7 @@ public class CommandLineConsoleTest
         MockMultiThreadRunner mmtr = new MockMultiThreadRunner();
         assertTrue(mmtr.isRunning());
 
-        CommandLineConsole commandLineConsole = new CommandLineConsole(mmtr);
+        CommandLineConsole commandLineConsole = new CommandLineConsole(new MockConfiguration(), mmtr);
 
         byte[] buffer = new byte[10];
         ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
@@ -88,11 +87,10 @@ public class CommandLineConsoleTest
     @Test
     public void stopTheConsoleBySendingBgOnTheInputStream() throws Exception
     {
-        MockStatistics ms = new MockStatistics();
-        MockMultiThreadRunner mockMultiThreadRunner = new MockMultiThreadRunner(ms);
+        MockMultiThreadRunner mockMultiThreadRunner = new MockMultiThreadRunner();
         assertTrue(mockMultiThreadRunner.isRunning());
 
-        CommandLineConsole commandLineConsole = new CommandLineConsole(mockMultiThreadRunner);
+        CommandLineConsole commandLineConsole = new CommandLineConsole(new MockConfiguration(), mockMultiThreadRunner);
 
         byte[] buffer = new byte[10];
 
@@ -135,9 +133,8 @@ public class CommandLineConsoleTest
     @Test
     public void stoppingUnblocksReadOnStdin() throws Exception
     {
-        MockStatistics ms = new MockStatistics();
-        MockMultiThreadRunner mockMultiThreadRunner = new MockMultiThreadRunner(ms);
-        CommandLineConsole commandLineConsole = new CommandLineConsole(mockMultiThreadRunner);
+        MockMultiThreadRunner mockMultiThreadRunner = new MockMultiThreadRunner();
+        CommandLineConsole commandLineConsole = new CommandLineConsole(new MockConfiguration(), mockMultiThreadRunner);
 
         //noinspection MismatchedQueryAndUpdateOfCollection
         final BlockingQueue<Object> checkPointOne = new ArrayBlockingQueue<>(1);

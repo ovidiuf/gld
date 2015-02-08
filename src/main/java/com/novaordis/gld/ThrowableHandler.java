@@ -17,7 +17,7 @@
 package com.novaordis.gld;
 
 import com.novaordis.ac.Handler;
-import com.novaordis.gld.statistics.CollectorBasedStatistics;
+import com.novaordis.gld.statistics.CollectorBasedCsvStatistics;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -59,7 +59,7 @@ public class ThrowableHandler implements Handler
 
         try
         {
-            pw.print(CollectorBasedStatistics.TIMESTAMP_FORMAT_MS.format(timestamp) + ", " + threadName + ": ");
+            pw.print(CollectorBasedCsvStatistics.TIMESTAMP_FORMAT_MS.format(timestamp) + ", " + threadName + ": ");
             t.printStackTrace(pw);
             pw.flush();
         }

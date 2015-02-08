@@ -36,6 +36,13 @@ public interface Configuration
     void setCommand(Command c);
 
     /**
+     * May return null, meaning no statistics will be generated.
+     */
+    Statistics getStatistics();
+
+    void setStatistics(Statistics s);
+
+    /**
      * Set with --threads
      */
     int getThreads();

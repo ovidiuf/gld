@@ -17,7 +17,7 @@
 package com.novaordis.gld.command;
 
 import com.novaordis.gld.ConfigurationImpl;
-import com.novaordis.gld.statistics.CollectorBasedStatistics;
+import com.novaordis.gld.statistics.CollectorBasedCsvStatistics;
 import com.novaordis.gld.Util;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -65,10 +65,10 @@ public class Test extends CommandBase
         }
         long t1 = System.nanoTime();
 
-        double msecs = ((double)(t1 - t0))/ CollectorBasedStatistics.NANOS_IN_MILLS;
+        double msecs = ((double)(t1 - t0))/ CollectorBasedCsvStatistics.NANOS_IN_MILLS;
         double ips = ((double)iterations)/msecs;
 
-        System.out.println(CollectorBasedStatistics.DURATION_MS_FORMAT.format(ips) + " iterations per ms");
+        System.out.println(CollectorBasedCsvStatistics.DURATION_MS_FORMAT.format(ips) + " iterations per ms");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

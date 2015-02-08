@@ -17,8 +17,6 @@
 package com.novaordis.gld.mock;
 
 import com.novaordis.gld.MultiThreadedRunner;
-import com.novaordis.gld.Statistics;
-import org.apache.log4j.Logger;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -27,29 +25,19 @@ public class MockMultiThreadRunner implements MultiThreadedRunner
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(MockMultiThreadRunner.class);
-
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private BlockingQueue<String> stopRendezvous = new ArrayBlockingQueue<String>(1);
+    private BlockingQueue<String> stopRendezvous = new ArrayBlockingQueue<>(1);
 
     private boolean running = true;
-
-    private MockStatistics ms;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockMultiThreadRunner()
     {
-        this(null);
-    }
-
-    public MockMultiThreadRunner(MockStatistics ms)
-    {
-        this.ms = ms;
     }
 
     // MultiThreadRunner implementation --------------------------------------------------------------------------------
@@ -73,12 +61,6 @@ public class MockMultiThreadRunner implements MultiThreadedRunner
         {
             throw new IllegalStateException("failed to put in rendezvous", e);
         }
-    }
-
-    @Override
-    public Statistics getStatistics()
-    {
-        return ms;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

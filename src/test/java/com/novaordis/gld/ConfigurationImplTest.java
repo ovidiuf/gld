@@ -16,6 +16,7 @@
 
 package com.novaordis.gld;
 
+import com.novaordis.gld.statistics.CollectorBasedCsvStatistics;
 import com.novaordis.utilities.Files;
 import com.novaordis.utilities.testing.Tests;
 import org.apache.log4j.Logger;
@@ -314,6 +315,107 @@ public class ConfigurationImplTest extends Assert
 
         assertEquals("something", c.getUsername());
     }
+
+    // --statistics ----------------------------------------------------------------------------------------------------
+
+    @Test
+    public void defaultStatistics() throws Exception
+    {
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--nodes",
+                "embedded",
+            });
+
+        CollectorBasedCsvStatistics s = (CollectorBasedCsvStatistics)c.getStatistics();
+        s.close();
+    }
+
+    @Test
+    public void csvStatistics() throws Exception
+    {
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--nodes",
+                "embedded",
+                "--statistics",
+                "csv"
+            });
+
+        CollectorBasedCsvStatistics s = (CollectorBasedCsvStatistics)c.getStatistics();
+        s.close();
+    }
+
+    @Test
+    public void noStatistics() throws Exception
+    {
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--nodes",
+                "embedded",
+                "--statistics",
+                "none"
+            });
+
+        assertNull(c.getStatistics());
+    }
+
+    @Test
+    public void invalidStatistics() throws Exception
+    {
+
+        try
+        {
+            new ConfigurationImpl(new String[]
+                {
+                    "load",
+                    "--nodes",
+                    "embedded",
+                    "--statistics",
+                    "blah"
+                });
+        }
+        catch(UserErrorException e)
+        {
+            log.info(e.getMessage());
+        }
+    }
+
+    // miscellaneous ---------------------------------------------------------------------------------------------------
+
+    @Test
+    public void miscellanous() throws Exception
+    {
+
+        try
+        {
+            new ConfigurationImpl(new String[]
+                {
+                    "load",
+                    "--type",
+                    "jms",
+                    "--nodes",
+                    "embedded",
+                    "--queue",
+                    "TEST",
+                    "--max-operations",
+                    "1",
+                    "--statistics",
+                    "none",
+                    "--threads",
+                    "10",
+                });
+        }
+        catch(UserErrorException e)
+        {
+            log.info(e.getMessage());
+        }
+    }
+
+
 
     // Package protected -----------------------------------------------------------------------------------------------
 

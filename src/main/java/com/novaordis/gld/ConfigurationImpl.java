@@ -27,6 +27,7 @@ import com.novaordis.gld.command.Version;
 import com.novaordis.gld.service.cache.EmbeddedCacheService;
 import com.novaordis.gld.service.jms.activemq.ActiveMQService;
 import com.novaordis.gld.service.cache.infinispan.InfinispanService;
+import com.novaordis.gld.statistics.StatisticsFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -78,6 +79,8 @@ public class ConfigurationImpl implements Configuration
     private StorageStrategy storageStrategy;
 
     private Service service;
+
+    private Statistics statistics;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -268,6 +271,18 @@ public class ConfigurationImpl implements Configuration
         return username;
     }
 
+    @Override
+    public Statistics getStatistics()
+    {
+        return statistics;
+    }
+
+    @Override
+    public void setStatistics(Statistics statistics)
+    {
+        this.statistics = statistics;
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Override
@@ -327,6 +342,8 @@ public class ConfigurationImpl implements Configuration
         String proxyString = null;
 
         List<String> arguments = new ArrayList<>(Arrays.asList(args));
+
+        String statisticsString = Util.extractString("--statistics", arguments, 0);
 
         for(int i = 0; i < arguments.size(); i ++)
         {
@@ -388,9 +405,9 @@ public class ConfigurationImpl implements Configuration
                 // command line takes precedence.
                 String confFileName = null;
 
-                if (i < args.length - 1)
+                if (i < arguments.size() - 1)
                 {
-                    confFileName = args[++i];
+                    confFileName = arguments.get(++i);
 
                     if (confFileName.startsWith("--"))
                     {
@@ -436,44 +453,44 @@ public class ConfigurationImpl implements Configuration
             }
             else if ("--threads".equals(crt))
             {
-                if (i < args.length - 1)
+                if (i < arguments.size() - 1)
                 {
-                    threads = Integer.parseInt(args[++i]);
+                    threads = Integer.parseInt(arguments.get(++i));
                 }
             }
             else if ("--max-total".equals(crt))
             {
-                if (i < args.length - 1)
+                if (i < arguments.size() - 1)
                 {
-                    maxTotal = Integer.parseInt(args[++i]);
+                    maxTotal = Integer.parseInt(arguments.get(++i));
                 }
             }
             else if ("--max-wait-millis".equals(crt))
             {
-                if (i < args.length - 1)
+                if (i < arguments.size() - 1)
                 {
-                    maxWaitMillis = Long.parseLong(args[++i]);
+                    maxWaitMillis = Long.parseLong(arguments.get(++i));
                 }
             }
             else if ("--sleep".equals(crt))
             {
-                if (i < args.length - 1)
+                if (i < arguments.size() - 1)
                 {
-                    sleep = Long.parseLong(args[++i]);
+                    sleep = Long.parseLong(arguments.get(++i));
                 }
             }
             else if ("--key-size".equals(crt))
             {
-                if (i < args.length - 1)
+                if (i < arguments.size() - 1)
                 {
-                    keySize = Integer.parseInt(args[++i]);
+                    keySize = Integer.parseInt(arguments.get(++i));
                 }
             }
             else if ("--value-size".equals(crt))
             {
-                if (i < args.length - 1)
+                if (i < arguments.size() - 1)
                 {
-                    valueSize = Integer.parseInt(args[++i]);
+                    valueSize = Integer.parseInt(arguments.get(++i));
                 }
             }
             else if ("--use-different-values".equals(crt))
@@ -482,9 +499,9 @@ public class ConfigurationImpl implements Configuration
             }
             else if ("--output".equals(crt) && !(command instanceof Content))
             {
-                if (i < args.length - 1)
+                if (i < arguments.size() - 1)
                 {
-                    output = args[++i];
+                    output = arguments.get(++i);
 
                     if (output.startsWith("--"))
                     {
@@ -497,16 +514,16 @@ public class ConfigurationImpl implements Configuration
             }
             else if ("--expiration".equals(crt))
             {
-                if (i < args.length - 1)
+                if (i < arguments.size() - 1)
                 {
-                    keyExpirationSecs = Long.parseLong(args[++i]);
+                    keyExpirationSecs = Long.parseLong(arguments.get(++i));
                 }
             }
             else if ("--exception-file".equals(crt))
             {
-                if (i < args.length - 1)
+                if (i < arguments.size() - 1)
                 {
-                    exceptionFile = args[++i];
+                    exceptionFile = arguments.get(++i);
 
                     if (exceptionFile.startsWith("--"))
                     {
@@ -516,9 +533,9 @@ public class ConfigurationImpl implements Configuration
             }
             else if ("--cache".equals(crt))
             {
-                if (i < args.length - 1)
+                if (i < arguments.size() - 1)
                 {
-                    cacheName = args[++i];
+                    cacheName = arguments.get(++i);
 
                     if (cacheName.startsWith("--"))
                     {
@@ -528,9 +545,9 @@ public class ConfigurationImpl implements Configuration
             }
             else if ("--keystore-file".equals(crt) || "--key-store-file".equals(crt))
             {
-                if (i < args.length - 1)
+                if (i < arguments.size() - 1)
                 {
-                    keyStoreFile = args[++i];
+                    keyStoreFile = arguments.get(++i);
 
                     if (keyStoreFile.startsWith("--"))
                     {
@@ -540,13 +557,13 @@ public class ConfigurationImpl implements Configuration
             }
             else if ("--username".equals(crt))
             {
-                if (i == args.length - 1)
+                if (i == arguments.size() - 1)
                 {
                     throw new UserErrorException("a user name should follow --username");
                 }
-                if (i < args.length - 1)
+                if (i < arguments.size() - 1)
                 {
-                    username = args[++i];
+                    username = arguments.get(++i);
                 }
             }
             else if (command != null)
@@ -790,6 +807,8 @@ public class ConfigurationImpl implements Configuration
         }
 
         command.initialize();
+
+        this.statistics = StatisticsFactory.getInstance(this, statisticsString);
     }
 
     // Inner classes ---------------------------------------------------------------------------------------------------

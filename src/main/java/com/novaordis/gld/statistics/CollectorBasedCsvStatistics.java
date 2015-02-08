@@ -34,11 +34,11 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
-public class CollectorBasedStatistics implements Statistics
+public class CollectorBasedCsvStatistics implements Statistics
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(CollectorBasedStatistics.class);
+    private static final Logger log = Logger.getLogger(CollectorBasedCsvStatistics.class);
 
     public static final Format TIMESTAMP_FORMAT_MS = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
     public static final Format TIMESTAMP_FORMAT_SEC = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -108,12 +108,12 @@ public class CollectorBasedStatistics implements Statistics
     /**
      * Uses the default sampling interval.
      */
-    public CollectorBasedStatistics(Collector collector)
+    public CollectorBasedCsvStatistics(Collector collector)
     {
         this(collector, DEFAULT_SAMPLING_INTERVAL_MS);
     }
 
-    public CollectorBasedStatistics(Collector collector, long samplingIntervalMs)
+    public CollectorBasedCsvStatistics(Collector collector, long samplingIntervalMs)
     {
         this(collector, samplingIntervalMs, null);
     }
@@ -123,7 +123,7 @@ public class CollectorBasedStatistics implements Statistics
      *        We seek to minimize the number of places where we synchronize. null means unlimited.
      *        TODO - this proved not to be such a good idea, swap this out and replace it with LoadStrategy control.
      */
-    public CollectorBasedStatistics(Collector collector, long samplingIntervalMs, Long maxOperations)
+    public CollectorBasedCsvStatistics(Collector collector, long samplingIntervalMs, Long maxOperations)
     {
         this.firstSample = true;
         this.done = false;
@@ -412,13 +412,14 @@ public class CollectorBasedStatistics implements Statistics
     /**
      * Use only for testing. close() is for public use.
      *
-     * @see com.novaordis.gld.statistics.CollectorBasedStatistics#close()
+     * @see CollectorBasedCsvStatistics#close()
      */
     void close(long timeStampMs)
     {
         log.debug(this + " sending a close notification");
         record(timeStampMs, 0L, 0L, new InternalClosingOperation(), null);
         log.debug(this + " sent the close notification");
+        csvStatsCollector.dispose();
     }
 
     // Protected -------------------------------------------------------------------------------------------------------

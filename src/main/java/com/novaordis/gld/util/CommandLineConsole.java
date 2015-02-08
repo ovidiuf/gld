@@ -16,7 +16,9 @@
 
 package com.novaordis.gld.util;
 
+import com.novaordis.gld.Configuration;
 import com.novaordis.gld.MultiThreadedRunner;
+import com.novaordis.gld.Statistics;
 import com.novaordis.gld.Util;
 import org.apache.log4j.Logger;
 
@@ -39,12 +41,14 @@ public class CommandLineConsole implements Runnable
     private BufferedReader inBufferedReader;
     private volatile boolean running;
     private MultiThreadedRunner multiThreadedRunner;
+    private Configuration configuration;
     private String line;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public CommandLineConsole(MultiThreadedRunner multiThreadedRunner)
+    public CommandLineConsole(Configuration configuration, MultiThreadedRunner multiThreadedRunner)
     {
+        this.configuration = configuration;
         this.multiThreadedRunner = multiThreadedRunner;
         this.thread = new Thread(this, "gld command line console");
         thread.setDaemon(true);
@@ -143,9 +147,10 @@ public class CommandLineConsole implements Runnable
                 // only send non-empty content to the log
                 line = line.trim();
 
-                if (!line.isEmpty())
+                Statistics statistics;
+                if (!line.isEmpty() && ((statistics = configuration.getStatistics()) != null))
                 {
-                    multiThreadedRunner.getStatistics().annotate(line);
+                    statistics.annotate(line);
                 }
             }
         }

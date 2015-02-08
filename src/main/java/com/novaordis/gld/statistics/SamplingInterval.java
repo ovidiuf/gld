@@ -75,7 +75,7 @@ public class SamplingInterval
         }
         else
         {
-            sb.append(CollectorBasedStatistics.TIMESTAMP_FORMAT_MS.format(intervalStartMs));
+            sb.append(CollectorBasedCsvStatistics.TIMESTAMP_FORMAT_MS.format(intervalStartMs));
         }
 
         sb.append(", ");
@@ -140,7 +140,7 @@ public class SamplingInterval
         else if (validReadsCount != null && validReadsCount != 0 && readHitsCount != null)
         {
             double hits = ((double)readHitsCount/validReadsCount);
-            sb.append(CollectorBasedStatistics.PERCENTAGE.format(hits));
+            sb.append(CollectorBasedCsvStatistics.PERCENTAGE.format(hits));
         }
 
         sb.append(", ");
@@ -172,11 +172,11 @@ public class SamplingInterval
         }
         else if (validReadsCount != null && validReadsCount > 0)
         {
-            double averageReadTime = cumulatedValidReadsTimeNano / validReadsCount / CollectorBasedStatistics.NANOS_IN_MILLS;
+            double averageReadTime = cumulatedValidReadsTimeNano / validReadsCount / CollectorBasedCsvStatistics.NANOS_IN_MILLS;
 
             if (averageReadTime >= 0)
             {
-                sb.append(CollectorBasedStatistics.DURATION_MS_FORMAT.format(averageReadTime));
+                sb.append(CollectorBasedCsvStatistics.DURATION_MS_FORMAT.format(averageReadTime));
             }
         }
 
@@ -192,11 +192,11 @@ public class SamplingInterval
         }
         else if (validWritesCount != null && validWritesCount > 0)
         {
-            double averageWriteTime = cumulatedValidWritesTimeNano / validWritesCount / CollectorBasedStatistics.NANOS_IN_MILLS;
+            double averageWriteTime = cumulatedValidWritesTimeNano / validWritesCount / CollectorBasedCsvStatistics.NANOS_IN_MILLS;
 
             if (averageWriteTime >= 0)
             {
-                sb.append(CollectorBasedStatistics.DURATION_MS_FORMAT.format(averageWriteTime));
+                sb.append(CollectorBasedCsvStatistics.DURATION_MS_FORMAT.format(averageWriteTime));
             }
         }
 
@@ -235,7 +235,7 @@ public class SamplingInterval
         }
         else if (systemLoadAverage != null)
         {
-            sb.append(CollectorBasedStatistics.LOAD_FORMAT.format(systemLoadAverage));
+            sb.append(CollectorBasedCsvStatistics.LOAD_FORMAT.format(systemLoadAverage));
         }
 
         sb.append(", ");
@@ -250,7 +250,7 @@ public class SamplingInterval
         }
         else if (systemCpuLoad != null)
         {
-            sb.append(CollectorBasedStatistics.LOAD_FORMAT.format(systemCpuLoad));
+            sb.append(CollectorBasedCsvStatistics.LOAD_FORMAT.format(systemCpuLoad));
         }
 
         sb.append(", ");
@@ -265,7 +265,7 @@ public class SamplingInterval
         }
         else if (processCpuLoad != null)
         {
-            sb.append(CollectorBasedStatistics.LOAD_FORMAT.format(processCpuLoad));
+            sb.append(CollectorBasedCsvStatistics.LOAD_FORMAT.format(processCpuLoad));
         }
 
         sb.append(", ");
@@ -286,7 +286,7 @@ public class SamplingInterval
         }
         else if (usedHeap != null)
         {
-            sb.append(CollectorBasedStatistics.MEMORY_MB_FORMAT.format((double) usedHeap / CollectorBasedStatistics.BYTES_IN_MB));
+            sb.append(CollectorBasedCsvStatistics.MEMORY_MB_FORMAT.format((double) usedHeap / CollectorBasedCsvStatistics.BYTES_IN_MB));
         }
 
         sb.append(", ");
@@ -301,7 +301,7 @@ public class SamplingInterval
         }
         else if (committedHeap != null)
         {
-            sb.append(CollectorBasedStatistics.MEMORY_MB_FORMAT.format((double)committedHeap / CollectorBasedStatistics.BYTES_IN_MB));
+            sb.append(CollectorBasedCsvStatistics.MEMORY_MB_FORMAT.format((double)committedHeap / CollectorBasedCsvStatistics.BYTES_IN_MB));
         }
 
         sb.append(", ");

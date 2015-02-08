@@ -33,11 +33,11 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class CollectorBasedStatisticsTest extends Assert
+public class CollectorBasedCsvStatisticsTest extends Assert
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(CollectorBasedStatisticsTest.class);
+    private static final Logger log = Logger.getLogger(CollectorBasedCsvStatisticsTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -60,7 +60,7 @@ public class CollectorBasedStatisticsTest extends Assert
         Collector collector = CollectorFactory.getInstance("TEST COLLECTOR", Thread.NORM_PRIORITY + 1);
         collector.registerHandler(sh);
 
-        CollectorBasedStatistics s = new CollectorBasedStatistics(collector);
+        CollectorBasedCsvStatistics s = new CollectorBasedCsvStatistics(collector);
 
         MockOperation mo = new MockOperation();
 
@@ -68,13 +68,13 @@ public class CollectorBasedStatisticsTest extends Assert
 
         // we don't allow it even a sampling interval - this is to make sure we capture even the fast
         // single operations
-        s.close(1L + CollectorBasedStatistics.DEFAULT_SAMPLING_INTERVAL_MS - 1);
+        s.close(1L + CollectorBasedCsvStatistics.DEFAULT_SAMPLING_INTERVAL_MS - 1);
 
         // make sure we can't call record anymore
 
         try
         {
-            s.record(CollectorBasedStatistics.DEFAULT_SAMPLING_INTERVAL_MS + 1, 0L, 0L, mo, null);
+            s.record(CollectorBasedCsvStatistics.DEFAULT_SAMPLING_INTERVAL_MS + 1, 0L, 0L, mo, null);
             fail("should have failed with IllegalStateException, statistics are closed");
         }
         catch(IllegalStateException e)
@@ -100,7 +100,7 @@ public class CollectorBasedStatisticsTest extends Assert
         // make sure we record one sample
         StringTokenizer lineTokenizer = new StringTokenizer(samples, ",");
         String timestamp = lineTokenizer.nextToken();
-        assertEquals(CollectorBasedStatistics.TIMESTAMP_FORMAT_MS.format(1L), timestamp);
+        assertEquals(CollectorBasedCsvStatistics.TIMESTAMP_FORMAT_MS.format(1L), timestamp);
         String throughput = lineTokenizer.nextToken();
         assertEquals("1", throughput.trim());
     }
@@ -113,7 +113,7 @@ public class CollectorBasedStatisticsTest extends Assert
         MockHandler mh = new MockHandler();
         Collector mc = new MockCollector(mh);
 
-        CollectorBasedStatistics s = new CollectorBasedStatistics(mc, 5L);
+        CollectorBasedCsvStatistics s = new CollectorBasedCsvStatistics(mc, 5L);
 
         Read r = new Read("a");
 
@@ -160,7 +160,7 @@ public class CollectorBasedStatisticsTest extends Assert
         MockHandler mh = new MockHandler();
         Collector mc = new MockCollector(mh);
 
-        CollectorBasedStatistics s = new CollectorBasedStatistics(mc, 5L);
+        CollectorBasedCsvStatistics s = new CollectorBasedCsvStatistics(mc, 5L);
 
         Read r = new Read("a");
 
@@ -205,7 +205,7 @@ public class CollectorBasedStatisticsTest extends Assert
         MockHandler mh = new MockHandler();
         Collector mc = new MockCollector(mh);
 
-        CollectorBasedStatistics s = new CollectorBasedStatistics(mc, 4L);
+        CollectorBasedCsvStatistics s = new CollectorBasedCsvStatistics(mc, 4L);
 
         Write w = new Write("TEST-KEY", "TEST-VALUE");
 
@@ -270,7 +270,7 @@ public class CollectorBasedStatisticsTest extends Assert
         MockHandler mh = new MockHandler();
         Collector mc = new MockCollector(mh);
 
-        CollectorBasedStatistics s = new CollectorBasedStatistics(mc, 4L);
+        CollectorBasedCsvStatistics s = new CollectorBasedCsvStatistics(mc, 4L);
 
         Read r = new Read("a");
 
@@ -335,7 +335,7 @@ public class CollectorBasedStatisticsTest extends Assert
         MockHandler mh = new MockHandler();
         Collector mc = new MockCollector(mh);
 
-        CollectorBasedStatistics s = new CollectorBasedStatistics(mc, 10L);
+        CollectorBasedCsvStatistics s = new CollectorBasedCsvStatistics(mc, 10L);
 
         @SuppressWarnings("ThrowableInstanceNeverThrown")
         Throwable t = new java.net.ConnectException("Connection refused");
@@ -388,7 +388,7 @@ public class CollectorBasedStatisticsTest extends Assert
         MockHandler mh = new MockHandler();
         Collector mc = new MockCollector(mh);
 
-        CollectorBasedStatistics s = new CollectorBasedStatistics(mc, 10L);
+        CollectorBasedCsvStatistics s = new CollectorBasedCsvStatistics(mc, 10L);
 
 
         @SuppressWarnings("ThrowableInstanceNeverThrown")
@@ -446,7 +446,7 @@ public class CollectorBasedStatisticsTest extends Assert
         MockHandler mh = new MockHandler();
         Collector mc = new MockCollector(mh);
 
-        CollectorBasedStatistics s = new CollectorBasedStatistics(mc, 10L);
+        CollectorBasedCsvStatistics s = new CollectorBasedCsvStatistics(mc, 10L);
 
         @SuppressWarnings("ThrowableInstanceNeverThrown")
         Throwable t = new Throwable("TEST");
@@ -499,7 +499,7 @@ public class CollectorBasedStatisticsTest extends Assert
         MockHandler mh = new MockHandler();
         Collector mc = new MockCollector(mh);
 
-        CollectorBasedStatistics s = new CollectorBasedStatistics(mc, 10L);
+        CollectorBasedCsvStatistics s = new CollectorBasedCsvStatistics(mc, 10L);
 
         @SuppressWarnings("ThrowableInstanceNeverThrown")
         Throwable t = new redis.clients.jedis.exceptions.JedisConnectionException("Unknown reply: something");

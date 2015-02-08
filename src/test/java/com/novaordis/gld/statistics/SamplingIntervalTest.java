@@ -74,7 +74,7 @@ public class SamplingIntervalTest
             null, null,
             null);
 
-        String expected = CollectorBasedStatistics.TIMESTAMP_FORMAT_MS.format(timestamp) + ", , , , , ,    , ,    , , , , , , , , , , ,    , , , , , ";
+        String expected = CollectorBasedCsvStatistics.TIMESTAMP_FORMAT_MS.format(timestamp) + ", , , , , ,    , ,    , , , , , , , , , , ,    , , , , , ";
 
         assertEquals(expected, emptyLine);
     }
@@ -91,7 +91,7 @@ public class SamplingIntervalTest
             null, null,
             "this is a comment");
 
-        String expected = CollectorBasedStatistics.TIMESTAMP_FORMAT_MS.format(timestamp) + ", , , , , ,    , ,    , , , , , , , , , , ,    , , , , , this is a comment";
+        String expected = CollectorBasedCsvStatistics.TIMESTAMP_FORMAT_MS.format(timestamp) + ", , , , , ,    , ,    , , , , , , , , , , ,    , , , , , this is a comment";
 
         assertEquals(expected, emptyLine);
     }
@@ -108,7 +108,7 @@ public class SamplingIntervalTest
             50L, 51L,
             null);
 
-        String expected = CollectorBasedStatistics.TIMESTAMP_FORMAT_MS.format(timestamp) +
+        String expected = CollectorBasedCsvStatistics.TIMESTAMP_FORMAT_MS.format(timestamp) +
             ", 4, 1, 2, 200.00%, 3,    .0, .0,    10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,    31.10, 32.20, 33.30, .00, .00, ";
 
         assertEquals(expected, emptyLine);
@@ -126,7 +126,7 @@ public class SamplingIntervalTest
             50L, 51L,
             "this is a comment");
 
-        String expected = CollectorBasedStatistics.TIMESTAMP_FORMAT_MS.format(timestamp) +
+        String expected = CollectorBasedCsvStatistics.TIMESTAMP_FORMAT_MS.format(timestamp) +
             ", 4, 1, 2, 200.00%, 3,    .0, .0,    10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,    31.10, 32.20, 33.30, .00, .00, this is a comment";
 
         assertEquals(expected, emptyLine);

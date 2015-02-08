@@ -16,11 +16,7 @@
 
 package com.novaordis.gld;
 
-import com.novaordis.ac.Collector;
-import com.novaordis.ac.CollectorFactory;
-import com.novaordis.gld.command.Load;
-import com.novaordis.gld.statistics.CollectorBasedStatistics;
-import com.novaordis.gld.statistics.SampleHandler;
+import com.novaordis.gld.statistics.CollectorBasedCsvStatistics;
 import com.novaordis.gld.util.CommandLineConsole;
 import org.apache.log4j.Logger;
 
@@ -38,16 +34,15 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Configuration config;
-    private CollectorBasedStatistics statistics;
+    private Configuration configuration;
     private List<SingleThreadedRunner> singleThreadedRunners;
     private volatile boolean running;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MultiThreadedRunnerImpl(Configuration config)
+    public MultiThreadedRunnerImpl(Configuration configuration)
     {
-        this.config = config;
+        this.configuration = configuration;
         this.singleThreadedRunners = new ArrayList<>();
 
     }
@@ -69,50 +64,37 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
         }
     }
 
-    @Override
-    public Statistics getStatistics()
-    {
-        return statistics;
-    }
-
-
     // Public ----------------------------------------------------------------------------------------------------------
 
     public void runConcurrently() throws Exception
     {
         running = true;
-        Collector collector = null;
-        Service service = config.getService();
-        Load command = (Load)config.getCommand();
-        LoadStrategy loadStrategy = config.getLoadStrategy();
+        Service service = configuration.getService();
+        LoadStrategy loadStrategy = configuration.getLoadStrategy();
+        Statistics statistics = configuration.getStatistics();
+        CommandLineConsole commandLineConsole =
+            statistics == null ? null : new CommandLineConsole(configuration, this);
 
         try
         {
-            collector = CollectorFactory.getInstance("SAMPLE COLLECTOR", Thread.NORM_PRIORITY + 1);
-            collector.registerHandler(new SampleHandler(System.getProperty("collector.file")));
-            if (config.getExceptionFile() != null)
-            {
-                collector.registerHandler(new ThrowableHandler(config.getExceptionFile()));
-            }
+            // configuration.getThreads() + the main thread that runs this code
+            final CyclicBarrier runnerThreadsBarrier = new CyclicBarrier(configuration.getThreads() + 1);
 
-            statistics = new CollectorBasedStatistics(collector, command.getMaxOperations());
-
-            // config.getThreads() + the main thread that runs this code
-            final CyclicBarrier runnerThreadsBarrier = new CyclicBarrier(config.getThreads() + 1);
-
-            for (int i = 0; i < config.getThreads(); i++)
+            for (int i = 0; i < configuration.getThreads(); i++)
             {
                 String name = "CLD Runner " + i;
 
                 SingleThreadedRunner r =
-                    new SingleThreadedRunner(name, config, loadStrategy, statistics, runnerThreadsBarrier);
+                    new SingleThreadedRunner(name, configuration, loadStrategy, statistics, runnerThreadsBarrier);
 
                 singleThreadedRunners.add(r);
                 r.start();
             }
 
-            final CommandLineConsole commandLineConsole = new CommandLineConsole(this);
-            commandLineConsole.start();
+            if (commandLineConsole != null)
+            {
+                commandLineConsole.start();
+            }
 
             log.debug("waiting for " + singleThreadedRunners.size() + " SingleThreadedRunner(s) to finish ...");
 
@@ -120,17 +102,16 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
 
             log.debug(singleThreadedRunners.size() + " SingleThreadedRunner(s) have finished");
 
-            commandLineConsole.stop(); // no more input needed from the console so dispose of it
-
-            statistics.close();
-
-            System.out.println(statistics.aggregatesToString());
+            if (commandLineConsole != null)
+            {
+                commandLineConsole.stop(); // no more input needed from the console so dispose of it
+            }
         }
         finally
         {
-            if (collector != null)
+            if (statistics != null)
             {
-                collector.dispose();
+                statistics.close();
             }
 
             if (service != null)
@@ -146,6 +127,11 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
             }
 
             running = false;
+        }
+
+        if (statistics != null)
+        {
+            System.out.println(((CollectorBasedCsvStatistics)statistics).aggregatesToString());
         }
     }
 

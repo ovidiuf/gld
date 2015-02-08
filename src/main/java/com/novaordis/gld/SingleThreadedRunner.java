@@ -51,17 +51,15 @@ public class SingleThreadedRunner implements Runnable
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    /**
+     * @param statistics may be null
+     */
     public SingleThreadedRunner(String name, Configuration config, LoadStrategy loadStrategy,
                                 Statistics statistics, CyclicBarrier barrier)
     {
         if (config == null)
         {
             throw new IllegalArgumentException("null configuration");
-        }
-
-        if (statistics == null)
-        {
-            throw new IllegalArgumentException("null Statistics instance");
         }
 
         if (barrier == null)
@@ -163,7 +161,7 @@ public class SingleThreadedRunner implements Runnable
         {
             // not fully thread-safe, in the worst case we'll send N more operations than --max-operations, where
             // N is the number of threads.
-            if (statistics.areWeDone())
+            if (statistics != null && statistics.areWeDone())
             {
                 System.out.println(Thread.currentThread().getName() + " reached the end of the counter, exiting");
                 return;
@@ -206,7 +204,10 @@ public class SingleThreadedRunner implements Runnable
             }
             finally
             {
-                statistics.record(t0Ms, t0, t1, op, ex);
+                if (statistics != null)
+                {
+                    statistics.record(t0Ms, t0, t1, op, ex);
+                }
 
                 if (sleep > 0)
                 {

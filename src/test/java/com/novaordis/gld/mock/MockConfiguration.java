@@ -21,6 +21,7 @@ import com.novaordis.gld.Configuration;
 import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.CacheService;
+import com.novaordis.gld.Statistics;
 import com.novaordis.gld.StorageStrategy;
 
 import java.util.List;
@@ -103,6 +104,18 @@ public class MockConfiguration implements Configuration
     public void setCommand(Command c)
     {
         this.command = c;
+    }
+
+    @Override
+    public Statistics getStatistics()
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void setStatistics(Statistics s)
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override

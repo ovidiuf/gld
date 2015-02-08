@@ -21,6 +21,4 @@ public interface MultiThreadedRunner
     boolean isRunning();
 
     void stop() throws Exception;
-
-    Statistics getStatistics();
 }
