@@ -24,6 +24,7 @@ import com.novaordis.gld.command.Help;
 import com.novaordis.gld.command.Load;
 import com.novaordis.gld.command.Test;
 import com.novaordis.gld.command.Version;
+import com.novaordis.gld.service.EmbeddedGenericService;
 import com.novaordis.gld.service.cache.EmbeddedCacheService;
 import com.novaordis.gld.service.jms.activemq.ActiveMQService;
 import com.novaordis.gld.service.cache.infinispan.InfinispanService;
@@ -786,15 +787,21 @@ public class ConfigurationImpl implements Configuration
             }
             else
             {
-                if (ContentType.KEYVALUE.equals(contentType))
+                if (ContentType.TEST.equals(contentType))
                 {
-                    service =
-                        new InfinispanService(getNodes(), getPassword(), getMaxTotal(),
-                            getMaxWaitMillis(), getKeyExpirationSecs(), getCacheName());
+                    service = new EmbeddedGenericService();
+                }
+                else if (ContentType.KEYVALUE.equals(contentType))
+                {
+                    service = new InfinispanService(getNodes(), getCacheName());
+                }
+                else if (ContentType.JMS.equals(contentType))
+                {
+                    service = new ActiveMQService(this, nodes);
                 }
                 else
                 {
-                    service = new ActiveMQService(this, nodes);
+                    throw new UserErrorException("unknown content type: " + contentType);
                 }
             }
         }

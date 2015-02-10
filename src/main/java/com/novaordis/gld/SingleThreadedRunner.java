@@ -172,7 +172,8 @@ public class SingleThreadedRunner implements Runnable
             if (op == null)
             {
                 // the strategy ran out of keys, it's time to finish
-                System.out.println(Thread.currentThread().getName() + " ran out of operations, " + operationCounter + " operations processed by this thread, exiting");
+                log.debug(Thread.currentThread().getName() + " ran out of operations, " +
+                    operationCounter + " operations processed by this thread, exiting");
                 return;
             }
 

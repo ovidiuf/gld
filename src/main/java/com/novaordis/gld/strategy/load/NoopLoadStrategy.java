@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.operations.jms;
+package com.novaordis.gld.strategy.load;
 
-import com.novaordis.gld.service.jms.Consumer;
-import com.novaordis.gld.service.jms.JmsEndpoint;
-import com.novaordis.gld.strategy.load.jms.Destination;
-import com.novaordis.gld.strategy.load.jms.ReceiveLoadStrategy;
+import com.novaordis.gld.Configuration;
+import com.novaordis.gld.KeyStore;
+import com.novaordis.gld.LoadStrategy;
+import com.novaordis.gld.Operation;
 
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
+import java.util.List;
 
-public class Receive extends JmsOperation
+public class NoopLoadStrategy implements LoadStrategy
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,60 +31,37 @@ public class Receive extends JmsOperation
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Long timeoutMs;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Receive(ReceiveLoadStrategy loadStrategy)
-    {
-        super(loadStrategy);
-        this.timeoutMs = loadStrategy.getTimeoutMs();
-    }
-
-    // JMSOperation overrides ------------------------------------------------------------------------------------------
+    // LoadStrategy implementation -------------------------------------------------------------------------------------
 
     @Override
-    public void perform(JmsEndpoint endpoint) throws Exception
+    public String getName()
     {
-        Consumer consumer = (Consumer)endpoint;
-        MessageConsumer jmsConsumer = consumer.getConsumer();
+        return "Noop";
+    }
 
-        Message m;
+    @Override
+    public void configure(Configuration configuration, List<String> arguments, int from) throws Exception
+    {
+        // noop
+    }
 
-        if (timeoutMs == null)
-        {
-            m = jmsConsumer.receive();
-        }
-        else
-        {
-            m = jmsConsumer.receive(timeoutMs);
-        }
+    @Override
+    public Operation next(Operation last, String lastWrittenKey) throws Exception
+    {
+        // noop
+        return null;
+    }
 
-        System.out.println(m.getJMSMessageID());
+    @Override
+    public KeyStore getKeyStore()
+    {
+        // noop
+        return null;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    /**
-     * @return null if there is no receive timeout
-     */
-    public Long getTimeoutMs()
-    {
-        return timeoutMs;
-    }
-
-    @Override
-    public String toString()
-    {
-        Destination d = getDestination();
-        String name = d.getName();
-
-        return
-            "receive[" +
-                ((d.isQueue() ? "queue=" : "topic=") + name) +
-                (", timeout=" + (getTimeoutMs() == null ? "0" : getTimeoutMs())) + "]";
-
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

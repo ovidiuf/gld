@@ -23,6 +23,7 @@ import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -38,11 +39,7 @@ public class InfinispanService implements CacheService
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private int socketTimeout;
-    private int maxRetries;
-    private boolean tcpKeepAlive;
-
-    private Node node;
+    private List<Node> nodes;
     private RemoteCacheManager remoteCacheManager;
     private RemoteCache<String, String> cache;
 
@@ -53,26 +50,31 @@ public class InfinispanService implements CacheService
     /**
      * @param cacheName - null is acceptable, it means "default cache"
      */
-    public InfinispanService(List<Node> nodes, String password,
-                             int maxTotal, long maxWaitMillis,
-                             long keyExpirationSecs, String cacheName)
+    public InfinispanService(List<Node> nodes, String cacheName)
     {
         this.cacheName = cacheName;
-        this.node = nodes.get(0);
-        this.socketTimeout = DEFAULT_SO_TIMEOUT_MS;
-        this.maxRetries = DEFAULT_MAX_RETRIES;
-        this.tcpKeepAlive = DEFAULT_TCP_KEEPALIVE;
+        this.nodes = nodes;
+
+        int socketTimeout = DEFAULT_SO_TIMEOUT_MS;
+        int maxRetries = DEFAULT_MAX_RETRIES;
+        boolean tcpKeepAlive = DEFAULT_TCP_KEEPALIVE;
 
         ConfigurationBuilder clientBuilder = new ConfigurationBuilder();
 
-        clientBuilder.addServer().
-            host(node.getHost()).
-            port(node.getPort()).
+        // Add all the nodes to the configuration builder
+        for (Node node : nodes)
+        {
+            clientBuilder.addServer().
+                host(node.getHost()).
+                port(node.getPort());
+        }
+
+        clientBuilder.
             socketTimeout(socketTimeout).
             maxRetries(maxRetries);
 
-            // only in Infinispan 6.3.x
-            // .tcpKeepAlive(tcpKeepAlive);
+        // only in Infinispan 6.3.x
+        // .tcpKeepAlive(tcpKeepAlive);
 
         remoteCacheManager = new RemoteCacheManager(clientBuilder.build());
     }
@@ -82,6 +84,8 @@ public class InfinispanService implements CacheService
     @Override
     public void perform(Operation o) throws Exception
     {
+        insureStarted();
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
@@ -116,19 +120,29 @@ public class InfinispanService implements CacheService
     @Override
     public void set(String key, String value) throws Exception
     {
+        insureStarted();
         cache.put(key, value);
     }
 
     @Override
     public String get(String key) throws Exception
     {
+        insureStarted();
         return cache.get(key);
     }
 
     @Override
     public Set<String> keys(String pattern)
     {
+        insureStarted();
         return cache.keySet();
+    }
+
+    @Override
+    public String delete(String key) throws Exception
+    {
+        insureStarted();
+        return cache.remove(key);
     }
 
     @Override
@@ -137,18 +151,27 @@ public class InfinispanService implements CacheService
         return cache;
     }
 
-    @Override
-    public String delete(String key) throws Exception
-    {
-        return cache.remove(key);
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString()
     {
-        return "InfinispanService[" + node + "/" + cacheName + "]";
+        StringBuilder sb = new StringBuilder("InfinispanService[");
+
+        for(Iterator<Node> i = nodes.iterator(); i.hasNext(); )
+        {
+            sb.append(i.next());
+
+            if (i.hasNext())
+            {
+                sb.append(',');
+            }
+        }
+
+        sb.deleteCharAt(sb.length() - 1);
+        sb.append("/").append(cacheName).append("]");
+
+        return sb.toString();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -156,6 +179,14 @@ public class InfinispanService implements CacheService
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private void insureStarted() throws IllegalStateException
+    {
+        if (!isStarted())
+        {
+            throw new IllegalStateException(this + " not started");
+        }
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

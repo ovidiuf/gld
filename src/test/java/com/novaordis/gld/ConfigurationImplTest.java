@@ -47,8 +47,10 @@ public class ConfigurationImplTest extends Assert
         Tests.cleanup();
     }
 
+    // nodes - embedded ------------------------------------------------------------------------------------------------
+
     @Test
-    public void nodes1() throws Exception
+    public void embeddedNodes() throws Exception
     {
         ConfigurationImpl c = new ConfigurationImpl(new String[]
             {
@@ -66,7 +68,7 @@ public class ConfigurationImplTest extends Assert
     }
 
     @Test
-    public void nodes2() throws Exception
+    public void embeddedNodes_comma() throws Exception
     {
         ConfigurationImpl c = new ConfigurationImpl(new String[]
             {
@@ -83,6 +85,57 @@ public class ConfigurationImplTest extends Assert
         assertEquals("localhost2", nodes.get(1).getHost());
         assertEquals(10002, nodes.get(1).getPort());
     }
+
+    // nodes -----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void singleNode() throws Exception
+    {
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--type",
+                "TEST",
+                "--nodes",
+                "localhost:10001",
+                "--statistics",
+                "none"
+            });
+
+        List<Node> nodes = c.getNodes();
+
+        assertEquals(1, nodes.size());
+        Node n = nodes.get(0);
+        assertEquals("localhost", n.getHost());
+        assertEquals(10001, n.getPort());
+    }
+
+    @Test
+    public void twoNodes() throws Exception
+    {
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--type",
+                "TEST",
+                "--nodes",
+                "localhost:10001,example.com:10002",
+                "--statistics",
+                "none"
+            });
+
+        List<Node> nodes = c.getNodes();
+
+        assertEquals(2, nodes.size());
+        Node n = nodes.get(0);
+        assertEquals("localhost", n.getHost());
+        assertEquals(10001, n.getPort());
+        Node n2 = nodes.get(1);
+        assertEquals("example.com", n2.getHost());
+        assertEquals(10002, n2.getPort());
+    }
+
+    // key-size --------------------------------------------------------------------------------------------------------
 
     @Test
     public void keySizeValueSize() throws Exception

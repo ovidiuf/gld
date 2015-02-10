@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.operations.jms;
+package com.novaordis.gld.service;
 
-import com.novaordis.gld.service.jms.Consumer;
-import com.novaordis.gld.service.jms.JmsEndpoint;
-import com.novaordis.gld.strategy.load.jms.Destination;
-import com.novaordis.gld.strategy.load.jms.ReceiveLoadStrategy;
+import com.novaordis.gld.Operation;
+import com.novaordis.gld.Service;
 
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-
-public class Receive extends JmsOperation
+public class EmbeddedGenericService implements Service
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,59 +27,42 @@ public class Receive extends JmsOperation
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Long timeoutMs;
+    private volatile boolean started;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Receive(ReceiveLoadStrategy loadStrategy)
-    {
-        super(loadStrategy);
-        this.timeoutMs = loadStrategy.getTimeoutMs();
-    }
-
-    // JMSOperation overrides ------------------------------------------------------------------------------------------
+    // Service implementation ------------------------------------------------------------------------------------------
 
     @Override
-    public void perform(JmsEndpoint endpoint) throws Exception
+    public void start() throws Exception
     {
-        Consumer consumer = (Consumer)endpoint;
-        MessageConsumer jmsConsumer = consumer.getConsumer();
+        started = true;
+    }
 
-        Message m;
+    @Override
+    public void stop() throws Exception
+    {
+        started = false;
+    }
 
-        if (timeoutMs == null)
-        {
-            m = jmsConsumer.receive();
-        }
-        else
-        {
-            m = jmsConsumer.receive(timeoutMs);
-        }
+    @Override
+    public boolean isStarted()
+    {
+        return started;
+    }
 
-        System.out.println(m.getJMSMessageID());
+    @Override
+    public void perform(Operation o) throws Exception
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    /**
-     * @return null if there is no receive timeout
-     */
-    public Long getTimeoutMs()
-    {
-        return timeoutMs;
-    }
-
     @Override
     public String toString()
     {
-        Destination d = getDestination();
-        String name = d.getName();
-
-        return
-            "receive[" +
-                ((d.isQueue() ? "queue=" : "topic=") + name) +
-                (", timeout=" + (getTimeoutMs() == null ? "0" : getTimeoutMs())) + "]";
-
+        return "EmbeddedGenericService[" + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

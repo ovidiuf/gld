@@ -14,82 +14,69 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.operations.jms;
+package com.novaordis.gld.service.cache.infinispan;
 
-import com.novaordis.gld.service.jms.Consumer;
-import com.novaordis.gld.service.jms.JmsEndpoint;
-import com.novaordis.gld.strategy.load.jms.Destination;
-import com.novaordis.gld.strategy.load.jms.ReceiveLoadStrategy;
+import com.novaordis.gld.Configuration;
+import com.novaordis.gld.EmbeddedNode;
+import com.novaordis.gld.Node;
+import com.novaordis.gld.Service;
+import com.novaordis.gld.ServiceTest;
+import com.novaordis.gld.mock.MockConfiguration;
+import org.apache.log4j.Logger;
+import org.junit.Test;
 
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
+import java.util.Arrays;
+import java.util.List;
 
-public class Receive extends JmsOperation
+import static org.junit.Assert.assertFalse;
+
+public class InfinispanServiceTest extends ServiceTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(InfinispanServiceTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Long timeoutMs;
-
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    public Receive(ReceiveLoadStrategy loadStrategy)
-    {
-        super(loadStrategy);
-        this.timeoutMs = loadStrategy.getTimeoutMs();
-    }
-
-    // JMSOperation overrides ------------------------------------------------------------------------------------------
-
-    @Override
-    public void perform(JmsEndpoint endpoint) throws Exception
-    {
-        Consumer consumer = (Consumer)endpoint;
-        MessageConsumer jmsConsumer = consumer.getConsumer();
-
-        Message m;
-
-        if (timeoutMs == null)
-        {
-            m = jmsConsumer.receive();
-        }
-        else
-        {
-            m = jmsConsumer.receive(timeoutMs);
-        }
-
-        System.out.println(m.getJMSMessageID());
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
     /**
-     * @return null if there is no receive timeout
+     * Unfortunately we can't really start an InfinispanCache as part of a simple unit test - it would require an
+     * external process, and so on, so we override the life cycle test with something simpler.
      */
-    public Long getTimeoutMs()
+    @Test
+    public void lifeCycle() throws Exception
     {
-        return timeoutMs;
-    }
+        Service s = getServiceToTest(new MockConfiguration(), Arrays.asList(getTestNode()));
 
-    @Override
-    public String toString()
-    {
-        Destination d = getDestination();
-        String name = d.getName();
+        assertFalse(s.isStarted());
 
-        return
-            "receive[" +
-                ((d.isQueue() ? "queue=" : "topic=") + name) +
-                (", timeout=" + (getTimeoutMs() == null ? "0" : getTimeoutMs())) + "]";
+        // stopping an already started stopped instance should be a noop
 
+        s.stop();
+
+        assertFalse(s.isStarted());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected InfinispanService getServiceToTest(Configuration configuration, List<Node> nodes) throws Exception
+    {
+        return new InfinispanService(nodes, "TEST-CACHE-NAME");
+    }
+
+    @Override
+    protected Node getTestNode()
+    {
+        return new EmbeddedNode();
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -26,6 +26,7 @@ import com.novaordis.gld.StorageStrategy;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.Util;
 import com.novaordis.gld.strategy.load.LoadStrategyFactory;
+import com.novaordis.gld.strategy.load.NoopLoadStrategy;
 import com.novaordis.gld.strategy.load.cache.WriteThenReadLoadStrategy;
 import com.novaordis.gld.strategy.load.jms.SendLoadStrategy;
 import com.novaordis.gld.strategy.storage.StorageStrategyFactory;
@@ -142,12 +143,12 @@ public class Load extends CommandBase
     private void processContextRelevantArguments(List<String> arguments, int from) throws UserErrorException
     {
         String contentTypeAsString = Util.extractString("--type", arguments, from);
-        maxOperations = Util.extractLong("--max-operations", arguments, from);
-
         if (contentTypeAsString != null)
         {
             this.contentType = ContentType.fromString(contentTypeAsString);
         }
+
+        maxOperations = Util.extractLong("--max-operations", arguments, from);
     }
 
     /**
@@ -182,6 +183,10 @@ public class Load extends CommandBase
             else if (ContentType.JMS.equals(getContentType()))
             {
                 loadStrategy = DEFAULT_JMS_LOAD_STRATEGY;
+            }
+            else if (ContentType.TEST.equals(getContentType()))
+            {
+                loadStrategy = new NoopLoadStrategy();
             }
             else
             {

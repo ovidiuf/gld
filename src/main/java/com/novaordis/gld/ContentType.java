@@ -19,7 +19,8 @@ package com.novaordis.gld;
 public enum ContentType
 {
     KEYVALUE,
-    JMS;
+    JMS,
+    TEST;
 
     /**
      * @throws java.lang.IllegalArgumentException on null argument.

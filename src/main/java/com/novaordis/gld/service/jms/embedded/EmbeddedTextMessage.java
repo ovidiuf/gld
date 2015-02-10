@@ -60,7 +60,7 @@ public class EmbeddedTextMessage implements TextMessage
     @Override
     public String getJMSMessageID() throws JMSException
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        return "mock-embedded-jms-message-id";
     }
 
     @Override
