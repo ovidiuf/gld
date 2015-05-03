@@ -31,6 +31,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import java.util.Iterator;
 import java.util.List;
 
 public class ActiveMQService implements Service
@@ -39,7 +40,7 @@ public class ActiveMQService implements Service
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    public static String toBrokerUrl(List<Node> nodes)
+    public static String toClientUrl(List<Node> nodes)
     {
         if (nodes == null)
         {
@@ -51,19 +52,65 @@ public class ActiveMQService implements Service
             throw new IllegalArgumentException("empty node list");
         }
 
-        if (nodes.size() > 1)
+        if (nodes.size() == 1)
         {
-            throw new RuntimeException("NOT YET IMPLEMENTED");
+            return toClientUrl(nodes.get(0));
+
+        }
+        else
+        {
+            // multiple nodes, we generate a "failover:()" URL
+            StringBuilder sb = new StringBuilder("failover:(");
+            for(Iterator<Node> i = nodes.iterator(); i.hasNext(); )
+            {
+                sb.append(toClientUrl(i.next()));
+
+                if (i.hasNext())
+                {
+                    sb.append(",");
+                }
+
+            }
+            sb.append(")");
+            return sb.toString();
+        }
+    }
+
+    public static String toClientUrl(Node node)
+    {
+        if (node == null)
+        {
+            throw new IllegalArgumentException("null node");
         }
 
-        Node n = nodes.get(0);
+        if (node instanceof EmbeddedNode)
+        {
+            return EmbeddedNode.EMBEDDED_LABEL.toLowerCase() + "://";
+        }
+        else
+        {
+            return  "tcp://" + node.getHost() + ":" + node.getPort();
+        }
+    }
 
-        return "tcp://" + n.getHost() + ":" + n.getPort();
+    public static boolean isEmbedded(String clientUrl)
+    {
+        if (clientUrl == null)
+        {
+            return false;
+        }
+
+        if (clientUrl.startsWith("failover:("))
+        {
+            clientUrl = clientUrl.substring("failover:(".length());
+        }
+
+        return clientUrl.startsWith(EmbeddedNode.EMBEDDED_LABEL.toLowerCase() + "://");
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private List<Node> nodes;
+    private String clientUrl;
 
     private Connection connection;
 
@@ -75,7 +122,7 @@ public class ActiveMQService implements Service
 
     public ActiveMQService(Configuration configuration, List<Node> nodes)
     {
-        this.nodes = nodes;
+        this.clientUrl = toClientUrl(nodes);
         this.configuration = configuration;
     }
 
@@ -172,7 +219,7 @@ public class ActiveMQService implements Service
     @Override
     public String toString()
     {
-        return "ActiveMQService" + nodes;
+        return "ActiveMQService[" + clientUrl + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -183,13 +230,14 @@ public class ActiveMQService implements Service
 
     private ConnectionFactory getConnectionFactory()
     {
-        if (nodes != null && !nodes.isEmpty() && nodes.get(0) instanceof EmbeddedNode)
+        if (isEmbedded(clientUrl))
         {
-            return new EmbeddedConnectionFactory((EmbeddedNode)nodes.get(0));
+            return new EmbeddedConnectionFactory(clientUrl);
         }
-
-        String brokerUrl = toBrokerUrl(nodes);
-        return new ActiveMQConnectionFactory(brokerUrl);
+        else
+        {
+            return new ActiveMQConnectionFactory(clientUrl);
+        }
     }
 
     // Inner classes ---------------------------------------------------------------------------------------------------

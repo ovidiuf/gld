@@ -56,14 +56,14 @@ public class ActiveMQServiceTest extends ServiceTest
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // toBrokerUrl -----------------------------------------------------------------------------------------------------
+    // toClientUrl - single node ---------------------------------------------------------------------------------------
 
     @Test
-    public void toBrokerUrl_nullList() throws Exception
+    public void toClientUrl_nullNode() throws Exception
     {
         try
         {
-            ActiveMQService.toBrokerUrl(null);
+            ActiveMQService.toClientUrl((Node)null);
             fail("should fail with IllegalArgumentException");
         }
         catch(IllegalArgumentException e)
@@ -73,11 +73,29 @@ public class ActiveMQServiceTest extends ServiceTest
     }
 
     @Test
-    public void toBrokerUrl_emptyList() throws Exception
+    public void toClientUrl_OneNode_EmbeddedNode() throws Exception
+    {
+        String s = ActiveMQService.toClientUrl(new EmbeddedNode());
+        log.info(s);
+        assertTrue(ActiveMQService.isEmbedded(s));
+    }
+
+    @Test
+    public void toClientUrl_OneNode_RegularNode() throws Exception
+    {
+        String s = ActiveMQService.toClientUrl(new Node("localhost", 10101));
+        log.info(s);
+        assertEquals("tcp://localhost:10101", s);
+    }
+
+    // toClientUrl - multiple nodes ------------------------------------------------------------------------------------
+
+    @Test
+    public void toClientUrl_nullList() throws Exception
     {
         try
         {
-            ActiveMQService.toBrokerUrl(new ArrayList<Node>());
+            ActiveMQService.toClientUrl((List<Node>)null);
             fail("should fail with IllegalArgumentException");
         }
         catch(IllegalArgumentException e)
@@ -87,11 +105,49 @@ public class ActiveMQServiceTest extends ServiceTest
     }
 
     @Test
-    public void toBrokerUrl() throws Exception
+    public void toClientUrl_emptyList() throws Exception
+    {
+        try
+        {
+            ActiveMQService.toClientUrl(new ArrayList<Node>());
+            fail("should fail with IllegalArgumentException");
+        }
+        catch(IllegalArgumentException e)
+        {
+            log.info(e.getMessage());
+        }
+    }
+
+    @Test
+    public void toClientUrl_OneEmbeddedNode() throws Exception
+    {
+        String s = ActiveMQService.toClientUrl(Arrays.<Node>asList(new EmbeddedNode()));
+        log.info(s);
+        assertTrue(ActiveMQService.isEmbedded(s));
+    }
+
+    @Test
+    public void toClientUrl_TwoEmbeddedNode() throws Exception
+    {
+        String s = ActiveMQService.toClientUrl(Arrays.<Node>asList(new EmbeddedNode(), new EmbeddedNode()));
+        log.info(s);
+        assertTrue(ActiveMQService.isEmbedded(s));
+    }
+
+    @Test
+    public void toClientUrl_OneNode() throws Exception
     {
         List<Node> nodes = Node.toNodeList("localhost:61616");
-        String s = ActiveMQService.toBrokerUrl(nodes);
+        String s = ActiveMQService.toClientUrl(nodes);
         assertEquals("tcp://localhost:61616", s);
+    }
+
+    @Test
+    public void toClientUrl_TwoNodes() throws Exception
+    {
+        List<Node> nodes = Node.toNodeList("localhost:61616,example.com:11111");
+        String s = ActiveMQService.toClientUrl(nodes);
+        assertEquals("failover:(tcp://localhost:61616,tcp://example.com:11111)", s);
     }
 
     // service lifecycle -----------------------------------------------------------------------------------------------

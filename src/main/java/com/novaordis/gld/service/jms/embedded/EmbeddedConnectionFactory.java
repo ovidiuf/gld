@@ -16,7 +16,7 @@
 
 package com.novaordis.gld.service.jms.embedded;
 
-import com.novaordis.gld.EmbeddedNode;
+import com.novaordis.gld.service.jms.activemq.ActiveMQService;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -32,8 +32,12 @@ public class EmbeddedConnectionFactory implements ConnectionFactory
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedConnectionFactory(EmbeddedNode node)
+    public EmbeddedConnectionFactory(String clientUrl)
     {
+        if (!ActiveMQService.isEmbedded(clientUrl))
+        {
+            throw new IllegalArgumentException(clientUrl + " is not an embedded client URL");
+        }
     }
 
     // ConnectionFactory implementation --------------------------------------------------------------------------------

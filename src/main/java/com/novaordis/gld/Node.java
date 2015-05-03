@@ -26,6 +26,9 @@ public class Node
 
     // Static ----------------------------------------------------------------------------------------------------------
 
+    /**
+     * Turns something like "localhost:10101, example.com:20202" into a Node List.
+     */
     public static List<Node> toNodeList(String arg) throws Exception
     {
         List<Node> result = new ArrayList<Node>();
