@@ -412,7 +412,7 @@ public class Util
     {
         if (arguments == null)
         {
-            throw new IllegalArgumentException("null argument list");
+            return null;
         }
 
         if (optionName == null)

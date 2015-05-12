@@ -37,16 +37,26 @@ public class StatisticsFactory
         if (label == null || "csv".equals(label))
         {
             // this is the default when nothing is specified
-            Load command = (Load)configuration.getCommand();
+
+            // TODO enforcing max operations via statistics is flawed, and newer load strategy implementations take
+            // matter in their own hands, keeping this not to break the tests, but we need to get rid of it
+            Long maxOperations = Long.MAX_VALUE;
+            if (configuration.getCommand() instanceof Load)
+            {
+                maxOperations = ((Load)configuration.getCommand()).getMaxOperations();
+            }
+
             Collector collector = CollectorFactory.getInstance("SAMPLE COLLECTOR", Thread.NORM_PRIORITY + 1);
-            collector.registerHandler(new SampleHandler(System.getProperty("collector.file")));
+
+            String outputFile = configuration.getOutputFile();
+            collector.registerHandler(new SampleHandler(outputFile));
             if (configuration.getExceptionFile() != null)
             {
                 collector.registerHandler(new ThrowableHandler(configuration.getExceptionFile()));
             }
 
             result = new CollectorBasedCsvStatistics(
-                collector, CollectorBasedCsvStatistics.DEFAULT_SAMPLING_INTERVAL_MS, command.getMaxOperations());
+                collector, CollectorBasedCsvStatistics.DEFAULT_SAMPLING_INTERVAL_MS, maxOperations);
 
         }
         else if ("none".equals(label))

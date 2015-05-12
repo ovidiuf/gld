@@ -107,6 +107,7 @@ public class Load extends CommandBase
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    @Override
     public String toString()
     {
         return "Load[" + (getLoadStrategy() == null ? null : getLoadStrategy().getName()) + "]";
@@ -135,6 +136,11 @@ public class Load extends CommandBase
 
     // Protected -------------------------------------------------------------------------------------------------------
 
+    protected void setContentType(ContentType ct)
+    {
+        this.contentType = ct;
+    }
+
     // Private ---------------------------------------------------------------------------------------------------------
 
     /**
@@ -145,7 +151,7 @@ public class Load extends CommandBase
         String contentTypeAsString = Util.extractString("--type", arguments, from);
         if (contentTypeAsString != null)
         {
-            this.contentType = ContentType.fromString(contentTypeAsString);
+            setContentType(ContentType.fromString(contentTypeAsString));
         }
 
         maxOperations = Util.extractLong("--max-operations", arguments, from);
@@ -173,6 +179,13 @@ public class Load extends CommandBase
                 configuration.setStorageStrategy(storageStrategy);
             }
         }
+
+        if (loadStrategy == null)
+        {
+            // try to get it from configuration file, if one is available
+            loadStrategy = configuration.getLoadStrategy();
+        }
+
 
         if (loadStrategy == null)
         {

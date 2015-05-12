@@ -22,6 +22,9 @@ import com.novaordis.gld.command.Delete;
 import com.novaordis.gld.command.GenerateKeys;
 import com.novaordis.gld.command.Help;
 import com.novaordis.gld.command.Load;
+import com.novaordis.gld.command.Start;
+import com.novaordis.gld.command.Status;
+import com.novaordis.gld.command.Stop;
 import com.novaordis.gld.command.Test;
 import com.novaordis.gld.command.Version;
 import com.novaordis.gld.service.EmbeddedGenericService;
@@ -29,6 +32,7 @@ import com.novaordis.gld.service.cache.EmbeddedCacheService;
 import com.novaordis.gld.service.jms.activemq.ActiveMQService;
 import com.novaordis.gld.service.cache.infinispan.InfinispanService;
 import com.novaordis.gld.statistics.StatisticsFactory;
+import com.novaordis.gld.strategy.load.LoadStrategyFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -65,7 +69,7 @@ public class ConfigurationImpl implements Configuration
     private int keySize;
     private int valueSize;
     private boolean useDifferentValues;
-    private String output;
+    private String outputFileName;
     private List<Node> nodes;
     private String password;
     private long keyExpirationSecs;
@@ -189,12 +193,12 @@ public class ConfigurationImpl implements Configuration
     }
 
     /**
-     * @see Configuration#getOutput()
+     * @see Configuration#getOutputFile()
      */
     @Override
-    public String getOutput()
+    public String getOutputFile()
     {
-        return output;
+        return outputFileName;
     }
 
     /**
@@ -284,6 +288,18 @@ public class ConfigurationImpl implements Configuration
         this.statistics = statistics;
     }
 
+    @Override
+    public boolean inBackground()
+    {
+        return command != null && (command instanceof Start);
+    }
+
+    @Override
+    public Properties getConfigurationFileContent()
+    {
+        return configurationFileContent;
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Override
@@ -300,7 +316,7 @@ public class ConfigurationImpl implements Configuration
                 "valueSize=" + valueSize + ", " +
                 "expiration=" + (keyExpirationSecs == -1L ? "NEVER" : keyExpirationSecs + " sec(s)") + ", " +
                 "useDifferentValues=" + useDifferentValues + ", " +
-                "output=" + output + ", " +
+                "outputFileName=" + outputFileName + ", " +
                 "password=" + (password == null ? "N/A" : "***") + ", " +
                 "cache service=" + service;
 
@@ -399,6 +415,18 @@ public class ConfigurationImpl implements Configuration
             else if ("delete".equals(crt))
             {
                 command = new Delete(this);
+            }
+            else if ("start".equals(crt))
+            {
+                command = new Start(this);
+            }
+            else if ("stop".equals(crt))
+            {
+                command = new Stop(this);
+            }
+            else if ("status".equals(crt))
+            {
+                command = new Status(this);
             }
             else if ("--conf".equals(crt))
             {
@@ -502,14 +530,11 @@ public class ConfigurationImpl implements Configuration
             {
                 if (i < arguments.size() - 1)
                 {
-                    output = arguments.get(++i);
+                    outputFileName = arguments.get(++i);
 
-                    if (output.startsWith("--"))
+                    if (outputFileName.startsWith("--"))
                     {
                         i--;
-
-                        //noinspection UnnecessaryContinue
-                        continue;
                     }
                 }
             }
@@ -708,11 +733,11 @@ public class ConfigurationImpl implements Configuration
             useDifferentValues = Boolean.parseBoolean((String)configurationFileContent.get("use-different-values"));
         }
 
-        // --output can only be set on command line
+        // --outputFileName can only be set on command line
 
         if (configurationFileContent != null && configurationFileContent.get("output") != null)
         {
-            throw new UserErrorException("'output' can be only set up on command line, and not in the configuration file; use --output <file>");
+            outputFileName = configurationFileContent.getProperty("output");
         }
 
         if (exceptionFile == null && configurationFileContent != null && configurationFileContent.get("exception-file") != null)
@@ -726,6 +751,23 @@ public class ConfigurationImpl implements Configuration
         if (proxyString == null && configurationFileContent != null && configurationFileContent.get("proxies") != null)
         {
             proxyString = (String)configurationFileContent.get("proxies");
+        }
+
+        if (loadStrategy == null && configurationFileContent != null && configurationFileContent.get("load-strategy") != null)
+        {
+            String strategyName = (String)configurationFileContent.get("load-strategy");
+            ContentType contentType = command != null && command instanceof Load ? ((Load)command).getContentType() : null;
+            loadStrategy = LoadStrategyFactory.fromString(this, strategyName, contentType, null, -1);
+        }
+
+        if (username == null && configurationFileContent != null && configurationFileContent.get("username") != null)
+        {
+            username = (String)configurationFileContent.get("username");
+        }
+
+        if (password == null && configurationFileContent != null && configurationFileContent.get("password") != null)
+        {
+            password = (String)configurationFileContent.get("password");
         }
 
         if (command != null && command.isRemote())
@@ -771,14 +813,16 @@ public class ConfigurationImpl implements Configuration
             //      service that delegates to an EmbeddedJMSConnection factory). We need to unify to one
             //      consistent solution.
 
-            if (!(command instanceof Load))
+            ContentType contentType;
+            if (command instanceof Load)
             {
-                throw new RuntimeException(
-                    "NOT YET IMPLEMENTED (1): we temporarily disabled support for ContentType for all commands, except Load. Need to refactor this.");
+                Load loadCommand = (Load)command;
+                contentType = loadCommand.getContentType();
             }
-
-            Load loadCommand = (Load)command;
-            ContentType contentType = loadCommand.getContentType();
+            else
+            {
+                contentType = ContentType.valueOf(configurationFileContent.getProperty("content-type"));
+            }
 
             if (nodes.get(0) instanceof EmbeddedNode && !ContentType.JMS.equals(contentType))
             {

@@ -54,7 +54,6 @@ public class LoadStrategyFactory
             throw new IllegalArgumentException("expecting '--load-strategy' on position " + from + " in " + arguments);
         }
 
-        LoadStrategy result;
 
         arguments.remove(from);
 
@@ -62,17 +61,6 @@ public class LoadStrategyFactory
         {
             throw new UserErrorException("a load strategy name should follow --load-strategy",
                 new NullPointerException("null storage strategy"));
-        }
-
-        String strategyName = arguments.remove(from);
-        String originalStrategyName = strategyName;
-
-        // user friendliness - if the first letter of the strategy name is not capitalized,
-        // capitalize it for her. This will allow the user to specify --load-strategy read
-
-        if (Character.isLowerCase(strategyName.charAt(0)))
-        {
-            strategyName = Character.toUpperCase(strategyName.charAt(0)) + strategyName.substring(1);
         }
 
         Command command = configuration.getCommand();
@@ -83,10 +71,30 @@ public class LoadStrategyFactory
                 "NOT YET IMPLEMENTED (2): we temporarily disabled support for ContentType for all commands, except Load. Need to refactor this.");
         }
 
-        Load loadCommand = (Load)command;
-        ContentType contentType = loadCommand.getContentType();
+        String strategyName = arguments.remove(from);
+        ContentType contentType = ((Load)command).getContentType();
+        return fromString(configuration, strategyName, contentType, arguments, from);
+    }
 
+    /**
+     * @param arguments - null is fine, will be ignored.
+     */
+    public static LoadStrategy fromString(Configuration configuration, String strategyName, ContentType contentType,
+                                          List<String> arguments, int from) throws Exception
+    {
         String subPackage = ContentType.JMS.equals(contentType) ? "jms" : "cache";
+
+        LoadStrategy result;
+
+        String originalStrategyName = strategyName;
+
+        // user friendliness - if the first letter of the strategy name is not capitalized,
+        // capitalize it for her. This will allow the user to specify --load-strategy read
+
+        if (Character.isLowerCase(strategyName.charAt(0)))
+        {
+            strategyName = Character.toUpperCase(strategyName.charAt(0)) + strategyName.substring(1);
+        }
 
         try
         {
@@ -103,9 +111,7 @@ public class LoadStrategyFactory
 
         // provide the rest of the arguments to the strategy, which will pick the ones it needs and
         // remove them from the list, leaving the rest of the arguments in the list
-
         result.configure(configuration, arguments, from);
-
         return result;
     }
 

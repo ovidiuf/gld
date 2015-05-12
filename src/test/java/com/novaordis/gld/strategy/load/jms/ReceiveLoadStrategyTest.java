@@ -16,9 +16,14 @@
 
 package com.novaordis.gld.strategy.load.jms;
 
+import com.novaordis.gld.Configuration;
+import com.novaordis.gld.LoadStrategy;
+import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.command.Load;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.operations.jms.Receive;
+import com.novaordis.gld.strategy.load.cache.WriteThenReadLoadStrategy;
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -29,16 +34,39 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(ReceiveLoadStrategyTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    // Overrides -------------------------------------------------------------------------------------------------------
+
+    @Override
+    @Test
+    public void nullArguments() throws Exception
+    {
+        LoadStrategy s = getLoadStrategyToTest();
+        Configuration c = new MockConfiguration();
+
+        try
+        {
+            s.configure(c, null, -1);
+            fail("should complain a about missing destination");
+        }
+        catch(UserErrorException e)
+        {
+            log.info(e.getMessage());
+        }
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 

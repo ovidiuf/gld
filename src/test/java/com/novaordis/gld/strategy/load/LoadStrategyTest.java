@@ -16,6 +16,7 @@
 
 package com.novaordis.gld.strategy.load;
 
+import com.novaordis.gld.Configuration;
 import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.mock.MockConfiguration;
 import org.apache.log4j.Logger;
@@ -24,6 +25,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public abstract class LoadStrategyTest
@@ -45,15 +47,11 @@ public abstract class LoadStrategyTest
     {
         LoadStrategy s = getLoadStrategyToTest();
 
-        try
-        {
-            s.configure(new MockConfiguration(), null, 0);
-            fail("should fail with IllegalArgumentException because of null arguments");
-        }
-        catch(IllegalArgumentException e)
-        {
-            log.info(e.getMessage());
-        }
+        Configuration c = new MockConfiguration();
+
+        s.configure(c, null, -1);
+
+        // we should be fine, null means no more arguments to look at
     }
 
     @Test

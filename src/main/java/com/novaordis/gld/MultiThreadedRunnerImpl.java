@@ -72,8 +72,12 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
         Service service = configuration.getService();
         LoadStrategy loadStrategy = configuration.getLoadStrategy();
         Statistics statistics = configuration.getStatistics();
-        CommandLineConsole commandLineConsole =
-            statistics == null ? null : new CommandLineConsole(configuration, this);
+        CommandLineConsole commandLineConsole = null;
+
+        if (!configuration.inBackground() && statistics != null)
+        {
+            commandLineConsole = new CommandLineConsole(configuration, this);
+        }
 
         try
         {

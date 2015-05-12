@@ -78,6 +78,11 @@ public class WriteThenReadLoadStrategy extends LoadStrategyBase
     {
         super.configure(conf, arguments, from);
 
+        if (arguments == null)
+        {
+            return;
+        }
+
         processArguments(arguments, from);
 
         this.keySize = conf.getKeySize();

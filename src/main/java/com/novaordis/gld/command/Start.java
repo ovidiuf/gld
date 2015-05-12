@@ -14,15 +14,23 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.load;
+package com.novaordis.gld.command;
 
 import com.novaordis.gld.Configuration;
-import com.novaordis.gld.KeyStore;
-import com.novaordis.gld.LoadStrategy;
+import com.novaordis.gld.ContentType;
+import com.novaordis.gld.UserErrorException;
 
-import java.util.List;
+import java.util.ArrayList;
 
-public abstract class LoadStrategyBase implements LoadStrategy
+/**
+ * Use this command to start gld in "background" mode, where it reads a scenario from configuration, and starts
+ * sending load into target, writing statistics into local files until it is explicitly stopped with the Stop command
+ * or it runs out of load.
+ *
+ * @see Stop
+ * @see Status
+ */
+public class Start extends Load
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -30,73 +38,26 @@ public abstract class LoadStrategyBase implements LoadStrategy
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Configuration configuration;
-    private KeyStore keyStore;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // LoadStrategy implementation -------------------------------------------------------------------------------------
-
-    /**
-     * @see com.novaordis.gld.LoadStrategy#configure(Configuration, List, int)
-     */
-    @Override
-    public void configure(Configuration configuration, List<String> arguments, int from) throws Exception
+    public Start(Configuration c) throws UserErrorException
     {
-        if (configuration == null)
-        {
-            throw new IllegalArgumentException("null configuration");
-        }
-
-        this.configuration = configuration;
-
-        if (arguments == null)
-        {
-            // null arguments list means there are no more arguments
-            return;
-        }
-
-        if (!arguments.isEmpty() && (from < 0 || from >= arguments.size()))
-        {
-            throw new ArrayIndexOutOfBoundsException("invalid array index: " + from);
-        }
-
-    }
-
-    @Override
-    public String getName()
-    {
-        String s = getClass().getSimpleName();
-
-        if (s.endsWith("LoadStrategy"))
-        {
-            s = s.substring(0, s.length() - "LoadStrategy".length());
-        }
-
-        return s;
-    }
-
-    @Override
-    public KeyStore getKeyStore()
-    {
-        return keyStore;
+        // we read the configuration from the file
+        super(c, new ArrayList<String>(), -1);
+        setContentType(ContentType.JMS);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public Configuration getConfiguration()
+    @Override
+    public String toString()
     {
-        return configuration;
+        return "Start[" + Integer.toHexString(System.identityHashCode(this)) + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    protected void setKeyStore(KeyStore keyStore)
-    {
-        this.keyStore = keyStore;
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

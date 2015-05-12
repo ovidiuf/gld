@@ -17,6 +17,7 @@
 package com.novaordis.gld;
 
 import java.util.List;
+import java.util.Properties;
 
 public interface Configuration
 {
@@ -92,7 +93,7 @@ public interface Configuration
     /**
      * May be null.
      */
-    String getOutput();
+    String getOutputFile();
 
     /**
      * May return null.
@@ -120,5 +121,9 @@ public interface Configuration
     String getKeyStoreFile();
 
     String getUsername();
+
+    boolean inBackground();
+
+    Properties getConfigurationFileContent();
 
 }

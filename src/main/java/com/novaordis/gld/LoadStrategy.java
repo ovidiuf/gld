@@ -29,7 +29,8 @@ public interface LoadStrategy
      * A strategy must be generally configured before the first use. If the strategy requires configuration and it
      * was not properly configured, the first next() invocation will throw IllegalStateException;
      *
-     * @param arguments - command line arguments. Relevant arguments will be used and removed from the list.
+     * @param arguments - command line arguments. Relevant arguments will be used and removed from the list. null is
+     *                  fine, will be ignored/
      *
      * @exception IllegalArgumentException on null configuration.
      *

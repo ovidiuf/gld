@@ -22,6 +22,7 @@
 
 reldir=$(dirname $0)
 home_dir=${reldir}/..
+verbose=false
 
 function get_java_home()
 {
@@ -52,15 +53,21 @@ classpath=$(get_classpath) || { echo "failed to build classpath"; exit 1; }
 
 debug_args=""
 output_settings=""
+background=false
 
 while [ "$1" != "" ]; do
     if [ "$1" = "--debug" ]; then
         debug_args="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5011"
-    elif [ "$1" = "--output" ]; then
-        shift
-        output_settings="-Dcollector.file=$1"
-        output_command_line_arg="--output $1"
+        verbose=true
+    elif [ "$1" = "--verbose" ]; then
+        verbose=true
     else
+        if [ "$1" = "start" ]; then
+            #
+            # start in background mode
+            #
+            background=true;
+        fi
         args="${args} $1"
     fi
     shift;
@@ -69,7 +76,14 @@ done
 java_bin="java"
 [ "${java_home}" != "" ] && java_bin="${java_home}/bin/java"
 
-${java_bin} -Xms1024m -Xmx1024m -cp ${classpath} ${debug_args} ${output_settings} \
-com.novaordis.gld.Main ${args} ${output_command_line_arg}
+command="${java_bin} -Xms1024m -Xmx1024m -cp ${classpath} ${debug_args} ${output_settings} com.novaordis.gld.Main ${args}"
 
+${verbose} && echo "${command}" 1&>2;
 
+if ${background}; then
+    ${command} &
+    echo ""
+    echo "gld launched in background, use gld stop|status to interact with it"
+else
+    ${command}
+fi

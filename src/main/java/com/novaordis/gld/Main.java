@@ -31,18 +31,23 @@ public class Main
             Command command = c.getCommand();
 
             command.execute();
+
+            System.exit(0);
         }
         catch(UserErrorException e)
         {
             System.out.println("[error]: " + e.getMessage());
+
+            System.exit(1);
         }
-        catch(Exception e)
+        catch(Throwable t)
         {
             System.out.println("");
             System.out.println("unexpected failure, send an error report to ovidiu@novaordis.com");
             System.out.println("");
+            t.printStackTrace();
 
-            throw e;
+            System.exit(2);
         }
     }
 

@@ -70,6 +70,11 @@ public class DeleteLoadStrategy extends LoadStrategyBase
 
         CacheService cs = (CacheService)configuration.getService();
 
+        if (cs == null)
+        {
+            throw new IllegalStateException("null cache service");
+        }
+
         if (!cs.isStarted())
         {
             throw new IllegalStateException("cache service " + cs + " not started");

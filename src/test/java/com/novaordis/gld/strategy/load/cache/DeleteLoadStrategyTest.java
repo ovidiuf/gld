@@ -17,6 +17,7 @@
 package com.novaordis.gld.strategy.load.cache;
 
 import com.novaordis.gld.Configuration;
+import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.keystore.SetKeyStore;
 import com.novaordis.gld.mock.MockCacheService;
 import com.novaordis.gld.mock.MockConfiguration;
@@ -35,6 +36,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class DeleteLoadStrategyTest extends LoadStrategyTest
 {
@@ -52,6 +54,25 @@ public class DeleteLoadStrategyTest extends LoadStrategyTest
     public void scratchCleanup() throws Exception
     {
         Tests.cleanup();
+    }
+
+    // Overrides -------------------------------------------------------------------------------------------------------
+
+    @Override
+    @Test
+    public void nullArguments() throws Exception
+    {
+        DeleteLoadStrategy s = getLoadStrategyToTest();
+
+        try
+        {
+            s.configure(new MockConfiguration(), null, -1);
+            fail("should fail with IllegalStateException on account of null cache service");
+        }
+        catch(IllegalStateException e)
+        {
+            log.info(e.getMessage());
+        }
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

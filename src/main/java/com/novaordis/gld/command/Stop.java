@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.load;
+package com.novaordis.gld.command;
 
 import com.novaordis.gld.Configuration;
-import com.novaordis.gld.KeyStore;
-import com.novaordis.gld.LoadStrategy;
+import com.novaordis.gld.UserErrorException;
 
 import java.util.List;
 
-public abstract class LoadStrategyBase implements LoadStrategy
+/**
+ * Use this command to stop gld running in "background" mode, where it reads a scenario from configuration, and starts
+ * sending load into target, writing statistics into local files until it is explicitly stopped with the Stop command
+ * or it runs out of load.
+ *
+ * @see Start
+ * @see Status
+ */
+public class Stop extends CommandBase
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -30,73 +37,38 @@ public abstract class LoadStrategyBase implements LoadStrategy
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Configuration configuration;
-    private KeyStore keyStore;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // LoadStrategy implementation -------------------------------------------------------------------------------------
-
-    /**
-     * @see com.novaordis.gld.LoadStrategy#configure(Configuration, List, int)
-     */
-    @Override
-    public void configure(Configuration configuration, List<String> arguments, int from) throws Exception
+    public Stop(Configuration c) throws UserErrorException
     {
-        if (configuration == null)
-        {
-            throw new IllegalArgumentException("null configuration");
-        }
+        super(c);
+    }
 
-        this.configuration = configuration;
+    // Command implementation ------------------------------------------------------------------------------------------
 
-        if (arguments == null)
-        {
-            // null arguments list means there are no more arguments
-            return;
-        }
-
-        if (!arguments.isEmpty() && (from < 0 || from >= arguments.size()))
-        {
-            throw new ArrayIndexOutOfBoundsException("invalid array index: " + from);
-        }
-
+    @Override
+    public boolean isInitialized()
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public String getName()
+    public void execute() throws Exception
     {
-        String s = getClass().getSimpleName();
-
-        if (s.endsWith("LoadStrategy"))
-        {
-            s = s.substring(0, s.length() - "LoadStrategy".length());
-        }
-
-        return s;
-    }
-
-    @Override
-    public KeyStore getKeyStore()
-    {
-        return keyStore;
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public Configuration getConfiguration()
+    @Override
+    public String toString()
     {
-        return configuration;
+        return "Stop[" + Integer.toHexString(System.identityHashCode(this)) + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    protected void setKeyStore(KeyStore keyStore)
-    {
-        this.keyStore = keyStore;
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

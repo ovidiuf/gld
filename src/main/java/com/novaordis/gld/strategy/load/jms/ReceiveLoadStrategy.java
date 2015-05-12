@@ -47,6 +47,12 @@ public class ReceiveLoadStrategy extends JmsLoadStrategy
     public void configure(Configuration configuration, List<String> arguments, int from) throws Exception
     {
         super.configure(configuration, arguments, from);
+
+        if (arguments == null)
+        {
+            return;
+        }
+
         processContextRelevantArguments(arguments, from);
     }
 

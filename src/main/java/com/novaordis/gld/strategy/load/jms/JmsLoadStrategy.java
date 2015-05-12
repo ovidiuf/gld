@@ -26,6 +26,7 @@ import com.novaordis.gld.strategy.load.LoadStrategyBase;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class JmsLoadStrategy extends LoadStrategyBase
@@ -134,12 +135,26 @@ public abstract class JmsLoadStrategy extends LoadStrategyBase
     // Private ---------------------------------------------------------------------------------------------------------
 
     /**
-     * Parse context-relevant command line arguments and removes them from the list.
+     * Parse context-relevant command line arguments and removes them from the list. If not finding the arguments
+     * we need in the list, try the configuration second
      */
     private void processContextRelevantArguments(List<String> arguments, int from) throws UserErrorException
     {
         String queueName = Util.extractString("--queue", arguments, from);
+
+        if (queueName == null)
+        {
+            Properties p = getConfiguration().getConfigurationFileContent();
+            queueName = p == null ? null : p.getProperty("queue");
+        }
+
         String topicName = Util.extractString("--topic", arguments, from);
+
+        if (topicName == null)
+        {
+            Properties p = getConfiguration().getConfigurationFileContent();
+            topicName = p == null ? null : p.getProperty("topic");
+        }
 
         if (queueName == null && topicName == null)
         {
@@ -179,6 +194,21 @@ public abstract class JmsLoadStrategy extends LoadStrategyBase
         Load load = (Load)getConfiguration().getCommand();
 
         Long maxOperations = load.getMaxOperations();
+
+        if (maxOperations == null)
+        {
+            // try the configuration file
+            // TODO need to refactor this for a consistent command-line/configuration file approach
+            Properties p = getConfiguration().getConfigurationFileContent();
+            if (p != null)
+            {
+                String s = p.getProperty("message-count");
+                if (s != null)
+                {
+                    maxOperations = Long.parseLong(s);
+                }
+            }
+        }
 
         if (maxOperations != null)
         {

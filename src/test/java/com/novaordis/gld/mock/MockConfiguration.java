@@ -25,6 +25,7 @@ import com.novaordis.gld.Statistics;
 import com.novaordis.gld.StorageStrategy;
 
 import java.util.List;
+import java.util.Properties;
 
 public class MockConfiguration implements Configuration
 {
@@ -167,7 +168,7 @@ public class MockConfiguration implements Configuration
     }
 
     @Override
-    public String getOutput()
+    public String getOutputFile()
     {
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
@@ -206,6 +207,18 @@ public class MockConfiguration implements Configuration
     public String getUsername()
     {
         return username;
+    }
+
+    @Override
+    public boolean inBackground()
+    {
+        return false;
+    }
+
+    @Override
+    public Properties getConfigurationFileContent()
+    {
+        return null;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

@@ -7,7 +7,7 @@ cat <<EOF
 
 Installs gld locally or into a remote enviornment.
 
-    ./install [version] [--force] [environment-name]
+    ./install [--verbose] [version] [--force] [environment-name]
 
 Where:
 
@@ -22,19 +22,31 @@ Where:
          script will stop, unless --force is specified.
 
      environment-name -  the name of the environment to install into. If
-         missing, install locally.
+         missing, install locally. A list of environments and associated
+         configuration can be found in the ./util/environments directory.
+
+         Example:
+
+            ./util/install --verbose 1.0.0-SNAPSHOT ec2-default
+
+
 
 EOF
 }
 
 reldir=$(dirname $0)
 project_home=${reldir}/..
-debug=false
+verbose=false
 
 function debug
 {
-    ${debug} && echo "$1" 1>&2
+    ${verbose} && echo "$@" 1>&2;
     return 0
+}
+
+function fail
+{
+    echo "[error]: $@" 1>&2 && exit 1
 }
 
 function install
@@ -59,14 +71,18 @@ function install
         if ${force}; then
             rm -r ${gld_home} && \
                 debug "${gld_home_basename} was installed already, but --force was used so it was removed" || \
-                { echo "failed to remove existing ${gld_home}" 1>&2; exit 1; }
+                fail "failed to remove existing ${gld_home}"
         else
             echo "${gld_home_basename} already installed in ${target_dir}. Use '--force' to overwrite"
             exit 1;
         fi
     fi
 
-    unzip -q ${source} -d ${target_dir} || { echo "failed to unzip ${source} into ${target_dir}" 1>&2; exit 1; }
+    local unzip_quiet="-q"
+    ${verbose} && unzip_quiet=""
+
+    unzip ${unzip_quiet} ${source} -d ${target_dir} && \
+        debug "unzipped ${source} into ${target_dir}" || fail "failed to unzip ${source} into ${target_dir}"
 
     local link_name
     ${collocated} && link_name=gld || link_name=current
@@ -164,9 +180,9 @@ function install_over_ssh
         { echo "failed to scp to ${user}@${host}:${installation_dir}" 1>2; exit 1; }
 
     ${force} && force_flag="--force"
-    ${debug} && debug_flag="--debug"
+    ${verbose} && verbose_flag="--verbose"
 
-    ssh ${user}@${host} "${installation_dir}/$(basename $0) ${debug_flag} --source ${installation_dir}/$(basename ${zip_file}) --target ${installation_dir} ${force_flag}" || \
+    ssh ${user}@${host} "${installation_dir}/$(basename $0) ${verbose_flag} --source ${installation_dir}/$(basename ${zip_file}) --target ${installation_dir} ${force_flag}" || \
         { echo "failed to execute the remote installation script on ${user}@${host}" 1>2; exit 1; }
 }
 
@@ -186,8 +202,8 @@ function main
             force=true
         elif [ "$1" = "?" -o "$1" = "--help" ]; then
             help=true
-        elif [ "$1" = "--debug" ]; then
-            debug=true
+        elif [ "$1" = "--debug" -o "$1" = "--verbose" ]; then
+            verbose=true
         elif [ "$1" = "--source" ]; then
             shift
             source=$1
@@ -211,8 +227,7 @@ function main
 
     if [ "${source}" != "" ]; then
 
-        # this is an installation started remotely; the zip file was uploaded and it is
-        # available locally
+        # this is an installation started remotely; the zip file was uploaded and it is available locally
         collocated=false
 
     elif [ "${version}" != "" ]; then
