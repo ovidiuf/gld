@@ -242,7 +242,7 @@ public class ConfigurationImplTest extends Assert
 
         assertTrue(Files.write(configurationFile,
             "nodes=blah:2222\n" +
-            "expiration=777\n"
+                "expiration=777\n"
         ));
 
         ConfigurationImpl c = new ConfigurationImpl(new String[]
@@ -300,27 +300,14 @@ public class ConfigurationImplTest extends Assert
     @Test
     public void passwordCommandLine() throws Exception
     {
-        File d = Tests.getScratchDirectory();
-        File passwordFile = new File(d, ".gld.password");
-        assertTrue(Files.write(passwordFile, "somethingelse\n"));
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--nodes", "embedded",
+                "--password", "somethingelse"
+            });
 
-        try
-        {
-            System.setProperty("password.file.directory", d.getPath());
-
-            ConfigurationImpl c = new ConfigurationImpl(new String[]
-                {
-                    "load",
-                    "--nodes", "embedded",
-                    "--password"
-                });
-
-            assertEquals("somethingelse", c.getPassword());
-        }
-        finally
-        {
-            System.clearProperty("password.file.directory");
-        }
+        assertEquals("somethingelse", c.getPassword());
     }
 
     @Test
@@ -329,8 +316,6 @@ public class ConfigurationImplTest extends Assert
         File d = Tests.getScratchDirectory();
         File configurationFile = new File(d, "test.conf");
         assertTrue(Files.write(configurationFile, "password=A\n"));
-        File passwordFile = new File(d, ".gld.password");
-        assertTrue(Files.write(passwordFile, "commandlinetakesprecedence\n"));
 
         try
         {
@@ -341,7 +326,7 @@ public class ConfigurationImplTest extends Assert
                     "load",
                     "--nodes", "embedded",
                     "--conf", configurationFile.getPath(),
-                    "--password"
+                    "--password", "commandlinetakesprecedence"
                 });
 
             assertEquals("commandlinetakesprecedence", c.getPassword());

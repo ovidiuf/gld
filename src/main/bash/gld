@@ -81,8 +81,7 @@ command="${java_bin} -Xms1024m -Xmx1024m -cp ${classpath} ${debug_args} ${output
 ${verbose} && echo "${command}" 1&>2;
 
 if ${background}; then
-    ${command} &
-    echo ""
+    # TODO background does not work well yet, use load, not start
     echo "gld launched in background, use gld stop|status to interact with it"
 else
     ${command}

@@ -476,10 +476,6 @@ public class ConfigurationImpl implements Configuration
 
                 nodesSb = new StringBuilder();
             }
-            else if ("--password".equals(crt))
-            {
-                hasPassword = true;
-            }
             else if ("--threads".equals(crt))
             {
                 if (i < arguments.size() - 1)
@@ -592,6 +588,17 @@ public class ConfigurationImpl implements Configuration
                     username = arguments.get(++i);
                 }
             }
+            else if ("--password".equals(crt))
+            {
+                if (i == arguments.size() - 1)
+                {
+                    throw new UserErrorException("a password name should follow --password");
+                }
+                if (i < arguments.size() - 1)
+                {
+                    password = arguments.get(++i);
+                }
+            }
             else if (command != null)
             {
                 // give it one more chance, pass it to the command, maybe it's a command argument?
@@ -612,58 +619,7 @@ public class ConfigurationImpl implements Configuration
             keyExpirationSecs = Long.parseLong((String)configurationFileContent.get("expiration"));
         }
 
-        if (hasPassword)
-        {
-            // we need to read the password from the current directory's .gld.password file.
-
-            String passwordFileDirectory = System.getProperty("password.file.directory");
-
-            if (passwordFileDirectory == null)
-            {
-                passwordFileDirectory = ".";
-            }
-
-            String passwordFileName = passwordFileDirectory + "/.gld.password";
-
-            File f = new File(passwordFileName);
-
-            if (!f.exists())
-            {
-                throw new UserErrorException(f + " does not exist");
-            }
-            if (!f.canRead())
-            {
-                throw new UserErrorException(f + " exists but cannot be read");
-            }
-
-            BufferedReader br = null;
-
-            try
-            {
-                br = new BufferedReader(new FileReader(f));
-
-                password = br.readLine();
-            }
-            catch(Exception e)
-            {
-                throw new UserErrorException("failed to read " + f + ": " + e.getMessage());
-            }
-            finally
-            {
-                if (br != null)
-                {
-                    try
-                    {
-                        br.close();
-                    }
-                    catch(Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-        else if (configurationFileContent != null && configurationFileContent.get("password") != null)
+        if (password == null && configurationFileContent != null && configurationFileContent.get("password") != null)
         {
             password = ((String)configurationFileContent.get("password"));
         }
