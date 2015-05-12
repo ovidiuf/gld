@@ -48,12 +48,21 @@ function get_classpath()
     done
 }
 
+# may return empty string
+function get-gld-pids()
+{
+    pids=$(ps -ef | grep java | grep com.novaordis.gld.Main | awk '{print $2}')
+    echo ${pids}
+}
+
+
 java_home=$(get_java_home) || { echo "failed to get JAVA_HOME"; exit 1; }
 classpath=$(get_classpath) || { echo "failed to build classpath"; exit 1; }
 
 debug_args=""
 output_settings=""
 background=false
+do_kill=false
 
 while [ "$1" != "" ]; do
     if [ "$1" = "--debug" ]; then
@@ -61,17 +70,29 @@ while [ "$1" != "" ]; do
         verbose=true
     elif [ "$1" = "--verbose" ]; then
         verbose=true
+    elif [ "$1" = "kill" ]; then
+        do_kill=true
+#        if [ "$1" = "start" ]; then
+#            #
+#            # start in background mode
+#            #
+#            background=true;
+#        fi
     else
-        if [ "$1" = "start" ]; then
-            #
-            # start in background mode
-            #
-            background=true;
-        fi
         args="${args} $1"
     fi
     shift;
 done
+
+if ${do_kill}; then
+    #
+    # used to remotely kill gld processes stuck in receiving
+    #
+    pids=$(get-gld-pids)
+    pids=$(echo "${pids}")
+    [ -z ${pids} ] && echo "no gld processes running on $(hostname)" || { kill -9 ${pids}; echo "killed ${pids}"; }
+    exit 0
+fi
 
 java_bin="java"
 [ "${java_home}" != "" ] && java_bin="${java_home}/bin/java"
