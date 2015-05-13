@@ -230,7 +230,8 @@ function install-locally()
         rm ${installation_dir}/${link_name} && debug "removed existing link ${installation_dir}/${link_name}" || fail "failed to remove existing link ${installation_dir}/${link_name}"
     fi
 
-    (cd ${installation_dir}; ln -s ${home_dir} ${link_name}) && debug "linked ${home_dir} to ${link_name}" || fail "failed to link ${home_dir} to ${link_name}"
+    # prefer relative links, this increases the chance they'll work over NFS
+    (cd ${installation_dir}; ln -s ./$(basename ${home_dir}) ${link_name}) && debug "linked ./$(basename ${home_dir}) to ${link_name}" || fail "failed to link ./$(basename ${home_dir}) to ${link_name}"
 }
 
 function install-remotely()
