@@ -108,7 +108,16 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
 
             if (commandLineConsole != null)
             {
-                commandLineConsole.stop(); // no more input needed from the console so dispose of it
+                if (configuration.waitForConsoleQuit())
+                {
+                    log.debug("waiting for console to issue quit ...");
+                    commandLineConsole.waitForExplicitQuit();
+                    log.debug("console issued quit");
+                }
+                else
+                {
+                    commandLineConsole.stop(); // no more input needed from the console so dispose of it
+                }
             }
         }
         finally

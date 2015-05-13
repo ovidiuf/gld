@@ -17,6 +17,8 @@
 package com.novaordis.gld.service.cache.infinispan;
 
 import com.novaordis.gld.CacheService;
+import com.novaordis.gld.Configuration;
+import com.novaordis.gld.ContentType;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.Operation;
 import org.infinispan.client.hotrod.RemoteCache;
@@ -45,14 +47,41 @@ public class InfinispanService implements CacheService
 
     private String cacheName;
 
+    private Configuration configuration;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
-     * @param cacheName - null is acceptable, it means "default cache"
+     * @see InfinispanService#setTarget(List)
+     * @see InfinispanService#setCacheName(String)
      */
+    public InfinispanService()
+    {
+    }
+
     public InfinispanService(List<Node> nodes, String cacheName)
     {
-        this.cacheName = cacheName;
+        setTarget(nodes);
+        setCacheName(cacheName);
+    }
+
+    // Service implementation ------------------------------------------------------------------------------------------
+
+    @Override
+    public ContentType getContentType()
+    {
+        return ContentType.KEYVALUE;
+    }
+
+    @Override
+    public void setConfiguration(Configuration c)
+    {
+        this.configuration = c;
+    }
+
+    @Override
+    public void setTarget(List<Node> nodes)
+    {
         this.nodes = nodes;
 
         int socketTimeout = DEFAULT_SO_TIMEOUT_MS;
@@ -78,8 +107,6 @@ public class InfinispanService implements CacheService
 
         remoteCacheManager = new RemoteCacheManager(clientBuilder.build());
     }
-
-    // Service implementation ------------------------------------------------------------------------------------------
 
     @Override
     public void perform(Operation o) throws Exception
@@ -152,6 +179,14 @@ public class InfinispanService implements CacheService
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    /**
+     * @param cacheName - null is acceptable, it means "default cache"
+     */
+    public void setCacheName(String cacheName)
+    {
+        this.cacheName = cacheName;
+    }
 
     @Override
     public String toString()

@@ -199,6 +199,38 @@
             <version>1.7.6</version>
         </dependency>
 
+
+        <!--
+            These dependencies are introduced by Spring and Embedded ActiveMQ
+        -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>4.1.6.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jms</artifactId>
+            <version>4.1.6.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xbean</groupId>
+            <artifactId>xbean-spring</artifactId>
+            <version>3.6</version>
+        </dependency>
+        <!--
+            This is needed by org.apache.activemq.xbean.PooledBrokerFactoryBean
+        -->
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-all</artifactId>
+            <version>5.10.1</version>
+        </dependency>
+
+        <!--
+            END OF Spring/Embedded ActiveMQ Dependencies
+        -->
+
     </dependencies>
 
 </project>

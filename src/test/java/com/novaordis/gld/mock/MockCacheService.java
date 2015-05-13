@@ -17,11 +17,15 @@
 package com.novaordis.gld.mock;
 
 import com.novaordis.gld.CacheService;
+import com.novaordis.gld.Configuration;
+import com.novaordis.gld.ContentType;
+import com.novaordis.gld.Node;
 import com.novaordis.gld.Operation;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -54,6 +58,24 @@ public class MockCacheService implements CacheService
     }
 
     // Service implementation ------------------------------------------------------------------------------------------
+
+    @Override
+    public ContentType getContentType()
+    {
+        return ContentType.KEYVALUE;
+    }
+
+    @Override
+    public void setConfiguration(Configuration c)
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void setTarget(List<Node> nodes)
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
 
     @Override
     public void perform(Operation o) throws Exception

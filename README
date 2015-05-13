@@ -18,3 +18,8 @@ limitations under the License.
 Installation on ec2
 
     ./util/make-zip; ./util/install 1.0.0-SNAPSHOT ec2-default --force
+
+
+Tests
+
+    mvn -Dmaven.surefire.debug="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005" test -Dtest=LoadCommandTest

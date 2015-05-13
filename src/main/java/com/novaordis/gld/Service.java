@@ -16,10 +16,19 @@
 
 package com.novaordis.gld;
 
+import java.util.List;
+
 public interface Service
 {
+    void setConfiguration(Configuration c);
+
+    void setTarget(List<Node> nodes);
+
+    ContentType getContentType();
+
     /**
      * Starting an already started service should throw IllegalStateException.
+     *
      * @throws IllegalStateException on attempt to start an already started service instance.
      */
     void start() throws Exception;
@@ -28,6 +37,7 @@ public interface Service
      * Stopping an already stopped service instance should be a noop.
      */
     void stop() throws Exception;
+
     boolean isStarted();
 
     void perform(Operation o) throws Exception;

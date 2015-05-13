@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2015 Nova Ordis LLC
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!--suppress SpringFacetInspection -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://activemq.apache.org/schema/core
+                           http://activemq.apache.org/schema/core/activemq-core-5.5.0.xsd">
+
+    <!--
+        this overwrite of ${ with _STARTPREFIX and } with _ENDSUFFIX tokens is necessary because the id attirbute of
+        amq:broker will not allow the original tokens since these characters are not allowed by the XML ID element
+        spec definition. Spring token replacement takes place AFTER documents are parsed and validated.
+    -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" >
+        <property name="placeholderPrefix" value="_STARTPREFIX"/>
+        <property name="placeholderSuffix" value="_ENDSUFFIX"/>
+    </bean>
+
+    <!--suppress UnparsedCustomBeanInspection -->
+    <amq:broker
+            dataDirectory="_STARTPREFIXembedded.gld.activemq.directory_ENDSUFFIX/data"
+            id="embedded-gld-activemq-broker-_STARTPREFIXembedded.gld.activemq.brokerid_ENDSUFFIX"
+            persistent="true">
+
+        <!-- This plugin keeps the stats displayed by GetActiveMQStatsActionBean -->
+        <amq:plugins>
+            <amq:statisticsBrokerPlugin/>
+        </amq:plugins>
+
+        <!--
+             By default AMQ tries to deliver a message 6 times, if it fails the message will end up in this queue
+             We may want to write listeners to pick up these messages and log their content so they can be analyzed.
+        -->
+        <amq:destinationPolicy>
+            <amq:policyMap>
+                <amq:policyEntries>
+                    <!-- producerFlowControl="false" do not block when storage is full -->
+                    <amq:policyEntry topic=">" producerFlowControl="false">
+                        <amq:pendingSubscriberPolicy>
+                            <!-- pending topic messages stay in memory -->
+                            <amq:vmCursor />
+                        </amq:pendingSubscriberPolicy>
+                        <!-- messageEvictionStrategy and pendingMessageLimitStrategy only works for topics -->
+                        <amq:messageEvictionStrategy>
+                            <amq:oldestMessageEvictionStrategy/>
+                        </amq:messageEvictionStrategy>
+                        <amq:pendingMessageLimitStrategy>
+                            <!-- keep a max of 50 messages pending topic messages, throw away the rest -->
+                            <amq:constantPendingMessageLimitStrategy limit="50"/>
+                        </amq:pendingMessageLimitStrategy>
+                    </amq:policyEntry>
+                    <!-- Set the following policy on all queues using the '>' wildcard.
+                         memoryLimit of 20mb will keep messages in memory up to 20mb, after that
+                         they'll be moved to temporary disk -->
+                    <amq:policyEntry queue="com.fitbit.site.>" producerFlowControl="false" memoryLimit="20mb">
+                        <amq:pendingQueuePolicy>
+                            <!-- put in disk all messages  -->
+                            <amq:storeCursor />
+                        </amq:pendingQueuePolicy>
+                        <amq:deadLetterStrategy>
+                            <!-- Use the prefix 'DLQ.' for the destination name, and make the DLQ a queue rather than a topic -->
+                            <amq:individualDeadLetterStrategy queuePrefix="DLQ.site." useQueueForQueueMessages="true" processExpired="false"/>
+                        </amq:deadLetterStrategy>
+                    </amq:policyEntry>
+                    <amq:policyEntry queue="com.fitbit.corporate.>" producerFlowControl="false" memoryLimit="20mb">
+                        <amq:pendingQueuePolicy>
+                            <!-- pending messages go to disk memory -->
+                            <amq:storeCursor />
+                        </amq:pendingQueuePolicy>
+                        <amq:deadLetterStrategy>
+                            <!-- Use the prefix 'DLQ.' for the destination name, and make the DLQ a queue rather than a topic -->
+                            <amq:individualDeadLetterStrategy queuePrefix="DLQ.corporate." useQueueForQueueMessages="true" processExpired="false"/>
+                        </amq:deadLetterStrategy>
+                    </amq:policyEntry>
+                    <amq:policyEntry queue="com.fitbit.commerce.>" producerFlowControl="false" memoryLimit="20mb">
+                        <amq:pendingQueuePolicy>
+                            <!-- pending messages go to disk memory -->
+                            <amq:storeCursor />
+                        </amq:pendingQueuePolicy>
+                        <amq:deadLetterStrategy>
+                            <!-- Use the prefix 'DLQ.' for the destination name, and make the DLQ a queue rather than a topic -->
+                            <amq:individualDeadLetterStrategy queuePrefix="DLQ.commerce." useQueueForQueueMessages="true" processExpired="false"/>
+                        </amq:deadLetterStrategy>
+                    </amq:policyEntry>
+                </amq:policyEntries>
+            </amq:policyMap>
+        </amq:destinationPolicy>
+
+        <amq:persistenceAdapter>
+            <amq:kahaDB directory="_STARTPREFIXembedded.gld.activemq.directory_ENDSUFFIX/data/gld/kahadb"
+                        ignoreMissingJournalfiles="true"
+                        checkForCorruptJournalFiles="true"
+                        checksumJournalFiles="true"/>
+        </amq:persistenceAdapter>
+
+        <!-- throw away all messages that end in DLQ, prints a message very 100 msgs, works in conjunction
+             with TTL. This should be temporary -->
+        <amq:plugins>
+            <amq:discardingDLQBrokerPlugin dropAll="true" dropTemporaryTopics="true" dropTemporaryQueues="true" reportInterval="100" />
+        </amq:plugins>
+
+        <amq:transportConnectors>
+            <!-- only for dev -->
+            <amq:transportConnector uri="vm://localhost?async=true" />
+        </amq:transportConnectors>
+
+        <!--
+            Messages will get forwarded to the servers listening on the IPs and ports declared here.
+        -->
+        <amq:networkConnectors>
+            <!-- static = don't use dynamic routing but only the specific server:ip pairs
+                 failover = if the connection fails try any of the other servers listed and keep on trying
+                 randomize = pick a server randomly, not in the order they're listed
+                 maxReconnectAttempts = do not try to reconnect evey 10 milliseconds if connection fails, just failover
+                 duplex=false only sends messages from this broker, never gets forwarded messages from other brokers
+                 networkTTL = max number of hops between brokers messages produced here can take
+                 alwaysSyncSend = false - don't do one message one response, forward messages in batch
+                 dispatchAsync = This makes more sense since you want to do async message delivery to slower consumers,
+                                  but do sync message delivery to faster consumers (to avoid the synchronization and
+                                  context switching costs of adding another seda queue). The downside to using sync
+                                  message delivery is that the producer is more likely to block if there is a slow
+                                  consumer that he is dispatching messages to.
+                                  The default setting is dispatchAsync=true which is the best setting for high
+                                  performance. If you want to deal better with slow consumers you will want to enable
+                                  this setting. If you want better thoughput and the chances of having a slow consumer
+                                  are low, you may want to change this to false.
+                 conduitSubscriptions = n consumers connected to the stand alone broker look like only 1 consumer to the
+                                        embedded broker, turning off conduit subscriptions makes the embedded brokers
+                                        aware of the number of the number of consumers connected to the stand alone
+                                        broker and moves the bottleneck to the stand alone broker
+                 Having 8 network connectors should increase the forwarding speed by 8x or something similar. -->
+            <amq:networkConnector name="one_connection_to_nob-_STARTPREFIXembedded.gld.activemq.brokerid_ENDSUFFIX"
+                                  uri="static:failover:(_STARTPREFIXembedded.gld.activemq.masterSlaveBrokerList_ENDSUFFIX)?randomize=true&amp;maxReconnectAttempts=0"
+                                  duplex="false"
+                                  conduitSubscriptions="false"
+                                  prefetchSize="400"
+                                  networkTTL="4"
+                                  dispatchAsync="true"
+                                  alwaysSyncSend="false"
+                                  userName="admin"
+                                  password="admin123"/>
+
+            <amq:networkConnector name="two_connection_to_nob-_STARTPREFIXembedded.gld.activemq.brokerid_ENDSUFFIX"
+                                  uri="static:failover:(_STARTPREFIXembedded.gld.activemq.masterSlaveBrokerList_ENDSUFFIX)?randomize=true&amp;maxReconnectAttempts=0"
+                                  duplex="false"
+                                  conduitSubscriptions="false"
+                                  prefetchSize="400"
+                                  networkTTL="4"
+                                  dispatchAsync="true"
+                                  alwaysSyncSend="false"
+                                  userName="admin"
+                                  password="admin123"/>
+
+            <amq:networkConnector name="three_connection_to_nob-_STARTPREFIXembedded.gld.activemq.brokerid_ENDSUFFIX"
+                                  uri="static:failover:(_STARTPREFIXembedded.gld.activemq.masterSlaveBrokerList_ENDSUFFIX)?randomize=true&amp;maxReconnectAttempts=0"
+                                  duplex="false"
+                                  conduitSubscriptions="false"
+                                  prefetchSize="400"
+                                  networkTTL="4"
+                                  dispatchAsync="true"
+                                  alwaysSyncSend="false"
+                                  userName="admin"
+                                  password="admin123"/>
+
+            <amq:networkConnector name="four_connection_to_nob-_STARTPREFIXembedded.gld.activemq.brokerid_ENDSUFFIX"
+                                  uri="static:failover:(_STARTPREFIXembedded.gld.activemq.masterSlaveBrokerList_ENDSUFFIX)?randomize=true&amp;maxReconnectAttempts=0"
+                                  duplex="false"
+                                  conduitSubscriptions="false"
+                                  prefetchSize="400"
+                                  networkTTL="4"
+                                  dispatchAsync="true"
+                                  alwaysSyncSend="false"
+                                  userName="admin"
+                                  password="admin123"/>
+        </amq:networkConnectors>
+
+        <!-- configure the location of the temp storage, used by storeCursor -->
+        <amq:tempDataStore>
+            <amq:pListStoreImpl directory="_STARTPREFIXembedded.gld.activemq.directory_ENDSUFFIX/data/gld" id="tmpstore"/>
+        </amq:tempDataStore>
+
+        <!-- AMQ defaults are
+                 memory 64 mb
+                 store 100 gb
+                 temp 50 gb
+        -->
+        <amq:systemUsage>
+            <amq:systemUsage>
+                <amq:memoryUsage>
+                    <amq:memoryUsage limit="120 mb"/>
+                </amq:memoryUsage>
+                <amq:storeUsage>
+                    <!-- with the short ttl we have I don't think we'll ever reach this limit -->
+                    <amq:storeUsage limit="100 gb" name="store"/>
+                </amq:storeUsage>
+                <amq:tempUsage>
+                    <!-- with the short ttl we have I don't think we'll ever reach this limit -->
+                    <amq:tempUsage limit="50 gb"/>
+                </amq:tempUsage>
+            </amq:systemUsage>
+        </amq:systemUsage>
+
+    </amq:broker>
+
+</beans>

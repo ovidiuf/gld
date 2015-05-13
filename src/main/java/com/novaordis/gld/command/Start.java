@@ -44,7 +44,6 @@ public class Start extends Load
     {
         // we read the configuration from the file
         super(c, new ArrayList<String>(), -1);
-        setContentType(ContentType.JMS);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

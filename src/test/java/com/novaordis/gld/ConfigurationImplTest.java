@@ -16,6 +16,9 @@
 
 package com.novaordis.gld;
 
+import com.novaordis.gld.command.Load;
+import com.novaordis.gld.service.cache.EmbeddedCacheService;
+import com.novaordis.gld.service.jms.activemq.ActiveMQService;
 import com.novaordis.gld.statistics.CollectorBasedCsvStatistics;
 import com.novaordis.utilities.Files;
 import com.novaordis.utilities.testing.Tests;
@@ -94,8 +97,8 @@ public class ConfigurationImplTest extends Assert
         ConfigurationImpl c = new ConfigurationImpl(new String[]
             {
                 "load",
-                "--type",
-                "TEST",
+                "--service",
+                "embedded-generic",
                 "--nodes",
                 "localhost:10001",
                 "--statistics",
@@ -116,8 +119,8 @@ public class ConfigurationImplTest extends Assert
         ConfigurationImpl c = new ConfigurationImpl(new String[]
             {
                 "load",
-                "--type",
-                "TEST",
+                "--service",
+                "embedded-generic",
                 "--nodes",
                 "localhost:10001,example.com:10002",
                 "--statistics",
@@ -453,7 +456,43 @@ public class ConfigurationImplTest extends Assert
         }
     }
 
+    // --service -------------------------------------------------------------------------------------------------------
 
+    @Test
+    public void implicitService() throws Exception
+    {
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--nodes",
+                "embedded",
+            });
+
+        Command command = c.getCommand();
+        assertTrue(command instanceof Load);
+        Service s = c.getService();
+        assertTrue(s instanceof EmbeddedCacheService);
+    }
+
+    @Test
+    public void explicitService() throws Exception
+    {
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--service",
+                "com.novaordis.gld.service.jms.activemq.ActiveMQService",
+                "--nodes",
+                "embedded",
+                "--queue",
+                "TEST"
+            });
+
+        Command command = c.getCommand();
+        assertTrue(command instanceof Load);
+        Service s = c.getService();
+        assertTrue(s instanceof ActiveMQService);
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

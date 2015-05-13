@@ -126,4 +126,7 @@ public interface Configuration
 
     Properties getConfigurationFileContent();
 
+    boolean waitForConsoleQuit();
+    void setWaitForConsoleQuit(boolean b);
+
 }

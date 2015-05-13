@@ -17,6 +17,7 @@
 package com.novaordis.gld.service.jms.activemq;
 
 import com.novaordis.gld.Configuration;
+import com.novaordis.gld.ContentType;
 import com.novaordis.gld.EmbeddedNode;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.Operation;
@@ -110,7 +111,7 @@ public class ActiveMQService implements Service
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String clientUrl;
+    private String url;
 
     private Connection connection;
 
@@ -120,13 +121,35 @@ public class ActiveMQService implements Service
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public ActiveMQService()
+    {
+    }
+
     public ActiveMQService(Configuration configuration, List<Node> nodes)
     {
-        this.clientUrl = toClientUrl(nodes);
-        this.configuration = configuration;
+        setConfiguration(configuration);
+        setTarget(nodes);
     }
 
     // Service implementation ------------------------------------------------------------------------------------------
+
+    @Override
+    public ContentType getContentType()
+    {
+        return ContentType.JMS;
+    }
+
+    @Override
+    public void setConfiguration(Configuration c)
+    {
+        this.configuration = c;
+    }
+
+    @Override
+    public void setTarget(List<Node> nodes)
+    {
+        this.url = toClientUrl(nodes);
+    }
 
     @Override
     public void start() throws Exception
@@ -219,7 +242,7 @@ public class ActiveMQService implements Service
     @Override
     public String toString()
     {
-        return "ActiveMQService[" + clientUrl + "]";
+        return "ActiveMQService[" + url + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -230,13 +253,13 @@ public class ActiveMQService implements Service
 
     private ConnectionFactory getConnectionFactory()
     {
-        if (isEmbedded(clientUrl))
+        if (isEmbedded(url))
         {
-            return new EmbeddedConnectionFactory(clientUrl);
+            return new EmbeddedConnectionFactory(url);
         }
         else
         {
-            return new ActiveMQConnectionFactory(clientUrl);
+            return new ActiveMQConnectionFactory(url);
         }
     }
 

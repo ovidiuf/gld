@@ -35,7 +35,6 @@ import com.novaordis.gld.statistics.StatisticsFactory;
 import com.novaordis.gld.strategy.load.LoadStrategyFactory;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,6 +85,10 @@ public class ConfigurationImpl implements Configuration
     private Service service;
 
     private Statistics statistics;
+
+    private String serviceString;
+
+    private boolean waitForConsoleQuit;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -300,6 +303,18 @@ public class ConfigurationImpl implements Configuration
         return configurationFileContent;
     }
 
+    @Override
+    public boolean waitForConsoleQuit()
+    {
+        return waitForConsoleQuit;
+    }
+
+    @Override
+    public void setWaitForConsoleQuit(boolean b)
+    {
+        this.waitForConsoleQuit = b;
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Override
@@ -353,8 +368,6 @@ public class ConfigurationImpl implements Configuration
 
         // default - don't expire
         keyExpirationSecs = -1L;
-
-        boolean hasPassword = false;
 
         String proxyString = null;
 
@@ -468,7 +481,6 @@ public class ConfigurationImpl implements Configuration
             else if ("--nodes".equals(crt))
             {
                 // this is special, as the list of nodes may come in different arguments, comma-separated, etc.
-
                 if (nodesSb != null)
                 {
                     throw new UserErrorException("--nodes specified twice on command line");
@@ -599,6 +611,17 @@ public class ConfigurationImpl implements Configuration
                     password = arguments.get(++i);
                 }
             }
+            else if ("--service".equals(crt))
+            {
+                if (i == arguments.size() - 1)
+                {
+                    throw new UserErrorException("a service name should follow --service");
+                }
+                if (i < arguments.size() - 1)
+                {
+                    serviceString = arguments.get(++i);
+                }
+            }
             else if (command != null)
             {
                 // give it one more chance, pass it to the command, maybe it's a command argument?
@@ -608,6 +631,11 @@ public class ConfigurationImpl implements Configuration
             {
                 throw new UserErrorException("unknown command '" + crt + "'");
             }
+        }
+
+        if (nodesSb != null)
+        {
+            nodesString = nodesSb.toString();
         }
 
         //
@@ -726,96 +754,159 @@ public class ConfigurationImpl implements Configuration
             password = (String)configurationFileContent.get("password");
         }
 
-        if (command != null && command.isRemote())
-        {
-            if (proxyString != null)
-            {
-                // we-re proxy-based
-
-                //List<Node> proxies = Node.toNodeList(proxyString);
-                //service = new HARedisService(proxies, getKeyExpirationSecs(), getMaxTotal());
-
-                throw new RuntimeException("NOT YET IMPLEMENTED - RETURN TO THIS");
-            }
-
-            // we connect directly to nodes, process nodes
-
-            if (nodesSb != null)
-            {
-                nodesString = nodesSb.toString();
-            }
-
-            if (nodesString == null && configurationFileContent != null)
-            {
-                // fallback to the configuration file if exists
-                nodesString = (String) configurationFileContent.get("nodes");
-            }
-
-            if (nodesString == null)
-            {
-                throw new UserErrorException(
-                    "no target redis nodes specified, set --nodes host1:port1,host2:port2,... on the command line or \"nodes=host1:port1,host2:port2,...\" in the configuration file");
-            }
-
-            nodes = Node.toNodeList(nodesString);
-
-            if (nodes.isEmpty())
-            {
-                throw new IllegalStateException("empty nodes list after non-null string: " + nodesString);
-            }
-
-            // TODO we handle embedded situation differently for cache and for JMS for historical reasons
-            //      (for cache, we have a top-level EmbeddedCacheService, while for JMS, we have an ActiveMQ
-            //      service that delegates to an EmbeddedJMSConnection factory). We need to unify to one
-            //      consistent solution.
-
-            ContentType contentType;
-            if (command instanceof Load)
-            {
-                Load loadCommand = (Load)command;
-                contentType = loadCommand.getContentType();
-            }
-            else
-            {
-                contentType = ContentType.valueOf(configurationFileContent.getProperty("content-type"));
-            }
-
-            if (nodes.get(0) instanceof EmbeddedNode && !ContentType.JMS.equals(contentType))
-            {
-                EmbeddedNode en = (EmbeddedNode)nodes.get(0);
-                service = new EmbeddedCacheService(en.getCapacity());
-            }
-            else
-            {
-                if (ContentType.TEST.equals(contentType))
-                {
-                    service = new EmbeddedGenericService();
-                }
-                else if (ContentType.KEYVALUE.equals(contentType))
-                {
-                    service = new InfinispanService(getNodes(), getCacheName());
-                }
-                else if (ContentType.JMS.equals(contentType))
-                {
-                    service = new ActiveMQService(this, nodes);
-                }
-                else
-                {
-                    throw new UserErrorException("unknown content type: " + contentType);
-                }
-            }
-        }
-
-        // other post-processing
+        //
+        // by now we should have a command, if we don't, we're broken
+        //
 
         if (command == null)
         {
             throw new UserErrorException("no command specified");
         }
 
+        if (command.isRemote())
+        {
+            nodes = buildNodeList(proxyString, nodesString);
+        }
+
+        service = buildService(serviceString, this, nodes);
+
         command.initialize();
 
         this.statistics = StatisticsFactory.getInstance(this, statisticsString);
+    }
+
+    /**
+     * @throws Exception if problems are encountered while building the node list.
+     */
+    private List<Node> buildNodeList(String proxyString, String nodesString) throws Exception
+    {
+        List<Node> result;
+
+        if (proxyString != null)
+        {
+            // we-re proxy-based
+
+            //List<Node> proxies = Node.toNodeList(proxyString);
+            //service = new HARedisService(proxies, getKeyExpirationSecs(), getMaxTotal());
+
+            throw new RuntimeException("NOT YET IMPLEMENTED - RETURN TO THIS");
+        }
+
+        // we connect directly to nodes, process nodes
+
+        if (nodesString == null && configurationFileContent != null)
+        {
+            // fallback to the configuration file if exists
+            nodesString = (String) configurationFileContent.get("nodes");
+        }
+
+        if (nodesString == null)
+        {
+            throw new UserErrorException(
+                "no target redis nodes specified, set --nodes host1:port1,host2:port2,... on the command line or \"nodes=host1:port1,host2:port2,...\" in the configuration file");
+        }
+
+        result = Node.toNodeList(nodesString);
+
+        if (result.isEmpty())
+        {
+            throw new IllegalStateException("empty nodes list after non-null string: " + nodesString);
+        }
+
+        return result;
+    }
+
+    /**
+     * @param serviceFullyQualifiedClassName null if no --service was specified on command line. Command line takes priority over
+     *                      inferences.
+     * @throws Exception
+     */
+    private Service buildService(String serviceFullyQualifiedClassName, Configuration configuration, List<Node> nodes)
+        throws Exception
+    {
+        Service result;
+
+        if (serviceString != null)
+        {
+            Service service;
+
+            // shortcuts
+            if ("embedded-generic".equalsIgnoreCase(serviceString))
+            {
+                service = new EmbeddedGenericService();
+            }
+            else if ("embedded-cache".equalsIgnoreCase(serviceString))
+            {
+                service = new EmbeddedCacheService();
+            }
+            else if ("activemq".equalsIgnoreCase(serviceString))
+            {
+                service = new ActiveMQService();
+            }
+            else if ("infinispan".equalsIgnoreCase(serviceString))
+            {
+                service = new InfinispanService();
+            }
+            else
+            {
+                // try to locate the class and instantiate it
+                Class c = getClass().getClassLoader().loadClass(serviceFullyQualifiedClassName);
+                //noinspection UnnecessaryLocalVariable
+                service = (Service) c.newInstance();
+            }
+
+            service.setConfiguration(configuration);
+            service.setTarget(nodes);
+            return service;
+        }
+
+        //
+        // heuristics
+        //
+
+        // TODO we handle embedded situation differently for cache and for JMS for historical reasons
+        //      (for cache, we have a top-level EmbeddedCacheService, while for JMS, we have an ActiveMQ
+        //      service that delegates to an EmbeddedJMSConnection factory). We need to unify to one
+        //      consistent solution.
+
+        ContentType contentType;
+
+        if (command instanceof Load)
+        {
+            Load loadCommand = (Load)command;
+            contentType = loadCommand.getContentType();
+        }
+        else
+        {
+            contentType = ContentType.valueOf(configurationFileContent.getProperty("content-type"));
+        }
+
+        if (nodes.get(0) instanceof EmbeddedNode && !ContentType.JMS.equals(contentType))
+        {
+            EmbeddedNode en = (EmbeddedNode)nodes.get(0);
+            result = new EmbeddedCacheService(en.getCapacity());
+        }
+        else
+        {
+            if (ContentType.TEST.equals(contentType))
+            {
+                result = new EmbeddedGenericService();
+            }
+            else if (ContentType.KEYVALUE.equals(contentType))
+            {
+                result = new InfinispanService(getNodes(), getCacheName());
+            }
+            else if (ContentType.JMS.equals(contentType))
+            {
+                result = new ActiveMQService(this, nodes);
+            }
+            else
+            {
+                throw new UserErrorException("unknown content type: " + contentType);
+            }
+        }
+
+        return result;
     }
 
     // Inner classes ---------------------------------------------------------------------------------------------------

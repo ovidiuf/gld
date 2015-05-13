@@ -26,6 +26,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 public class CommandLineConsole implements Runnable
 {
@@ -44,6 +46,8 @@ public class CommandLineConsole implements Runnable
     private Configuration configuration;
     private String line;
 
+    private BlockingQueue<Object> quitQueue;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public CommandLineConsole(Configuration configuration, MultiThreadedRunner multiThreadedRunner)
@@ -53,6 +57,7 @@ public class CommandLineConsole implements Runnable
         this.thread = new Thread(this, "gld command line console");
         thread.setDaemon(true);
         setIn(System.in);
+        this.quitQueue = new ArrayBlockingQueue<Object>(1);
     }
 
     // Runnable implementation -----------------------------------------------------------------------------------------
@@ -108,6 +113,16 @@ public class CommandLineConsole implements Runnable
                     //
                     // 'q' (quit)
                     //
+
+                    try
+                    {
+                        quitQueue.put(new Object());
+                    }
+                    catch(InterruptedException e)
+                    {
+                        throw new IllegalStateException(
+                            "interrupted while attempting to place message on the quit queue", e);
+                    }
 
                     try
                     {
@@ -198,9 +213,21 @@ public class CommandLineConsole implements Runnable
         closer.start();
     }
 
-    boolean isRunning()
+    public boolean isRunning()
     {
         return running;
+    }
+
+    public void waitForExplicitQuit()
+    {
+        try
+        {
+            quitQueue.take();
+        }
+        catch(InterruptedException e)
+        {
+            throw new IllegalStateException("interrupted while waiting on the quit queue");
+        }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -217,7 +244,6 @@ public class CommandLineConsole implements Runnable
     {
         return line;
     }
-
 
     // Protected -------------------------------------------------------------------------------------------------------
 

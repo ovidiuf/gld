@@ -16,6 +16,8 @@
 
 package com.novaordis.gld.service.cache.redis;
 
+import com.novaordis.gld.Configuration;
+import com.novaordis.gld.ContentType;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.CacheService;
 import com.novaordis.gld.Operation;
@@ -75,6 +77,24 @@ public class ShardedJedisRedisService implements CacheService
     }
 
     // Service implementation ------------------------------------------------------------------------------------------
+
+    @Override
+    public ContentType getContentType()
+    {
+        return ContentType.KEYVALUE;
+    }
+
+    @Override
+    public void setConfiguration(Configuration c)
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void setTarget(List<Node> nodes)
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
 
     @Override
     public void perform(Operation o) throws Exception

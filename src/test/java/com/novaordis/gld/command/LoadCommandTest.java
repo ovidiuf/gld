@@ -341,25 +341,28 @@ public class LoadCommandTest extends CommandTest
         MockConfiguration mc = new MockConfiguration();
         List<String> args = new ArrayList<>(Arrays.asList("load"));
         Load load = new Load(mc, args, 0);
-        assertEquals(ContentType.KEYVALUE, load.getContentType());
+        // we don't know yet the content type, we don't have a service defined
+        assertNull(load.getContentType());
     }
 
     @Test
     public void type_KeyValue() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        List<String> args = new ArrayList<>(Arrays.asList("load", "--type", "key-value"));
+        List<String> args = new ArrayList<>(Arrays.asList("load", "--service", "embedded-cache"));
         Load load = new Load(mc, args, 0);
-        assertEquals(ContentType.KEYVALUE, load.getContentType());
+        // the Load command did not get a change to initialize the service yet, so it does not know the content type
+        assertNull(load.getContentType());
     }
 
     @Test
     public void type_JMS() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        List<String> args = new ArrayList<>(Arrays.asList("load", "--type", "jms"));
+        List<String> args = new ArrayList<>(Arrays.asList("load", "--service", "activemq"));
         Load load = new Load(mc, args, 0);
-        assertEquals(ContentType.JMS, load.getContentType());
+        // the Load command did not get a change to initialize the service yet, so it does not know the content type
+        assertNull(load.getContentType());
     }
 
     @Test
@@ -399,8 +402,8 @@ public class LoadCommandTest extends CommandTest
         ConfigurationImpl c = new ConfigurationImpl(new String[]
             {
                 "load",
-                "--type",
-                "keyvalue",
+                "--service",
+                "embedded-cache",
                 "--nodes",
                 "embedded"
             });
@@ -415,8 +418,8 @@ public class LoadCommandTest extends CommandTest
         ConfigurationImpl c = new ConfigurationImpl(new String[]
             {
                 "load",
-                "--type",
-                "jms",
+                "--service",
+                "activemq",
                 "--nodes",
                 "embedded",
                 "--queue",

@@ -16,22 +16,49 @@
 
 package com.novaordis.gld.service;
 
+import com.novaordis.gld.Configuration;
+import com.novaordis.gld.ContentType;
+import com.novaordis.gld.Node;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.Service;
+import org.apache.log4j.Logger;
+
+import java.util.List;
 
 public class EmbeddedGenericService implements Service
 {
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(EmbeddedGenericService.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private volatile boolean started;
+    private Configuration configuration;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Service implementation ------------------------------------------------------------------------------------------
+
+    @Override
+    public ContentType getContentType()
+    {
+        return ContentType.TEST;
+    }
+
+    @Override
+    public void setConfiguration(Configuration c)
+    {
+        this.configuration = c;
+    }
+
+    @Override
+    public void setTarget(List<Node> nodes)
+    {
+        log.info("setting target to " + nodes + " is a noop");
+    }
 
     @Override
     public void start() throws Exception

@@ -13,11 +13,11 @@ Usage:
 
 Global Options:
 
-    --type <load-type>     Specifies the type of load to be sent into the service provider.  Valid
-      values are "key-value" (suitable for loading cache providers),  "jms"  (suitable for loading
-      JMS providers),  "http", etc.  The default is "key-value".  The default  load strategy   for
-      caches is "WriteThenRead" and for JMS load is "Send". More details about load strategies can
-      be found below under the "Load Strategies" section.
+    --service <service-type> Defines the service provider type. You can use either one of the
+      pre-defined values ("infinispan", "activemq", etc.) or a fully qualified class name of a class
+      available in the class path and that implements com.novaordis.gld.Service. The default  load
+      strategy for caches is "WriteThenRead" and for JMS load is "Send".  More details about  load
+      strategies can be found below under the "Load Strategies" section.
 
     --nodes <node1:port1,node2:port2,...>    The list of  host:port values for the backend service
       nodes to send requests into. There is no default, the node list must be explicitly specified.
@@ -217,7 +217,7 @@ Load Strategies
 
             Example:
 
-            gld load --type jms --threads 10 --load-strategy send \
+            gld load --service activemq --threads 10 --load-strategy send \
                  --nodes node1.example.com:61616 --username admin --password \
                  --queue TEST --endpoint-policy REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION \
                  --max-operations 1
@@ -234,7 +234,7 @@ Load Strategies
 
             Example:
 
-            gld load --type jms --threads 10 --load-strategy receive \
+            gld load --service activemq --threads 10 --load-strategy receive \
                  --nodes node1.example.com:61616 --username admin --password \
                  --queue TEST --endpoint-policy REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION \
                  --max-operations 1

@@ -221,6 +221,18 @@ public class MockConfiguration implements Configuration
         return null;
     }
 
+    @Override
+    public boolean waitForConsoleQuit()
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void setWaitForConsoleQuit(boolean b)
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     public void setKeySize(int i)

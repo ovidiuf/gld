@@ -19,6 +19,8 @@ Where:
 
 Other Options:
 
+     --clean - performs an maven clean before attempting to build
+
      --no-tests
 
 Examples:
@@ -108,6 +110,17 @@ function get-artifact-zip-name()
     local artifact_base_name;
     artifact_base_name=$(get-artifact-base-name) || exit 1
     echo ${artifact_base_name}-${version}.zip
+}
+
+function clean()
+{
+    debug-arguments $@
+    [ -z ${project_home} ] && fail "global variable 'project_home' not defined"
+
+    local maven_quiet="-q"
+    ${verbose} && maven_quiet=""
+
+    (cd ${project_home}; mvn ${maven_quiet} clean) && debug "mvn ${maven_quiet} clean" || exit 1
 }
 
 #
@@ -290,10 +303,12 @@ function main()
 {
     local force
     local remote_environment
+    local clean
     while [ ! -z $1 ]; do
         if [ $1 = "--help" ]; then help=true
         elif [ $1 = "--verbose" -o $1 = "-v" ]; then verbose=true;
         elif [ $1 = "--no-tests" ]; then no_tests=true;
+        elif [ $1 = "--clean" ]; then clean=true;
         elif [ $1 = "--force" ]; then force=true;
         elif [ -z ${remote_environment} ]; then remote_environment=$1;
         else fail "unknown argument: $1"
@@ -304,6 +319,8 @@ function main()
     ${help} && { usage; exit 0; }
 
     project_home=$(dirname $0)
+
+    ${clean} && clean;
 
     ! is-zip-available && build-zip
 

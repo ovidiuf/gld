@@ -44,7 +44,6 @@ public class Load extends CommandBase
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private ContentType contentType;
     private LoadStrategy loadStrategy;
     private StorageStrategy storageStrategy;
     private Long maxOperations;
@@ -54,7 +53,6 @@ public class Load extends CommandBase
     public Load(Configuration c, List<String> arguments, int from) throws UserErrorException
     {
         super(c);
-        contentType = ContentType.KEYVALUE;
         maxOperations = null; // unlimited
         processContextRelevantArguments(arguments, from);
     }
@@ -120,7 +118,22 @@ public class Load extends CommandBase
 
     public ContentType getContentType()
     {
-        return contentType;
+        // the service (if available) dictates the content type
+        Configuration configuration = getConfiguration();
+
+        if (configuration == null)
+        {
+            return null;
+        }
+
+        Service service = configuration.getService();
+
+        if (service == null)
+        {
+            return null;
+        }
+
+        return service.getContentType();
     }
 
     /**
@@ -136,11 +149,6 @@ public class Load extends CommandBase
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected void setContentType(ContentType ct)
-    {
-        this.contentType = ct;
-    }
-
     // Private ---------------------------------------------------------------------------------------------------------
 
     /**
@@ -151,7 +159,7 @@ public class Load extends CommandBase
         String contentTypeAsString = Util.extractString("--type", arguments, from);
         if (contentTypeAsString != null)
         {
-            setContentType(ContentType.fromString(contentTypeAsString));
+            throw new UserErrorException("do not use --type, use --service");
         }
 
         maxOperations = Util.extractLong("--max-operations", arguments, from);

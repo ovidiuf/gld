@@ -17,9 +17,14 @@
 package com.novaordis.gld.service.cache;
 
 import com.novaordis.gld.CacheService;
+import com.novaordis.gld.Configuration;
+import com.novaordis.gld.ContentType;
+import com.novaordis.gld.Node;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.Util;
+import org.apache.log4j.Logger;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -29,12 +34,15 @@ public class EmbeddedCacheService implements CacheService
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
+    private static final Logger log = Logger.getLogger(EmbeddedCacheService.class);
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private Map<String, String> embeddedCache;
     private boolean started;
+    private Configuration configuration;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -62,6 +70,24 @@ public class EmbeddedCacheService implements CacheService
     }
 
     // Service implementation ------------------------------------------------------------------------------------------
+
+    @Override
+    public ContentType getContentType()
+    {
+        return ContentType.KEYVALUE;
+    }
+
+    @Override
+    public void setConfiguration(Configuration c)
+    {
+        this.configuration = c;
+    }
+
+    @Override
+    public void setTarget(List<Node> nodes)
+    {
+        log.info("setting target to " + nodes + " is a noop");
+    }
 
     @Override
     public void perform(Operation o) throws Exception

@@ -16,10 +16,14 @@
 
 package com.novaordis.gld.service.cache.redis;
 
+import com.novaordis.gld.Configuration;
+import com.novaordis.gld.ContentType;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.CacheService;
 import com.novaordis.gld.Operation;
 import redis.clients.jedis.Jedis;
+
+import java.util.List;
 import java.util.Set;
 
 public class SimpleJedisProxyRedisService implements CacheService
@@ -32,6 +36,7 @@ public class SimpleJedisProxyRedisService implements CacheService
 
     private Jedis client;
     private long keyExpirationSecs;
+    private Configuration configuration;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -42,6 +47,24 @@ public class SimpleJedisProxyRedisService implements CacheService
     }
 
     // Service implementation ------------------------------------------------------------------------------------------
+
+    @Override
+    public ContentType getContentType()
+    {
+        return ContentType.KEYVALUE;
+    }
+
+    @Override
+    public void setConfiguration(Configuration c)
+    {
+        this.configuration = c;
+    }
+
+    @Override
+    public void setTarget(List<Node> nodes)
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
 
     @Override
     public void perform(Operation o) throws Exception
