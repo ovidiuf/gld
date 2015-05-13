@@ -1,11 +1,12 @@
 
-environment_user=ec2-user
-environment_installation_dir=/data/opt/gld
+user=ec2-user
+installation_dir=/data/opt
 
 # we need to provide a space separated environment_hosts so we figure it out from local variables
 #environment_hosts="$(p01 -a) $(b01 -a) $(b02 -a) $(c01 -a)"
 
-environment_hosts="f01"
+#
+hosts="f01"
 
 
 
