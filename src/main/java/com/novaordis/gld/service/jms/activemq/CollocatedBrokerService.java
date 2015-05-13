@@ -21,6 +21,7 @@ import com.novaordis.gld.ContentType;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.operations.jms.JmsOperation;
+import com.novaordis.utilities.Files;
 import org.apache.log4j.Logger;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.jms.core.JmsTemplate;
@@ -29,6 +30,8 @@ import org.springframework.jms.core.MessageCreator;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
+import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -50,6 +53,8 @@ public class CollocatedBrokerService implements com.novaordis.gld.Service
 
     private static final Logger log = Logger.getLogger(CollocatedBrokerService.class);
 
+    private static final File LOCAL_DIRECTORY = new File("/tmp/gld");
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
@@ -57,6 +62,7 @@ public class CollocatedBrokerService implements com.novaordis.gld.Service
     private Configuration configuration;
     private List<Node> nodes;
     private JmsTemplate jmsTemplate;
+
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -97,15 +103,49 @@ public class CollocatedBrokerService implements com.novaordis.gld.Service
             throw new IllegalStateException(this + " already started");
         }
 
-        System.setProperty("embedded.gld.activemq.directory", "/tmp/gld");
+        if (LOCAL_DIRECTORY.isDirectory())
+        {
+            // remove it and re-created it
+            if (!Files.rmdir(LOCAL_DIRECTORY, true))
+            {
+                throw new IllegalStateException("failed to delete " + LOCAL_DIRECTORY);
+            }
+
+            log.info(LOCAL_DIRECTORY + " deleted");
+        }
+
+        if (Files.mkdir(LOCAL_DIRECTORY))
+        {
+            log.info(LOCAL_DIRECTORY + " created");
+        }
+        else
+        {
+            throw new IllegalStateException("failed to create " + LOCAL_DIRECTORY);
+        }
+
+        System.setProperty("embedded.gld.activemq.directory", LOCAL_DIRECTORY.getAbsolutePath());
         System.setProperty("embedded.gld.activemq.brokerid", "0");
-        System.setProperty("embedded.gld.activemq.masterSlaveBrokerList", "tcp://localhost:61616");
+
+        // tcp://b01:61616,tcp://b02:61616,tcp://b03:61616
+        String delegateBrokerList = "";
+        for(Iterator<Node> i = nodes.iterator(); i.hasNext(); )
+        {
+            Node n = i.next();
+            delegateBrokerList += "tcp://" + n.getHost() + ":" + n.getPort();
+            if (i.hasNext())
+            {
+                delegateBrokerList += ",";
+            }
+        }
+
+        log.info("delegate broker list: " + delegateBrokerList);
+        System.setProperty("embedded.gld.activemq.masterSlaveBrokerList", delegateBrokerList);
 
         GenericXmlApplicationContext context = new GenericXmlApplicationContext();
         context.load("classpath:amq-embedded-broker/application-context.xml");
         context.refresh();
 
-        jmsTemplate = (JmsTemplate)context.getBean("localTESTJmsTemplate");
+        jmsTemplate = (JmsTemplate)context.getBean("jmsTemplate");
 
         //
         // we configure the runtime to wait for explicit console quit, as messages may need to propagate
@@ -127,6 +167,9 @@ public class CollocatedBrokerService implements com.novaordis.gld.Service
         }
 
         jmsTemplate = null;
+
+        // TODO we don't delete the LOCAL_DIRECTORY just yet
+
         log.debug(this + " stopped");
     }
 

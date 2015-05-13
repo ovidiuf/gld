@@ -37,27 +37,26 @@
     <bean id="transportConnectionListener" class="....util.jms.listeners.TransportConnectionListener" />
     -->
 
-    <amq:connectionFactory id="jmsFactory" brokerURL="vm://localhost" useAsyncSend="true">
-        <!--
-        <property name="transportListener" ref="transportConnectionListener" />
-        -->
+    <amq:connectionFactory id="inVMConnectionFactory" brokerURL="vm://localhost" useAsyncSend="true">
+        <!-- <property name="transportListener" ref="transportConnectionListener" /> -->
     </amq:connectionFactory>
 
-    <!-- JMS Producer Configuration -->
-    <bean id="localConnectionFactory"
-          class="org.apache.activemq.pool.PooledConnectionFactory"
-          p:maxConnections="3"
+    <bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
+          p:connectionFactory-ref="inVMConnectionFactory"
           depends-on="pooledBroker"
-          p:connectionFactory-ref="jmsFactory" />
+          p:maxConnections="3"/>
 
-    <amq:queue id="TEST" physicalName="TEST" />
-
-    <bean id="localTESTJmsTemplate" class="org.springframework.jms.core.JmsTemplate"
-          p:connectionFactory-ref="localConnectionFactory"
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate"
+          p:connectionFactory-ref="pooledConnectionFactory"
           p:timeToLive="600000"
-          p:explicitQosEnabled="true"
-          p:defaultDestination-ref="TEST" />
+          p:explicitQosEnabled="true"/>
 
+    <!--
+    TODO Do I really need this?
+    -->
+    <!--
+    <amq:queue id="TEST" physicalName="TEST" />
+    -->
 
     <!--
         Cosumer configuration

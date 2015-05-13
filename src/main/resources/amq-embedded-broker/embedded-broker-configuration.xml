@@ -70,7 +70,7 @@
                     <!-- Set the following policy on all queues using the '>' wildcard.
                          memoryLimit of 20mb will keep messages in memory up to 20mb, after that
                          they'll be moved to temporary disk -->
-                    <amq:policyEntry queue="com.fitbit.site.>" producerFlowControl="false" memoryLimit="20mb">
+                    <amq:policyEntry queue="com.X.site.>" producerFlowControl="false" memoryLimit="20mb">
                         <amq:pendingQueuePolicy>
                             <!-- put in disk all messages  -->
                             <amq:storeCursor />
@@ -80,7 +80,7 @@
                             <amq:individualDeadLetterStrategy queuePrefix="DLQ.site." useQueueForQueueMessages="true" processExpired="false"/>
                         </amq:deadLetterStrategy>
                     </amq:policyEntry>
-                    <amq:policyEntry queue="com.fitbit.corporate.>" producerFlowControl="false" memoryLimit="20mb">
+                    <amq:policyEntry queue="com.X.corporate.>" producerFlowControl="false" memoryLimit="20mb">
                         <amq:pendingQueuePolicy>
                             <!-- pending messages go to disk memory -->
                             <amq:storeCursor />
@@ -90,7 +90,7 @@
                             <amq:individualDeadLetterStrategy queuePrefix="DLQ.corporate." useQueueForQueueMessages="true" processExpired="false"/>
                         </amq:deadLetterStrategy>
                     </amq:policyEntry>
-                    <amq:policyEntry queue="com.fitbit.commerce.>" producerFlowControl="false" memoryLimit="20mb">
+                    <amq:policyEntry queue="com.X.commerce.>" producerFlowControl="false" memoryLimit="20mb">
                         <amq:pendingQueuePolicy>
                             <!-- pending messages go to disk memory -->
                             <amq:storeCursor />
