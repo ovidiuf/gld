@@ -52,54 +52,45 @@
         <amq:destinationPolicy>
             <amq:policyMap>
                 <amq:policyEntries>
-                    <!-- producerFlowControl="false" do not block when storage is full -->
                     <amq:policyEntry topic=">" producerFlowControl="false">
                         <amq:pendingSubscriberPolicy>
                             <!-- pending topic messages stay in memory -->
                             <amq:vmCursor />
                         </amq:pendingSubscriberPolicy>
-                        <!-- messageEvictionStrategy and pendingMessageLimitStrategy only works for topics -->
                         <amq:messageEvictionStrategy>
                             <amq:oldestMessageEvictionStrategy/>
                         </amq:messageEvictionStrategy>
                         <amq:pendingMessageLimitStrategy>
-                            <!-- keep a max of 50 messages pending topic messages, throw away the rest -->
                             <amq:constantPendingMessageLimitStrategy limit="50"/>
                         </amq:pendingMessageLimitStrategy>
                     </amq:policyEntry>
-                    <!-- Set the following policy on all queues using the '>' wildcard.
-                         memoryLimit of 20mb will keep messages in memory up to 20mb, after that
-                         they'll be moved to temporary disk -->
+                    <!--
                     <amq:policyEntry queue="com.X.site.>" producerFlowControl="false" memoryLimit="20mb">
                         <amq:pendingQueuePolicy>
-                            <!-- put in disk all messages  -->
                             <amq:storeCursor />
                         </amq:pendingQueuePolicy>
                         <amq:deadLetterStrategy>
-                            <!-- Use the prefix 'DLQ.' for the destination name, and make the DLQ a queue rather than a topic -->
                             <amq:individualDeadLetterStrategy queuePrefix="DLQ.site." useQueueForQueueMessages="true" processExpired="false"/>
                         </amq:deadLetterStrategy>
                     </amq:policyEntry>
                     <amq:policyEntry queue="com.X.corporate.>" producerFlowControl="false" memoryLimit="20mb">
                         <amq:pendingQueuePolicy>
-                            <!-- pending messages go to disk memory -->
                             <amq:storeCursor />
                         </amq:pendingQueuePolicy>
                         <amq:deadLetterStrategy>
-                            <!-- Use the prefix 'DLQ.' for the destination name, and make the DLQ a queue rather than a topic -->
                             <amq:individualDeadLetterStrategy queuePrefix="DLQ.corporate." useQueueForQueueMessages="true" processExpired="false"/>
                         </amq:deadLetterStrategy>
                     </amq:policyEntry>
                     <amq:policyEntry queue="com.X.commerce.>" producerFlowControl="false" memoryLimit="20mb">
                         <amq:pendingQueuePolicy>
-                            <!-- pending messages go to disk memory -->
                             <amq:storeCursor />
                         </amq:pendingQueuePolicy>
                         <amq:deadLetterStrategy>
-                            <!-- Use the prefix 'DLQ.' for the destination name, and make the DLQ a queue rather than a topic -->
                             <amq:individualDeadLetterStrategy queuePrefix="DLQ.commerce." useQueueForQueueMessages="true" processExpired="false"/>
                         </amq:deadLetterStrategy>
                     </amq:policyEntry>
+                    -->
+                    <amq:policyEntry queue=">" producerFlowControl="true"/>
                 </amq:policyEntries>
             </amq:policyMap>
         </amq:destinationPolicy>
@@ -205,15 +196,15 @@
         <amq:systemUsage>
             <amq:systemUsage>
                 <amq:memoryUsage>
-                    <amq:memoryUsage limit="120 mb"/>
+                    <amq:memoryUsage limit="5 gb"/>
                 </amq:memoryUsage>
                 <amq:storeUsage>
                     <!-- with the short ttl we have I don't think we'll ever reach this limit -->
-                    <amq:storeUsage limit="100 gb" name="store"/>
+                    <amq:storeUsage limit="4 gb" name="store"/>
                 </amq:storeUsage>
                 <amq:tempUsage>
                     <!-- with the short ttl we have I don't think we'll ever reach this limit -->
-                    <amq:tempUsage limit="50 gb"/>
+                    <amq:tempUsage limit="4 gb"/>
                 </amq:tempUsage>
             </amq:systemUsage>
         </amq:systemUsage>
