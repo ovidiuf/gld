@@ -21,6 +21,7 @@ import com.novaordis.gld.ContentType;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.CacheService;
 import com.novaordis.gld.Operation;
+import com.novaordis.gld.UserErrorException;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.ShardedJedis;
@@ -92,6 +93,15 @@ public class ShardedJedisRedisService implements CacheService
 
     @Override
     public void setTarget(List<Node> nodes)
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
+    /**
+     * @see com.novaordis.gld.Service#configure(List)
+     */
+    @Override
+    public void configure(List<String> commandLineArguments) throws UserErrorException
     {
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }

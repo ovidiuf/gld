@@ -480,7 +480,7 @@ public class ConfigurationImpl implements Configuration
             }
             else if ("--nodes".equals(crt))
             {
-                // this is special, as the list of nodes may come in different arguments, comma-separated, etc.
+                // this is special, as the list of nodes may come in different commandLineArguments, comma-separated, etc.
                 if (nodesSb != null)
                 {
                     throw new UserErrorException("--nodes specified twice on command line");
@@ -768,7 +768,7 @@ public class ConfigurationImpl implements Configuration
             nodes = buildNodeList(proxyString, nodesString);
         }
 
-        service = buildService(serviceString, this, nodes);
+        service = buildService(serviceString, this, nodes, arguments);
 
         command.initialize();
 
@@ -817,12 +817,17 @@ public class ConfigurationImpl implements Configuration
     }
 
     /**
-     * @param serviceFullyQualifiedClassName null if no --service was specified on command line. Command line takes priority over
-     *                      inferences.
+     * @param serviceFullyQualifiedClassName null if no --service was specified on command line. Command line takes
+     *                                       priority over inferences.
+     *
+     * @param commandLineArguments - command line arguments (whatever is left after the upper layer processing) that may
+     *                             contain configuration relevant to the service. The service is supposed to recognize
+     *                             them, extract them configure itself with them and remove them from the list.
+     *
      * @throws Exception
      */
-    private Service buildService(String serviceFullyQualifiedClassName, Configuration configuration, List<Node> nodes)
-        throws Exception
+    private Service buildService(String serviceFullyQualifiedClassName, Configuration configuration,
+                                 List<Node> nodes, List<String> commandLineArguments) throws Exception
     {
         Service result;
 
@@ -857,6 +862,7 @@ public class ConfigurationImpl implements Configuration
 
             service.setConfiguration(configuration);
             service.setTarget(nodes);
+            service.configure(commandLineArguments);
             return service;
         }
 

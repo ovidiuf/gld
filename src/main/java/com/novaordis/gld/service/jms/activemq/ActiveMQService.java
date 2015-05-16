@@ -22,6 +22,7 @@ import com.novaordis.gld.EmbeddedNode;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.Service;
+import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.operations.jms.JmsOperation;
 import com.novaordis.gld.service.jms.EndpointPolicy;
 import com.novaordis.gld.service.jms.JmsEndpoint;
@@ -149,6 +150,15 @@ public class ActiveMQService implements Service
     public void setTarget(List<Node> nodes)
     {
         this.url = toClientUrl(nodes);
+    }
+
+    /**
+     * @see com.novaordis.gld.Service#configure(List)
+     */
+    @Override
+    public void configure(List<String> commandLineArguments) throws UserErrorException
+    {
+        // noop
     }
 
     @Override

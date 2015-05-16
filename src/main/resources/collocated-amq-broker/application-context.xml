@@ -27,9 +27,9 @@
                            http://activemq.apache.org/schema/core
                            http://activemq.apache.org/schema/core/activemq-core-5.5.0.xsd">
 
-    <!--  Embedded ActiveMQ Broker-->
+    <!--  Collocated ActiveMQ Broker-->
     <bean id="pooledBroker" class="org.apache.activemq.xbean.PooledBrokerFactoryBean">
-        <property name="config" value="classpath:amq-embedded-broker/embedded-broker-configuration.xml"/>
+        <property name="config" value="classpath:collocated-amq-broker/collocated-broker-configuration.xml"/>
     </bean>
 
     <!-- Transport Connection Listener Monitor -->

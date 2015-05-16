@@ -221,7 +221,12 @@ public class Load extends CommandBase
         configuration.setLoadStrategy(loadStrategy);
 
         // at this point we should not have any unaccounted for arguments
-        failOnUnknownArguments();
+
+        //
+        // commented this out when we introduced command-line configurable services; the service arguments end up
+        // in here and they make no sense to the command, so don't fail ...
+        //
+        //failOnUnknownArguments();
     }
 
     // Inner classes ---------------------------------------------------------------------------------------------------

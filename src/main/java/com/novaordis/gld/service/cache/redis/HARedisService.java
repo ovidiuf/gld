@@ -22,6 +22,7 @@ import com.novaordis.gld.ContentType;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.CacheService;
 import com.novaordis.gld.Operation;
+import com.novaordis.gld.UserErrorException;
 
 import java.util.List;
 import java.util.Set;
@@ -73,6 +74,15 @@ public class HARedisService implements CacheService
 
     @Override
     public void setTarget(List<Node> nodes)
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
+    /**
+     * @see com.novaordis.gld.Service#configure(List)
+     */
+    @Override
+    public void configure(List<String> commandLineArguments) throws UserErrorException
     {
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }

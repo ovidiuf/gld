@@ -21,6 +21,7 @@ import com.novaordis.gld.ContentType;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.CacheService;
 import com.novaordis.gld.Operation;
+import com.novaordis.gld.UserErrorException;
 import redis.clients.jedis.Jedis;
 
 import java.util.List;
@@ -68,6 +69,15 @@ public class SimpleJedisProxyRedisService implements CacheService
 
     @Override
     public void perform(Operation o) throws Exception
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
+    /**
+     * @see com.novaordis.gld.Service#configure(List)
+     */
+    @Override
+    public void configure(List<String> commandLineArguments) throws UserErrorException
     {
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }

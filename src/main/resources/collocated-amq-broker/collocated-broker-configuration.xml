@@ -36,8 +36,8 @@
 
     <!--suppress UnparsedCustomBeanInspection -->
     <amq:broker
-            dataDirectory="_STARTPREFIXembedded.gld.activemq.directory_ENDSUFFIX/data"
-            id="embedded-gld-activemq-broker-_STARTPREFIXembedded.gld.activemq.brokerid_ENDSUFFIX"
+            dataDirectory="_STARTPREFIXgld.collocated.activemq.broker.directory_ENDSUFFIX/data"
+            id="_STARTPREFIXgld.collocated.activemq.broker.id_ENDSUFFIX"
             persistent="true">
 
         <!-- This plugin keeps the stats displayed by GetActiveMQStatsActionBean -->
@@ -96,7 +96,7 @@
         </amq:destinationPolicy>
 
         <amq:persistenceAdapter>
-            <amq:kahaDB directory="_STARTPREFIXembedded.gld.activemq.directory_ENDSUFFIX/data/gld/kahadb"
+            <amq:kahaDB directory="_STARTPREFIXgld.collocated.activemq.broker.directory_ENDSUFFIX/data/gld/kahadb"
                         ignoreMissingJournalfiles="true"
                         checkForCorruptJournalFiles="true"
                         checksumJournalFiles="true"/>
@@ -138,8 +138,8 @@
                                         aware of the number of the number of consumers connected to the stand alone
                                         broker and moves the bottleneck to the stand alone broker
                  Having 8 network connectors should increase the forwarding speed by 8x or something similar. -->
-            <amq:networkConnector name="one_connection_to_nob-_STARTPREFIXembedded.gld.activemq.brokerid_ENDSUFFIX"
-                                  uri="static:failover:(_STARTPREFIXembedded.gld.activemq.masterSlaveBrokerList_ENDSUFFIX)?randomize=true&amp;maxReconnectAttempts=0"
+            <amq:networkConnector name="one_connection_to_nob-_STARTPREFIXgld.collocated.activemq.broker.id_ENDSUFFIX"
+                                  uri="static:failover:(_STARTPREFIXgld.collocated.activemq.broker.target.nodes_ENDSUFFIX)?randomize=true&amp;maxReconnectAttempts=0"
                                   duplex="false"
                                   conduitSubscriptions="false"
                                   prefetchSize="400"
@@ -149,8 +149,8 @@
                                   userName="admin"
                                   password="admin123"/>
 
-            <amq:networkConnector name="two_connection_to_nob-_STARTPREFIXembedded.gld.activemq.brokerid_ENDSUFFIX"
-                                  uri="static:failover:(_STARTPREFIXembedded.gld.activemq.masterSlaveBrokerList_ENDSUFFIX)?randomize=true&amp;maxReconnectAttempts=0"
+            <amq:networkConnector name="two_connection_to_nob-_STARTPREFIXgld.collocated.activemq.broker.id_ENDSUFFIX"
+                                  uri="static:failover:(_STARTPREFIXgld.collocated.activemq.broker.target.nodes_ENDSUFFIX)?randomize=true&amp;maxReconnectAttempts=0"
                                   duplex="false"
                                   conduitSubscriptions="false"
                                   prefetchSize="400"
@@ -160,8 +160,8 @@
                                   userName="admin"
                                   password="admin123"/>
 
-            <amq:networkConnector name="three_connection_to_nob-_STARTPREFIXembedded.gld.activemq.brokerid_ENDSUFFIX"
-                                  uri="static:failover:(_STARTPREFIXembedded.gld.activemq.masterSlaveBrokerList_ENDSUFFIX)?randomize=true&amp;maxReconnectAttempts=0"
+            <amq:networkConnector name="three_connection_to_nob-_STARTPREFIXgld.collocated.activemq.broker.id_ENDSUFFIX"
+                                  uri="static:failover:(_STARTPREFIXgld.collocated.activemq.broker.target.nodes_ENDSUFFIX)?randomize=true&amp;maxReconnectAttempts=0"
                                   duplex="false"
                                   conduitSubscriptions="false"
                                   prefetchSize="400"
@@ -171,8 +171,8 @@
                                   userName="admin"
                                   password="admin123"/>
 
-            <amq:networkConnector name="four_connection_to_nob-_STARTPREFIXembedded.gld.activemq.brokerid_ENDSUFFIX"
-                                  uri="static:failover:(_STARTPREFIXembedded.gld.activemq.masterSlaveBrokerList_ENDSUFFIX)?randomize=true&amp;maxReconnectAttempts=0"
+            <amq:networkConnector name="four_connection_to_nob-_STARTPREFIXgld.collocated.activemq.broker.id_ENDSUFFIX"
+                                  uri="static:failover:(_STARTPREFIXgld.collocated.activemq.broker.target.nodes_ENDSUFFIX)?randomize=true&amp;maxReconnectAttempts=0"
                                   duplex="false"
                                   conduitSubscriptions="false"
                                   prefetchSize="400"
@@ -185,7 +185,7 @@
 
         <!-- configure the location of the temp storage, used by storeCursor -->
         <amq:tempDataStore>
-            <amq:pListStoreImpl directory="_STARTPREFIXembedded.gld.activemq.directory_ENDSUFFIX/data/gld" id="tmpstore"/>
+            <amq:pListStoreImpl directory="_STARTPREFIXgld.collocated.activemq.broker.directory_ENDSUFFIX/data/gld" id="tmpstore"/>
         </amq:tempDataStore>
 
         <!-- AMQ defaults are
@@ -196,7 +196,7 @@
         <amq:systemUsage>
             <amq:systemUsage>
                 <amq:memoryUsage>
-                    <amq:memoryUsage limit="5 gb"/>
+                    <amq:memoryUsage limit="_STARTPREFIXgld.collocated.activemq.broker.memoryUsage_ENDSUFFIX"/>
                 </amq:memoryUsage>
                 <amq:storeUsage>
                     <!-- with the short ttl we have I don't think we'll ever reach this limit -->

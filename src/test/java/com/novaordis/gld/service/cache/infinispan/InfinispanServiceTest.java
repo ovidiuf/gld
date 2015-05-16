@@ -20,7 +20,7 @@ import com.novaordis.gld.Configuration;
 import com.novaordis.gld.EmbeddedNode;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.Service;
-import com.novaordis.gld.ServiceTest;
+import com.novaordis.gld.service.ServiceTest;
 import com.novaordis.gld.mock.MockConfiguration;
 import org.apache.log4j.Logger;
 import org.junit.Test;

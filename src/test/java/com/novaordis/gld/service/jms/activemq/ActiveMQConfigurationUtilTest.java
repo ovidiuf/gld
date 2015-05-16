@@ -14,92 +14,78 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service;
+package com.novaordis.gld.service.jms.activemq;
 
-import com.novaordis.gld.Configuration;
-import com.novaordis.gld.ContentType;
-import com.novaordis.gld.Node;
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.Service;
 import com.novaordis.gld.UserErrorException;
 import org.apache.log4j.Logger;
+import org.junit.Test;
 
-import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-public class EmbeddedGenericService implements Service
+public class ActiveMQConfigurationUtilTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(EmbeddedGenericService.class);
+    private static final Logger log = Logger.getLogger(ActiveMQConfigurationUtilTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private volatile boolean started;
-    private Configuration configuration;
-
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    // Service implementation ------------------------------------------------------------------------------------------
-
-    @Override
-    public ContentType getContentType()
-    {
-        return ContentType.TEST;
-    }
-
-    @Override
-    public void setConfiguration(Configuration c)
-    {
-        this.configuration = c;
-    }
-
-    @Override
-    public void setTarget(List<Node> nodes)
-    {
-        log.info("setting target to " + nodes + " is a noop");
-    }
-
-    /**
-     * @see com.novaordis.gld.Service#configure(List)
-     */
-    @Override
-    public void configure(List<String> commandLineArguments) throws UserErrorException
-    {
-        // noop
-    }
-
-    @Override
-    public void start() throws Exception
-    {
-        started = true;
-    }
-
-    @Override
-    public void stop() throws Exception
-    {
-        started = false;
-    }
-
-    @Override
-    public boolean isStarted()
-    {
-        return started;
-    }
-
-    @Override
-    public void perform(Operation o) throws Exception
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Override
-    public String toString()
+    // sanitizeMemoryUsage() -------------------------------------------------------------------------------------------
+
+    @Test
+    public void sanitizeMemoryUsage_InvalidValue() throws Exception
     {
-        return "EmbeddedGenericService[" + "]";
+        try
+        {
+            ActiveMQConfigurationUtil.sanitizeMemoryUsage("G");
+            fail("should fail, not a valid memory limit");
+        }
+        catch(UserErrorException e)
+        {
+            log.info(e.getMessage());
+        }
+    }
+
+    @Test
+    public void sanitizeMemoryUsage_InvalidUnit() throws Exception
+    {
+        try
+        {
+            ActiveMQConfigurationUtil.sanitizeMemoryUsage("10blah");
+            fail("should fail, not a valid unit");
+        }
+        catch(UserErrorException e)
+        {
+            log.info(e.getMessage());
+        }
+    }
+
+    @Test
+    public void sanitizeMemoryUsage() throws Exception
+    {
+        String s = ActiveMQConfigurationUtil.sanitizeMemoryUsage("5G");
+        assertEquals("5 gb", s);
+    }
+
+    @Test
+    public void sanitizeMemoryUsage2() throws Exception
+    {
+        String s = ActiveMQConfigurationUtil.sanitizeMemoryUsage("5GB");
+        assertEquals("5 gb", s);
+    }
+
+    @Test
+    public void sanitizeMemoryUsage_OnlyDigits() throws Exception
+    {
+        String s = ActiveMQConfigurationUtil.sanitizeMemoryUsage("5");
+        assertEquals("5", s);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

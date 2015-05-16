@@ -99,7 +99,7 @@ java_bin="java"
 
 command="${java_bin} -Xms1024m -Xmx1024m -cp ${classpath} ${debug_args} ${output_settings} com.novaordis.gld.Main ${args}"
 
-${verbose} && echo "${command}" 1&>2;
+${verbose} && echo "${command}" 1>&2;
 
 if ${background}; then
     # TODO background does not work well yet, use load, not start
@@ -107,3 +107,5 @@ if ${background}; then
 else
     ${command}
 fi
+
+

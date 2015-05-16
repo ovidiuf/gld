@@ -50,6 +50,8 @@ public class MockConfiguration implements Configuration
 
     private String username;
 
+    private boolean waitForConsoleQuit;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockConfiguration()
@@ -224,13 +226,13 @@ public class MockConfiguration implements Configuration
     @Override
     public boolean waitForConsoleQuit()
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        return waitForConsoleQuit;
     }
 
     @Override
     public void setWaitForConsoleQuit(boolean b)
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        this.waitForConsoleQuit = b;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

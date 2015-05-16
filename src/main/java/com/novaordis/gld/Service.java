@@ -24,12 +24,24 @@ public interface Service
 
     void setTarget(List<Node> nodes);
 
+    /**
+     * @param commandLineArguments command line arguments (whatever is left after the upper layer processes upper level
+     *                             arguments) that may contain configuration relevant to the service. The service is
+     *                             supposed to recognize them, extract them configure itself with them and remove them
+     *                             from the list. Arguments relevant to the service will be removed from the list when
+     *                             the method is done.
+     *
+     * @exception UserErrorException on invalid data specified by user. Contains a human readable message.
+     */
+    void configure(List<String> commandLineArguments) throws UserErrorException;
+
     ContentType getContentType();
 
     /**
      * Starting an already started service should throw IllegalStateException.
      *
      * @throws IllegalStateException on attempt to start an already started service instance.
+     * @throws UserErrorException contains a human readable message. Thrown on incomplete command line configuration.
      */
     void start() throws Exception;
 

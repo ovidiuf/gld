@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld;
+package com.novaordis.gld.service;
 
+import com.novaordis.gld.Configuration;
+import com.novaordis.gld.Node;
+import com.novaordis.gld.Service;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
@@ -24,6 +27,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -94,6 +98,24 @@ public abstract class ServiceTest
         {
             log.info(e.getMessage());
         }
+    }
+
+    @Test
+    public void configureIgnoresArgumentsThatDoNotBelongToService() throws Exception
+    {
+        Service s = getServiceToTest(new MockConfiguration(), Arrays.asList(getTestNode()));
+
+        List<String> arguments = Arrays.asList(
+            "--this-argument-surely-is-not-interesting-to-the-service",
+            "apples",
+            "--this-argument-is-also-not-interesting-to-the-service",
+            "oranges"
+            );
+
+        s.configure(arguments);
+
+        // make sure no arguments were removed from list
+        assertEquals(4, arguments.size());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

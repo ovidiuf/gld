@@ -21,6 +21,7 @@ import com.novaordis.gld.Configuration;
 import com.novaordis.gld.ContentType;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.Operation;
+import com.novaordis.gld.UserErrorException;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
@@ -106,6 +107,15 @@ public class InfinispanService implements CacheService
         // .tcpKeepAlive(tcpKeepAlive);
 
         remoteCacheManager = new RemoteCacheManager(clientBuilder.build());
+    }
+
+    /**
+     * @see com.novaordis.gld.Service#configure(List)
+     */
+    @Override
+    public void configure(List<String> commandLineArguments) throws UserErrorException
+    {
+        // noop
     }
 
     @Override

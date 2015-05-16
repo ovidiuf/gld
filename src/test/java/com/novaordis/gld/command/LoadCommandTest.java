@@ -322,15 +322,19 @@ public class LoadCommandTest extends CommandTest
         load.addArgument("--write-toread");
         load.addArgument("66");
 
-        try
-        {
-            load.initialize();
-            fail("should fail with UserErrorException, misspelled '--write-to-read'");
-        }
-        catch(UserErrorException e)
-        {
-            log.info(e.getMessage());
-        }
+        load.initialize();
+
+        //
+        // modified this test after introducing services configurable from command line arguments. Because of that
+        // the command may see arguments it does not know, and it can't fail anymore
+        //
+
+        List<String> argsAfterInitialization = load.getArguments();
+
+        // nobody consumed them
+        assertEquals(2, argsAfterInitialization.size());
+        assertEquals("--write-toread", argsAfterInitialization.get(0));
+        assertEquals("66", argsAfterInitialization.get(1));
     }
 
     // content type ----------------------------------------------------------------------------------------------------

@@ -21,6 +21,7 @@ import com.novaordis.gld.Configuration;
 import com.novaordis.gld.ContentType;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.Operation;
+import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.Util;
 import org.apache.log4j.Logger;
 
@@ -87,6 +88,15 @@ public class EmbeddedCacheService implements CacheService
     public void setTarget(List<Node> nodes)
     {
         log.info("setting target to " + nodes + " is a noop");
+    }
+
+    /**
+     * @see com.novaordis.gld.Service#configure(List)
+     */
+    @Override
+    public void configure(List<String> commandLineArguments) throws UserErrorException
+    {
+        // noop
     }
 
     @Override

@@ -19,7 +19,7 @@ package com.novaordis.gld.service.jms.activemq;
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.EmbeddedNode;
 import com.novaordis.gld.Node;
-import com.novaordis.gld.ServiceTest;
+import com.novaordis.gld.service.ServiceTest;
 import com.novaordis.gld.command.Load;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.operations.jms.Send;
