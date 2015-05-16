@@ -42,34 +42,17 @@ public class CollectorBasedCsvStatistics implements Statistics
 
     public static final Format TIMESTAMP_FORMAT_MS = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
     public static final Format TIMESTAMP_FORMAT_SEC = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-
     public static final Format DURATION_MS_FORMAT = new DecimalFormat("#.0");
     public static final Format LOAD_FORMAT = new DecimalFormat("#.00");
     public static final Format MEMORY_MB_FORMAT = new DecimalFormat("#.00");
-
     public static final Format PERCENTAGE = new DecimalFormat("00.00%");
-
     public static final long NANOS_IN_MILLS = 1000L * 1000L;
-
     public static final long DEFAULT_SAMPLING_INTERVAL_MS = 1000L; // 1 second
-
     public static final int BYTES_IN_MB = 1024 * 1024;
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
-
-    private boolean firstSample;
-
-    private Collector csvStatsCollector;
-
-    private long samplingIntervalMs;
-    private volatile boolean done;
-    private long operationsLeft;
-
-    private long validReadsCountInSample;
-    private long readHitsInSample;
-    private long validWritesCountInSample;
 
     /**
      * An array with failure counters, indexed by failure type.
@@ -77,30 +60,31 @@ public class CollectorBasedCsvStatistics implements Statistics
      */
     private long[] failureCounters;
 
-    private long cumulatedValidReadsTimeInSampleNano;
-    private long cumulatedValidWritesTimeInSampleNano;
-
-    private long samplingIntervalStartMs;
-
-    private long totalValidReads;
-    private long totalValidWrites;
-
-    private long totalValidReadsTimeNano;
-    private long totalValidWritesTimeNano;
-
-    private long startTimestamp;
-    private long endTimestamp;
-
-    private long totalFailures;
-
     /**
      * An array with failure counters, indexed by failure type.
      * @see com.novaordis.gld.RedisFailure
      */
     private long[] totalFailureCounters;
 
+    private boolean firstSample;
+    private Collector csvStatsCollector;
+    private long samplingIntervalMs;
+    private volatile boolean done;
+    private long operationsLeft;
+    private long validReadsCountInSample;
+    private long readHitsInSample;
+    private long validWritesCountInSample;
+    private long cumulatedValidReadsTimeInSampleNano;
+    private long cumulatedValidWritesTimeInSampleNano;
+    private long samplingIntervalStartMs;
+    private long totalValidReads;
+    private long totalValidWrites;
+    private long totalValidReadsTimeNano;
+    private long totalValidWritesTimeNano;
+    private long startTimestamp;
+    private long endTimestamp;
+    private long totalFailures;
     private SystemStatistics systemStats;
-
     private volatile boolean closed;
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -129,32 +113,22 @@ public class CollectorBasedCsvStatistics implements Statistics
         this.done = false;
         this.csvStatsCollector = collector;
         this.samplingIntervalMs = samplingIntervalMs;
-
         this.samplingIntervalStartMs = -1L;
-
         this.validReadsCountInSample = 0;
         this.readHitsInSample = 0;
         this.validWritesCountInSample = 0;
-
         this.failureCounters = new long[RedisFailure.FAILURE_TYPES_COUNT];
-
         this.cumulatedValidReadsTimeInSampleNano = 0L;
         this.cumulatedValidWritesTimeInSampleNano = 0L;
-
         this.totalValidReads = 0L;
         this.totalValidWrites = 0L;
-
         this.totalValidReadsTimeNano = 0L;
         this.totalValidWritesTimeNano = 0L;
-
         this.startTimestamp = 0L;
         this.endTimestamp = 0L;
-
         this.totalFailures = 0L;
         this.totalFailureCounters = new long[RedisFailure.FAILURE_TYPES_COUNT];
-
         this.systemStats = new SystemStatistics();
-
         this.operationsLeft = maxOperations == null ? Long.MAX_VALUE : maxOperations;
     }
 
