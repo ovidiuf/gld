@@ -1,0 +1,23 @@
+#!/bin/bash
+
+threads=1
+queue=TEST
+nodes="localhost:61616"
+type=receive
+output=./receive.csv
+
+if [ "${type}" = receive ]; then service_args="--service activemq"
+elif [ "${type}" = send ]; then service_args="--service com.novaordis.gld.service.jms.activemq.CollocatedBrokerService --memoryUsage 500mb --directory /Users/ovidiu/tmp/gld-activemq"
+else echo "unknown type ${type}" 1>&2; exit 1; fi
+
+[ ! -z ${output} ] && output_option="--output ${output}"
+
+gld load \
+--nodes "${nodes}" \
+--threads ${threads} \
+${service_args} \
+--load-strategy ${type} \
+--queue ${queue} \
+${output_option} \
+--username admin --password admin123
+
