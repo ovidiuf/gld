@@ -21,6 +21,7 @@ import com.novaordis.gld.RedisFailure;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+@Deprecated
 public class SamplingInterval
 {
     // Constants -------------------------------------------------------------------------------------------------------

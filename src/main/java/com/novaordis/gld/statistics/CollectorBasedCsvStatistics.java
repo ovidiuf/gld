@@ -34,6 +34,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
+@Deprecated
 public class CollectorBasedCsvStatistics implements Statistics
 {
     // Constants -------------------------------------------------------------------------------------------------------
