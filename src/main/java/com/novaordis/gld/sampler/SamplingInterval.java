@@ -22,9 +22,14 @@ import java.util.Set;
 public interface SamplingInterval
 {
     /**
-     * The timestamp of the moment the sampling interval started.
+     * @return the timestamp of the moment the sampling interval started.
      */
     long getTimestamp();
+
+    /**
+     * @return the duration of the sampling interval, in ms
+     */
+    long getDuration();
 
     /**
      * The types of the operations sampled in this interval.

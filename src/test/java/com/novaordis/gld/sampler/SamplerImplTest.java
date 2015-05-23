@@ -16,13 +16,7 @@
 
 package com.novaordis.gld.sampler;
 
-import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
-import org.junit.Test;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class SamplerImplTest extends SamplerTest
 {
@@ -37,33 +31,6 @@ public class SamplerImplTest extends SamplerTest
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void severalSamplingCycles() throws Exception
-    {
-        SamplerImpl s = getSamplerToTest();
-
-        s.registerOperation(MockOperation.class);
-
-        s.start();
-
-        assertTrue(s.isStarted());
-
-        try
-        {
-            s.setSamplingIntervalMs(100L);
-            fail("should fail, can't modify the sampling interval after the sampler was started");
-        }
-        catch(IllegalStateException e)
-        {
-            log.info(e.getMessage());
-        }
-
-        s.stop();
-
-        assertFalse(s.isStarted());
-    }
-
 
     // Package protected -----------------------------------------------------------------------------------------------
 

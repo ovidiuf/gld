@@ -46,7 +46,7 @@ public class SamplerImplStressTest
     @Test
     public void severalSamplingCycles() throws Exception
     {
-        final SamplerImpl s = new SamplerImpl();
+        final SamplerImpl s = new SamplerImpl(250L, 1000L);
 
         s.registerOperation(MockOperation.class);
         long interval = 1000L;
@@ -124,6 +124,16 @@ public class SamplerImplStressTest
 
         log.info(successful + " successful operations");
         assertEquals(successful, threads * operationsPerThread);
+
+        // make sure the interval duration is constant and equal with the sampling interval
+
+        for(SamplingInterval si: samples)
+        {
+            assertEquals(
+                "the interval duration " + si.getDuration() + " ms is not equal to " + interval + " ms for " + si,
+                interval, si.getDuration());
+        }
+
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

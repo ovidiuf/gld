@@ -19,7 +19,8 @@ package com.novaordis.gld.sampler;
 public interface Counter
 {
     /**
-     * Update the corresponding counter using a non-blocking algorithm (CAS).
+     * Update the corresponding counter using a non-blocking algorithm (CAS). The method is supposed to be accessed
+     * concurrently in a highly contended environment.
      *
      * @param t0Ms - the time (in milliseconds) when the operation that is being recorded started.
      * @param t0Nano - the time (in nanoseconds) when the operation that is being recorded started. Logically, it
@@ -28,9 +29,12 @@ public interface Counter
      * @param t1Nano - the time (in nanoseconds) when the operation that is being recorded ended. Java documentation
      *        advises against using nano-second precision time to get absolute time information, so we are only using
      *        this value to calculate delta in conjunction with 't0Nano'.
-     * @param t - optionally a Throwable associated with the operation.
+     * @param t - optionally a Throwable associated with the operation. Actually we only expect one or none exception
+     *          instances to be passed, the rest will be ignored.
      *
      * @throws java.lang.IllegalArgumentException if t1Nano precedes t0Nano.
+     *
+     * @see Sampler#record(long, long, long, com.novaordis.gld.Operation, Throwable...)
      */
     public void update(long t0Ms, long t0Nano, long t1Nano, Throwable... t);
 

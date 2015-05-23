@@ -42,6 +42,7 @@ public class SamplingIntervalImpl implements SamplingInterval
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private long intervalStartTimestamp;
+    private long durationMs;
     private Set<Class> operationTypes;
     private Map<Class, Long> successCount;
     private List<String> annotations;
@@ -49,11 +50,13 @@ public class SamplingIntervalImpl implements SamplingInterval
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
+     * @param durationMs - the interval duration in milliseconds.
      * @param operationTypes  - the types of the operations sampled in this interval.
      */
-    public SamplingIntervalImpl(long intervalStartTimestamp, Set<Class> operationTypes)
+    public SamplingIntervalImpl(long intervalStartTimestamp, long durationMs, Set<Class> operationTypes)
     {
         this.intervalStartTimestamp = intervalStartTimestamp;
+        this.durationMs = durationMs;
         this.operationTypes = operationTypes;
         this.successCount = new HashMap<>();
         this.annotations = new ArrayList<>();
@@ -65,7 +68,16 @@ public class SamplingIntervalImpl implements SamplingInterval
     @Override
     public long getTimestamp()
     {
-        return 0;
+        return intervalStartTimestamp;
+    }
+
+    /**
+     * @return the interval duration in milliseconds.
+     */
+    @Override
+    public long getDuration()
+    {
+        return durationMs;
     }
 
     @Override

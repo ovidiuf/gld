@@ -80,6 +80,9 @@ public interface Sampler
      *
      * After stopping the sampler, all operation registrations are lost.
      *
+     * stop() is guaranteed to allow for one more full sampling run after it was called and to trigger generation of
+     * a final sampling interval that will contain all events recorded from the same thread that called stop().
+     *
      * @see Sampler#record(long, long, long, Operation, java.lang.Throwable...)
      */
     void stop();
@@ -144,7 +147,8 @@ public interface Sampler
      * @param t1Nano - the time (in nanoseconds) when the operation that is being recorded ended. Java documentation
      *        advises against using nano-second precision time to get absolute time information, so we are only using
      *        this value to calculate delta in conjunction with 't0Nano'.
-     * @param t - optionally a Throwable associated with the operation.
+     * @param t - optionally a Throwable associated with the operation. Actually we only expect one or none exception
+     *          instances to be passed, the rest will be ignored.
      *
      * @exception IllegalStateException if called upon a stopped sampler.
      * @exception IllegalArgumentException for operations of unknown type.
@@ -159,14 +163,4 @@ public interface Sampler
      */
     void annotate(String line);
 
-    /**
-     * Puts the calling thread on wait until the next sampler task finishes running or timeout occurs.
-     *
-     * @param timeout in ms.
-     *
-     * @see Object#wait(long)
-     *
-     * @throws InterruptedException
-     */
-    void waitUntilNextSamplingTaskFinishes(long timeout) throws InterruptedException;
 }

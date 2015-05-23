@@ -349,7 +349,7 @@ public abstract class SamplerTest
 
         sampler.annotate("test");
 
-        sampler.waitUntilNextSamplingTaskFinishes(10000L);
+        sampler.stop();
 
         // at least one of the samples has the comment, but not more than one
         String annotation = null;
@@ -370,6 +370,51 @@ public abstract class SamplerTest
             annotation = annotations.get(0);
         }
 
+        assertEquals("test", annotation);
+    }
+
+    @Test
+    public void stop_waitForAFullIntervalAndGenerateAFinalSample() throws Exception
+    {
+        Sampler sampler = getSamplerToTest();
+        sampler.registerOperation(MockOperation.class);
+        final List<SamplingInterval> sil = new ArrayList<>();
+        sampler.registerConsumer(new SamplingConsumer()
+        {
+            @Override
+            public void consume(SamplingInterval samplingInterval)
+            {
+                sil.add(samplingInterval);
+            }
+        });
+        sampler.start();
+
+        sampler.annotate("test");
+        sampler.record(0L, 1L, 2L, new MockOperation());
+
+        sampler.stop();
+
+        assertFalse(sil.isEmpty());
+
+        int count = 0;
+        String annotation = null;
+
+        for(SamplingInterval i: sil)
+        {
+            count += i.getSuccessCount(MockOperation.class);
+
+            for(String a: i.getAnnotations())
+            {
+                if (annotation != null)
+                {
+                    fail("more than one annotation");
+                }
+
+                annotation = a;
+            }
+        }
+
+        assertEquals(1, count);
         assertEquals("test", annotation);
     }
 

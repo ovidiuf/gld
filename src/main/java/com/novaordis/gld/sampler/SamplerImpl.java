@@ -47,6 +47,7 @@ public class SamplerImpl extends TimerTask implements Sampler
     private Timer samplingTimer;
 
     private volatile boolean started;
+    private volatile boolean shutDown;
 
     final Map<Class, Counter> counters;
     final List<String> annotations;
@@ -61,14 +62,20 @@ public class SamplerImpl extends TimerTask implements Sampler
 
     public SamplerImpl()
     {
-        this.samplingIntervalMs = DEFAULT_SAMPLING_INTERVAL_MS;
-        this.samplingTaskRunIntervalMs = DEFAULT_SAMPLING_TASK_RUN_INTERVAL_MS;
+        this(DEFAULT_SAMPLING_TASK_RUN_INTERVAL_MS, DEFAULT_SAMPLING_INTERVAL_MS);
+    }
+
+    public SamplerImpl(long samplingTaskRunIntervalMs, long samplingIntervalMs)
+    {
+        this.samplingIntervalMs = samplingIntervalMs;
+        this.samplingTaskRunIntervalMs = samplingTaskRunIntervalMs;
         this.consumers = new ArrayList<>();
         this.started = false;
         this.counters = new HashMap<>();
         this.annotations = new CopyOnWriteArrayList<>();
         this.lastRunTimestampMs = -1L;
         verifySamplingIntervalsRelationship();
+        this.shutDown = false;
 
         this.mutex = new Object();
 
@@ -132,7 +139,20 @@ public class SamplerImpl extends TimerTask implements Sampler
                 "a started sampler is supposed to have a non-null timer, and this one doesn't");
         }
 
-        samplingTimer.cancel();
+        // tell the last task to shut the timer down
+        shutDown = true;
+
+        // wait until the last sample is written
+
+        try
+        {
+            waitUntilNextSamplingTaskFinishes(null);
+        }
+        catch(InterruptedException e)
+        {
+            throw new IllegalStateException("interrupted while waiting for last sampling task to finish", e);
+        }
+
         samplingTimer = null;
         started = false;
     }
@@ -225,15 +245,15 @@ public class SamplerImpl extends TimerTask implements Sampler
             throw new IllegalStateException(this + " not started");
         }
 
-        // locate the counters per operation - the map is never written concurrently so we don't need to take
-        // any special precautions
+        // locate the counter corresponding to the operation being recorded - the map is never written concurrently so
+        // we don't need to take any special synchronization precautions.
 
         Counter counter = counters.get(op.getClass());
 
         if (counter == null)
         {
             throw new IllegalArgumentException(
-                "no operation of type " + op.getClass() + " was registered with this sampler");
+                "no operation of type " + op.getClass() + " was registered with this sampler before startup");
         }
 
         counter.update(t0Ms, t0Nano, t1Nano, t);
@@ -243,19 +263,6 @@ public class SamplerImpl extends TimerTask implements Sampler
     public void annotate(String line)
     {
         annotations.add(line);
-    }
-
-    /**
-     * @see Sampler#waitUntilNextSamplingTaskFinishes(long)
-     */
-    @Override
-    public void waitUntilNextSamplingTaskFinishes(long timeout) throws InterruptedException
-    {
-        synchronized (mutex)
-        {
-            log.debug("blocking on " + this + "'s mutex with a timeout of " + timeout + " ms");
-            mutex.wait(timeout);
-        }
     }
 
     // TimerTask implementation ----------------------------------------------------------------------------------------
@@ -278,7 +285,7 @@ public class SamplerImpl extends TimerTask implements Sampler
 
         if (debug) { log.debug("sampling task starting, it covers the last " + duration + " ms ..."); }
 
-        SamplingIntervalImpl si = new SamplingIntervalImpl(thisRunTimestampMs, counters.keySet());
+        SamplingIntervalImpl si = new SamplingIntervalImpl(thisRunTimestampMs, duration, counters.keySet());
 
         // make a local copy and reset the counters; it's fine to access the holding map as it will be never be
         // written concurrently
@@ -310,6 +317,14 @@ public class SamplerImpl extends TimerTask implements Sampler
             }
         }
 
+        if (shutDown)
+        {
+            // cancel the timer, no further tasks will be scheduled. From javadoc: Note that calling this method from
+            // within the run method of a timer task that was invoked by this timer absolutely guarantees that the
+            // ongoing task execution is the last task execution that will ever be performed by this timer.
+            samplingTimer.cancel();
+        }
+
         synchronized (mutex)
         {
             // release all threads waiting on mutex for the sampler task to finish
@@ -327,6 +342,33 @@ public class SamplerImpl extends TimerTask implements Sampler
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
+
+    /**
+     * Puts the calling thread on wait until the next sampler task finishes running or timeout occurs. Currently
+     * only used for testing.
+     *
+     * @param timeout in ms. null means wait until notified.
+     *
+     * @see Object#wait(long)
+     *
+     * @throws InterruptedException
+     */
+    void waitUntilNextSamplingTaskFinishes(Long timeout) throws InterruptedException
+    {
+        synchronized (mutex)
+        {
+            if (timeout == null)
+            {
+                log.debug("blocking on " + this + "'s mutex with no timeout");
+                mutex.wait();
+            }
+            else
+            {
+                log.debug("blocking on " + this + "'s mutex with a timeout of " + timeout + " ms");
+                mutex.wait(timeout);
+            }
+        }
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 
