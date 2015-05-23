@@ -16,17 +16,9 @@
 
 package com.novaordis.gld.sampler;
 
-import com.novaordis.gld.strategy.load.cache.MockOperation;
-import org.apache.log4j.Logger;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-
-public class CounterImplTest extends CounterTest
+public class NonBlockingCounterTest extends CounterTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = Logger.getLogger(CounterImplTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -36,27 +28,14 @@ public class CounterImplTest extends CounterTest
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Test
-    public void success() throws Exception
-    {
-        CounterImpl c = getCounterToTest(MockOperation.class);
-
-        c.update(0L, 10L, 17L);
-
-        assertEquals(1, c.getSuccessCount());
-        assertEquals(7L, c.getCumulatedTime());
-
-        log.debug(".");
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected CounterImpl getCounterToTest(Class operationType) throws Exception
+    protected NonBlockingCounter getCounterToTest(Class operationType) throws Exception
     {
-        return new CounterImpl(operationType);
+        return new NonBlockingCounter(operationType);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

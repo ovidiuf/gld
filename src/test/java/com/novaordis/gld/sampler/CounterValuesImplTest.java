@@ -16,17 +16,13 @@
 
 package com.novaordis.gld.sampler;
 
-import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
-import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
-
-public class SamplerImplTest extends SamplerTest
+public class CounterValuesImplTest extends CounterValuesTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(SamplerImplTest.class);
+    private static final Logger log = Logger.getLogger(CounterValuesImplTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -36,45 +32,14 @@ public class SamplerImplTest extends SamplerTest
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Test
-    public void exceptionInRunDoesNotPreventReleasingTheMutex() throws Exception
-    {
-        // start the sampler with a very large sampling interval, so the stop timeout will be very large; hoewever,
-        // keep the sampling thread run interval small
-        long twoDays = 2L * 24 * 60 * 60 * 1000L;
-        SamplerImpl si = new SamplerImpl(250L, twoDays);
-        si.registerOperation(MockOperation.class);
-
-        si.start();
-
-        assertTrue(si.isStarted());
-
-        // "break" the sampler, so when run() is invoked, it'll throw an exception. Setting the consumers to
-        // null will cause an NPE
-
-        si.setConsumers(null);
-
-        log.info(si + " has been broken ...");
-
-        // attempt to stop, the stop must not block indefinitely, if it does, the JUnit will kill the test and fail
-
-        long t0 = System.currentTimeMillis();
-
-        si.stop();
-
-        long t1 = System.currentTimeMillis();
-
-        log.info("the sampler stopped, it took " + (t1 - t0) + " ms to stop the sampler");
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected SamplerImpl getSamplerToTest() throws Exception
+    protected CounterValuesImpl getCounterValuesToTest(int successCount, long successCumulatedTime) throws Exception
     {
-        return new SamplerImpl();
+        return new CounterValuesImpl(successCount, successCumulatedTime);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

@@ -20,6 +20,7 @@ import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public abstract class CounterTest
@@ -64,6 +65,59 @@ public abstract class CounterTest
         {
             log.info(e.getMessage());
         }
+    }
+
+    @Test
+    public void happyPath_Success() throws Exception
+    {
+        Counter c = getCounterToTest(MockOperation.class);
+
+        c.update(0L, 10L, 11L);
+        c.update(1L, 10L, 12L);
+        c.update(2L, 10L, 13L);
+
+        assertEquals(MockOperation.class, c.getOperationType());
+
+        CounterValues v0 = c.getCounterValuesAndReset();
+
+        long sc0 = v0.getSuccessCount();
+        long sct0 = v0.getSuccessCumulatedTime();
+
+        assertEquals(3, sc0);
+        assertEquals(1L + 2L + 3L, sct0);
+
+        // TODO
+        // v0.getFailureCount(Exception.class);
+
+        c.update(3L, 10L, 14L);
+
+        CounterValues v1 = c.getCounterValuesAndReset();
+
+        long sc1 = v1.getSuccessCount();
+        long sct1 = v1.getSuccessCumulatedTime();
+
+        assertEquals(1, sc1);
+        assertEquals(4L, sct1);
+
+        CounterValues v2 = c.getCounterValuesAndReset();
+
+        long sc2 = v2.getSuccessCount();
+        long sct2 = v2.getSuccessCumulatedTime();
+
+        assertEquals(0, sc2);
+        assertEquals(0L, sct2);
+    }
+
+    @Test
+    public void happyPath_Failures() throws Exception
+    {
+        fail("return here");
+    }
+
+    @Test
+    public void multiThreadedMiniStress_SuccessAndFailures() throws Exception
+    {
+        fail("return here");
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -17,16 +17,20 @@
 package com.novaordis.gld.sampler;
 
 import com.novaordis.gld.strategy.load.cache.MockOperation;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class SamplerImplTest extends SamplerTest
+public abstract class SamplingIntervalTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = Logger.getLogger(SamplerImplTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -37,45 +41,39 @@ public class SamplerImplTest extends SamplerTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void exceptionInRunDoesNotPreventReleasingTheMutex() throws Exception
+    public void happyPath() throws Exception
     {
-        // start the sampler with a very large sampling interval, so the stop timeout will be very large; hoewever,
-        // keep the sampling thread run interval small
-        long twoDays = 2L * 24 * 60 * 60 * 1000L;
-        SamplerImpl si = new SamplerImpl(250L, twoDays);
-        si.registerOperation(MockOperation.class);
+        SamplingInterval si = getSamplingIntervalToTest(
+            7L, 11L, new HashSet<Class>(Arrays.asList(MockOperation.class)), Arrays.asList("blah"));
 
-        si.start();
+        assertEquals(7L, si.getTimestamp());
 
-        assertTrue(si.isStarted());
+        assertEquals(11L, si.getDuration());
 
-        // "break" the sampler, so when run() is invoked, it'll throw an exception. Setting the consumers to
-        // null will cause an NPE
+        Set<Class> operationTypes = si.getOperationTypes();
+        assertEquals(1, operationTypes.size());
+        assertTrue(operationTypes.contains(MockOperation.class));
 
-        si.setConsumers(null);
+        // make sure we return null and not throw any exception on unknown operation types
+        assertNull(si.getCounterValues(Object.class));
 
-        log.info(si + " has been broken ...");
+        CounterValues values = si.getCounterValues(MockOperation.class);
+        // since we did not recorded any operations, I expect the values to be 0
+        assertEquals(0, values.getSuccessCount());
+        assertEquals(0, values.getSuccessCumulatedTime());
 
-        // attempt to stop, the stop must not block indefinitely, if it does, the JUnit will kill the test and fail
-
-        long t0 = System.currentTimeMillis();
-
-        si.stop();
-
-        long t1 = System.currentTimeMillis();
-
-        log.info("the sampler stopped, it took " + (t1 - t0) + " ms to stop the sampler");
+        List<String> annotations = si.getAnnotations();
+        assertEquals(1, annotations.size());
+        assertTrue(annotations.contains("blah"));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    @Override
-    protected SamplerImpl getSamplerToTest() throws Exception
-    {
-        return new SamplerImpl();
-    }
+    protected abstract SamplingInterval getSamplingIntervalToTest(
+        long intervalStartTimestamp, long durationMs, Set<Class> operationTypes, List<String> annotations)
+        throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

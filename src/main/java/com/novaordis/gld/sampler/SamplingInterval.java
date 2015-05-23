@@ -37,10 +37,9 @@ public interface SamplingInterval
     Set<Class> getOperationTypes();
 
     /**
-     * @exception java.lang.IllegalArgumentException if the operation type was not known to the sampler when it
-     *            generated this sampling interval.
+     * @return null if the operation type was not known to the sampler when it generated this sampling interval.
      */
-    long getSuccessCount(Class operationType);
+    CounterValues getCounterValues(Class operationType);
 
     /**
      * @return the annotations that were entered at the console during this sampling interval. May return an empty

@@ -132,7 +132,7 @@ public abstract class SamplerTest
 
         for(SamplingInterval si: samplingIntervals)
         {
-            totalCount += si.getSuccessCount(MockOperation.class);
+            totalCount += si.getCounterValues(MockOperation.class).getSuccessCount();
         }
 
         assertEquals(1, totalCount);
@@ -401,7 +401,7 @@ public abstract class SamplerTest
 
         for(SamplingInterval i: sil)
         {
-            count += i.getSuccessCount(MockOperation.class);
+            count += i.getCounterValues(MockOperation.class).getSuccessCount();
 
             for(String a: i.getAnnotations())
             {

@@ -22,13 +22,16 @@ import org.apache.log4j.Logger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * A standard counter implementation, that measures success count, cumulated time (in nanoseconds) and failures.
+ * A non-blocking counter implementation. It relies on compare-ans-set non-blocking java.util.concurrent.atomic objects.
+ * Provides thread safety for produced CounterValues instances.
+ *
+ * @see CounterValues
  */
-public class CounterImpl implements Counter
+public class NonBlockingCounter implements Counter
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(CounterImpl.class);
+    private static final Logger log = Logger.getLogger(NonBlockingCounter.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -37,11 +40,11 @@ public class CounterImpl implements Counter
     private Class operationType;
 
     private AtomicLong successCount;
-    private AtomicLong cumulatedTimeNano;
+    private AtomicLong cumulatedSuccessTimeNano;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public CounterImpl(Class operationType)
+    public NonBlockingCounter(Class operationType)
     {
         if (!Operation.class.isAssignableFrom(operationType))
         {
@@ -50,9 +53,9 @@ public class CounterImpl implements Counter
 
         this.operationType = operationType;
         this.successCount = new AtomicLong(0L);
-        this.cumulatedTimeNano = new AtomicLong(0L);
+        this.cumulatedSuccessTimeNano = new AtomicLong(0L);
 
-        log.debug(this + " constructed");
+        log.debug(this + " created");
     }
 
     // Counter implementation ------------------------------------------------------------------------------------------
@@ -81,42 +84,29 @@ public class CounterImpl implements Counter
             // success
 
             successCount.incrementAndGet();
-            cumulatedTimeNano.addAndGet(duration);
+            cumulatedSuccessTimeNano.addAndGet(duration);
         }
         else
         {
             // failure
-
             throw new RuntimeException("NOT YET IMPLEMENTED");
         }
     }
 
+    @Override
+    public CounterValues getCounterValuesAndReset()
+    {
+        long sc = successCount.getAndSet(0L);
+        long cst = cumulatedSuccessTimeNano.getAndSet(0L);
+        return new CounterValuesImpl(sc, cst);
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public long getSuccessCount()
-    {
-        return successCount.get();
-    }
-
-    public long getSuccessCountAndReset()
-    {
-        return successCount.getAndSet(0L);
-    }
-
-    public long getCumulatedTime()
-    {
-        return cumulatedTimeNano.get();
-    }
-
-    public long getCumulatedTimeAndReset()
-    {
-        return cumulatedTimeNano.getAndSet(0L);
-    }
 
     @Override
     public String toString()
     {
-        return "Counter[" + (operationType == null ? null : operationType.getSimpleName()) + "]";
+        return "NonBlockingCounter[" + (operationType == null ? null : operationType.getSimpleName()) + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

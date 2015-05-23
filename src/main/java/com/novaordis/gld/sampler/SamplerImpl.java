@@ -79,7 +79,7 @@ public class SamplerImpl extends TimerTask implements Sampler
 
         this.mutex = new Object();
 
-        log.debug("SamplerImpl created, sampling task run interval " + samplingTaskRunIntervalMs +
+        log.debug(this + " created, sampling task run interval " + samplingTaskRunIntervalMs +
             " ms, sampling interval " + samplingIntervalMs + " ms");
     }
 
@@ -116,7 +116,7 @@ public class SamplerImpl extends TimerTask implements Sampler
 
         started = true;
 
-        log.debug("sampler started");
+        log.debug(this + " started");
     }
 
     @Override
@@ -142,17 +142,20 @@ public class SamplerImpl extends TimerTask implements Sampler
         // tell the last task to shut the timer down
         shutDown = true;
 
-        // wait until the last sample is written
+        // wait until the last sample is written, it will happen in at most
+        // (samplingIntervalMs + samplingTaskRunIntervalMs) milliseconds or it won't happen at all
 
         try
         {
-            waitUntilNextSamplingTaskFinishes(null);
+            waitUntilNextSamplingTaskFinishes(samplingIntervalMs + samplingTaskRunIntervalMs + 500L);
         }
         catch(InterruptedException e)
         {
             throw new IllegalStateException("interrupted while waiting for last sampling task to finish", e);
         }
 
+        // redundantly cancel the sampler in case the sampling tasks didn't, no harm in canceling it twice
+        samplingTimer.cancel();
         samplingTimer = null;
         started = false;
     }
@@ -211,7 +214,7 @@ public class SamplerImpl extends TimerTask implements Sampler
             throw new IllegalArgumentException(operationType + " is not assignable from Operation");
         }
 
-        Counter counter = new CounterImpl(operationType);
+        Counter counter = new NonBlockingCounter(operationType);
         counters.put(operationType, counter);
         return counter;
     }
@@ -232,6 +235,12 @@ public class SamplerImpl extends TimerTask implements Sampler
     public synchronized boolean registerConsumer(SamplingConsumer consumer)
     {
         return consumers.add(consumer);
+    }
+
+    @Override
+    public void annotate(String line)
+    {
+        annotations.add(line);
     }
 
     /**
@@ -259,77 +268,81 @@ public class SamplerImpl extends TimerTask implements Sampler
         counter.update(t0Ms, t0Nano, t1Nano, t);
     }
 
-    @Override
-    public void annotate(String line)
-    {
-        annotations.add(line);
-    }
-
     // TimerTask implementation ----------------------------------------------------------------------------------------
 
     @Override
     public void run()
     {
-        long thisRunTimestampMs = System.currentTimeMillis();
-
-        if (lastRunTimestampMs == -1L)
+        try
         {
-            // this is the first run, we don't have the beginning of the sampling interval, set it and wait until the
-            // next sampling task run
+            long thisRunTimestampMs = System.currentTimeMillis();
+
+            if (lastRunTimestampMs == -1L)
+            {
+                // this is the first run, we don't have the beginning of the sampling interval, set it and wait until
+                // the next sampling task run
+                lastRunTimestampMs = thisRunTimestampMs;
+                return;
+            }
+
+            long duration = thisRunTimestampMs - lastRunTimestampMs;
             lastRunTimestampMs = thisRunTimestampMs;
-            return;
-        }
 
-        long duration = thisRunTimestampMs - lastRunTimestampMs;
-        lastRunTimestampMs = thisRunTimestampMs;
+            if (debug) { log.debug("sampling task running, it covers the last " + duration + " ms ..."); }
 
-        if (debug) { log.debug("sampling task starting, it covers the last " + duration + " ms ..."); }
+            SamplingIntervalImpl si = new SamplingIntervalImpl(thisRunTimestampMs, duration, counters.keySet());
 
-        SamplingIntervalImpl si = new SamplingIntervalImpl(thisRunTimestampMs, duration, counters.keySet());
-
-        // make a local copy and reset the counters; it's fine to access the holding map as it will be never be
-        // written concurrently
-        for(Counter c: counters.values())
-        {
-            CounterImpl ci = (CounterImpl)c;
-            Class ot = ci.getOperationType();
-            si.setSuccessCount(ot, ci.getSuccessCountAndReset());
-        }
-
-        // collect annotations and place them in the sampling interval instance
-        Object[] aa = annotations.toArray();
-        annotations.clear();
-        for(Object o: aa)
-        {
-            si.addAnnotation((String)o);
-        }
-
-        for(SamplingConsumer c: consumers)
-        {
-            try
+            // make a local copy and reset the counters; it's fine to access the holding map as it will be never be
+            // written concurrently
+            for (Counter c : counters.values())
             {
-                c.consume(si);
+                Class ot = c.getOperationType();
+                CounterValues cvs = c.getCounterValuesAndReset();
+                si.setCounterValues(ot, cvs);
             }
-            catch(Throwable t)
+
+            // collect annotations and place them in the sampling interval instance
+            Object[] aa = annotations.toArray();
+            annotations.clear();
+            for (Object o : aa)
             {
-                // protect ourselves against malfunctioning consumers
-                log.warn("sampling consumer " + c + " failed to handle a sampling interval instance", t);
+                si.addAnnotation((String) o);
+            }
+
+            for (SamplingConsumer c : consumers)
+            {
+                try
+                {
+                    c.consume(si);
+                }
+                catch (Throwable t)
+                {
+                    // protect ourselves against malfunctioning consumers
+                    log.warn("sampling consumer " + c + " failed to handle a sampling interval instance", t);
+                }
+            }
+
+            if (shutDown)
+            {
+                // cancel the timer, no further tasks will be scheduled. From javadoc: Note that calling this method
+                // from within the run method of a timer task that was invoked by this timer absolutely guarantees that
+                // the ongoing task execution is the last task execution that will ever be performed by this timer.
+                samplingTimer.cancel();
             }
         }
-
-        if (shutDown)
+        catch(Throwable t)
         {
-            // cancel the timer, no further tasks will be scheduled. From javadoc: Note that calling this method from
-            // within the run method of a timer task that was invoked by this timer absolutely guarantees that the
-            // ongoing task execution is the last task execution that will ever be performed by this timer.
-            samplingTimer.cancel();
+            log.warn(this + "'s sampling thread failed", t);
         }
-
-        synchronized (mutex)
+        finally
         {
-            // release all threads waiting on mutex for the sampler task to finish
-            log.debug("releasing all threads waiting on mutex");
-            mutex.notifyAll();
+            // release all threads waiting on mutex for the sampler task to finish, regardless whether it was
+            // successful or it failed
+            synchronized (mutex)
+            {
+                if (debug) { log.debug("releasing all other threads waiting on " + this + "'s mutex ..."); }
+                mutex.notifyAll();
+            }
         }
     }
 
@@ -368,6 +381,14 @@ public class SamplerImpl extends TimerTask implements Sampler
                 mutex.wait(timeout);
             }
         }
+    }
+
+    /**
+     * For testing only.
+     */
+    void setConsumers(List<SamplingConsumer> consumers)
+    {
+        this.consumers = consumers;
     }
 
     // Protected -------------------------------------------------------------------------------------------------------

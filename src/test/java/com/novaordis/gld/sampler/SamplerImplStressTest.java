@@ -25,9 +25,6 @@ import java.util.List;
 import java.util.concurrent.CyclicBarrier;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class SamplerImplStressTest
 {
@@ -109,6 +106,8 @@ public class SamplerImplStressTest
         log.info("sleeping for " + (interval / 1000L) + " seconds ...");
         Thread.sleep(interval);
 
+        log.info("stopping the sampler ...");
+
         s.stop();
 
         log.info("sampler stopped");
@@ -119,7 +118,7 @@ public class SamplerImplStressTest
 
         for(SamplingInterval si: samples)
         {
-            successful += si.getSuccessCount(MockOperation.class);
+            successful += si.getCounterValues(MockOperation.class).getSuccessCount();
         }
 
         log.info(successful + " successful operations");

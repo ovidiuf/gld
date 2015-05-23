@@ -16,12 +16,14 @@
 
 package com.novaordis.gld.sampler;
 
+import com.novaordis.gld.Operation;
 import org.apache.log4j.Logger;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,23 +46,68 @@ public class SamplingIntervalImpl implements SamplingInterval
     private long intervalStartTimestamp;
     private long durationMs;
     private Set<Class> operationTypes;
-    private Map<Class, Long> successCount;
+    private Map<Class, CounterValues> values;
     private List<String> annotations;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
-     * @param durationMs - the interval duration in milliseconds.
-     * @param operationTypes  - the types of the operations sampled in this interval.
+     * @see SamplingIntervalImpl(long, long, Set, List)
      */
     public SamplingIntervalImpl(long intervalStartTimestamp, long durationMs, Set<Class> operationTypes)
     {
+        this(intervalStartTimestamp, durationMs, operationTypes, null);
+    }
+
+    /**
+     * @param durationMs - the interval duration in milliseconds.
+     * @param operationTypes  - the types of the operations sampled in this interval. null or empty set is not
+     *                        acceptable, we must have at least one operation type we collect statistics for
+     *
+     * @param annotations null or empty list are valid values
+     */
+    public SamplingIntervalImpl(
+        long intervalStartTimestamp, long durationMs, Set<Class> operationTypes, List<String> annotations)
+    {
         this.intervalStartTimestamp = intervalStartTimestamp;
         this.durationMs = durationMs;
-        this.operationTypes = operationTypes;
-        this.successCount = new HashMap<>();
-        this.annotations = new ArrayList<>();
-        log.debug(this + " constructed");
+
+        if (operationTypes == null)
+        {
+            throw new IllegalArgumentException("null operation types");
+        }
+
+        if (operationTypes.isEmpty())
+        {
+            throw new IllegalArgumentException("no operation types specified");
+        }
+
+        this.operationTypes = new HashSet<>();
+        this.values = new HashMap<>();
+
+        // insure the operation types are valid and initialize the values map with zero
+
+        for(Class c: operationTypes)
+        {
+            if (!Operation.class.isAssignableFrom(c))
+            {
+                throw new IllegalArgumentException(c + " is not an Operation");
+            }
+
+            this.operationTypes.add(c);
+            this.values.put(c, new CounterValuesImpl());
+        }
+
+        if (annotations == null)
+        {
+            this.annotations = new ArrayList<>();
+        }
+        else
+        {
+            this.annotations = annotations;
+        }
+
+        log.debug(this + " created");
     }
 
     // SamplingInterval implementation ---------------------------------------------------------------------------------
@@ -87,21 +134,12 @@ public class SamplingIntervalImpl implements SamplingInterval
     }
 
     /**
-     * @return 0 if the operation type is unknown.
-     *
-     * @see SamplingInterval#getSuccessCount(Class)
+     * @see SamplingInterval#getCounterValues(Class)
      */
     @Override
-    public long getSuccessCount(Class operationType)
+    public CounterValues getCounterValues(Class operationType)
     {
-        Long lv = successCount.get(operationType);
-
-        if (lv == null)
-        {
-            return 0;
-        }
-
-        return lv;
+        return values.get(operationType);
     }
 
     @Override
@@ -112,9 +150,9 @@ public class SamplingIntervalImpl implements SamplingInterval
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public void setSuccessCount(Class operationType, long lv)
+    public void setCounterValues(Class operationType, CounterValues counterValues)
     {
-        successCount.put(operationType, lv);
+        values.put(operationType, counterValues);
     }
 
     public void addAnnotation(String s)
