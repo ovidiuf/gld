@@ -18,10 +18,13 @@ package com.novaordis.gld.sampler;
 
 import org.apache.log4j.Logger;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A standard counter implementation, that measures success count, cumulated time (in nanoseconds) and failures.
@@ -32,17 +35,26 @@ public class SamplingIntervalImpl implements SamplingInterval
 
     private static final Logger log = Logger.getLogger(SamplingIntervalImpl.class);
 
+    public static final Format TIMESTAMP_DISPLAY_FORMAT = new SimpleDateFormat("yy/MM/dd HH:mm:ss,SSS");
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private long intervalStartTimestamp;
+    private Set<Class> operationTypes;
     private Map<Class, Long> successCount;
     private List<String> annotations;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public SamplingIntervalImpl()
+    /**
+     * @param operationTypes  - the types of the operations sampled in this interval.
+     */
+    public SamplingIntervalImpl(long intervalStartTimestamp, Set<Class> operationTypes)
     {
+        this.intervalStartTimestamp = intervalStartTimestamp;
+        this.operationTypes = operationTypes;
         this.successCount = new HashMap<>();
         this.annotations = new ArrayList<>();
         log.debug(this + " constructed");
@@ -54,6 +66,12 @@ public class SamplingIntervalImpl implements SamplingInterval
     public long getTimestamp()
     {
         return 0;
+    }
+
+    @Override
+    public Set<Class> getOperationTypes()
+    {
+        return operationTypes;
     }
 
     /**
@@ -95,7 +113,7 @@ public class SamplingIntervalImpl implements SamplingInterval
     @Override
     public String toString()
     {
-        return "SamplingInterval[]";
+        return "[" + TIMESTAMP_DISPLAY_FORMAT.format(intervalStartTimestamp) + " ... ]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -245,6 +245,9 @@ public class SamplerImpl extends TimerTask implements Sampler
         annotations.add(line);
     }
 
+    /**
+     * @see Sampler#waitUntilNextSamplingTaskFinishes(long)
+     */
     @Override
     public void waitUntilNextSamplingTaskFinishes(long timeout) throws InterruptedException
     {
@@ -253,7 +256,6 @@ public class SamplerImpl extends TimerTask implements Sampler
             log.debug("blocking on " + this + "'s mutex with a timeout of " + timeout + " ms");
             mutex.wait(timeout);
         }
-
     }
 
     // TimerTask implementation ----------------------------------------------------------------------------------------
@@ -261,23 +263,22 @@ public class SamplerImpl extends TimerTask implements Sampler
     @Override
     public void run()
     {
-        long ts = System.currentTimeMillis();
-        long beginningOfTheSamplingInterval = lastRunTimestampMs;
-        lastRunTimestampMs = ts;
+        long thisRunTimestampMs = System.currentTimeMillis();
 
-        if (beginningOfTheSamplingInterval == -1L)
+        if (lastRunTimestampMs == -1L)
         {
-            // this is the first run, we don't have the beginning of the sampling interval, wait until the next
+            // this is the first run, we don't have the beginning of the sampling interval, set it and wait until the
+            // next sampling task run
+            lastRunTimestampMs = thisRunTimestampMs;
             return;
         }
 
-        //noinspection UnnecessaryLocalVariable
-        long endOfTheSamplingInterval = ts;
-        long durationOfTheSamplingInterval = endOfTheSamplingInterval - beginningOfTheSamplingInterval;
+        long duration = thisRunTimestampMs - lastRunTimestampMs;
+        lastRunTimestampMs = thisRunTimestampMs;
 
-        if (debug) { log.debug("sampling task starting, it covers " + durationOfTheSamplingInterval + " ms ..."); }
+        if (debug) { log.debug("sampling task starting, it covers the last " + duration + " ms ..."); }
 
-        SamplingIntervalImpl si = new SamplingIntervalImpl();
+        SamplingIntervalImpl si = new SamplingIntervalImpl(thisRunTimestampMs, counters.keySet());
 
         // make a local copy and reset the counters; it's fine to access the holding map as it will be never be
         // written concurrently

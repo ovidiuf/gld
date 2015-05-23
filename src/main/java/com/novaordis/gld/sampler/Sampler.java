@@ -159,5 +159,14 @@ public interface Sampler
      */
     void annotate(String line);
 
+    /**
+     * Puts the calling thread on wait until the next sampler task finishes running or timeout occurs.
+     *
+     * @param timeout in ms.
+     *
+     * @see Object#wait(long)
+     *
+     * @throws InterruptedException
+     */
     void waitUntilNextSamplingTaskFinishes(long timeout) throws InterruptedException;
 }

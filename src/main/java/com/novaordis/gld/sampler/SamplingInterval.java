@@ -17,10 +17,19 @@
 package com.novaordis.gld.sampler;
 
 import java.util.List;
+import java.util.Set;
 
 public interface SamplingInterval
 {
+    /**
+     * The timestamp of the moment the sampling interval started.
+     */
     long getTimestamp();
+
+    /**
+     * The types of the operations sampled in this interval.
+     */
+    Set<Class> getOperationTypes();
 
     /**
      * @exception java.lang.IllegalArgumentException if the operation type was not known to the sampler when it
@@ -28,6 +37,10 @@ public interface SamplingInterval
      */
     long getSuccessCount(Class operationType);
 
+    /**
+     * @return the annotations that were entered at the console during this sampling interval. May return an empty
+     * list if no annotations were entered.
+     */
     List<String> getAnnotations();
 
 }
