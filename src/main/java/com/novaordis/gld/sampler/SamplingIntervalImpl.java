@@ -45,8 +45,8 @@ public class SamplingIntervalImpl implements SamplingInterval
 
     private long intervalStartTimestamp;
     private long durationMs;
-    private Set<Class> operationTypes;
-    private Map<Class, CounterValues> values;
+    private Set<Class<? extends Operation>> operationTypes;
+    private Map<Class<? extends Operation>, CounterValues> values;
     private List<String> annotations;
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -54,7 +54,8 @@ public class SamplingIntervalImpl implements SamplingInterval
     /**
      * @see SamplingIntervalImpl(long, long, Set, List)
      */
-    public SamplingIntervalImpl(long intervalStartTimestamp, long durationMs, Set<Class> operationTypes)
+    public SamplingIntervalImpl(
+        long intervalStartTimestamp, long durationMs, Set<Class<? extends Operation>> operationTypes)
     {
         this(intervalStartTimestamp, durationMs, operationTypes, null);
     }
@@ -66,8 +67,8 @@ public class SamplingIntervalImpl implements SamplingInterval
      *
      * @param annotations null or empty list are valid values
      */
-    public SamplingIntervalImpl(
-        long intervalStartTimestamp, long durationMs, Set<Class> operationTypes, List<String> annotations)
+    public SamplingIntervalImpl(long intervalStartTimestamp, long durationMs,
+                                Set<Class<? extends Operation>> operationTypes, List<String> annotations)
     {
         this.intervalStartTimestamp = intervalStartTimestamp;
         this.durationMs = durationMs;
@@ -87,13 +88,8 @@ public class SamplingIntervalImpl implements SamplingInterval
 
         // insure the operation types are valid and initialize the values map with zero
 
-        for(Class c: operationTypes)
+        for(Class<? extends Operation> c: operationTypes)
         {
-            if (!Operation.class.isAssignableFrom(c))
-            {
-                throw new IllegalArgumentException(c + " is not an Operation");
-            }
-
             this.operationTypes.add(c);
             this.values.put(c, new CounterValuesImpl());
         }
@@ -127,8 +123,11 @@ public class SamplingIntervalImpl implements SamplingInterval
         return durationMs;
     }
 
+    /**
+     * @see SamplingInterval#getOperationTypes()
+     */
     @Override
-    public Set<Class> getOperationTypes()
+    public Set<Class<? extends Operation>> getOperationTypes()
     {
         return operationTypes;
     }
@@ -137,7 +136,7 @@ public class SamplingIntervalImpl implements SamplingInterval
      * @see SamplingInterval#getCounterValues(Class)
      */
     @Override
-    public CounterValues getCounterValues(Class operationType)
+    public CounterValues getCounterValues(Class<? extends Operation> operationType)
     {
         return values.get(operationType);
     }
@@ -150,7 +149,7 @@ public class SamplingIntervalImpl implements SamplingInterval
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public void setCounterValues(Class operationType, CounterValues counterValues)
+    public void setCounterValues(Class<? extends Operation> operationType, CounterValues counterValues)
     {
         values.put(operationType, counterValues);
     }

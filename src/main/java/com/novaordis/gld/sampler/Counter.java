@@ -16,6 +16,8 @@
 
 package com.novaordis.gld.sampler;
 
+import com.novaordis.gld.Operation;
+
 public interface Counter
 {
     /**
@@ -42,7 +44,7 @@ public interface Counter
      */
     void update(long t0Ms, long t0Nano, long t1Nano, Throwable... t);
 
-    Class getOperationType();
+    Class<? extends Operation> getOperationType();
 
     /**
      * @return all this counter's values (successful operations count, successful operations cumulated time, failure

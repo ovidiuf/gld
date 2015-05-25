@@ -49,7 +49,7 @@ public class SamplerImpl extends TimerTask implements Sampler
     private volatile boolean started;
     private volatile boolean shutDown;
 
-    final Map<Class, Counter> counters;
+    final Map<Class<? extends Operation>, Counter> counters;
     final List<String> annotations;
 
     private List<SamplingConsumer> consumers;
@@ -202,7 +202,7 @@ public class SamplerImpl extends TimerTask implements Sampler
      * @see Sampler#registerOperation(Class)
      */
     @Override
-    public synchronized Counter registerOperation(Class operationType)
+    public synchronized Counter registerOperation(Class<? extends Operation> operationType)
     {
         if (isStarted())
         {
@@ -296,7 +296,7 @@ public class SamplerImpl extends TimerTask implements Sampler
             // written concurrently
             for (Counter c : counters.values())
             {
-                Class ot = c.getOperationType();
+                Class<? extends Operation> ot = c.getOperationType();
                 CounterValues cvs = c.getCounterValuesAndReset();
                 si.setCounterValues(ot, cvs);
             }

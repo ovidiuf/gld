@@ -16,6 +16,7 @@
 
 package com.novaordis.gld.sampler;
 
+import com.novaordis.gld.Operation;
 import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -28,7 +29,6 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -65,23 +65,8 @@ public class SamplingIntervalImplTest extends SamplingIntervalTest
     {
         try
         {
-            getSamplingIntervalToTest(0L, 1L, new HashSet<Class>(), new ArrayList<String>());
+            getSamplingIntervalToTest(0L, 1L, new HashSet<Class<? extends Operation>>(), new ArrayList<String>());
             fail("should fail on account of empty operation types set");
-        }
-        catch(IllegalArgumentException iae)
-        {
-            log.info(iae.getMessage());
-        }
-    }
-
-    @Test
-    public void notAnOperationTypeInSet() throws Exception
-    {
-        try
-        {
-            getSamplingIntervalToTest(0L, 1L,
-                new HashSet<Class>(Arrays.asList(MockOperation.class, Object.class)), new ArrayList<String>());
-            fail("should fail on account on the fact there are non-operation types in set");
         }
         catch(IllegalArgumentException iae)
         {
@@ -93,7 +78,7 @@ public class SamplingIntervalImplTest extends SamplingIntervalTest
     public void nullAnnotationsList() throws Exception
     {
         SamplingIntervalImpl si = getSamplingIntervalToTest(
-            0L, 1L, new HashSet<Class>(Arrays.asList(MockOperation.class)), null);
+            0L, 1L, new HashSet<Class<? extends Operation>>(Arrays.asList(MockOperation.class)), null);
 
         List<String> annotations = si.getAnnotations();
         assertNotNull(annotations);
@@ -103,8 +88,8 @@ public class SamplingIntervalImplTest extends SamplingIntervalTest
     @Test
     public void setCounterValues_and_addAnnotation() throws Exception
     {
-        SamplingIntervalImpl si =
-            getSamplingIntervalToTest(0L, 1L, new HashSet<Class>(Arrays.asList(MockOperation.class)), null);
+        SamplingIntervalImpl si = getSamplingIntervalToTest(
+            0L, 1L, new HashSet<Class<? extends Operation>>(Arrays.asList(MockOperation.class)), null);
 
 
         List<String> annotations = si.getAnnotations();
@@ -117,8 +102,6 @@ public class SamplingIntervalImplTest extends SamplingIntervalTest
         assertNotNull(values);
         assertEquals(0L, values.getSuccessCount());
         assertEquals(0L, values.getSuccessCumulatedTime());
-
-        assertNull(si.getCounterValues(Object.class));
 
         si.setCounterValues(MockOperation.class, new CounterValuesImpl(7L, 11L));
         si.addAnnotation("blah");
@@ -140,7 +123,8 @@ public class SamplingIntervalImplTest extends SamplingIntervalTest
 
     @Override
     protected SamplingIntervalImpl getSamplingIntervalToTest(
-        long intervalStartTimestamp, long durationMs, Set<Class> operationTypes, List<String> annotations)
+        long intervalStartTimestamp, long durationMs, Set<Class<? extends Operation>> operationTypes,
+        List<String> annotations)
         throws Exception
     {
         return new SamplingIntervalImpl(intervalStartTimestamp, durationMs, operationTypes, annotations);

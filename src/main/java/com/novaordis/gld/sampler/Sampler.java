@@ -122,12 +122,12 @@ public interface Sampler
      * @exception IllegalStateException if attempting to register an operation after the sampler was started.
      * @exception IllegalArgumentException on illegal operation type.
      */
-    Counter registerOperation(Class operationType);
+    Counter registerOperation(Class<? extends Operation> operationType);
 
     /**
      * May return null.
      */
-    Counter getCounter(Class operationType);
+    Counter getCounter(Class<? extends Operation> operationType);
 
     /**
      * @return whether consumer was successfully added or not.

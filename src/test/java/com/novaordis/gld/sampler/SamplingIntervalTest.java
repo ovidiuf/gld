@@ -16,6 +16,7 @@
 
 package com.novaordis.gld.sampler;
 
+import com.novaordis.gld.Operation;
 import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.junit.Test;
 
@@ -25,7 +26,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public abstract class SamplingIntervalTest
@@ -44,18 +44,16 @@ public abstract class SamplingIntervalTest
     public void happyPath() throws Exception
     {
         SamplingInterval si = getSamplingIntervalToTest(
-            7L, 11L, new HashSet<Class>(Arrays.asList(MockOperation.class)), Arrays.asList("blah"));
+            7L, 11L, new HashSet<Class<? extends Operation>>(Arrays.asList(MockOperation.class)),
+            Arrays.asList("blah"));
 
         assertEquals(7L, si.getTimestamp());
 
         assertEquals(11L, si.getDuration());
 
-        Set<Class> operationTypes = si.getOperationTypes();
+        Set<Class<? extends Operation>> operationTypes = si.getOperationTypes();
         assertEquals(1, operationTypes.size());
         assertTrue(operationTypes.contains(MockOperation.class));
-
-        // make sure we return null and not throw any exception on unknown operation types
-        assertNull(si.getCounterValues(Object.class));
 
         CounterValues values = si.getCounterValues(MockOperation.class);
         // since we did not recorded any operations, I expect the values to be 0
@@ -72,8 +70,8 @@ public abstract class SamplingIntervalTest
     // Protected -------------------------------------------------------------------------------------------------------
 
     protected abstract SamplingInterval getSamplingIntervalToTest(
-        long intervalStartTimestamp, long durationMs, Set<Class> operationTypes, List<String> annotations)
-        throws Exception;
+        long intervalStartTimestamp, long durationMs, Set<Class<? extends Operation>> operationTypes,
+        List<String> annotations) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

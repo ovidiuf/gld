@@ -16,6 +16,8 @@
 
 package com.novaordis.gld.sampler;
 
+import com.novaordis.gld.Operation;
+
 import java.util.List;
 import java.util.Set;
 
@@ -34,12 +36,12 @@ public interface SamplingInterval
     /**
      * The types of the operations sampled in this interval.
      */
-    Set<Class> getOperationTypes();
+    Set<Class<? extends Operation>> getOperationTypes();
 
     /**
      * @return null if the operation type was not known to the sampler when it generated this sampling interval.
      */
-    CounterValues getCounterValues(Class operationType);
+    CounterValues getCounterValues(Class<? extends Operation> operationType);
 
     /**
      * @return the annotations that were entered at the console during this sampling interval. May return an empty

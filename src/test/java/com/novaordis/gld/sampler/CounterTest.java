@@ -16,6 +16,7 @@
 
 package com.novaordis.gld.sampler;
 
+import com.novaordis.gld.Operation;
 import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -36,20 +37,6 @@ public abstract class CounterTest
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void notAnOperation() throws Exception
-    {
-        try
-        {
-            getCounterToTest(Object.class);
-            fail("should fail with IllegalArgumentException because the argument is not an Operation");
-        }
-        catch(IllegalArgumentException e)
-        {
-            log.info(e.getMessage());
-        }
-    }
 
     @Test
     public void t1PrecedesT0() throws Exception
@@ -124,7 +111,7 @@ public abstract class CounterTest
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected abstract Counter getCounterToTest(Class operationType) throws Exception;
+    protected abstract Counter getCounterToTest(Class<? extends Operation> operationType) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -37,20 +37,15 @@ public class NonBlockingCounter implements Counter
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Class operationType;
+    private Class<? extends Operation> operationType;
 
     private AtomicLong successCount;
     private AtomicLong cumulatedSuccessTimeNano;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public NonBlockingCounter(Class operationType)
+    public NonBlockingCounter(Class<? extends Operation> operationType)
     {
-        if (!Operation.class.isAssignableFrom(operationType))
-        {
-            throw new IllegalArgumentException(operationType + " is not assignable from Operation");
-        }
-
         this.operationType = operationType;
         this.successCount = new AtomicLong(0L);
         this.cumulatedSuccessTimeNano = new AtomicLong(0L);
@@ -61,7 +56,7 @@ public class NonBlockingCounter implements Counter
     // Counter implementation ------------------------------------------------------------------------------------------
 
     @Override
-    public Class getOperationType()
+    public Class<? extends Operation> getOperationType()
     {
         return operationType;
     }

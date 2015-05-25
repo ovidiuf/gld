@@ -304,22 +304,6 @@ public abstract class SamplerTest
     }
 
     @Test
-    public void attemptToRegisterANonOperationType() throws Exception
-    {
-        Sampler sampler = getSamplerToTest();
-
-        try
-        {
-            sampler.registerOperation(Object.class);
-            fail("should throw IllegalArgumentException on account of trying to register an invalid operation type");
-        }
-        catch(IllegalArgumentException e)
-        {
-            log.info(e.getMessage());
-        }
-    }
-
-    @Test
     public void successfulOperationRegistration() throws Exception
     {
         Sampler sampler = getSamplerToTest();

@@ -16,6 +16,8 @@
 
 package com.novaordis.gld.sampler;
 
+import com.novaordis.gld.Operation;
+
 public class NonBlockingCounterTest extends CounterTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
@@ -33,7 +35,7 @@ public class NonBlockingCounterTest extends CounterTest
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected NonBlockingCounter getCounterToTest(Class operationType) throws Exception
+    protected NonBlockingCounter getCounterToTest(Class<? extends Operation> operationType) throws Exception
     {
         return new NonBlockingCounter(operationType);
     }
