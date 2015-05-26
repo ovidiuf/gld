@@ -42,7 +42,7 @@ public class Receive extends JmsOperation
         this.timeoutMs = loadStrategy.getTimeoutMs();
     }
 
-    // JMSOperation overrides ------------------------------------------------------------------------------------------
+    // JmsOperation overrides ------------------------------------------------------------------------------------------
 
     @Override
     public void perform(JmsEndpoint endpoint) throws Exception

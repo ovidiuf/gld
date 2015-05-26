@@ -40,7 +40,7 @@ public class Send extends JmsOperation
         super(loadStrategy);
     }
 
-    // JMSOperation overrides ------------------------------------------------------------------------------------------
+    // JmsOperation overrides ------------------------------------------------------------------------------------------
 
     @Override
     public void perform(JmsEndpoint endpoint) throws Exception
