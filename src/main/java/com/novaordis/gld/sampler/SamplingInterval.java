@@ -24,7 +24,7 @@ import java.util.Set;
 public interface SamplingInterval
 {
     /**
-     * @return the timestamp of the moment the sampling interval started.
+     * @return the timestamp (in milliseconds) of the sampling interval start.
      */
     long getTimestamp();
 

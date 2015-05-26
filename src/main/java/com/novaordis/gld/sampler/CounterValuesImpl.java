@@ -16,7 +16,7 @@
 
 package com.novaordis.gld.sampler;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,7 +32,7 @@ public class CounterValuesImpl implements CounterValues
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private long successCount;
-    private long successCumulatedDuration;
+    private long successCumulatedDurationNano;
 
     private Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters;
 
@@ -57,15 +57,15 @@ public class CounterValuesImpl implements CounterValues
      *
      * @throws IllegalArgumentException on invalid failure array
      */
-    public CounterValuesImpl(long successCount, long successCumulatedDuration,
+    public CounterValuesImpl(long successCount, long successCumulatedDurationNano,
                              Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters)
     {
         this.successCount = successCount;
-        this.successCumulatedDuration = successCumulatedDuration;
+        this.successCumulatedDurationNano = successCumulatedDurationNano;
 
         if (failureCounters == null)
         {
-            this.failureCounters = Collections.emptyMap();
+            this.failureCounters = new HashMap<>();
         }
         else
         {
@@ -82,9 +82,9 @@ public class CounterValuesImpl implements CounterValues
     }
 
     @Override
-    public long getSuccessCumulatedDuration()
+    public long getSuccessCumulatedDurationNano()
     {
-        return successCumulatedDuration;
+        return successCumulatedDurationNano;
     }
 
     @Override
@@ -176,6 +176,53 @@ public class CounterValuesImpl implements CounterValues
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    /**
+     * The implementation operates under the assumption that the only thread invoking this method is the sampling
+     * thread, so the implementation is NOT thread safe.
+     */
+    public void incrementWith(CounterValues other)
+    {
+        successCount += other.getSuccessCount();
+        successCumulatedDurationNano += other.getSuccessCumulatedDurationNano();
+
+        Set<Class<? extends Throwable>> otherFailureTypes = other.getFailureTypes();
+
+        if (otherFailureTypes.isEmpty())
+        {
+            // no failure counters to add, we're done here
+            return;
+        }
+
+        for(Class<? extends Throwable> ft : otherFailureTypes)
+        {
+            long oc = other.getFailureCount(ft);
+            long ocd = other.getFailureCumulatedDurationNano(ft);
+
+            ImmutableFailureCounter thisFailureCounter = failureCounters.get(ft);
+
+            long baseOc = 0L;
+            long baseOcd = 0L;
+
+            if (thisFailureCounter != null)
+            {
+                baseOc = thisFailureCounter.getCount();
+                baseOcd = thisFailureCounter.getCumulatedDurationNano();
+            }
+
+            failureCounters.put(ft, new ImmutableFailureCounter(ft, baseOc + oc, baseOcd + ocd));
+        }
+
+        // since we modified the failure counters, we re-set the pre-calculated aggregated values
+        failureCount = null;
+        failureCumulatedDurationNano = null;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "" + successCount + ", " + (failureCount == null ? 0 : failureCount);
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

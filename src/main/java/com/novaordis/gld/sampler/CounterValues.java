@@ -21,6 +21,8 @@ import java.util.Set;
 /**
  * Instances are NOT supposed to be accessed concurrently from multiple threads and must not be thread safe, for
  * performance reasons. The Counter implementations provide protection for those situations.
+ *
+ * Immutable (read-only) interface.
  */
 public interface CounterValues
 {
@@ -29,7 +31,7 @@ public interface CounterValues
     /**
      * @return the cumulated duration (in nanoseconds) for all successful operations.
      */
-    long getSuccessCumulatedDuration();
+    long getSuccessCumulatedDurationNano();
 
     /**
      * The failure type set is cumulative: once a failure has been reported for a specific operation, that failure

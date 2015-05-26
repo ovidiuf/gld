@@ -46,31 +46,22 @@ public class SamplingIntervalImpl implements SamplingInterval
     private long intervalStartTimestamp;
     private long durationMs;
     private Set<Class<? extends Operation>> operationTypes;
-    private Map<Class<? extends Operation>, CounterValues> values;
+    private Map<Class<? extends Operation>, CounterValuesImpl> values;
     private List<String> annotations;
 
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    /**
-     * @see SamplingIntervalImpl(long, long, Set, List)
-     */
-    public SamplingIntervalImpl(
-        long intervalStartTimestamp, long durationMs, Set<Class<? extends Operation>> operationTypes)
-    {
-        this(intervalStartTimestamp, durationMs, operationTypes, null);
-    }
 
     /**
      * @param durationMs - the interval duration in milliseconds.
      * @param operationTypes  - the types of the operations sampled in this interval. null or empty set is not
      *                        acceptable, we must have at least one operation type we collect statistics for
      *
-     * @param annotations null or empty list are valid values
+     * @see SamplingIntervalImpl(long, long, Set, List)
      */
-    public SamplingIntervalImpl(long intervalStartTimestamp, long durationMs,
-                                Set<Class<? extends Operation>> operationTypes, List<String> annotations)
+    public SamplingIntervalImpl(long intervalStartTimestampMs, long durationMs,
+                                Set<Class<? extends Operation>> operationTypes)
     {
-        this.intervalStartTimestamp = intervalStartTimestamp;
+        this.intervalStartTimestamp = intervalStartTimestampMs;
         this.durationMs = durationMs;
 
         if (operationTypes == null)
@@ -94,14 +85,7 @@ public class SamplingIntervalImpl implements SamplingInterval
             this.values.put(c, new CounterValuesImpl());
         }
 
-        if (annotations == null)
-        {
-            this.annotations = new ArrayList<>();
-        }
-        else
-        {
-            this.annotations = annotations;
-        }
+        this.annotations = new ArrayList<>();
 
         log.debug(this + " created");
     }
@@ -149,9 +133,38 @@ public class SamplingIntervalImpl implements SamplingInterval
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public void setCounterValues(Class<? extends Operation> operationType, CounterValues counterValues)
+    /**
+     * Sets the CounterValues instance for the given operationType with the given values, throwing away any other
+     * associated CounterValue instance.
+     *
+     * The implementation operates under the assumption that the only thread invoking this method is the sampling
+     * thread, so the implementation is NOT thread safe.
+     */
+    public void setCounterValues(Class<? extends Operation> operationType, CounterValuesImpl counterValues)
     {
         values.put(operationType, counterValues);
+    }
+
+    /**
+     * If no CounterValues instance is associated with the given operation type, sets the given values (the same
+     * semantics as the setCounterValues() method. Otherwise, it increments the existing counters with the given values.
+     *
+     * The implementation operates under the assumption that the only thread invoking this method is the sampling
+     * thread, so the implementation is NOT thread safe.
+     *
+     * @see SamplingIntervalImpl#setCounterValues(Class, CounterValuesImpl)
+     */
+    public void incrementCounterValues(Class<? extends Operation> operationType, CounterValues counterValues)
+    {
+        CounterValuesImpl cvs = values.get(operationType);
+
+        if (cvs == null)
+        {
+            cvs = new CounterValuesImpl();
+            values.put(operationType, cvs);
+        }
+
+        cvs.incrementWith(counterValues);
     }
 
     public void addAnnotation(String s)

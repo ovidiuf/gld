@@ -89,7 +89,7 @@ public abstract class CounterTest
         CounterValues v0 = c.getCounterValuesAndReset();
 
         long sc0 = v0.getSuccessCount();
-        long sct0 = v0.getSuccessCumulatedDuration();
+        long sct0 = v0.getSuccessCumulatedDurationNano();
 
         assertEquals(3, sc0);
         assertEquals(1L + 2L + 3L, sct0);
@@ -104,7 +104,7 @@ public abstract class CounterTest
         CounterValues v1 = c.getCounterValuesAndReset();
 
         long sc1 = v1.getSuccessCount();
-        long sct1 = v1.getSuccessCumulatedDuration();
+        long sct1 = v1.getSuccessCumulatedDurationNano();
 
         assertEquals(1, sc1);
         assertEquals(4L, sct1);
@@ -117,7 +117,7 @@ public abstract class CounterTest
         CounterValues v2 = c.getCounterValuesAndReset();
 
         long sc2 = v2.getSuccessCount();
-        long sct2 = v2.getSuccessCumulatedDuration();
+        long sct2 = v2.getSuccessCumulatedDurationNano();
 
         assertEquals(0, sc2);
         assertEquals(0L, sct2);
@@ -141,7 +141,7 @@ public abstract class CounterTest
 
         CounterValues v0 = c.getCounterValuesAndReset();
         assertEquals(0, v0.getSuccessCount());
-        assertEquals(0L, v0.getSuccessCumulatedDuration());
+        assertEquals(0L, v0.getSuccessCumulatedDurationNano());
         assertEquals(3, v0.getFailureCount());
         assertEquals(1L + 2L + 3L, v0.getFailureCumulatedDurationNano());
         Set<Class<? extends Throwable>> failureTypes = v0.getFailureTypes();
@@ -154,7 +154,7 @@ public abstract class CounterTest
 
         CounterValues v1 = c.getCounterValuesAndReset();
         assertEquals(0, v1.getSuccessCount());
-        assertEquals(0L, v1.getSuccessCumulatedDuration());
+        assertEquals(0L, v1.getSuccessCumulatedDurationNano());
         assertEquals(1, v1.getFailureCount());
         assertEquals(4L, v1.getFailureCumulatedDurationNano());
         failureTypes = v1.getFailureTypes();
@@ -168,7 +168,7 @@ public abstract class CounterTest
         CounterValues v2 = c.getCounterValuesAndReset();
 
         assertEquals(0, v2.getSuccessCount());
-        assertEquals(0L, v2.getSuccessCumulatedDuration());
+        assertEquals(0L, v2.getSuccessCumulatedDurationNano());
 
         assertEquals(0, v2.getFailureCount());
         assertEquals(0L, v2.getFailureCumulatedDurationNano());
@@ -200,7 +200,7 @@ public abstract class CounterTest
         CounterValues v0 = c.getCounterValuesAndReset();
 
         assertEquals(5, v0.getSuccessCount());
-        assertEquals(1L + 2L + 4L + 6L + 8L, v0.getSuccessCumulatedDuration());
+        assertEquals(1L + 2L + 4L + 6L + 8L, v0.getSuccessCumulatedDurationNano());
         assertEquals(3, v0.getFailureCount());
         assertEquals(3L + 5L + 7L, v0.getFailureCumulatedDurationNano());
         Set<Class<? extends Throwable>> failureTypes = v0.getFailureTypes();
@@ -216,7 +216,7 @@ public abstract class CounterTest
         CounterValues v1 = c.getCounterValuesAndReset();
 
         assertEquals(2, v1.getSuccessCount());
-        assertEquals(1L + 3L, v1.getSuccessCumulatedDuration());
+        assertEquals(1L + 3L, v1.getSuccessCumulatedDurationNano());
         assertEquals(1, v1.getFailureCount());
         assertEquals(2L, v1.getFailureCumulatedDurationNano());
         failureTypes = v1.getFailureTypes();
@@ -230,7 +230,7 @@ public abstract class CounterTest
         CounterValues v2 = c.getCounterValuesAndReset();
 
         assertEquals(0, v2.getSuccessCount());
-        assertEquals(0L, v2.getSuccessCumulatedDuration());
+        assertEquals(0L, v2.getSuccessCumulatedDurationNano());
         assertEquals(0, v2.getFailureCount());
         assertEquals(0L, v2.getFailureCumulatedDurationNano());
         failureTypes = v2.getFailureTypes();

@@ -59,6 +59,13 @@ public class ImmutableFailureCounter implements FailureCounter
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    @Override
+    public String toString()
+    {
+        return (failureType == null ? "null" : failureType.getSimpleName()) +
+            " " + count + " " + cumulatedFailureDurationNano;
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

@@ -58,7 +58,7 @@ public abstract class SamplingIntervalTest
         CounterValues values = si.getCounterValues(MockOperation.class);
         // since we did not recorded any operations, I expect the values to be 0
         assertEquals(0, values.getSuccessCount());
-        assertEquals(0, values.getSuccessCumulatedDuration());
+        assertEquals(0, values.getSuccessCumulatedDurationNano());
 
         List<String> annotations = si.getAnnotations();
         assertEquals(1, annotations.size());

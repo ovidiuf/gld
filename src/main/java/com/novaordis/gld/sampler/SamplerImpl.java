@@ -47,16 +47,18 @@ public class SamplerImpl extends TimerTask implements Sampler
     private Timer samplingTimer;
 
     private volatile boolean started;
-    private volatile boolean shutDown;
+    private volatile boolean shuttingDown;
 
     final Map<Class<? extends Operation>, Counter> counters;
     final List<String> annotations;
 
     private List<SamplingConsumer> consumers;
 
-    private long lastRunTimestampMs;
+    private long lastRunTimestamp;
 
     private final Object mutex;
+
+    private SamplingIntervalImpl current;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -73,10 +75,9 @@ public class SamplerImpl extends TimerTask implements Sampler
         this.started = false;
         this.counters = new HashMap<>();
         this.annotations = new CopyOnWriteArrayList<>();
-        this.lastRunTimestampMs = -1L;
+        this.lastRunTimestamp = -1L;
         verifySamplingIntervalsRelationship();
-        this.shutDown = false;
-
+        this.shuttingDown = false;
         this.mutex = new Object();
 
         log.debug(this + " created, sampling task run interval " + samplingTaskRunIntervalMs +
@@ -107,15 +108,25 @@ public class SamplerImpl extends TimerTask implements Sampler
             throw new IllegalStateException("no operations were registered");
         }
 
-        samplingTimer = new Timer("Sampling Thread", true);
-
         // execute the sampling timer functionality ourselves, to initiate the state
         run();
 
-        samplingTimer.scheduleAtFixedRate(this, samplingTaskRunIntervalMs, samplingTaskRunIntervalMs);
+        if (samplingTaskRunIntervalMs <= 0)
+        {
+            log.warn("the sampling task run interval is " + (samplingTaskRunIntervalMs == 0 ? "0" : "negative") +
+                ", no sampling tasks will run");
+
+        }
+        else
+        {
+            // start the timer and schedule a task only if the sampling task run interval is larger than 0, otherwise
+            // just make it look like it started
+            samplingTimer = new Timer("Sampling Thread", true);
+            samplingTimer.scheduleAtFixedRate(this, samplingTaskRunIntervalMs, samplingTaskRunIntervalMs);
+        }
+
 
         started = true;
-
         log.debug(this + " started");
     }
 
@@ -133,30 +144,27 @@ public class SamplerImpl extends TimerTask implements Sampler
             return;
         }
 
-        if (samplingTimer == null)
-        {
-            throw new IllegalStateException(
-                "a started sampler is supposed to have a non-null timer, and this one doesn't");
-        }
-
         // tell the last task to shut the timer down
-        shutDown = true;
+        shuttingDown = true;
 
         // wait until the last sample is written, it will happen in at most
         // (samplingIntervalMs + samplingTaskRunIntervalMs) milliseconds or it won't happen at all
-
-        try
+        if (samplingTimer != null)
         {
-            waitUntilNextSamplingTaskFinishes(samplingIntervalMs + samplingTaskRunIntervalMs + 500L);
-        }
-        catch(InterruptedException e)
-        {
-            throw new IllegalStateException("interrupted while waiting for last sampling task to finish", e);
+            try
+            {
+                waitUntilNextSamplingTaskFinishes(samplingIntervalMs + samplingTaskRunIntervalMs + 500L);
+            }
+            catch (InterruptedException e)
+            {
+                throw new IllegalStateException("interrupted while waiting for last sampling task to finish", e);
+            }
+
+            // redundantly cancel the sampler in case the sampling tasks didn't, no harm in canceling it twice
+            samplingTimer.cancel();
+            samplingTimer = null;
         }
 
-        // redundantly cancel the sampler in case the sampling tasks didn't, no harm in canceling it twice
-        samplingTimer.cancel();
-        samplingTimer = null;
         started = false;
     }
 
@@ -273,57 +281,81 @@ public class SamplerImpl extends TimerTask implements Sampler
     @Override
     public void run()
     {
+        long thisRunTimestamp = System.currentTimeMillis();
+
         try
         {
-            long thisRunTimestampMs = System.currentTimeMillis();
-
-            if (lastRunTimestampMs == -1L)
+            if (lastRunTimestamp == -1L)
             {
-                // this is the first run, we don't have the beginning of the sampling interval, set it and wait until
-                // the next sampling task run
-                lastRunTimestampMs = thisRunTimestampMs;
+                // this is the first run, we don't have the beginning of the sampling interval, we'll set it in the
+                // finally clause and wait until the next sampling task run
+                log.debug("sampling task timestamp initialization run, not collecting statistics yet ...");
+
+                // done for this run ...
                 return;
             }
 
-            long duration = thisRunTimestampMs - lastRunTimestampMs;
-            lastRunTimestampMs = thisRunTimestampMs;
+            if (debug) { log.debug("sampling task running, it covers the last " + (thisRunTimestamp - lastRunTimestamp) + " ms ..."); }
 
-            if (debug) { log.debug("sampling task running, it covers the last " + duration + " ms ..."); }
-
-            SamplingIntervalImpl si = new SamplingIntervalImpl(thisRunTimestampMs, duration, counters.keySet());
-
-            // make a local copy and reset the counters; it's fine to access the holding map as it will be never be
-            // written concurrently
-            for (Counter c : counters.values())
+            if (current == null)
             {
-                Class<? extends Operation> ot = c.getOperationType();
-                CounterValues cvs = c.getCounterValuesAndReset();
-                si.setCounterValues(ot, cvs);
+                // there was no sampling interval built yet, set it to be on a round second mark, preceding but as
+                // close as possible to this run timestamp
+                long siTs = (thisRunTimestamp / 1000) * 1000L;
+                current = new SamplingIntervalImpl(siTs, samplingIntervalMs, counters.keySet());
+
+                log.debug("sampling interval initialized, beginning to collect statistics ...");
+
+                // done for this run ...
+                return;
             }
 
-            // collect annotations and place them in the sampling interval instance
-            Object[] aa = annotations.toArray();
-            annotations.clear();
-            for (Object o : aa)
+            if (thisRunTimestamp - current.getTimestamp() < samplingIntervalMs)
             {
-                si.addAnnotation((String) o);
-            }
+                // we are still strictly within the current sampling interval, increment the current sampling interval
+                // counters, while resetting the concurrent counters; the sampling interval will never be accessed by
+                // other thread except the sampling thread, so it does not need synchronization or any other type of
+                // memory visibility control
 
-            for (SamplingConsumer c : consumers)
-            {
-                try
+                for (Counter c : counters.values())
                 {
-                    c.consume(si);
+                    Class<? extends Operation> operationType = c.getOperationType();
+                    CounterValues cvs = c.getCounterValuesAndReset();
+                    current.incrementCounterValues(operationType, cvs);
                 }
-                catch (Throwable t)
+
+                // also collect the annotations (if any) and add them to the sampling interval
+                Object[] aa = annotations.toArray();
+                annotations.clear();
+                for (Object o : aa)
                 {
-                    // protect ourselves against malfunctioning consumers
-                    log.warn("sampling consumer " + c + " failed to handle a sampling interval instance", t);
+                    current.addAnnotation((String) o);
                 }
+
+                // done for this run ...
+                return;
             }
 
-            if (shutDown)
+            // we're right on the edge of the sampling interval or we went beyond it
+
+            // if only a sample accumulated, send it to consumers
+
+            // if more than one sample accumulated, distribute values across samples and send all of them to
+            // consumers
+
+            SamplingInterval wrappedUp = current;
+
+            // TODO review this
+
+            current = new SamplingIntervalImpl(
+                wrappedUp.getTimestamp() + samplingIntervalMs, samplingIntervalMs, counters.keySet());
+
+            sendSampleToConsumers(wrappedUp);
+
+            if (shuttingDown)
             {
+                // TODO review this to make sure I have time to collect all in-flight stuff
+
                 // cancel the timer, no further tasks will be scheduled. From javadoc: Note that calling this method
                 // from within the run method of a timer task that was invoked by this timer absolutely guarantees that
                 // the ongoing task execution is the last task execution that will ever be performed by this timer.
@@ -336,6 +368,8 @@ public class SamplerImpl extends TimerTask implements Sampler
         }
         finally
         {
+            lastRunTimestamp = thisRunTimestamp;
+
             // release all threads waiting on mutex for the sampler task to finish, regardless whether it was
             // successful or it failed
             synchronized (mutex)
@@ -391,6 +425,19 @@ public class SamplerImpl extends TimerTask implements Sampler
         this.consumers = consumers;
     }
 
+    /**
+     * For testing only. May return null.
+     */
+    SamplingInterval getCurrent()
+    {
+        return current;
+    }
+
+    long getLastRunTimestamp()
+    {
+        return lastRunTimestamp;
+    }
+
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
@@ -403,6 +450,22 @@ public class SamplerImpl extends TimerTask implements Sampler
                 "the sampling task run interval (" + samplingTaskRunIntervalMs +
                     " ms) must be strictly smaller than sampling interval (" + samplingIntervalMs +
                     " ms) to insure desired resolution");
+        }
+    }
+
+    private void sendSampleToConsumers(SamplingInterval si)
+    {
+        for (SamplingConsumer c : consumers)
+        {
+            try
+            {
+                c.consume(si);
+            }
+            catch (Throwable t)
+            {
+                // protect ourselves against malfunctioning consumers
+                log.warn("sampling consumer " + c + " failed to handle a sampling interval instance", t);
+            }
         }
     }
 

@@ -141,7 +141,7 @@ public class NonBlockingCounter implements Counter
     @Override
     public String toString()
     {
-        return "NonBlockingCounter[" + (operationType == null ? null : operationType.getSimpleName()) + "]";
+        return operationType == null ? "null" : operationType.getSimpleName();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

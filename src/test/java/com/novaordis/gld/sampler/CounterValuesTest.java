@@ -41,7 +41,7 @@ public abstract class CounterValuesTest
         CounterValues v = getCounterValuesToTest();
 
         assertEquals(0, v.getSuccessCount());
-        assertEquals(0L, v.getSuccessCumulatedDuration());
+        assertEquals(0L, v.getSuccessCumulatedDurationNano());
         assertEquals(0, v.getFailureCount());
         assertEquals(0L, v.getFailureCumulatedDurationNano());
         assertTrue(v.getFailureTypes().isEmpty());
