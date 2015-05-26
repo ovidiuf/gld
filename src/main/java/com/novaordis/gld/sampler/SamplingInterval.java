@@ -26,12 +26,17 @@ public interface SamplingInterval
     /**
      * @return the timestamp (in milliseconds) of the sampling interval start.
      */
-    long getTimestamp();
+    long getStartMs();
 
     /**
-     * @return the duration of the sampling interval, in ms
+     * @return the duration (in milliseconds) of the sampling interval.
      */
-    long getDuration();
+    long getDurationMs();
+
+    /**
+     * @return the timestamp (in milliseconds) of the sampling interval end.
+     */
+    long getEndMs();
 
     /**
      * The types of the operations sampled in this interval.

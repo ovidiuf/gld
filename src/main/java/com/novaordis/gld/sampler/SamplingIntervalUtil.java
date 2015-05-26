@@ -17,186 +17,171 @@
 package com.novaordis.gld.sampler;
 
 import com.novaordis.gld.Operation;
-import org.apache.log4j.Logger;
 
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * A standard counter implementation, that measures success count, cumulated time (in nanoseconds) and failures.
+ * Static utilities related to sampling intervals.
  */
-public class SamplingIntervalUtil implements SamplingInterval
+public class SamplingIntervalUtil
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(SamplingIntervalUtil.class);
-
-    public static final Format TIMESTAMP_DISPLAY_FORMAT = new SimpleDateFormat("yy/MM/dd HH:mm:ss,SSS");
-
     // Static ----------------------------------------------------------------------------------------------------------
+
+    /**
+     * Distribute the values from the given SamplingInterval to 'extraSamples' more successive same-length intervals
+     * (so the total number of returned intervals will be extraSamples + 1). It is possible - and quite probable, if the
+     * sampling run periodicity is well chosen relative to the sampling interval - that extraSamples is 0.
+     *
+     * If n is 0, it simply returns the instance it was passed.
+     *
+     * TODO: too complex, needs refactoring
+     * TODO: the extrapolation algorithm can be improved by making the distribution more precise as we scan the
+     *       interval list. Now we distribute evenly across all intervals and rounding errors add up to back-load the
+     *       last interval.
+     *
+     */
+    public static SamplingInterval[] extrapolate(SamplingInterval recorded, int extraSamples)
+    {
+        if (recorded == null)
+        {
+            throw new IllegalArgumentException("null sampling interval");
+        }
+
+        if (extraSamples == 0)
+        {
+            return new SamplingInterval[] { recorded };
+        }
+
+        // total number of samples
+        int n = extraSamples + 1;
+
+        SamplingIntervalImpl[] result = new SamplingIntervalImpl[n];
+        long duration = recorded.getDurationMs();
+        long start = recorded.getStartMs();
+        boolean annotationsProcessed = false;
+
+        for(Class<? extends Operation> ot : recorded.getOperationTypes())
+        {
+            CounterValues valuesToBeDistributed = recorded.getCounterValues(ot);
+
+            long successCount = 0L;
+            long successCumulatedDuration = 0L;
+
+            Set<Class<? extends Throwable>> failureTypes = valuesToBeDistributed.getFailureTypes();
+            Map<Class<? extends Throwable>, Long> failureCount = zeroInitializedFailureCounterMap(failureTypes);
+            Map<Class<? extends Throwable>, Long> failureCumulatedDuration = zeroInitializedFailureCounterMap(failureTypes);
+
+            for(int i = 0; i < n; i ++)
+            {
+                SamplingIntervalImpl si = result[i];
+
+                if (si == null)
+                {
+                    si = new SamplingIntervalImpl(start, duration, recorded.getOperationTypes());
+                    result[i] = si;
+                    start += duration;
+                }
+
+                if ((i == 0) && !annotationsProcessed)
+                {
+                    annotationsProcessed = true;
+
+                    // place all annotations in the first sampling interval
+                    for(String a: recorded.getAnnotations())
+                    {
+                        si.addAnnotation(a);
+                    }
+                }
+
+                long sc;
+                long scd = 0L;
+                Map<Class<? extends Throwable>, Long> fc = zeroInitializedFailureCounterMap(failureTypes);
+                Map<Class<? extends Throwable>, Long> fcd = zeroInitializedFailureCounterMap(failureTypes);
+
+                if (i != n - 1)
+                {
+                    sc = valuesToBeDistributed.getSuccessCount() / n;
+                    successCount += sc;
+
+                    if (sc != 0)
+                    {
+                        scd = valuesToBeDistributed.getSuccessCumulatedDurationNano() / n;
+                        successCumulatedDuration += scd;
+                    }
+
+                    for(Class<? extends Throwable> ft: failureTypes)
+                    {
+                        fc.put(ft, valuesToBeDistributed.getFailureCount(ft) / n);
+                        failureCount.put(ft, failureCount.get(ft) + fc.get(ft));
+
+                        if (fc.get(ft) != 0L)
+                        {
+                            fcd.put(ft, valuesToBeDistributed.getFailureCumulatedDurationNano(ft) / n);
+                            failureCumulatedDuration.put(ft, failureCumulatedDuration.get(ft) + fcd.get(ft));
+                        }
+                    }
+                }
+                else
+                {
+                    // last sampling interval
+
+                    sc = valuesToBeDistributed.getSuccessCount() - successCount;
+                    scd = valuesToBeDistributed.getSuccessCumulatedDurationNano() - successCumulatedDuration;
+
+                    for(Class<? extends Throwable> ft: failureTypes)
+                    {
+                        fc.put(ft, valuesToBeDistributed.getFailureCount(ft) - failureCount.get(ft));
+                        fcd.put(ft, valuesToBeDistributed.getFailureCumulatedDurationNano(ft) - failureCumulatedDuration.get(ft));
+                    }
+                }
+
+                Map<Class<? extends Throwable>, ImmutableFailureCounter> failures = new HashMap<>();
+                for(Class<? extends Throwable> ft: failureTypes)
+                {
+                    ImmutableFailureCounter ifc = new ImmutableFailureCounter(ft, fc.get(ft), fcd.get(ft));
+                    failures.put(ft, ifc);
+                }
+
+                CounterValuesImpl cv = new CounterValuesImpl(sc, scd, failures);
+                si.setCounterValues(ot, cv);
+            }
+        }
+
+        return result;
+    }
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private long intervalStartTimestamp;
-    private long durationMs;
-    private Set<Class<? extends Operation>> operationTypes;
-    private Map<Class<? extends Operation>, CounterValuesImpl> values;
-    private List<String> annotations;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    /**
-     * @param durationMs - the interval duration in milliseconds.
-     * @param operationTypes  - the types of the operations sampled in this interval. null or empty set is not
-     *                        acceptable, we must have at least one operation type we collect statistics for
-     *
-     * @see com.novaordis.gld.sampler.SamplingIntervalUtil (long, long, java.util.Set, java.util.List)
-     */
-    public SamplingIntervalUtil(long intervalStartTimestampMs, long durationMs,
-                                Set<Class<? extends Operation>> operationTypes)
+    private SamplingIntervalUtil()
     {
-        this.intervalStartTimestamp = intervalStartTimestampMs;
-        this.durationMs = durationMs;
-
-        if (operationTypes == null)
-        {
-            throw new IllegalArgumentException("null operation types");
-        }
-
-        if (operationTypes.isEmpty())
-        {
-            throw new IllegalArgumentException("no operation types specified");
-        }
-
-        this.operationTypes = new HashSet<>();
-        this.values = new HashMap<>();
-
-        // insure the operation types are valid and initialize the values map with zero
-
-        for(Class<? extends Operation> c: operationTypes)
-        {
-            this.operationTypes.add(c);
-            this.values.put(c, new CounterValuesImpl());
-        }
-
-        this.annotations = new ArrayList<>();
-
-        log.debug(this + " created");
-    }
-
-    // SamplingInterval implementation ---------------------------------------------------------------------------------
-
-    /**
-     * @see com.novaordis.gld.sampler.SamplingInterval#getStartMs()
-     */
-    @Override
-    public long getStartMs()
-    {
-        return intervalStartTimestamp;
-    }
-
-    /**
-     * @see com.novaordis.gld.sampler.SamplingInterval#getDurationMs()
-     */
-    @Override
-    public long getDurationMs()
-    {
-        return durationMs;
-    }
-
-    /**
-     * @see com.novaordis.gld.sampler.SamplingInterval#getEndMs()
-     */
-    @Override
-    public long getEndMs()
-    {
-        return intervalStartTimestamp + durationMs;
-    }
-
-    /**
-     * @see com.novaordis.gld.sampler.SamplingInterval#getOperationTypes()
-     */
-    @Override
-    public Set<Class<? extends Operation>> getOperationTypes()
-    {
-        return operationTypes;
-    }
-
-    /**
-     * @see com.novaordis.gld.sampler.SamplingInterval#getCounterValues(Class)
-     */
-    @Override
-    public CounterValues getCounterValues(Class<? extends Operation> operationType)
-    {
-        return values.get(operationType);
-    }
-
-    @Override
-    public List<String> getAnnotations()
-    {
-        return annotations;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    /**
-     * Sets the CounterValues instance for the given operationType with the given values, throwing away any other
-     * associated CounterValue instance.
-     *
-     * The implementation operates under the assumption that the only thread invoking this method is the sampling
-     * thread, so the implementation is NOT thread safe.
-     */
-    public void setCounterValues(Class<? extends Operation> operationType, CounterValuesImpl counterValues)
-    {
-        values.put(operationType, counterValues);
-    }
-
-    /**
-     * If no CounterValues instance is associated with the given operation type, sets the given values (the same
-     * semantics as the setCounterValues() method. Otherwise, it increments the existing counters with the given values.
-     *
-     * The implementation operates under the assumption that the only thread invoking this method is the sampling
-     * thread, so the implementation is NOT thread safe.
-     *
-     * @see com.novaordis.gld.sampler.SamplingIntervalUtil#setCounterValues(Class, com.novaordis.gld.sampler.CounterValuesImpl)
-     */
-    public void incrementCounterValues(Class<? extends Operation> operationType, CounterValues counterValues)
-    {
-        CounterValuesImpl cvs = values.get(operationType);
-
-        if (cvs == null)
-        {
-            cvs = new CounterValuesImpl();
-            values.put(operationType, cvs);
-        }
-
-        cvs.incrementWith(counterValues);
-    }
-
-    public void addAnnotation(String s)
-    {
-        annotations.add(s);
-    }
-
-    @Override
-    public String toString()
-    {
-        return "[" +
-            TIMESTAMP_DISPLAY_FORMAT.format(intervalStartTimestamp) + " - " +
-            TIMESTAMP_DISPLAY_FORMAT.format(intervalStartTimestamp + durationMs) + "]";
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private static Map<Class<? extends Throwable>, Long> zeroInitializedFailureCounterMap(
+        Set<Class<? extends Throwable>> failureTypes )
+    {
+        Map<Class<? extends Throwable>, Long> result = new HashMap<>();
+
+        for(Class<? extends Throwable> ft: failureTypes)
+        {
+            result.put(ft, 0L);
+        }
+
+        return result;
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -72,10 +73,10 @@ public abstract class SamplerTest
 
         assertTrue(sampler.registerConsumer(new SamplingConsumer()
         {
-            public void consume(SamplingInterval samplingInterval)
+            public void consume(SamplingInterval... sis)
             {
                 // simply accumulate the sampling intervals
-                samplingIntervals.add(samplingInterval);
+                samplingIntervals.addAll(Arrays.asList(sis));
             }
 
         }));
@@ -324,9 +325,9 @@ public abstract class SamplerTest
         sampler.registerConsumer(new SamplingConsumer()
         {
             @Override
-            public void consume(SamplingInterval samplingInterval)
+            public void consume(SamplingInterval... sis)
             {
-                sil.add(samplingInterval);
+                sil.addAll(Arrays.asList(sis));
             }
         });
         sampler.start();
@@ -366,9 +367,9 @@ public abstract class SamplerTest
         sampler.registerConsumer(new SamplingConsumer()
         {
             @Override
-            public void consume(SamplingInterval samplingInterval)
+            public void consume(SamplingInterval... sis)
             {
-                sil.add(samplingInterval);
+                sil.addAll(Arrays.asList(sis));
             }
         });
         sampler.start();

@@ -92,19 +92,31 @@ public class SamplingIntervalImpl implements SamplingInterval
 
     // SamplingInterval implementation ---------------------------------------------------------------------------------
 
+    /**
+     * @see SamplingInterval#getStartMs()
+     */
     @Override
-    public long getTimestamp()
+    public long getStartMs()
     {
         return intervalStartTimestamp;
     }
 
     /**
-     * @return the interval duration in milliseconds.
+     * @see SamplingInterval#getDurationMs()
      */
     @Override
-    public long getDuration()
+    public long getDurationMs()
     {
         return durationMs;
+    }
+
+    /**
+     * @see SamplingInterval#getEndMs()
+     */
+    @Override
+    public long getEndMs()
+    {
+        return intervalStartTimestamp + durationMs;
     }
 
     /**
@@ -175,7 +187,9 @@ public class SamplingIntervalImpl implements SamplingInterval
     @Override
     public String toString()
     {
-        return "[" + TIMESTAMP_DISPLAY_FORMAT.format(intervalStartTimestamp) + " ... ]";
+        return "[" +
+            TIMESTAMP_DISPLAY_FORMAT.format(intervalStartTimestamp) + " - " +
+            TIMESTAMP_DISPLAY_FORMAT.format(intervalStartTimestamp + durationMs) + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

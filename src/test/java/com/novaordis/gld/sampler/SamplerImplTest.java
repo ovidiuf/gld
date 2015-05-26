@@ -101,6 +101,11 @@ public class SamplerImplTest extends SamplerTest
 
     // simulated runs --------------------------------------------------------------------------------------------------
 
+    /**
+     * Note: this test is a remnant of work that since migrated in SamplerImplWorkBenchTest.
+     *
+     * @see com.novaordis.gld.sampler.SamplerImplWorkBenchTest
+     */
     @Test
     public void simulatedStepByStepSamplingCollection() throws Exception
     {
@@ -112,9 +117,9 @@ public class SamplerImplTest extends SamplerTest
         s.registerConsumer(new SamplingConsumer()
         {
             @Override
-            public void consume(SamplingInterval samplingInterval)
+            public void consume(SamplingInterval... sis)
             {
-
+                // noop
             }
         });
 
@@ -135,7 +140,7 @@ public class SamplerImplTest extends SamplerTest
         SamplingInterval current = s.getCurrent();
         assertNotNull(current);
 
-        long ts = current.getTimestamp();
+        long ts = current.getStartMs();
         // make sure it's rounded on the second
         assertEquals(0L, ts - ((ts / 1000) * 1000L));
 
@@ -143,8 +148,8 @@ public class SamplerImplTest extends SamplerTest
         s.run();
 
         current = s.getCurrent();
-        assertEquals(ts, current.getTimestamp()); // insure it's the same sampling interval
-        assertEquals(samplingInterval, current.getDuration());
+        assertEquals(ts, current.getStartMs()); // insure it's the same sampling interval
+        assertEquals(samplingInterval, current.getDurationMs());
         Set<Class<? extends Operation>> operationTypes = current.getOperationTypes();
         assertEquals(1, operationTypes.size());
         assertTrue(operationTypes.contains(MockOperation.class));
@@ -163,8 +168,8 @@ public class SamplerImplTest extends SamplerTest
         s.run();
 
         current = s.getCurrent();
-        assertEquals(ts, current.getTimestamp()); // insure it's the same sampling interval
-        assertEquals(samplingInterval, current.getDuration());
+        assertEquals(ts, current.getStartMs()); // insure it's the same sampling interval
+        assertEquals(samplingInterval, current.getDurationMs());
         operationTypes = current.getOperationTypes();
         assertEquals(1, operationTypes.size());
         assertTrue(operationTypes.contains(MockOperation.class));
@@ -189,8 +194,8 @@ public class SamplerImplTest extends SamplerTest
         s.run();
 
         current = s.getCurrent();
-        assertEquals(ts, current.getTimestamp()); // insure it's the same sampling interval
-        assertEquals(samplingInterval, current.getDuration());
+        assertEquals(ts, current.getStartMs()); // insure it's the same sampling interval
+        assertEquals(samplingInterval, current.getDurationMs());
         operationTypes = current.getOperationTypes();
         assertEquals(1, operationTypes.size());
         assertTrue(operationTypes.contains(MockOperation.class));
@@ -217,8 +222,8 @@ public class SamplerImplTest extends SamplerTest
         s.run();
 
         current = s.getCurrent();
-        assertEquals(ts, current.getTimestamp()); // insure it's the same sampling interval
-        assertEquals(samplingInterval, current.getDuration());
+        assertEquals(ts, current.getStartMs()); // insure it's the same sampling interval
+        assertEquals(samplingInterval, current.getDurationMs());
         operationTypes = current.getOperationTypes();
         assertEquals(1, operationTypes.size());
         assertTrue(operationTypes.contains(MockOperation.class));

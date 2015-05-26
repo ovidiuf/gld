@@ -47,9 +47,9 @@ public abstract class SamplingIntervalTest
             7L, 11L, new HashSet<Class<? extends Operation>>(Arrays.asList(MockOperation.class)),
             Arrays.asList("blah"));
 
-        assertEquals(7L, si.getTimestamp());
+        assertEquals(7L, si.getStartMs());
 
-        assertEquals(11L, si.getDuration());
+        assertEquals(11L, si.getDurationMs());
 
         Set<Class<? extends Operation>> operationTypes = si.getOperationTypes();
         assertEquals(1, operationTypes.size());

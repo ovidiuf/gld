@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CyclicBarrier;
 
@@ -54,9 +55,9 @@ public class SamplerImplStressTest
         s.registerConsumer(new SamplingConsumer()
         {
             @Override
-            public void consume(SamplingInterval si)
+            public void consume(SamplingInterval... si)
             {
-                samples.add(si);
+                samples.addAll(Arrays.asList(si));
             }
         });
 
@@ -129,8 +130,8 @@ public class SamplerImplStressTest
         for(SamplingInterval si: samples)
         {
             assertEquals(
-                "the interval duration " + si.getDuration() + " ms is not equal to " + interval + " ms for " + si,
-                interval, si.getDuration());
+                "the interval duration " + si.getDurationMs() + " ms is not equal to " + interval + " ms for " + si,
+                interval, si.getDurationMs());
         }
 
     }

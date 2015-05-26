@@ -20,7 +20,10 @@ public interface SamplingConsumer
 {
     /**
      * Consumers must be fast and don't block, otherwise they'll be holding the sampling thread.
+     *
+     * @param samplingIntervals if multiple intervals are sent, they are guaranteed to be successive identical
+     *                          intervals. The implementation should throw IllegalArgumentException if they are not.
      */
-    void consume(SamplingInterval samplingInterval);
+    void consume(SamplingInterval... samplingIntervals);
 
 }

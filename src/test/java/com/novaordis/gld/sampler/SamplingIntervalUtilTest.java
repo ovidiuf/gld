@@ -17,26 +17,24 @@
 package com.novaordis.gld.sampler;
 
 import com.novaordis.gld.Operation;
+import com.novaordis.gld.strategy.load.cache.AnotherTypeOfMockOperation;
 import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class SamplingIntervalUtilTest extends SamplerTest
+public class SamplingIntervalUtilTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -50,67 +48,14 @@ public class SamplingIntervalUtilTest extends SamplerTest
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Test
-    public void negativeSamplerTaskRunInterval() throws Exception
-    {
-        SamplerImpl si = new SamplerImpl(-1L, 1000L);
-        si.registerOperation(MockOperation.class);
-        si.start();
-        assertTrue(si.isStarted());
-        si.stop();
-        assertFalse(si.isStarted());
-    }
+    // extrapolate() ----------------------------------------------------------------------------------------------------
 
     @Test
-    public void zeroSamplerTaskRunInterval() throws Exception
-    {
-        SamplerImpl si = new SamplerImpl(0L, 1000L);
-        si.registerOperation(MockOperation.class);
-        si.start();
-        assertTrue(si.isStarted());
-        si.stop();
-        assertFalse(si.isStarted());
-    }
-
-    @Test
-    public void exceptionInRunDoesNotPreventReleasingTheMutex() throws Exception
-    {
-        // start the sampler with a very large sampling interval, so the stop timeout will be very large; hoewever,
-        // keep the sampling thread run interval small
-        long twoDays = 2L * 24 * 60 * 60 * 1000L;
-        SamplerImpl si = new SamplerImpl(250L, twoDays);
-        si.registerOperation(MockOperation.class);
-
-        si.start();
-
-        assertTrue(si.isStarted());
-
-        // "break" the sampler, so when run() is invoked, it'll throw an exception. Setting the consumers to
-        // null will cause an NPE
-
-        si.setConsumers(null);
-
-        log.info(si + " has been broken ...");
-
-        // attempt to stop, the stop must not block indefinitely, if it does, the JUnit will kill the test and fail
-
-        long t0 = System.currentTimeMillis();
-
-        si.stop();
-
-        long t1 = System.currentTimeMillis();
-
-        log.info("the sampler stopped, it took " + (t1 - t0) + " ms to stop the sampler");
-    }
-
-    // distribute() ----------------------------------------------------------------------------------------------------
-
-    @Test
-    public void distribute_null() throws Exception
+    public void extrapolate_null() throws Exception
     {
         try
         {
-            SamplerImpl.distribute(null, 0);
+            SamplingIntervalUtil.extrapolate(null, 0);
             fail("should fail because we're passing a null sampling interval");
         }
         catch(IllegalArgumentException e)
@@ -120,7 +65,7 @@ public class SamplingIntervalUtilTest extends SamplerTest
     }
 
     @Test
-    public void distribute_n_is_0() throws Exception
+    public void extrapolate_extraSamples_is_0() throws Exception
     {
         Set<Class<? extends Operation>> operationTypes = new HashSet<>();
         operationTypes.add(MockOperation.class);
@@ -133,7 +78,7 @@ public class SamplingIntervalUtilTest extends SamplerTest
         si.addAnnotation("annotation 1");
         si.addAnnotation("annotation 2");
 
-        SamplingInterval[] result = SamplerImpl.distribute(si, 0);
+        SamplingInterval[] result = SamplingIntervalUtil.extrapolate(si, 0);
 
         assertEquals(1, result.length);
 
@@ -163,7 +108,7 @@ public class SamplingIntervalUtilTest extends SamplerTest
     }
 
     @Test
-    public void distribute_n_is_1() throws Exception
+    public void extrapolate_extraSamples_is_1() throws Exception
     {
         Set<Class<? extends Operation>> operationTypes = new HashSet<>();
         operationTypes.add(MockOperation.class);
@@ -176,7 +121,7 @@ public class SamplingIntervalUtilTest extends SamplerTest
         si.addAnnotation("annotation 1");
         si.addAnnotation("annotation 2");
 
-        SamplingInterval[] result = SamplerImpl.distribute(si, 1);
+        SamplingInterval[] result = SamplingIntervalUtil.extrapolate(si, 1);
 
         assertEquals(2, result.length);
 
@@ -198,12 +143,14 @@ public class SamplingIntervalUtilTest extends SamplerTest
         assertEquals(2, cv2.getFailureTypes().size());
         assertTrue(cv2.getFailureTypes().contains(SocketException.class));
         assertTrue(cv2.getFailureTypes().contains(ConnectException.class));
-//
-//        assertEquals(0L, cv2.getFailureCount(SocketException.class));
-//        assertEquals(0L, cv2.getFailureCumulatedDurationNano(SocketException.class));
-//
-//        assertEquals(1L, cv2.getFailureCount(ConnectException.class));
-//        assertEquals(1L, cv2.getFailureCumulatedDurationNano(ConnectException.class));
+
+        // first sampling interval - failure counters
+
+        assertEquals(0L, cv2.getFailureCount(SocketException.class));
+        assertEquals(0L, cv2.getFailureCumulatedDurationNano(SocketException.class));
+
+        assertEquals(1L, cv2.getFailureCount(ConnectException.class));
+        assertEquals(2L, cv2.getFailureCumulatedDurationNano(ConnectException.class));
 
         // all annotations are stored in the first interval
         assertEquals(2, si2.getAnnotations().size());
@@ -225,179 +172,284 @@ public class SamplingIntervalUtilTest extends SamplerTest
         assertEquals(2, cv3.getFailureTypes().size());
         assertTrue(cv3.getFailureTypes().contains(SocketException.class));
         assertTrue(cv3.getFailureTypes().contains(ConnectException.class));
-//
-//        assertEquals(1L, cv3.getFailureCount(SocketException.class));
-//        assertEquals(2L, cv3.getFailureCumulatedDurationNano(SocketException.class));
-//
-//        assertEquals(2L, cv3.getFailureCount(ConnectException.class));
-//        assertEquals(3L, cv3.getFailureCumulatedDurationNano(ConnectException.class));
+
+        // second sampling interval - failure counters
+
+        assertEquals(1L, cv3.getFailureCount(SocketException.class));
+        assertEquals(2L, cv3.getFailureCumulatedDurationNano(SocketException.class));
+
+        assertEquals(2L, cv3.getFailureCount(ConnectException.class));
+        assertEquals(2L, cv3.getFailureCumulatedDurationNano(ConnectException.class));
 
         // all annotations are stored in the first interval
         assertTrue(si3.getAnnotations().isEmpty());
     }
 
     @Test
-    public void distribute_n_is_1_twoOperations() throws Exception
+    public void extrapolate_extraSamples_is_1_twoOperations() throws Exception
     {
-        fail("return here");
+        Set<Class<? extends Operation>> operationTypes = new HashSet<>();
+        operationTypes.add(MockOperation.class);
+        operationTypes.add(AnotherTypeOfMockOperation.class);
+
+        SamplingIntervalImpl si = new SamplingIntervalImpl(100L, 200L, operationTypes);
+
+        Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters = new HashMap<>();
+        failureCounters.put(SocketException.class, new ImmutableFailureCounter(SocketException.class, 1L, 2L));
+        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(ConnectException.class, 3L, 4L));
+        CounterValuesImpl cv = new CounterValuesImpl(5L, 6L, failureCounters);
+        si.setCounterValues(MockOperation.class, cv);
+
+        failureCounters = new HashMap<>();
+        failureCounters.put(SocketException.class, new ImmutableFailureCounter(SocketException.class, 7L, 8L));
+        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(ConnectException.class, 9L, 10L));
+        cv = new CounterValuesImpl(11L, 12L, failureCounters);
+        si.setCounterValues(AnotherTypeOfMockOperation.class, cv);
+
+        si.addAnnotation("annotation 1");
+        si.addAnnotation("annotation 2");
+
+        SamplingInterval[] result = SamplingIntervalUtil.extrapolate(si, 1);
+
+        assertEquals(2, result.length);
+
+        SamplingInterval si2 = result[0];
+        SamplingInterval si3 = result[1];
+
+        // first sampling interval
+
+        assertEquals(100L, si2.getStartMs());
+        assertEquals(200L, si2.getDurationMs());
+        assertEquals(300L, si2.getEndMs());
+
+        assertEquals(2, si2.getOperationTypes().size());
+        assertTrue(si2.getOperationTypes().contains(MockOperation.class));
+        assertTrue(si2.getOperationTypes().contains(AnotherTypeOfMockOperation.class));
+
+        //
+        // 2.1
+        //
+
+        CounterValues cv21 = si2.getCounterValues(MockOperation.class);
+
+        assertEquals(2L, cv21.getSuccessCount());
+        assertEquals(3L, cv21.getSuccessCumulatedDurationNano());
+
+        assertEquals(2, cv21.getFailureTypes().size());
+        assertTrue(cv21.getFailureTypes().contains(SocketException.class));
+        assertTrue(cv21.getFailureTypes().contains(ConnectException.class));
+
+        // first sampling interval - failure counters
+
+        assertEquals(0L, cv21.getFailureCount(SocketException.class));
+        assertEquals(0L, cv21.getFailureCumulatedDurationNano(SocketException.class));
+
+        assertEquals(1L, cv21.getFailureCount(ConnectException.class));
+        assertEquals(2L, cv21.getFailureCumulatedDurationNano(ConnectException.class));
+
+        //
+        // 2.2
+        //
+
+        CounterValues cv22 = si2.getCounterValues(AnotherTypeOfMockOperation.class);
+
+        assertEquals(5L, cv22.getSuccessCount());
+        assertEquals(6L, cv22.getSuccessCumulatedDurationNano());
+
+        assertEquals(2, cv22.getFailureTypes().size());
+        assertTrue(cv22.getFailureTypes().contains(SocketException.class));
+        assertTrue(cv22.getFailureTypes().contains(ConnectException.class));
+
+        // first sampling interval - failure counters
+
+        assertEquals(3L, cv22.getFailureCount(SocketException.class));
+        assertEquals(4L, cv22.getFailureCumulatedDurationNano(SocketException.class));
+
+        assertEquals(4L, cv22.getFailureCount(ConnectException.class));
+        assertEquals(5L, cv22.getFailureCumulatedDurationNano(ConnectException.class));
+
+        // all annotations are stored in the first interval
+        assertEquals(2, si2.getAnnotations().size());
+        assertEquals("annotation 1", si2.getAnnotations().get(0));
+        assertEquals("annotation 2", si2.getAnnotations().get(1));
+
+        // the second sampling interval
+
+        assertEquals(300L, si3.getStartMs());
+        assertEquals(200L, si3.getDurationMs());
+        assertEquals(500L, si3.getEndMs());
+        assertEquals(2, si3.getOperationTypes().size());
+        assertTrue(si3.getOperationTypes().contains(MockOperation.class));
+        assertTrue(si3.getOperationTypes().contains(AnotherTypeOfMockOperation.class));
+
+        //
+        // 3.1
+        //
+
+        CounterValues cv31 = si3.getCounterValues(MockOperation.class);
+
+        assertEquals(3L, cv31.getSuccessCount());
+        assertEquals(3L, cv31.getSuccessCumulatedDurationNano());
+
+        assertEquals(2, cv31.getFailureTypes().size());
+        assertTrue(cv31.getFailureTypes().contains(SocketException.class));
+        assertTrue(cv31.getFailureTypes().contains(ConnectException.class));
+
+        // second sampling interval - failure counters
+
+        assertEquals(1L, cv31.getFailureCount(SocketException.class));
+        assertEquals(2L, cv31.getFailureCumulatedDurationNano(SocketException.class));
+
+        assertEquals(2L, cv31.getFailureCount(ConnectException.class));
+        assertEquals(2L, cv31.getFailureCumulatedDurationNano(ConnectException.class));
+
+        //
+        // 3.2
+        //
+
+        CounterValues cv32 = si3.getCounterValues(AnotherTypeOfMockOperation.class);
+
+        assertEquals(6L, cv32.getSuccessCount());
+        assertEquals(6L, cv32.getSuccessCumulatedDurationNano());
+
+        assertEquals(2, cv32.getFailureTypes().size());
+        assertTrue(cv32.getFailureTypes().contains(SocketException.class));
+        assertTrue(cv32.getFailureTypes().contains(ConnectException.class));
+
+        // second sampling interval - failure counters
+
+        assertEquals(4L, cv32.getFailureCount(SocketException.class));
+        assertEquals(4L, cv32.getFailureCumulatedDurationNano(SocketException.class));
+
+        assertEquals(5L, cv32.getFailureCount(ConnectException.class));
+        assertEquals(5L, cv32.getFailureCumulatedDurationNano(ConnectException.class));
+
+        // all annotations are stored in the first interval
+        assertTrue(si3.getAnnotations().isEmpty());
     }
 
-    // simulated runs --------------------------------------------------------------------------------------------------
-
-    /**
-     * Note: this test is a remnant of work that since migrated in SamplerImplWorkBenchTest.
-     *
-     * @see SamplerImplWorkBenchTest
-     */
     @Test
-    public void simulatedStepByStepSamplingCollection() throws Exception
+    public void extrapolate_extraSamples_is_2() throws Exception
     {
-        long samplingInterval = 10 * 1000L; // 10 seconds to allow us time to experiment
+        Set<Class<? extends Operation>> operationTypes = new HashSet<>();
+        operationTypes.add(MockOperation.class);
+        SamplingIntervalImpl si = new SamplingIntervalImpl(1000L, 785L, operationTypes);
+        Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters = new HashMap<>();
+        failureCounters.put(SocketException.class, new ImmutableFailureCounter(SocketException.class, 1L, 2L));
+        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(ConnectException.class, 3L, 4L));
+        failureCounters.put(IOException.class, new ImmutableFailureCounter(IOException.class, 50000L, 60000L));
+        CounterValuesImpl cv = new CounterValuesImpl(5L, 6L, failureCounters);
+        si.setCounterValues(MockOperation.class, cv);
+        si.addAnnotation("annotation 1");
+        si.addAnnotation("annotation 2");
 
-        // the sampling task run interval is 0, meaning no timer task will be registered
-        SamplerImpl s = new SamplerImpl(0L, samplingInterval);
-        s.registerOperation(MockOperation.class);
-        s.registerConsumer(new SamplingConsumer()
-        {
-            @Override
-            public void consume(SamplingInterval... sis)
-            {
-                // noop
-            }
-        });
+        SamplingInterval[] result = SamplingIntervalUtil.extrapolate(si, 2);
 
-        assertTrue(s.getLastRunTimestamp() <= 0);
+        assertEquals(3, result.length);
 
-        // we're not actually starting anything because the sampling task interval is 0, but the sampler will look
-        // like it started; this will also run the first initialization run()
-        s.start();
+        SamplingInterval si2 = result[0];
+        SamplingInterval si3 = result[1];
+        SamplingInterval si4 = result[2];
+        
+        // sample 0
 
-        assertTrue(s.isStarted());
+        assertEquals(1000L, si2.getStartMs());
+        assertEquals(785L, si2.getDurationMs());
+        assertEquals(1000L + 785L, si2.getEndMs());
 
-        assertTrue(s.getLastRunTimestamp() > 0);
+        assertEquals(2, si2.getAnnotations().size());
+        assertEquals("annotation 1", si2.getAnnotations().get(0));
+        assertEquals("annotation 2", si2.getAnnotations().get(1));
 
-        assertNull(s.getCurrent());
+        assertEquals(1, si2.getOperationTypes().size());
+        assertTrue(si2.getOperationTypes().contains(MockOperation.class));
+        CounterValues cv2 = si2.getCounterValues(MockOperation.class);
+        
+        assertEquals(1L, cv2.getSuccessCount());
+        assertEquals(2L, cv2.getSuccessCumulatedDurationNano());
+        assertEquals(16667L, cv2.getFailureCount());
+        assertEquals(20001L, cv2.getFailureCumulatedDurationNano());
+        assertEquals(3, cv2.getFailureTypes().size());
+        assertTrue(cv2.getFailureTypes().contains(SocketException.class));
+        assertTrue(cv2.getFailureTypes().contains(ConnectException.class));
+        assertTrue(cv2.getFailureTypes().contains(IOException.class));
 
-        // sampling interval initialization
-        s.run();
-        SamplingInterval current = s.getCurrent();
-        assertNotNull(current);
+        assertEquals(0L, cv2.getFailureCount(SocketException.class));
+        assertEquals(0L, cv2.getFailureCumulatedDurationNano(SocketException.class));
+        assertEquals(1L, cv2.getFailureCount(ConnectException.class));
+        assertEquals(1L, cv2.getFailureCumulatedDurationNano(ConnectException.class));
+        assertEquals(16666L, cv2.getFailureCount(IOException.class));
+        assertEquals(20000L, cv2.getFailureCumulatedDurationNano(IOException.class));
+        
+        // sample 1
 
-        long ts = current.getStartMs();
-        // make sure it's rounded on the second
-        assertEquals(0L, ts - ((ts / 1000) * 1000L));
+        assertEquals(1000L + 785L, si3.getStartMs());
+        assertEquals(785L, si3.getDurationMs());
+        assertEquals(1000L + 785L + 785L, si3.getEndMs());
 
-        // first collection run, should not collect anything
-        s.run();
+        assertEquals(0, si3.getAnnotations().size());
 
-        current = s.getCurrent();
-        assertEquals(ts, current.getStartMs()); // insure it's the same sampling interval
-        assertEquals(samplingInterval, current.getDurationMs());
-        Set<Class<? extends Operation>> operationTypes = current.getOperationTypes();
-        assertEquals(1, operationTypes.size());
-        assertTrue(operationTypes.contains(MockOperation.class));
-        assertTrue(current.getAnnotations().isEmpty());
-        CounterValues cvs = current.getCounterValues(MockOperation.class);
-        assertEquals(0L, cvs.getSuccessCount());
-        assertEquals(0L, cvs.getSuccessCumulatedDurationNano());
-        assertEquals(0L, cvs.getFailureCount());
-        assertEquals(0L, cvs.getFailureCumulatedDurationNano());
+        assertEquals(1, si3.getOperationTypes().size());
+        assertTrue(si3.getOperationTypes().contains(MockOperation.class));
+        CounterValues cv3 = si3.getCounterValues(MockOperation.class);
 
-        // record a success and a failure
-        s.record(System.currentTimeMillis(), 1L, 2L, new MockOperation()); // 1
-        s.record(System.currentTimeMillis(), 3L, 5L, new MockOperation(), new SocketException()); // 2
+        assertEquals(1L, cv3.getSuccessCount());
+        assertEquals(2L, cv3.getSuccessCumulatedDurationNano());
+        assertEquals(16667L, cv3.getFailureCount());
+        assertEquals(20001L, cv3.getFailureCumulatedDurationNano());
+        assertEquals(3, cv3.getFailureTypes().size());
+        assertTrue(cv3.getFailureTypes().contains(SocketException.class));
+        assertTrue(cv3.getFailureTypes().contains(ConnectException.class));
+        assertTrue(cv3.getFailureTypes().contains(IOException.class));
 
-        // another collection run, it should collect both the success and the failure
-        s.run();
+        assertEquals(0L, cv3.getFailureCount(SocketException.class));
+        assertEquals(0L, cv3.getFailureCumulatedDurationNano(SocketException.class));
+        assertEquals(1L, cv3.getFailureCount(ConnectException.class));
+        assertEquals(1L, cv3.getFailureCumulatedDurationNano(ConnectException.class));
+        assertEquals(16666L, cv3.getFailureCount(IOException.class));
+        assertEquals(20000L, cv3.getFailureCumulatedDurationNano(IOException.class));
+        
+        
+        // sample 2
 
-        current = s.getCurrent();
-        assertEquals(ts, current.getStartMs()); // insure it's the same sampling interval
-        assertEquals(samplingInterval, current.getDurationMs());
-        operationTypes = current.getOperationTypes();
-        assertEquals(1, operationTypes.size());
-        assertTrue(operationTypes.contains(MockOperation.class));
-        assertTrue(current.getAnnotations().isEmpty());
-        cvs = current.getCounterValues(MockOperation.class);
-        assertEquals(1L, cvs.getSuccessCount());
-        assertEquals(1L, cvs.getSuccessCumulatedDurationNano());
-        assertEquals(1L, cvs.getFailureCount());
-        assertEquals(2L, cvs.getFailureCumulatedDurationNano());
-        Set<Class<? extends Throwable>> failureTypes = cvs.getFailureTypes();
-        assertEquals(1, failureTypes.size());
-        assertTrue(failureTypes.contains(SocketException.class));
-        assertEquals(1L, cvs.getFailureCount(SocketException.class));
-        assertEquals(2L, cvs.getFailureCumulatedDurationNano(SocketException.class));
+        assertEquals(1000L + 785L + 785L, si4.getStartMs());
+        assertEquals(785L, si4.getDurationMs());
+        assertEquals(1000L + 785L + 785L + 785L, si4.getEndMs());
 
-        // record a success, the same type a failure, and an annotation
-        s.record(System.currentTimeMillis(), 6L, 9L, new MockOperation()); // 3
-        s.record(System.currentTimeMillis(), 10L, 14L, new MockOperation(), new SocketException()); // 4
-        s.annotate("annotation 1");
+        assertEquals(0, si4.getAnnotations().size());
 
-        // another collection run
-        s.run();
+        assertEquals(1, si4.getOperationTypes().size());
+        assertTrue(si4.getOperationTypes().contains(MockOperation.class));
+        CounterValues cv4 = si4.getCounterValues(MockOperation.class);
 
-        current = s.getCurrent();
-        assertEquals(ts, current.getStartMs()); // insure it's the same sampling interval
-        assertEquals(samplingInterval, current.getDurationMs());
-        operationTypes = current.getOperationTypes();
-        assertEquals(1, operationTypes.size());
-        assertTrue(operationTypes.contains(MockOperation.class));
-        List<String> annotations = current.getAnnotations();
-        assertEquals(1, annotations.size());
-        assertTrue(annotations.contains("annotation 1"));
-        cvs = current.getCounterValues(MockOperation.class);
-        assertEquals(2L, cvs.getSuccessCount());
-        assertEquals(1L + 3L, cvs.getSuccessCumulatedDurationNano());
-        assertEquals(2L, cvs.getFailureCount());
-        assertEquals(2L + 4L, cvs.getFailureCumulatedDurationNano());
-        failureTypes = cvs.getFailureTypes();
-        assertEquals(1, failureTypes.size());
-        assertTrue(failureTypes.contains(SocketException.class));
-        assertEquals(2L, cvs.getFailureCount(SocketException.class));
-        assertEquals(2L + 4L, cvs.getFailureCumulatedDurationNano(SocketException.class));
+        assertEquals(3L, cv4.getSuccessCount());
+        assertEquals(2L, cv4.getSuccessCumulatedDurationNano());
+        assertEquals(16670L, cv4.getFailureCount());
+        assertEquals(20004L, cv4.getFailureCumulatedDurationNano());
+        assertEquals(3, cv4.getFailureTypes().size());
+        assertTrue(cv4.getFailureTypes().contains(SocketException.class));
+        assertTrue(cv4.getFailureTypes().contains(ConnectException.class));
+        assertTrue(cv4.getFailureTypes().contains(IOException.class));
 
-        // record a success, a different type a failure, and another annotation
-        s.record(System.currentTimeMillis(), 15L, 20L, new MockOperation()); // 5
-        s.record(System.currentTimeMillis(), 21L, 27L, new MockOperation(), new ConnectException()); // 6
-        s.annotate("annotation 2");
+        assertEquals(1L, cv4.getFailureCount(SocketException.class));
+        assertEquals(2L, cv4.getFailureCumulatedDurationNano(SocketException.class));
+        assertEquals(1L, cv4.getFailureCount(ConnectException.class));
+        assertEquals(2L, cv4.getFailureCumulatedDurationNano(ConnectException.class));
+        assertEquals(16668L, cv4.getFailureCount(IOException.class));
+        assertEquals(20000L, cv4.getFailureCumulatedDurationNano(IOException.class));
 
-        // another collection run
-        s.run();
 
-        current = s.getCurrent();
-        assertEquals(ts, current.getStartMs()); // insure it's the same sampling interval
-        assertEquals(samplingInterval, current.getDurationMs());
-        operationTypes = current.getOperationTypes();
-        assertEquals(1, operationTypes.size());
-        assertTrue(operationTypes.contains(MockOperation.class));
-        annotations = current.getAnnotations();
-        assertEquals(2, annotations.size());
-        assertEquals("annotation 1", annotations.get(0));
-        assertEquals("annotation 2", annotations.get(1));
-        cvs = current.getCounterValues(MockOperation.class);
-        assertEquals(3L, cvs.getSuccessCount());
-        assertEquals(1L + 3L + 5L, cvs.getSuccessCumulatedDurationNano());
-        assertEquals(3L, cvs.getFailureCount());
-        assertEquals(2L + 4L + 6L, cvs.getFailureCumulatedDurationNano());
-        failureTypes = cvs.getFailureTypes();
-        assertEquals(2, failureTypes.size());
-        assertTrue(failureTypes.contains(SocketException.class));
-        assertTrue(failureTypes.contains(ConnectException.class));
-        assertEquals(2L, cvs.getFailureCount(SocketException.class));
-        assertEquals(2L + 4L, cvs.getFailureCumulatedDurationNano(SocketException.class));
-        assertEquals(1L, cvs.getFailureCount(ConnectException.class));
-        assertEquals(6L, cvs.getFailureCumulatedDurationNano(ConnectException.class));
+        assertEquals(1L + 3L + 50000L, cv2.getFailureCount() + cv3.getFailureCount() + cv4.getFailureCount());
+        assertEquals(2L + 4L + 60000L,
+            cv2.getFailureCumulatedDurationNano() +
+                cv3.getFailureCumulatedDurationNano() +
+                cv4.getFailureCumulatedDurationNano());
     }
+
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected SamplerImpl getSamplerToTest() throws Exception
-    {
-        return new SamplerImpl();
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 
