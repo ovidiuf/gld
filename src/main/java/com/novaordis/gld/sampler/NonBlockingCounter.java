@@ -19,6 +19,11 @@ package com.novaordis.gld.sampler;
 import com.novaordis.gld.Operation;
 import org.apache.log4j.Logger;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -41,6 +46,7 @@ public class NonBlockingCounter implements Counter
 
     private AtomicLong successCount;
     private AtomicLong cumulatedSuccessTimeNano;
+    private ConcurrentMap<Class<? extends Throwable>, NonBlockingFailureCounter> failureCounters;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -49,6 +55,7 @@ public class NonBlockingCounter implements Counter
         this.operationType = operationType;
         this.successCount = new AtomicLong(0L);
         this.cumulatedSuccessTimeNano = new AtomicLong(0L);
+        this.failureCounters = new ConcurrentHashMap<>();
 
         log.debug(this + " created");
     }
@@ -81,10 +88,28 @@ public class NonBlockingCounter implements Counter
             successCount.incrementAndGet();
             cumulatedSuccessTimeNano.addAndGet(duration);
         }
+        else if (t.length > 1)
+        {
+            // unsupported usage
+            throw new IllegalArgumentException(
+                "just one throwable is allowed as argument, but " + t.length + " were provided");
+        }
         else
         {
             // failure
-            throw new RuntimeException("NOT YET IMPLEMENTED");
+            Class<? extends Throwable> failureType = t[0].getClass();
+
+            NonBlockingFailureCounter failureCounter = failureCounters.get(failureType);
+
+            if (failureCounter == null)
+            {
+                // only create the instance if it is *not* in the map - there's a slight change a FailureCounter
+                // instance will be created unnecessarily but that is an unlikely, rare and ultimately harmless event
+                failureCounter = new NonBlockingFailureCounter(failureType);
+                failureCounters.putIfAbsent(failureType, failureCounter);
+            }
+
+            failureCounter.increment(duration);
         }
     }
 
@@ -92,8 +117,23 @@ public class NonBlockingCounter implements Counter
     public CounterValues getCounterValuesAndReset()
     {
         long sc = successCount.getAndSet(0L);
-        long cst = cumulatedSuccessTimeNano.getAndSet(0L);
-        return new CounterValuesImpl(sc, cst);
+        long cstn = cumulatedSuccessTimeNano.getAndSet(0L);
+
+        // TODO:
+        //       This is not exactly atomic, the key set may change (grow) between running keySet() and acquiring
+        //       statistics per failure type, but this is fine, we'll get those statistics during the next read
+
+        Set<Class<? extends Throwable>> failureTypes = failureCounters.keySet();
+        Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounterSnapshot = new HashMap<>();
+
+        for(Class<? extends Throwable> failureType: failureTypes)
+        {
+            NonBlockingFailureCounter c = failureCounters.get(failureType);
+            ImmutableFailureCounter ifc = c.getFailureCounterSnapshotAndReset();
+            failureCounterSnapshot.put(failureType, ifc);
+        }
+
+        return new CounterValuesImpl(sc, cstn, failureCounterSnapshot);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

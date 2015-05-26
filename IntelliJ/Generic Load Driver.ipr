@@ -188,8 +188,10 @@
       <words>
         <w>activemq</w>
         <w>baos</w>
+        <w>cstn</w>
         <w>feodorov</w>
         <w>idempotency</w>
+        <w>nbfc</w>
       </words>
     </dictionary>
   </component>

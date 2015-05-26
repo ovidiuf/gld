@@ -16,6 +16,8 @@
 
 package com.novaordis.gld.sampler;
 
+import java.util.Set;
+
 /**
  * Instances are NOT supposed to be accessed concurrently from multiple threads and must not be thread safe, for
  * performance reasons. The Counter implementations provide protection for those situations.
@@ -24,10 +26,46 @@ public interface CounterValues
 {
     long getSuccessCount();
 
-    long getSuccessCumulatedTime();
+    /**
+     * @return the cumulated duration (in nanoseconds) for all successful operations.
+     */
+    long getSuccessCumulatedDuration();
 
-//    int getFailureCount();
-//    long getFailureCumulatedTime();
-//    List<Throwable> getFailureTypes();
+    /**
+     * The failure type set is cumulative: once a failure has been reported for a specific operation, that failure
+     * type will be always present in subsequent counters generated for that operation, even if the associated counters
+     * will be zero if that failure does not show up again.
+     *
+     * @return may be empty, never null.
+     */
+    Set<Class<? extends Throwable>> getFailureTypes();
+
+    /**
+     * @return the total failure count. Does not differentiates on type.
+     */
+    long getFailureCount();
+
+    /**
+     * @param failureType the class implementing the failure. It must be the exact exception class, superclasses are
+     *                    ignored.
+     *
+     * @return the failure count for a specific failure type. Return 0L if there's no such failure type.
+     */
+    long getFailureCount(Class<? extends Throwable> failureType);
+
+    /**
+     * @return the cumulated time (in nanoseconds) for all failed operations.
+     */
+    long getFailureCumulatedDurationNano();
+
+    /**
+     * @param failureType the class implementing the failure. It must be the exact exception class, superclasses are
+     *                    ignored.
+     *
+     * @return the cumulated time (in nanoseconds) for a specific failure type.
+     */
+    long getFailureCumulatedDurationNano(Class<? extends Throwable> failureType);
+
+
 
 }

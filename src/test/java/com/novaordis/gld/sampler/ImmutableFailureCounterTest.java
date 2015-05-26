@@ -16,16 +16,6 @@
 
 package com.novaordis.gld.sampler;
 
-
-import org.junit.Test;
-
-import java.net.SocketException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.junit.Assert.assertEquals;
-
 public class ImmutableFailureCounterTest extends FailureCounterTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
@@ -38,60 +28,14 @@ public class ImmutableFailureCounterTest extends FailureCounterTest
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Test
-    public void happyPath_miniStress() throws Exception
-    {
-        int threadCount = 130;
-        int executionCount = 479;
-        final long duration = 7L;
-
-        final NonBlockingFailureCounter c = new NonBlockingFailureCounter(SocketException.class);
-
-        final AtomicInteger counter = new AtomicInteger();
-
-        ExecutorService es = Executors.newFixedThreadPool(threadCount);
-
-        for(int i = 0; i < executionCount; i ++)
-        {
-            es.execute(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    c.increment(duration);
-                    counter.incrementAndGet();
-                }
-            });
-        }
-
-        // wait until we count 'executionCount' executions
-
-        while(counter.get() < executionCount)
-        {
-            Thread.sleep(50L);
-        }
-
-        es.shutdown();
-
-        assertEquals(SocketException.class, c.getFailureType());
-        long[] counters = c.getCountersAndReset();
-        assertEquals(2, counters.length);
-
-
-        long failureCount = counters[0];
-        long cumulatedDuration = counters[1];
-        assertEquals(executionCount, failureCount);
-        assertEquals(executionCount * duration, cumulatedDuration);
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected NonBlockingFailureCounter getFailureCounterToTest(Class<? extends Throwable> failureType) throws Exception
+    protected ImmutableFailureCounter getFailureCounterToTest(Class<? extends Throwable> failureType) throws Exception
     {
-        return new NonBlockingFailureCounter(failureType);
+        return new ImmutableFailureCounter(failureType, 0L, 0L);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

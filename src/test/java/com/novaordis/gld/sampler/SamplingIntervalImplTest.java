@@ -101,15 +101,15 @@ public class SamplingIntervalImplTest extends SamplingIntervalTest
         // make sure there's a zero-value CounterValues even if nothing has been recorded yet
         assertNotNull(values);
         assertEquals(0L, values.getSuccessCount());
-        assertEquals(0L, values.getSuccessCumulatedTime());
+        assertEquals(0L, values.getSuccessCumulatedDuration());
 
-        si.setCounterValues(MockOperation.class, new CounterValuesImpl(7L, 11L));
+        si.setCounterValues(MockOperation.class, new CounterValuesImpl(7L, 11L, null));
         si.addAnnotation("blah");
         si.addAnnotation("blah2");
 
         values = si.getCounterValues(MockOperation.class);
         assertEquals(7L, values.getSuccessCount());
-        assertEquals(11L, values.getSuccessCumulatedTime());
+        assertEquals(11L, values.getSuccessCumulatedDuration());
 
         annotations = si.getAnnotations();
         assertEquals(2, annotations.size());

@@ -39,6 +39,7 @@ public interface Counter
      *          instances to be passed, the rest will be ignored.
      *
      * @throws java.lang.IllegalArgumentException if t1Nano precedes t0Nano.
+     * @throws java.lang.IllegalArgumentException if more than one throwable is passed as argument.
      *
      * @see Sampler#record(long, long, long, com.novaordis.gld.Operation, Throwable...)
      */

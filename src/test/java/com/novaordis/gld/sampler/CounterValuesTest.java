@@ -16,16 +16,16 @@
 
 package com.novaordis.gld.sampler;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import java.net.SocketException;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public abstract class CounterValuesTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = Logger.getLogger(CounterValuesTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -36,19 +36,24 @@ public abstract class CounterValuesTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void happyPath() throws Exception
+    public void defaultBehavior() throws Exception
     {
-        CounterValues v = getCounterValuesToTest(1, 10L);
-        assertEquals(1, v.getSuccessCount());
-        assertEquals(10L, v.getSuccessCumulatedTime());
+        CounterValues v = getCounterValuesToTest();
+
+        assertEquals(0, v.getSuccessCount());
+        assertEquals(0L, v.getSuccessCumulatedDuration());
+        assertEquals(0, v.getFailureCount());
+        assertEquals(0L, v.getFailureCumulatedDurationNano());
+        assertTrue(v.getFailureTypes().isEmpty());
+        assertEquals(0, v.getFailureCount(SocketException.class));
+        assertEquals(0L, v.getFailureCumulatedDurationNano(SocketException.class));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected abstract CounterValues getCounterValuesToTest(int successCount, long successCumulatedTime)
-        throws Exception;
+    protected abstract CounterValues getCounterValuesToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

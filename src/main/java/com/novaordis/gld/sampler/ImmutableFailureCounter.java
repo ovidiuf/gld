@@ -16,8 +16,6 @@
 
 package com.novaordis.gld.sampler;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 public class ImmutableFailureCounter implements FailureCounter
 {
     // Constants -------------------------------------------------------------------------------------------------------
@@ -26,17 +24,17 @@ public class ImmutableFailureCounter implements FailureCounter
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Class<? extends Throwable> failureType;
-    private AtomicLong count;
-    private AtomicLong cumulatedFailureDurationNano;
+    private final Class<? extends Throwable> failureType;
+    private final long count;
+    private final long cumulatedFailureDurationNano;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public ImmutableFailureCounter(Class<? extends Throwable> failureType)
+    public ImmutableFailureCounter(Class<? extends Throwable> failureType, long count, long cumulatedFailureDurationNano)
     {
         this.failureType = failureType;
-        this.count = new AtomicLong();
-        this.cumulatedFailureDurationNano = new AtomicLong();
+        this.count = count;
+        this.cumulatedFailureDurationNano = cumulatedFailureDurationNano;
     }
 
     // FailureCounter implementation -----------------------------------------------------------------------------------
@@ -50,34 +48,16 @@ public class ImmutableFailureCounter implements FailureCounter
     @Override
     public long getCount()
     {
-        return count.get();
+        return count;
     }
 
     @Override
     public long getCumulatedDurationNano()
     {
-        return cumulatedFailureDurationNano.get();
+        return cumulatedFailureDurationNano;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    /**
-     * @param durationNano the duration (in nanoseconds) of the failed call.
-     */
-    public void increment(long durationNano)
-    {
-        count.incrementAndGet();
-        cumulatedFailureDurationNano.addAndGet(durationNano);
-    }
-
-    /**
-     * @return a long[2] containing the invocation count on the first position and the cumulated time (in nanoseconds)
-     * on the second position.
-     */
-    public long[] getCountersAndReset()
-    {
-        return new long[] {count.getAndSet(0), cumulatedFailureDurationNano.getAndSet(0)};
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

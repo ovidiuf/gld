@@ -21,7 +21,12 @@ import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import java.net.BindException;
+import java.net.SocketException;
+import java.util.Set;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public abstract class CounterTest
@@ -55,6 +60,22 @@ public abstract class CounterTest
     }
 
     @Test
+    public void moreThanOneThrowable() throws Exception
+    {
+        Counter c = getCounterToTest(MockOperation.class);
+
+        try
+        {
+            c.update(0L, 10L, 11L, new Exception(), new Exception());
+            fail("should fail, more than one throwable given");
+        }
+        catch(IllegalArgumentException e)
+        {
+            log.info(e.getMessage());
+        }
+    }
+
+    @Test
     public void happyPath_Success() throws Exception
     {
         Counter c = getCounterToTest(MockOperation.class);
@@ -68,43 +89,157 @@ public abstract class CounterTest
         CounterValues v0 = c.getCounterValuesAndReset();
 
         long sc0 = v0.getSuccessCount();
-        long sct0 = v0.getSuccessCumulatedTime();
+        long sct0 = v0.getSuccessCumulatedDuration();
 
         assertEquals(3, sc0);
         assertEquals(1L + 2L + 3L, sct0);
 
-        // TODO
-        // v0.getFailureCount(Exception.class);
+        assertEquals(0, v0.getFailureCount());
+        assertEquals(0, v0.getFailureCumulatedDurationNano());
+        assertTrue(v0.getFailureTypes().isEmpty());
+        assertEquals(0, v0.getFailureCount(Throwable.class));
 
         c.update(3L, 10L, 14L);
 
         CounterValues v1 = c.getCounterValuesAndReset();
 
         long sc1 = v1.getSuccessCount();
-        long sct1 = v1.getSuccessCumulatedTime();
+        long sct1 = v1.getSuccessCumulatedDuration();
 
         assertEquals(1, sc1);
         assertEquals(4L, sct1);
 
+        assertEquals(0, v1.getFailureCount());
+        assertEquals(0, v1.getFailureCumulatedDurationNano());
+        assertTrue(v1.getFailureTypes().isEmpty());
+        assertEquals(0, v1.getFailureCount(Throwable.class));
+
         CounterValues v2 = c.getCounterValuesAndReset();
 
         long sc2 = v2.getSuccessCount();
-        long sct2 = v2.getSuccessCumulatedTime();
+        long sct2 = v2.getSuccessCumulatedDuration();
 
         assertEquals(0, sc2);
         assertEquals(0L, sct2);
+
+        assertEquals(0, v2.getFailureCount());
+        assertEquals(0, v2.getFailureCumulatedDurationNano());
+        assertTrue(v2.getFailureTypes().isEmpty());
+        assertEquals(0, v2.getFailureCount(Throwable.class));
     }
 
     @Test
     public void happyPath_Failures() throws Exception
     {
-        fail("return here");
+        Counter c = getCounterToTest(MockOperation.class);
+
+        c.update(0L, 10L, 11L, new SocketException());
+        c.update(1L, 10L, 12L, new BindException());
+        c.update(2L, 10L, 13L, new SocketException());
+
+        assertEquals(MockOperation.class, c.getOperationType());
+
+        CounterValues v0 = c.getCounterValuesAndReset();
+        assertEquals(0, v0.getSuccessCount());
+        assertEquals(0L, v0.getSuccessCumulatedDuration());
+        assertEquals(3, v0.getFailureCount());
+        assertEquals(1L + 2L + 3L, v0.getFailureCumulatedDurationNano());
+        Set<Class<? extends Throwable>> failureTypes = v0.getFailureTypes();
+        assertEquals(2, failureTypes.size());
+        assertEquals(2, v0.getFailureCount(SocketException.class));
+        assertEquals(1, v0.getFailureCount(BindException.class));
+        assertEquals(0, v0.getFailureCount(Throwable.class));
+
+        c.update(3L, 10L, 14L, new SocketException());
+
+        CounterValues v1 = c.getCounterValuesAndReset();
+        assertEquals(0, v1.getSuccessCount());
+        assertEquals(0L, v1.getSuccessCumulatedDuration());
+        assertEquals(1, v1.getFailureCount());
+        assertEquals(4L, v1.getFailureCumulatedDurationNano());
+        failureTypes = v1.getFailureTypes();
+        assertEquals(2, failureTypes.size());
+        assertTrue(failureTypes.contains(SocketException.class));
+        assertTrue(failureTypes.contains(BindException.class));
+        assertEquals(1, v1.getFailureCount(SocketException.class));
+        assertEquals(0, v1.getFailureCount(BindException.class));
+        assertEquals(0, v1.getFailureCount(Throwable.class));
+
+        CounterValues v2 = c.getCounterValuesAndReset();
+
+        assertEquals(0, v2.getSuccessCount());
+        assertEquals(0L, v2.getSuccessCumulatedDuration());
+
+        assertEquals(0, v2.getFailureCount());
+        assertEquals(0L, v2.getFailureCumulatedDurationNano());
+        failureTypes = v2.getFailureTypes();
+        assertEquals(2, failureTypes.size());
+        assertTrue(failureTypes.contains(SocketException.class));
+        assertTrue(failureTypes.contains(BindException.class));
+        assertEquals(0, v2.getFailureCount(SocketException.class));
+        assertEquals(0, v2.getFailureCount(BindException.class));
+        assertEquals(0, v2.getFailureCount(Throwable.class));
     }
 
     @Test
-    public void multiThreadedMiniStress_SuccessAndFailures() throws Exception
+    public void happyPath_Success_and_Failures() throws Exception
     {
-        fail("return here");
+        Counter c = getCounterToTest(MockOperation.class);
+
+        c.update(0L, 10L, 11L);
+        c.update(1L, 10L, 12L);
+        c.update(2L, 10L, 13L, new SocketException());
+        c.update(3L, 10L, 14L);
+        c.update(4L, 10L, 15L, new BindException());
+        c.update(5L, 10L, 16L);
+        c.update(6L, 10L, 17L, new SocketException());
+        c.update(7L, 10L, 18L);
+
+        assertEquals(MockOperation.class, c.getOperationType());
+
+        CounterValues v0 = c.getCounterValuesAndReset();
+
+        assertEquals(5, v0.getSuccessCount());
+        assertEquals(1L + 2L + 4L + 6L + 8L, v0.getSuccessCumulatedDuration());
+        assertEquals(3, v0.getFailureCount());
+        assertEquals(3L + 5L + 7L, v0.getFailureCumulatedDurationNano());
+        Set<Class<? extends Throwable>> failureTypes = v0.getFailureTypes();
+        assertEquals(2, failureTypes.size());
+        assertEquals(2, v0.getFailureCount(SocketException.class));
+        assertEquals(1, v0.getFailureCount(BindException.class));
+        assertEquals(0, v0.getFailureCount(Throwable.class));
+
+        c.update(8L, 10L, 11L);
+        c.update(9L, 10L, 12L, new SocketException());
+        c.update(10L, 10L, 13L);
+
+        CounterValues v1 = c.getCounterValuesAndReset();
+
+        assertEquals(2, v1.getSuccessCount());
+        assertEquals(1L + 3L, v1.getSuccessCumulatedDuration());
+        assertEquals(1, v1.getFailureCount());
+        assertEquals(2L, v1.getFailureCumulatedDurationNano());
+        failureTypes = v1.getFailureTypes();
+        assertEquals(2, failureTypes.size());
+        assertTrue(failureTypes.contains(SocketException.class));
+        assertTrue(failureTypes.contains(BindException.class));
+        assertEquals(1, v1.getFailureCount(SocketException.class));
+        assertEquals(0, v1.getFailureCount(BindException.class));
+        assertEquals(0, v1.getFailureCount(Throwable.class));
+
+        CounterValues v2 = c.getCounterValuesAndReset();
+
+        assertEquals(0, v2.getSuccessCount());
+        assertEquals(0L, v2.getSuccessCumulatedDuration());
+        assertEquals(0, v2.getFailureCount());
+        assertEquals(0L, v2.getFailureCumulatedDurationNano());
+        failureTypes = v2.getFailureTypes();
+        assertEquals(2, failureTypes.size());
+        assertTrue(failureTypes.contains(SocketException.class));
+        assertTrue(failureTypes.contains(BindException.class));
+        assertEquals(0, v2.getFailureCount(SocketException.class));
+        assertEquals(0, v2.getFailureCount(BindException.class));
+        assertEquals(0, v2.getFailureCount(Throwable.class));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

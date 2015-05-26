@@ -16,6 +16,10 @@
 
 package com.novaordis.gld.sampler;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * @see CounterValues
  */
@@ -28,7 +32,15 @@ public class CounterValuesImpl implements CounterValues
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private long successCount;
-    private long successCumulatedTime;
+    private long successCumulatedDuration;
+
+    private Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters;
+
+    // null means it was not calculated yet
+    private Long failureCount;
+
+    // null means it was not calculated yet
+    private Long failureCumulatedDurationNano;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -37,13 +49,28 @@ public class CounterValuesImpl implements CounterValues
      */
     public CounterValuesImpl()
     {
-        this(0L, 0L);
+        this(0L, 0L, null);
     }
 
-    public CounterValuesImpl(long successCount, long successCumulatedTime)
+    /**
+     * @param failureCounters a map associating failure types to failure counters.
+     *
+     * @throws IllegalArgumentException on invalid failure array
+     */
+    public CounterValuesImpl(long successCount, long successCumulatedDuration,
+                             Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters)
     {
         this.successCount = successCount;
-        this.successCumulatedTime = successCumulatedTime;
+        this.successCumulatedDuration = successCumulatedDuration;
+
+        if (failureCounters == null)
+        {
+            this.failureCounters = Collections.emptyMap();
+        }
+        else
+        {
+            this.failureCounters = failureCounters;
+        }
     }
 
     // CounterValues implementation ------------------------------------------------------------------------------------
@@ -55,9 +82,97 @@ public class CounterValuesImpl implements CounterValues
     }
 
     @Override
-    public long getSuccessCumulatedTime()
+    public long getSuccessCumulatedDuration()
     {
-        return successCumulatedTime;
+        return successCumulatedDuration;
+    }
+
+    @Override
+    public Set<Class<? extends Throwable>> getFailureTypes()
+    {
+        return failureCounters.keySet();
+    }
+
+    /**
+     * @see CounterValues#getFailureCount()
+     */
+    @Override
+    public long getFailureCount()
+    {
+        // lazy evaluation - we do it late because we might never have to do it
+
+        if (failureCount == null)
+        {
+            long c = 0L;
+            long d = 0L;
+            for(FailureCounter fc: failureCounters.values())
+            {
+                c += fc.getCount();
+                d += fc.getCumulatedDurationNano();
+            }
+
+            failureCount = c;
+            failureCumulatedDurationNano = d;
+        }
+
+        return failureCount;
+    }
+
+    /**
+     * @see CounterValues#getFailureCount(Class)
+     */
+    @Override
+    public long getFailureCount(Class<? extends Throwable> failureType)
+    {
+        ImmutableFailureCounter c = failureCounters.get(failureType);
+
+        if (c == null)
+        {
+            return 0L;
+        }
+
+        return c.getCount();
+    }
+
+    /**
+     * @see CounterValues#getFailureCumulatedDurationNano()
+     */
+    @Override
+    public long getFailureCumulatedDurationNano()
+    {
+        // lazy evaluation - we do it late because we might never have to do it
+
+        if (failureCumulatedDurationNano == null)
+        {
+            long c = 0L;
+            long d = 0L;
+            for(FailureCounter fc: failureCounters.values())
+            {
+                c += fc.getCount();
+                d += fc.getCumulatedDurationNano();
+            }
+
+            failureCount = c;
+            failureCumulatedDurationNano = d;
+        }
+
+        return failureCumulatedDurationNano;
+    }
+
+    /**
+     * @see CounterValues#getFailureCumulatedDurationNano(Class)
+     */
+    @Override
+    public long getFailureCumulatedDurationNano(Class<? extends Throwable> failureType)
+    {
+        ImmutableFailureCounter c = failureCounters.get(failureType);
+
+        if (c == null)
+        {
+            return 0L;
+        }
+
+        return c.getCumulatedDurationNano();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
