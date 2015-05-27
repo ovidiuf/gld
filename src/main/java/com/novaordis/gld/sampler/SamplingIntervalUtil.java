@@ -142,7 +142,7 @@ public class SamplingIntervalUtil
                 Map<Class<? extends Throwable>, ImmutableFailureCounter> failures = new HashMap<>();
                 for(Class<? extends Throwable> ft: failureTypes)
                 {
-                    ImmutableFailureCounter ifc = new ImmutableFailureCounter(ft, fc.get(ft), fcd.get(ft));
+                    ImmutableFailureCounter ifc = new ImmutableFailureCounter(fc.get(ft), fcd.get(ft));
                     failures.put(ft, ifc);
                 }
 

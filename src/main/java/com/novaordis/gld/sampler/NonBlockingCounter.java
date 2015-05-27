@@ -105,7 +105,7 @@ public class NonBlockingCounter implements Counter
             {
                 // only create the instance if it is *not* in the map - there's a slight change a FailureCounter
                 // instance will be created unnecessarily but that is an unlikely, rare and ultimately harmless event
-                failureCounter = new NonBlockingFailureCounter(failureType);
+                failureCounter = new NonBlockingFailureCounter();
                 failureCounters.putIfAbsent(failureType, failureCounter);
             }
 

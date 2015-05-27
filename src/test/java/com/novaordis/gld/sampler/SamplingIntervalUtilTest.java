@@ -71,8 +71,8 @@ public class SamplingIntervalUtilTest
         operationTypes.add(MockOperation.class);
         SamplingIntervalImpl si = new SamplingIntervalImpl(1L, 5L, operationTypes);
         Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters = new HashMap<>();
-        failureCounters.put(SocketException.class, new ImmutableFailureCounter(SocketException.class, 1L, 2L));
-        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(ConnectException.class, 3L, 4L));
+        failureCounters.put(SocketException.class, new ImmutableFailureCounter(1L, 2L));
+        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(3L, 4L));
         CounterValuesImpl cv = new CounterValuesImpl(5L, 6L, failureCounters);
         si.setCounterValues(MockOperation.class, cv);
         si.addAnnotation("annotation 1");
@@ -114,8 +114,8 @@ public class SamplingIntervalUtilTest
         operationTypes.add(MockOperation.class);
         SamplingIntervalImpl si = new SamplingIntervalImpl(1L, 5L, operationTypes);
         Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters = new HashMap<>();
-        failureCounters.put(SocketException.class, new ImmutableFailureCounter(SocketException.class, 1L, 2L));
-        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(ConnectException.class, 3L, 4L));
+        failureCounters.put(SocketException.class, new ImmutableFailureCounter(1L, 2L));
+        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(3L, 4L));
         CounterValuesImpl cv = new CounterValuesImpl(5L, 6L, failureCounters);
         si.setCounterValues(MockOperation.class, cv);
         si.addAnnotation("annotation 1");
@@ -195,14 +195,14 @@ public class SamplingIntervalUtilTest
         SamplingIntervalImpl si = new SamplingIntervalImpl(100L, 200L, operationTypes);
 
         Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters = new HashMap<>();
-        failureCounters.put(SocketException.class, new ImmutableFailureCounter(SocketException.class, 1L, 2L));
-        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(ConnectException.class, 3L, 4L));
+        failureCounters.put(SocketException.class, new ImmutableFailureCounter(1L, 2L));
+        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(3L, 4L));
         CounterValuesImpl cv = new CounterValuesImpl(5L, 6L, failureCounters);
         si.setCounterValues(MockOperation.class, cv);
 
         failureCounters = new HashMap<>();
-        failureCounters.put(SocketException.class, new ImmutableFailureCounter(SocketException.class, 7L, 8L));
-        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(ConnectException.class, 9L, 10L));
+        failureCounters.put(SocketException.class, new ImmutableFailureCounter(7L, 8L));
+        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(9L, 10L));
         cv = new CounterValuesImpl(11L, 12L, failureCounters);
         si.setCounterValues(AnotherTypeOfMockOperation.class, cv);
 
@@ -335,9 +335,9 @@ public class SamplingIntervalUtilTest
         operationTypes.add(MockOperation.class);
         SamplingIntervalImpl si = new SamplingIntervalImpl(1000L, 785L, operationTypes);
         Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters = new HashMap<>();
-        failureCounters.put(SocketException.class, new ImmutableFailureCounter(SocketException.class, 1L, 2L));
-        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(ConnectException.class, 3L, 4L));
-        failureCounters.put(IOException.class, new ImmutableFailureCounter(IOException.class, 50000L, 60000L));
+        failureCounters.put(SocketException.class, new ImmutableFailureCounter(1L, 2L));
+        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(3L, 4L));
+        failureCounters.put(IOException.class, new ImmutableFailureCounter(50000L, 60000L));
         CounterValuesImpl cv = new CounterValuesImpl(5L, 6L, failureCounters);
         si.setCounterValues(MockOperation.class, cv);
         si.addAnnotation("annotation 1");

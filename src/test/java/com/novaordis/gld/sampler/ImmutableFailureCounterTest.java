@@ -33,9 +33,9 @@ public class ImmutableFailureCounterTest extends FailureCounterTest
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected ImmutableFailureCounter getFailureCounterToTest(Class<? extends Throwable> failureType) throws Exception
+    protected ImmutableFailureCounter getFailureCounterToTest() throws Exception
     {
-        return new ImmutableFailureCounter(failureType, 0L, 0L);
+        return new ImmutableFailureCounter(0L, 0L);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

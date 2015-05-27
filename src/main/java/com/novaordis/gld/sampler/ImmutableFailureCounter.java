@@ -24,26 +24,18 @@ public class ImmutableFailureCounter implements FailureCounter
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private final Class<? extends Throwable> failureType;
     private final long count;
     private final long cumulatedFailureDurationNano;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public ImmutableFailureCounter(Class<? extends Throwable> failureType, long count, long cumulatedFailureDurationNano)
+    public ImmutableFailureCounter(long count, long cumulatedFailureDurationNano)
     {
-        this.failureType = failureType;
         this.count = count;
         this.cumulatedFailureDurationNano = cumulatedFailureDurationNano;
     }
 
     // FailureCounter implementation -----------------------------------------------------------------------------------
-
-    @Override
-    public Class<? extends Throwable> getFailureType()
-    {
-        return failureType;
-    }
 
     @Override
     public long getCount()
@@ -62,8 +54,7 @@ public class ImmutableFailureCounter implements FailureCounter
     @Override
     public String toString()
     {
-        return (failureType == null ? "null" : failureType.getSimpleName()) +
-            " " + count + " " + cumulatedFailureDurationNano;
+        return "" + count + " " + cumulatedFailureDurationNano;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

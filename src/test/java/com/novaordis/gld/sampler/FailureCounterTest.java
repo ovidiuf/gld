@@ -16,18 +16,13 @@
 
 package com.novaordis.gld.sampler;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
-
-import java.net.SocketException;
 
 import static org.junit.Assert.assertEquals;
 
 public abstract class FailureCounterTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = Logger.getLogger(FailureCounterTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -40,9 +35,8 @@ public abstract class FailureCounterTest
     @Test
     public void defaultBehavior() throws Exception
     {
-        FailureCounter c = getFailureCounterToTest(SocketException.class);
+        FailureCounter c = getFailureCounterToTest();
 
-        assertEquals(SocketException.class, c.getFailureType());
         assertEquals(0L, c.getCount());
         assertEquals(0L, c.getCumulatedDurationNano());
     }
@@ -51,7 +45,7 @@ public abstract class FailureCounterTest
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected abstract FailureCounter getFailureCounterToTest(Class<? extends Throwable> failureType) throws Exception;
+    protected abstract FailureCounter getFailureCounterToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

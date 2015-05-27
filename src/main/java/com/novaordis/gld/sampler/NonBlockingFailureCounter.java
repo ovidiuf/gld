@@ -26,26 +26,18 @@ public class NonBlockingFailureCounter implements FailureCounter
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Class<? extends Throwable> failureType;
     private AtomicLong count;
     private AtomicLong cumulatedFailureDurationNano;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public NonBlockingFailureCounter(Class<? extends Throwable> failureType)
+    public NonBlockingFailureCounter()
     {
-        this.failureType = failureType;
         this.count = new AtomicLong();
         this.cumulatedFailureDurationNano = new AtomicLong();
     }
 
     // FailureCounter implementation -----------------------------------------------------------------------------------
-
-    @Override
-    public Class<? extends Throwable> getFailureType()
-    {
-        return failureType;
-    }
 
     @Override
     public long getCount()
@@ -72,7 +64,7 @@ public class NonBlockingFailureCounter implements FailureCounter
 
     public ImmutableFailureCounter getFailureCounterSnapshotAndReset()
     {
-        return new ImmutableFailureCounter(failureType, count.getAndSet(0), cumulatedFailureDurationNano.getAndSet(0));
+        return new ImmutableFailureCounter(count.getAndSet(0), cumulatedFailureDurationNano.getAndSet(0));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -210,7 +210,7 @@ public class CounterValuesImpl implements CounterValues
                 baseOcd = thisFailureCounter.getCumulatedDurationNano();
             }
 
-            failureCounters.put(ft, new ImmutableFailureCounter(ft, baseOc + oc, baseOcd + ocd));
+            failureCounters.put(ft, new ImmutableFailureCounter(baseOc + oc, baseOcd + ocd));
         }
 
         // since we modified the failure counters, we re-set the pre-calculated aggregated values

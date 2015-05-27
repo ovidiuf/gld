@@ -134,8 +134,8 @@ public class SamplingIntervalImplTest extends SamplingIntervalTest
         SamplingIntervalImpl si = new SamplingIntervalImpl(0L, 1L, operationTypes);
 
         Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters = new HashMap<>();
-        failureCounters.put(SocketException.class, new ImmutableFailureCounter(SocketException.class, 1L, 2L));
-        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(ConnectException.class, 3L, 4L));
+        failureCounters.put(SocketException.class, new ImmutableFailureCounter(1L, 2L));
+        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(3L, 4L));
         CounterValues cv = new CounterValuesImpl(5L, 6L, failureCounters);
 
         si.incrementCounterValues(MockOperation.class, cv);
@@ -171,8 +171,8 @@ public class SamplingIntervalImplTest extends SamplingIntervalTest
         // increment the MockOperation counters one more time and for the first time AnotherTypeOfMockOperation's
 
         failureCounters = new HashMap<>();
-        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(SocketException.class, 7L, 8L));
-        failureCounters.put(IOException.class, new ImmutableFailureCounter(IOException.class, 9L, 10L));
+        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(7L, 8L));
+        failureCounters.put(IOException.class, new ImmutableFailureCounter(9L, 10L));
         cv = new CounterValuesImpl(11L, 12L, failureCounters);
 
         si.incrementCounterValues(MockOperation.class, cv);
@@ -195,8 +195,8 @@ public class SamplingIntervalImplTest extends SamplingIntervalTest
         assertEquals(10L, cv3.getFailureCumulatedDurationNano(IOException.class));
 
         failureCounters = new HashMap<>();
-        failureCounters.put(SocketException.class, new ImmutableFailureCounter(SocketException.class, 13L, 14L));
-        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(ConnectException.class, 15L, 16L));
+        failureCounters.put(SocketException.class, new ImmutableFailureCounter(13L, 14L));
+        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(15L, 16L));
         cv = new CounterValuesImpl(17L, 18L, failureCounters);
 
         si.incrementCounterValues(AnotherTypeOfMockOperation.class, cv);

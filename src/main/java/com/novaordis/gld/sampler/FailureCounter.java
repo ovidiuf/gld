@@ -21,8 +21,6 @@ package com.novaordis.gld.sampler;
  */
 public interface FailureCounter
 {
-    public Class<? extends Throwable> getFailureType();
-
     public long getCount();
 
     public long getCumulatedDurationNano();

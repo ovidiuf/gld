@@ -56,7 +56,7 @@ public class CounterValuesImplTest extends CounterValuesTest
     public void knownAndUnknownFailures() throws Exception
     {
         Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters = new HashMap<>();
-        failureCounters.put(SocketException.class, new ImmutableFailureCounter(SocketException.class, 1L, 2L));
+        failureCounters.put(SocketException.class, new ImmutableFailureCounter(1L, 2L));
 
         CounterValuesImpl cv = new CounterValuesImpl(0L, 0L, failureCounters);
 
@@ -75,8 +75,8 @@ public class CounterValuesImplTest extends CounterValuesTest
     public void aggregatedValues() throws Exception
     {
         Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters = new HashMap<>();
-        failureCounters.put(SocketException.class, new ImmutableFailureCounter(SocketException.class, 1L, 2L));
-        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(ConnectException.class, 3L, 4L));
+        failureCounters.put(SocketException.class, new ImmutableFailureCounter(1L, 2L));
+        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(3L, 4L));
 
         CounterValuesImpl cv = new CounterValuesImpl(0L, 0L, failureCounters);
 
@@ -114,7 +114,7 @@ public class CounterValuesImplTest extends CounterValuesTest
         assertEquals(0L, base.getFailureCumulatedDurationNano(SocketException.class));
 
         Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters = new HashMap<>();
-        failureCounters.put(SocketException.class, new ImmutableFailureCounter(SocketException.class, 1L, 2L));
+        failureCounters.put(SocketException.class, new ImmutableFailureCounter(1L, 2L));
         CounterValuesImpl increment1 = new CounterValuesImpl(3L, 4L, failureCounters);
 
         base.incrementWith(increment1);
@@ -130,8 +130,8 @@ public class CounterValuesImplTest extends CounterValuesTest
         assertEquals(2L, base.getFailureCumulatedDurationNano(SocketException.class));
 
         failureCounters = new HashMap<>();
-        failureCounters.put(SocketException.class, new ImmutableFailureCounter(SocketException.class, 5L, 6L));
-        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(ConnectException.class, 7L, 8L));
+        failureCounters.put(SocketException.class, new ImmutableFailureCounter(5L, 6L));
+        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(7L, 8L));
         CounterValuesImpl increment2 = new CounterValuesImpl(9L, 10L, failureCounters);
 
         base.incrementWith(increment2);
@@ -150,8 +150,8 @@ public class CounterValuesImplTest extends CounterValuesTest
         assertEquals(8L, base.getFailureCumulatedDurationNano(ConnectException.class));
 
         failureCounters = new HashMap<>();
-        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(ConnectException.class, 11L, 12L));
-        failureCounters.put(IOException.class, new ImmutableFailureCounter(IOException.class, 13L, 14L));
+        failureCounters.put(ConnectException.class, new ImmutableFailureCounter(11L, 12L));
+        failureCounters.put(IOException.class, new ImmutableFailureCounter(13L, 14L));
         CounterValuesImpl increment3 = new CounterValuesImpl(15L, 16L, failureCounters);
 
         base.incrementWith(increment3);

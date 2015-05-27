@@ -18,7 +18,6 @@ package com.novaordis.gld.sampler;
 
 import org.junit.Test;
 
-import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -44,7 +43,7 @@ public class NonBlockingFailureCounterTest extends FailureCounterTest
         int executionCount = 479;
         final long duration = 7L;
 
-        final NonBlockingFailureCounter c = new NonBlockingFailureCounter(SocketException.class);
+        final NonBlockingFailureCounter c = new NonBlockingFailureCounter();
 
         final AtomicInteger counter = new AtomicInteger();
 
@@ -72,7 +71,6 @@ public class NonBlockingFailureCounterTest extends FailureCounterTest
 
         es.shutdown();
 
-        assertEquals(SocketException.class, c.getFailureType());
         ImmutableFailureCounter ifc = c.getFailureCounterSnapshotAndReset();
         assertEquals(executionCount, ifc.getCount());
         assertEquals(executionCount * duration, ifc.getCumulatedDurationNano());
@@ -81,13 +79,12 @@ public class NonBlockingFailureCounterTest extends FailureCounterTest
     @Test
     public void immutableFailureCounterCreation() throws Exception
     {
-        NonBlockingFailureCounter nbfc = getFailureCounterToTest(SocketException.class);
+        NonBlockingFailureCounter nbfc = getFailureCounterToTest();
 
         ImmutableFailureCounter ifc = nbfc.getFailureCounterSnapshotAndReset();
 
         assertEquals(0L, ifc.getCount());
         assertEquals(0L, ifc.getCumulatedDurationNano());
-        assertEquals(SocketException.class, ifc.getFailureType());
 
         nbfc.increment(1L);
         nbfc.increment(2L);
@@ -97,13 +94,11 @@ public class NonBlockingFailureCounterTest extends FailureCounterTest
 
         assertEquals(3L, ifc2.getCount());
         assertEquals(1L + 2L + 3L, ifc2.getCumulatedDurationNano());
-        assertEquals(SocketException.class, ifc2.getFailureType());
 
         ImmutableFailureCounter ifc3 = nbfc.getFailureCounterSnapshotAndReset();
 
         assertEquals(0L, ifc3.getCount());
         assertEquals(0L, ifc3.getCumulatedDurationNano());
-        assertEquals(SocketException.class, ifc3.getFailureType());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -111,9 +106,9 @@ public class NonBlockingFailureCounterTest extends FailureCounterTest
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected NonBlockingFailureCounter getFailureCounterToTest(Class<? extends Throwable> failureType) throws Exception
+    protected NonBlockingFailureCounter getFailureCounterToTest() throws Exception
     {
-        return new NonBlockingFailureCounter(failureType);
+        return new NonBlockingFailureCounter();
     }
 
     // Private ---------------------------------------------------------------------------------------------------------
