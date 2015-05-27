@@ -20,10 +20,13 @@ import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import java.text.DecimalFormat;
+import java.text.Format;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.Assert.assertEquals;
 
@@ -42,13 +45,12 @@ public class SamplerImplStressTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void severalSamplingCycles() throws Exception
+    public void stress() throws Exception
     {
-        final SamplerImpl s = new SamplerImpl(250L, 1000L);
-
-        s.registerOperation(MockOperation.class);
         long interval = 1000L;
-        s.setSamplingIntervalMs(interval);
+
+        final SamplerImpl s = new SamplerImpl(250L, interval);
+        s.registerOperation(MockOperation.class);
 
         final List<SamplingInterval> samples = new ArrayList<>();
 
@@ -66,6 +68,8 @@ public class SamplerImplStressTest
         int threads = 300;
         final int operationsPerThread = 1200000;
         final CyclicBarrier barrier = new CyclicBarrier(threads + 1);
+        final AtomicLong totalTimeAcrossThreadsNs = new AtomicLong(0L);
+
         for(int i = 0; i < threads; i ++)
         {
             new Thread(new Runnable()
@@ -73,15 +77,20 @@ public class SamplerImplStressTest
                 @Override
                 public void run()
                 {
+                    long totalTimeNs = 0;
+
                     for(int j = 0; j < operationsPerThread; j ++)
                     {
                         long t0Nano = System.nanoTime();
                         MockOperation mo = new MockOperation();
                         long t1Nano = System.nanoTime();
                         s.record(System.currentTimeMillis(), t0Nano, t1Nano, mo);
+                        totalTimeNs += (t1Nano - t0Nano);
                     }
 
                     log.info(Thread.currentThread().getName() + " finished");
+
+                    totalTimeAcrossThreadsNs.addAndGet(totalTimeNs);
 
                     try
                     {
@@ -100,9 +109,9 @@ public class SamplerImplStressTest
         }
 
         // wait for all pump threads to finish
+
         barrier.await();
         log.info(Thread.currentThread().getName() + " released from barrier");
-
 
         log.info("sleeping for " + (interval / 1000L) + " seconds ...");
         Thread.sleep(interval);
@@ -134,6 +143,39 @@ public class SamplerImplStressTest
                 interval, si.getDurationMs());
         }
 
+        log.info("average allocation time in nanoseconds:");
+
+        Format DECIMAL_FORMAT = new DecimalFormat("#.00");
+
+        int index = 0;
+        long totalSc = 0L;
+        long totalScd = 0L;
+
+        for(SamplingInterval si: samples)
+        {
+            CounterValues cv = si.getCounterValues(MockOperation.class);
+            long sc = cv.getSuccessCount();
+            long scd = cv.getSuccessCumulatedDurationNano();
+
+            double a = ((double)scd)/sc;
+
+            log.info("sample " + index++ + ": " + si + " " + sc + " invocations, " +
+                (sc == 0 ? "N/A" : DECIMAL_FORMAT.format(a)) + " ns/invocation");
+
+            assertEquals(0L, cv.getFailureCount());
+            assertEquals(0L, cv.getFailureCumulatedDurationNano());
+
+            totalSc += sc;
+            totalScd += scd;
+        }
+
+        double sampledAverage = ((double)totalScd)/totalSc;
+        double directlyReadAverage = ((double)totalTimeAcrossThreadsNs.get())/successful;
+
+        log.info("average operation time in nanoseconds (without sampling): " + DECIMAL_FORMAT.format(directlyReadAverage));
+        log.info("average operation time in nanoseconds (with sampling):    " + DECIMAL_FORMAT.format(sampledAverage));
+
+        assertEquals(directlyReadAverage, sampledAverage, 0.01);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

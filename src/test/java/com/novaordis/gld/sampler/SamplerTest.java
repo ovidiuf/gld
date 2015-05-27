@@ -330,6 +330,7 @@ public abstract class SamplerTest
                 sil.addAll(Arrays.asList(sis));
             }
         });
+
         sampler.start();
 
         sampler.annotate("test");

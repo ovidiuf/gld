@@ -132,20 +132,17 @@ public class SamplerImplTest extends SamplerTest
         assertTrue(s.isStarted());
 
         assertTrue(s.getLastRunTimestamp() > 0);
-
-        assertNull(s.getCurrent());
-
-        // sampling interval initialization
-        s.run();
         SamplingInterval current = s.getCurrent();
         assertNotNull(current);
 
+        s.run(); // first run, should not collect anyting
+
         long ts = current.getStartMs();
+
         // make sure it's rounded on the second
         assertEquals(0L, ts - ((ts / 1000) * 1000L));
 
-        // first collection run, should not collect anything
-        s.run();
+        s.run(); // second collection run, should not collect anything
 
         current = s.getCurrent();
         assertEquals(ts, current.getStartMs()); // insure it's the same sampling interval

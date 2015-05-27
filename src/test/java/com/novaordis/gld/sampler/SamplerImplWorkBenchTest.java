@@ -80,18 +80,17 @@ public class SamplerImplWorkBenchTest
 
         assertTrue(s.getLastRunTimestamp() > 0);
 
-        assertNull(s.getCurrent());
-
-        // run 2 - sampling interval initialization
-        s.run();
         SamplingInterval current = s.getCurrent();
         assertNotNull(current);
+
+        // run 2 - collection run, should not collect anything
+        s.run();
 
         long ts = current.getStartMs();
         // make sure it's rounded on the second
         assertEquals(0L, ts - ((ts / 1000) * 1000L));
 
-        // run 3 - first collection run, should not collect anything
+        // run 3 - collection run, should not collect anything
         s.run();
 
         current = s.getCurrent();
@@ -338,13 +337,11 @@ public class SamplerImplWorkBenchTest
         s.start();
 
         assertTrue(s.isStarted());
-        assertNull(s.getCurrent());
-
-        // run 2 - sampling interval initialization
-        s.run();
-
         SamplingInterval current = s.getCurrent();
         assertNotNull(current);
+
+        // run 2 - should not collect anything
+        s.run();
 
         // record a success, a failure an an annotation and wait 5 sampling intervals
         s.record(System.currentTimeMillis(), 1L, 2L, new MockOperation()); // 1

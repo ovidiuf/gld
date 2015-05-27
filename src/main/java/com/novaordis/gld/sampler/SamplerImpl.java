@@ -253,6 +253,8 @@ public class SamplerImpl extends TimerTask implements Sampler
     public void annotate(String line)
     {
         annotations.add(line);
+
+        if (debug) { log.debug(this + " annotated with '" + line + "'"); }
     }
 
     /**
@@ -290,17 +292,6 @@ public class SamplerImpl extends TimerTask implements Sampler
 
         try
         {
-            if (lastRunTimestamp == -1L)
-            {
-                // this is the first run, we don't have the beginning of the sampling interval, we'll set it in the
-                // finally clause and wait until the next sampling task run
-                log.debug("run " + runCounter + ": sampling task timestamp initialization run, not collecting statistics yet");
-
-
-                // done for this run ...
-                return;
-            }
-
             if (current == null)
             {
                 // there was no sampling interval built yet, set it to be on a round second mark, preceding but as
@@ -309,32 +300,26 @@ public class SamplerImpl extends TimerTask implements Sampler
                 current = new SamplingIntervalImpl(siTs, samplingIntervalMs, counters.keySet());
 
                 log.debug("run " + runCounter + ": sampling interval initialized, beginning to collect statistics");
-
-                // done for this run ...
-                return;
             }
 
-            if (debug) { log.debug("run " + runCounter + ": sampling task executing, collecting and analyzing statistics for the last " + (thisRunTimestamp - lastRunTimestamp) + " ms"); }
+            if (debug) { log.debug("run " + runCounter + ": sampling task executing" + (lastRunTimestamp == -1 ? "" : ", collecting statistics from the last " + (thisRunTimestamp - lastRunTimestamp) + " ms")); }
+
+            // we need to collect and reset counters and annotations irrespective of whether run falls within the
+            // current sampling interval or outside it; since we don't have a precise way of determining when exactly
+            // the records have been made (we actually do, but it'd be too expensive and not worth it, in the grand
+            // scheme of things), we allocate the counter values and the annotations to the current sample. If we
+            // overshoot, with more than one sample, the current sample will be extrapolated anyway. If we fall within
+            // the next sample, oh well ...
+
+            collectAndResetCountersAndAnnotations();
 
             if (thisRunTimestamp - current.getStartMs() < samplingIntervalMs)
             {
-                // we are still strictly within the current sampling interval, increment the current sampling interval
-                // counters, while resetting the concurrent counters; the sampling interval will never be accessed by
-                // other thread except the sampling thread, so it does not need synchronization or any other type of
-                // memory visibility control
-
-                if (debug) { log.debug("still within sampling interval " + current + ", copying and resetting counters"); }
-
-                collectAndResetCountersAndAnnotations();
-
-                // done for this run ...
+                // not ready to wrap up the current sampling interval, we're done for the time being
                 return;
             }
 
             // we're right on the edge of the sampling interval or we went beyond it
-
-            // TODO - what to do with the current statistics and annotations? The code below discards everything
-            // that was collected since the last "regular" run, and this is incorrect, we're losing data.
 
             long pastCurrent = thisRunTimestamp - current.getEndMs();
 
@@ -347,7 +332,7 @@ public class SamplerImpl extends TimerTask implements Sampler
 
             SamplingInterval last = current;
 
-            // if more than one sample accumulated, extrapolate values across multiple samples and send all of them
+            // if more than one sample has accumulated, extrapolate values across multiple samples and send all of them
             // to consumers (although, for a sampling run interval smaller than the sampling interval, multiple samples
             // is an unlikely occurrence)
             int n = (int)(pastCurrent / samplingIntervalMs);
