@@ -17,8 +17,11 @@
 package com.novaordis.gld.sampler;
 
 import com.novaordis.gld.Operation;
+import com.novaordis.gld.sampler.metrics.Metric;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -149,6 +152,18 @@ public class SamplingIntervalUtil
                 CounterValuesImpl cv = new CounterValuesImpl(sc, scd, failures);
                 si.setCounterValues(ot, cv);
             }
+        }
+
+        return result;
+    }
+
+    public static List<Number> snapshotMetrics(List<Metric> metrics)
+    {
+        List<Number> result = new ArrayList<>();
+
+        for(Metric m: metrics)
+        {
+            result.add(m.getValue());
         }
 
         return result;

@@ -16,6 +16,10 @@
 
 package com.novaordis.gld.sampler;
 
+import com.novaordis.gld.sampler.metrics.FreePhysicalMemorySize;
+import com.novaordis.gld.sampler.metrics.Metric;
+import com.novaordis.gld.sampler.metrics.SystemCpuLoad;
+import com.novaordis.gld.sampler.metrics.SystemLoadAverage;
 import com.novaordis.gld.strategy.load.cache.AnotherTypeOfMockOperation;
 import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
@@ -402,6 +406,67 @@ public abstract class SamplerTest
 
         assertEquals(1, count);
         assertEquals("test", annotation);
+    }
+
+    // metrics ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void registerAndReadMetrics() throws Exception
+    {
+        Sampler sampler = getSamplerToTest();
+        long samplingTaskRunInterval = 10L;
+        long samplingInterval = 11L;
+        sampler.setSamplingTaskRunIntervalMs(samplingTaskRunInterval);
+        sampler.setSamplingIntervalMs(samplingInterval);
+        sampler.registerOperation(MockOperation.class);
+        final List<SamplingInterval> sil = new ArrayList<>();
+        sampler.registerConsumer(new SamplingConsumer()
+        {
+            @Override
+            public void consume(SamplingInterval... sis)
+            {
+                sil.addAll(Arrays.asList(sis));
+            }
+        });
+
+        assertTrue(sampler.registerMetric(new SystemCpuLoad()));
+        assertTrue(sampler.registerMetric(new SystemLoadAverage()));
+        assertTrue(sampler.registerMetric(new FreePhysicalMemorySize()));
+        assertTrue(sampler.registerMetric(new FreePhysicalMemorySize()));
+
+        sampler.start();
+
+        sampler.record(0L, 1L, 2L, new MockOperation());
+
+        // wait to get some samples
+        Thread.sleep(2 * samplingInterval);
+
+        sampler.stop(); // this will populate the sampler interval
+
+        assertFalse(sil.isEmpty());
+
+        for(SamplingInterval si: sil)
+        {
+            // sampling interval instances must have system-wide metrics
+
+            List<Number> metricValues = si.getMetricValues();
+
+            assertNotNull("null metric values - this probably means SamplingInterval extrapolation did not work for metrics", metricValues);
+
+            assertEquals(4, metricValues.size());
+            assertTrue(metricValues.get(0) != null);
+            log.info(metricValues.get(0));
+
+            assertTrue(metricValues.get(1) != null);
+            log.info(metricValues.get(1));
+
+            assertTrue(metricValues.get(2) != null);
+            log.info(metricValues.get(2));
+
+            assertTrue(metricValues.get(3) != null);
+            log.info(metricValues.get(3));
+
+        }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

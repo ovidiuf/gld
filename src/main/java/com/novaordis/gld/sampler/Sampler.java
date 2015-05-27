@@ -17,6 +17,7 @@
 package com.novaordis.gld.sampler;
 
 import com.novaordis.gld.Operation;
+import com.novaordis.gld.sampler.metrics.Metric;
 
 /**
  * A fixed-interval sampler. Once started, the sampler will continuously and regularly produce samples each
@@ -33,26 +34,32 @@ import com.novaordis.gld.Operation;
  *      s.registerOperation(Send.class);
  *      s.registerOperation(Receive.class);
  *
- * 3. Register all sample consumers.
+ * 3. Register the system-wide metrics we want to sample
+ *
+ *      s.registerMetric(...);
+ *      s.registerMetric(...);
+ *      ...
+ *
+ * 4. Register all sample consumers.
  *
  *      s.registerConsumer(...);
  *
- * 4. Configure the sampling interval:
+ * 5. Configure the sampling interval:
  *
  *      s.setSamplingIntervalMs(...);
  *
- * 5. Start the sampler.
+ * 6. Start the sampler.
  *
  *      s.start();
  *
- * 6. Send operations into it:
+ * 7. Send operations into it:
  *
  *      s.record(...)
  *
  * Note that if the sampler is asked to record an operation it was not configured with, it will thrown an
  * IllegalArgumentException.
  *
- * 7. Stop the sampler.
+ * 8. Stop the sampler.
  *
  *      s.stop();
  *
@@ -60,33 +67,6 @@ import com.novaordis.gld.Operation;
  */
 public interface Sampler
 {
-    /**
-     * Starts the sampler. Once started, the sampler will continuously and regularly produce samples each
-     * <b>samplingIntervalMs</b>milliseconds and send them to all registered SampleConsumers. It's usually a good
-     * idea to register all consumers before calling start.
-     *
-     * The operation should be idempotent - once started, subsequent invocations should be noops.
-     *
-     * @exception java.lang.IllegalStateException if the start() is invoked without any operation registered.
-     */
-    void start();
-
-    boolean isStarted();
-
-    /**
-     * Stops the sampler. Once stopped, record() will throw IllegalStateException and registered consumers will stop
-     * receiving samples. It is up to the implementation whether will accept re-starting or not, the implementation
-     * should make that clear.
-     *
-     * After stopping the sampler, all operation registrations are lost.
-     *
-     * stop() is guaranteed to allow for one more full sampling run after it was called and to trigger generation of
-     * a final sampling interval that will contain all events recorded from the same thread that called stop().
-     *
-     * @see Sampler#record(long, long, long, Operation, java.lang.Throwable...)
-     */
-    void stop();
-
     /**
      * Sets the sampling interval. Implementations may accept or not changing the sampling interval after the
      * sampler was started. The documentation should describe the behavior.
@@ -125,14 +105,44 @@ public interface Sampler
     Counter registerOperation(Class<? extends Operation> operationType);
 
     /**
-     * May return null.
-     */
-    Counter getCounter(Class<? extends Operation> operationType);
-
-    /**
      * @return whether consumer was successfully added or not.
      */
     boolean registerConsumer(SamplingConsumer consumer);
+
+    /**
+     * Registers a system-wide metric to be included with each sampling interval.
+     *
+     * @return true if the metric was successfully registered. A reason *not* to successfully register a metric would
+     * be if the metric was already registered.
+     */
+    boolean registerMetric(Metric m);
+
+    /**
+     * Starts the sampler. Once started, the sampler will continuously and regularly produce samples each
+     * <b>samplingIntervalMs</b>milliseconds and send them to all registered SampleConsumers. It's usually a good
+     * idea to register all consumers before calling start.
+     *
+     * The operation should be idempotent - once started, subsequent invocations should be noops.
+     *
+     * @exception java.lang.IllegalStateException if the start() is invoked without any operation registered.
+     */
+    void start();
+
+    boolean isStarted();
+
+    /**
+     * Stops the sampler. Once stopped, record() will throw IllegalStateException and registered consumers will stop
+     * receiving samples. It is up to the implementation whether will accept re-starting or not, the implementation
+     * should make that clear.
+     *
+     * After stopping the sampler, all operation registrations are lost.
+     *
+     * stop() is guaranteed to allow for one more full sampling run after it was called and to trigger generation of
+     * a final sampling interval that will contain all events recorded from the same thread that called stop().
+     *
+     * @see Sampler#record(long, long, long, Operation, java.lang.Throwable...)
+     */
+    void stop();
 
     /**
      * Presents the operation to the sampler, giving it a chance to update its internal statistics.
@@ -157,10 +167,14 @@ public interface Sampler
      */
     void record(long t0Ms, long t0Nano, long t1Nano, Operation op, Throwable... t);
 
-
     /**
      * Annotate the statistics, using the current time stamp.
      */
     void annotate(String line);
+
+    /**
+     * May return null.
+     */
+    Counter getCounter(Class<? extends Operation> operationType);
 
 }

@@ -29,7 +29,6 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class SamplerImplTest extends SamplerTest
@@ -104,7 +103,7 @@ public class SamplerImplTest extends SamplerTest
     /**
      * Note: this test is a remnant of work that since migrated in SamplerImplWorkBenchTest.
      *
-     * @see com.novaordis.gld.sampler.SamplerImplWorkBenchTest
+     * @see SamplerImplWorkBenchTest
      */
     @Test
     public void simulatedStepByStepSamplingCollection() throws Exception
@@ -114,6 +113,7 @@ public class SamplerImplTest extends SamplerTest
         // the sampling task run interval is 0, meaning no timer task will be registered
         SamplerImpl s = new SamplerImpl(0L, samplingInterval);
         s.registerOperation(MockOperation.class);
+        //s.registerMetric()
         s.registerConsumer(new SamplingConsumer()
         {
             @Override

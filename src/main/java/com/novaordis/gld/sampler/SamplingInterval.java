@@ -17,6 +17,7 @@
 package com.novaordis.gld.sampler;
 
 import com.novaordis.gld.Operation;
+import com.novaordis.gld.sampler.metrics.Metric;
 
 import java.util.List;
 import java.util.Set;
@@ -53,5 +54,10 @@ public interface SamplingInterval
      * list if no annotations were entered.
      */
     List<String> getAnnotations();
+
+    /**
+     * @see Sampler#registerMetric(Metric)
+     */
+    List<Number> getMetricValues();
 
 }

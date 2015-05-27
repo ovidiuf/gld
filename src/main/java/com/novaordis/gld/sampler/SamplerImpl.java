@@ -17,6 +17,7 @@
 package com.novaordis.gld.sampler;
 
 import com.novaordis.gld.Operation;
+import com.novaordis.gld.sampler.metrics.Metric;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -61,6 +62,8 @@ public class SamplerImpl extends TimerTask implements Sampler
 
     private SamplingIntervalImpl current;
 
+    private List<Metric> metrics;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public SamplerImpl()
@@ -81,6 +84,7 @@ public class SamplerImpl extends TimerTask implements Sampler
         this.shuttingDown = false;
         this.mutex = new Object();
         this.runCounter = 0L;
+        this.metrics = new ArrayList<>();
 
         log.debug(this + " created, sampling task run interval " + samplingTaskRunIntervalMs +
             " ms, sampling interval " + samplingIntervalMs + " ms");
@@ -250,6 +254,12 @@ public class SamplerImpl extends TimerTask implements Sampler
     }
 
     @Override
+    public boolean registerMetric(Metric m)
+    {
+        return metrics.add(m);
+    }
+
+    @Override
     public void annotate(String line)
     {
         annotations.add(line);
@@ -329,6 +339,8 @@ public class SamplerImpl extends TimerTask implements Sampler
                     "this run should have been occurred after the end of the current sampling interval " + current +
                         " but it did occur before at " + thisRunTimestamp);
             }
+
+            current.setMetrics(SamplingIntervalUtil.snapshotMetrics(metrics));
 
             SamplingInterval last = current;
 
