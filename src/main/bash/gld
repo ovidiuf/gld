@@ -1,46 +1,50 @@
 #!/bin/bash
-#
-# Copyright (c) 2015 Nova Ordis LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-# Generic Load Driver
-#
-# Run ./rld for help.
-#
-#
 
 reldir=$(dirname $0)
 home_dir=${reldir}/..
 verbose=false
+main_class=com.novaordis.gld.Main
+memory=1024m
+
+function debug()
+{
+    ${verbose} && echo "$@" 1>&2;
+    return 0
+}
+
+function debug-arguments
+{
+    ${verbose} && echo "${FUNCNAME[1]}($@)" 1>&2;
+    return 0
+}
+
+function fail
+{
+    echo "[error]: $@" 1>&2 && exit 1
+}
 
 function get_java_home()
 {
-    # we cannot rely on JAVA_HOME in J4, so we hardcode
     # local java_home="/usr/java/jdk64-1.7.0_45"
     local java_home=""
 
-    local name;
-    name=$(uname -n)
-    name=${name##*.}
+    if [ -n "${JAVA_HOME}" ]; then
+        debug "using JAVA_HOME from environment ${JAVA_HOME}"
+        java_home=${JAVA_HOME}
+    else
+        local name;
+        name=$(uname -n)
+        name=${name##*.}
 
-    [ "${name}" = "local" -o "${name}" = "ovidius-mbp" ] && java_home="/Library/Java/JavaVirtualMachines/jdk1.7.0_60.jdk/Contents/Home"
+        [ "${name}" = "local" -o "${name}" = "ovidius-mbp" ] && java_home="/Library/Java/JavaVirtualMachines/jdk1.7.0_60.jdk/Contents/Home"
+    fi
 
     echo ${java_home}
 }
 
 function get_classpath()
 {
+    debug "${FUNCNAME[0]}: home_dir=${home_dir}"
     local first=true
     for i in ${home_dir}/lib/*.jar; do
         ${first} && first=false || echo -n ":"
@@ -54,10 +58,6 @@ function get-gld-pids()
     pids=$(ps -ef | grep java | grep com.novaordis.gld.Main | awk '{print $2}')
     echo ${pids}
 }
-
-
-java_home=$(get_java_home) || { echo "failed to get JAVA_HOME"; exit 1; }
-classpath=$(get_classpath) || { echo "failed to build classpath"; exit 1; }
 
 debug_args=""
 output_settings=""
@@ -84,6 +84,9 @@ while [ "$1" != "" ]; do
     shift;
 done
 
+java_home=$(get_java_home) || { echo "failed to get JAVA_HOME"; exit 1; }
+classpath=$(get_classpath) || { echo "failed to build classpath"; exit 1; }
+
 if ${do_kill}; then
     #
     # used to remotely kill gld processes stuck in receiving
@@ -97,7 +100,7 @@ fi
 java_bin="java"
 [ "${java_home}" != "" ] && java_bin="${java_home}/bin/java"
 
-command="${java_bin} -Xms1024m -Xmx1024m -cp ${classpath} ${debug_args} ${output_settings} com.novaordis.gld.Main ${args}"
+command="${java_bin} -Xms${memory} -Xmx${memory} -cp ${classpath} ${debug_args} ${output_settings} ${main_class} ${args}"
 
 ${verbose} && echo "${command}" 1>&2;
 
@@ -107,5 +110,7 @@ if ${background}; then
 else
     ${command}
 fi
+
+
 
 
