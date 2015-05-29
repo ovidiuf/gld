@@ -43,17 +43,29 @@ public class SystemCpuLoad implements Metric
         return INSTANCE;
     }
 
-
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private Number value;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    @SuppressWarnings("UnusedDeclaration")
+    public SystemCpuLoad()
+    {
+        this(getJava7OperatingSystemMXBean().getSystemCpuLoad());
+    }
+
+    public SystemCpuLoad(double value)
+    {
+        this.value = value;
+    }
 
     // Metric implementation ------------------------------------------------------------------------------------------
 
     @Override
     public Number getValue()
     {
-        return getJava7OperatingSystemMXBean().getSystemCpuLoad();
+        return value;
     }
 
     @Override

@@ -44,14 +44,27 @@ public class FreePhysicalMemorySize implements Metric
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private Number value;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    @SuppressWarnings("UnusedDeclaration")
+    public FreePhysicalMemorySize()
+    {
+        this(getJava7OperatingSystemMXBean().getFreePhysicalMemorySize());
+    }
+
+    public FreePhysicalMemorySize(long value)
+    {
+        this.value = value;
+    }
 
     // Metric implementation ------------------------------------------------------------------------------------------
 
     @Override
     public Number getValue()
     {
-        return getJava7OperatingSystemMXBean().getFreePhysicalMemorySize();
+        return value;
     }
 
     @Override

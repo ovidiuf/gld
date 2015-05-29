@@ -38,7 +38,9 @@ public class SystemLoadAverageTest extends MetricTest
 
     protected Metric getMetricToTest() throws Exception
     {
-        return new SystemLoadAverage();
+        // build the new instance the way client code does it
+        return SystemLoadAverage.class.newInstance();
+
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

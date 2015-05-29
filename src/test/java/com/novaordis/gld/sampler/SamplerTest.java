@@ -20,6 +20,7 @@ import com.novaordis.gld.sampler.metrics.FreePhysicalMemorySize;
 import com.novaordis.gld.sampler.metrics.Metric;
 import com.novaordis.gld.sampler.metrics.SystemCpuLoad;
 import com.novaordis.gld.sampler.metrics.SystemLoadAverage;
+import com.novaordis.gld.sampler.metrics.TotalPhysicalMemorySize;
 import com.novaordis.gld.strategy.load.cache.AnotherTypeOfMockOperation;
 import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
@@ -412,6 +413,16 @@ public abstract class SamplerTest
     // metrics ---------------------------------------------------------------------------------------------------------
 
     @Test
+    public void registerDuplicateMetricType() throws Exception
+    {
+        Sampler sampler = getSamplerToTest();
+
+        assertTrue(sampler.registerMetric(SystemCpuLoad.class));
+        assertFalse(sampler.registerMetric(SystemCpuLoad.class));
+    }
+
+
+    @Test
     public void registerAndReadMetrics() throws Exception
     {
         Sampler sampler = getSamplerToTest();
@@ -433,7 +444,7 @@ public abstract class SamplerTest
         assertTrue(sampler.registerMetric(SystemCpuLoad.class));
         assertTrue(sampler.registerMetric(SystemLoadAverage.class));
         assertTrue(sampler.registerMetric(FreePhysicalMemorySize.class));
-        assertTrue(sampler.registerMetric(FreePhysicalMemorySize.class));
+        assertTrue(sampler.registerMetric(TotalPhysicalMemorySize.class));
 
         sampler.start();
 
@@ -451,9 +462,6 @@ public abstract class SamplerTest
             // sampling interval instances must have system-wide metrics
 
             Set<Metric> metrics = si.getMetrics();
-
-            assertNotNull("null metric values - this probably means SamplingInterval extrapolation did not work for metrics", metrics);
-
             assertEquals(4, metrics.size());
 
             for(Metric m: metrics)

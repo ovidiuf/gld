@@ -38,7 +38,8 @@ public class TotalPhysicalMemorySizeTest extends MetricTest
 
     protected Metric getMetricToTest() throws Exception
     {
-        return new TotalPhysicalMemorySize();
+        // build the new instance the way client code does it
+        return TotalPhysicalMemorySize.class.newInstance();
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

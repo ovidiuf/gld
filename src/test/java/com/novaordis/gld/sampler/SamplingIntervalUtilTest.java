@@ -17,6 +17,12 @@
 package com.novaordis.gld.sampler;
 
 import com.novaordis.gld.Operation;
+import com.novaordis.gld.sampler.metrics.FreePhysicalMemorySize;
+import com.novaordis.gld.sampler.metrics.MeasureUnit;
+import com.novaordis.gld.sampler.metrics.Metric;
+import com.novaordis.gld.sampler.metrics.SystemCpuLoad;
+import com.novaordis.gld.sampler.metrics.SystemLoadAverage;
+import com.novaordis.gld.sampler.metrics.TotalPhysicalMemorySize;
 import com.novaordis.gld.strategy.load.cache.AnotherTypeOfMockOperation;
 import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
@@ -25,12 +31,14 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -77,6 +85,12 @@ public class SamplingIntervalUtilTest
         si.setCounterValues(MockOperation.class, cv);
         si.addAnnotation("annotation 1");
         si.addAnnotation("annotation 2");
+        Set<Metric> metrics = new HashSet<>();
+        metrics.add(new FreePhysicalMemorySize(7));
+        metrics.add(new TotalPhysicalMemorySize(11));
+        metrics.add(new SystemLoadAverage(13.0));
+        metrics.add(new SystemCpuLoad(0.17));
+        si.setMetrics(metrics);
 
         SamplingInterval[] result = SamplingIntervalUtil.extrapolate(si, 0);
 
@@ -105,6 +119,32 @@ public class SamplingIntervalUtilTest
         assertEquals(2, si2.getAnnotations().size());
         assertEquals("annotation 1", si2.getAnnotations().get(0));
         assertEquals("annotation 2", si2.getAnnotations().get(1));
+
+        metrics = si2.getMetrics();
+        assertEquals(4, metrics.size());
+        for(Metric m: metrics)
+        {
+            if (m instanceof FreePhysicalMemorySize)
+            {
+                assertEquals(7L, m.getValue());
+            }
+            else if (m instanceof TotalPhysicalMemorySize)
+            {
+                assertEquals(11L, m.getValue());
+            }
+            else if (m instanceof SystemLoadAverage)
+            {
+                assertEquals(13.0, m.getValue());
+            }
+            else if (m instanceof SystemCpuLoad)
+            {
+                assertEquals(0.17, m.getValue());
+            }
+            else
+            {
+                fail("metric " + m + " should not be here");
+            }
+        }
     }
 
     @Test
@@ -120,6 +160,12 @@ public class SamplingIntervalUtilTest
         si.setCounterValues(MockOperation.class, cv);
         si.addAnnotation("annotation 1");
         si.addAnnotation("annotation 2");
+        Set<Metric> metrics = new HashSet<>();
+        metrics.add(new FreePhysicalMemorySize(7));
+        metrics.add(new TotalPhysicalMemorySize(11));
+        metrics.add(new SystemLoadAverage(13.0));
+        metrics.add(new SystemCpuLoad(0.17));
+        si.setMetrics(metrics);
 
         SamplingInterval[] result = SamplingIntervalUtil.extrapolate(si, 1);
 
@@ -157,6 +203,33 @@ public class SamplingIntervalUtilTest
         assertEquals("annotation 1", si2.getAnnotations().get(0));
         assertEquals("annotation 2", si2.getAnnotations().get(1));
 
+        // metrics should propagate the same values
+        metrics = si2.getMetrics();
+        assertEquals(4, metrics.size());
+        for(Metric m: metrics)
+        {
+            if (m instanceof FreePhysicalMemorySize)
+            {
+                assertEquals(7L, m.getValue());
+            }
+            else if (m instanceof TotalPhysicalMemorySize)
+            {
+                assertEquals(11L, m.getValue());
+            }
+            else if (m instanceof SystemLoadAverage)
+            {
+                assertEquals(13.0, m.getValue());
+            }
+            else if (m instanceof SystemCpuLoad)
+            {
+                assertEquals(0.17, m.getValue());
+            }
+            else
+            {
+                fail("metric " + m + " should not be here");
+            }
+        }
+
         // the second sampling interval
 
         assertEquals(6L, si3.getStartMs());
@@ -183,6 +256,33 @@ public class SamplingIntervalUtilTest
 
         // all annotations are stored in the first interval
         assertTrue(si3.getAnnotations().isEmpty());
+
+        // metrics should propagate the same values
+        metrics = si3.getMetrics();
+        assertEquals(4, metrics.size());
+        for(Metric m: metrics)
+        {
+            if (m instanceof FreePhysicalMemorySize)
+            {
+                assertEquals(7L, m.getValue());
+            }
+            else if (m instanceof TotalPhysicalMemorySize)
+            {
+                assertEquals(11L, m.getValue());
+            }
+            else if (m instanceof SystemLoadAverage)
+            {
+                assertEquals(13.0, m.getValue());
+            }
+            else if (m instanceof SystemCpuLoad)
+            {
+                assertEquals(0.17, m.getValue());
+            }
+            else
+            {
+                fail("metric " + m + " should not be here");
+            }
+        }
     }
 
     @Test
@@ -208,6 +308,13 @@ public class SamplingIntervalUtilTest
 
         si.addAnnotation("annotation 1");
         si.addAnnotation("annotation 2");
+
+        Set<Metric> metrics = new HashSet<>();
+        metrics.add(new FreePhysicalMemorySize(7));
+        metrics.add(new TotalPhysicalMemorySize(11));
+        metrics.add(new SystemLoadAverage(13.0));
+        metrics.add(new SystemCpuLoad(0.17));
+        si.setMetrics(metrics);
 
         SamplingInterval[] result = SamplingIntervalUtil.extrapolate(si, 1);
 
@@ -273,6 +380,33 @@ public class SamplingIntervalUtilTest
         assertEquals("annotation 1", si2.getAnnotations().get(0));
         assertEquals("annotation 2", si2.getAnnotations().get(1));
 
+        // metrics should propagate the same values
+        metrics = si2.getMetrics();
+        assertEquals(4, metrics.size());
+        for(Metric m: metrics)
+        {
+            if (m instanceof FreePhysicalMemorySize)
+            {
+                assertEquals(7L, m.getValue());
+            }
+            else if (m instanceof TotalPhysicalMemorySize)
+            {
+                assertEquals(11L, m.getValue());
+            }
+            else if (m instanceof SystemLoadAverage)
+            {
+                assertEquals(13.0, m.getValue());
+            }
+            else if (m instanceof SystemCpuLoad)
+            {
+                assertEquals(0.17, m.getValue());
+            }
+            else
+            {
+                fail("metric " + m + " should not be here");
+            }
+        }
+
         // the second sampling interval
 
         assertEquals(300L, si3.getStartMs());
@@ -326,6 +460,33 @@ public class SamplingIntervalUtilTest
 
         // all annotations are stored in the first interval
         assertTrue(si3.getAnnotations().isEmpty());
+
+        // metrics should propagate the same values
+        metrics = si3.getMetrics();
+        assertEquals(4, metrics.size());
+        for(Metric m: metrics)
+        {
+            if (m instanceof FreePhysicalMemorySize)
+            {
+                assertEquals(7L, m.getValue());
+            }
+            else if (m instanceof TotalPhysicalMemorySize)
+            {
+                assertEquals(11L, m.getValue());
+            }
+            else if (m instanceof SystemLoadAverage)
+            {
+                assertEquals(13.0, m.getValue());
+            }
+            else if (m instanceof SystemCpuLoad)
+            {
+                assertEquals(0.17, m.getValue());
+            }
+            else
+            {
+                fail("metric " + m + " should not be here");
+            }
+        }
     }
 
     @Test
@@ -342,6 +503,12 @@ public class SamplingIntervalUtilTest
         si.setCounterValues(MockOperation.class, cv);
         si.addAnnotation("annotation 1");
         si.addAnnotation("annotation 2");
+        Set<Metric> metrics = new HashSet<>();
+        metrics.add(new FreePhysicalMemorySize(7));
+        metrics.add(new TotalPhysicalMemorySize(11));
+        metrics.add(new SystemLoadAverage(13.0));
+        metrics.add(new SystemCpuLoad(0.17));
+        si.setMetrics(metrics);
 
         SamplingInterval[] result = SamplingIntervalUtil.extrapolate(si, 2);
 
@@ -380,7 +547,34 @@ public class SamplingIntervalUtilTest
         assertEquals(1L, cv2.getFailureCumulatedDurationNano(ConnectException.class));
         assertEquals(16666L, cv2.getFailureCount(IOException.class));
         assertEquals(20000L, cv2.getFailureCumulatedDurationNano(IOException.class));
-        
+
+        // metrics should propagate the same values
+        metrics = si2.getMetrics();
+        assertEquals(4, metrics.size());
+        for(Metric m: metrics)
+        {
+            if (m instanceof FreePhysicalMemorySize)
+            {
+                assertEquals(7L, m.getValue());
+            }
+            else if (m instanceof TotalPhysicalMemorySize)
+            {
+                assertEquals(11L, m.getValue());
+            }
+            else if (m instanceof SystemLoadAverage)
+            {
+                assertEquals(13.0, m.getValue());
+            }
+            else if (m instanceof SystemCpuLoad)
+            {
+                assertEquals(0.17, m.getValue());
+            }
+            else
+            {
+                fail("metric " + m + " should not be here");
+            }
+        }
+
         // sample 1
 
         assertEquals(1000L + 785L, si3.getStartMs());
@@ -408,8 +602,34 @@ public class SamplingIntervalUtilTest
         assertEquals(1L, cv3.getFailureCumulatedDurationNano(ConnectException.class));
         assertEquals(16666L, cv3.getFailureCount(IOException.class));
         assertEquals(20000L, cv3.getFailureCumulatedDurationNano(IOException.class));
-        
-        
+
+        // metrics should propagate the same values
+        metrics = si3.getMetrics();
+        assertEquals(4, metrics.size());
+        for(Metric m: metrics)
+        {
+            if (m instanceof FreePhysicalMemorySize)
+            {
+                assertEquals(7L, m.getValue());
+            }
+            else if (m instanceof TotalPhysicalMemorySize)
+            {
+                assertEquals(11L, m.getValue());
+            }
+            else if (m instanceof SystemLoadAverage)
+            {
+                assertEquals(13.0, m.getValue());
+            }
+            else if (m instanceof SystemCpuLoad)
+            {
+                assertEquals(0.17, m.getValue());
+            }
+            else
+            {
+                fail("metric " + m + " should not be here");
+            }
+        }
+
         // sample 2
 
         assertEquals(1000L + 785L + 785L, si4.getStartMs());
@@ -444,8 +664,56 @@ public class SamplingIntervalUtilTest
             cv2.getFailureCumulatedDurationNano() +
                 cv3.getFailureCumulatedDurationNano() +
                 cv4.getFailureCumulatedDurationNano());
+
+        // metrics should propagate the same values
+        metrics = si4.getMetrics();
+        assertEquals(4, metrics.size());
+        for(Metric m: metrics)
+        {
+            if (m instanceof FreePhysicalMemorySize)
+            {
+                assertEquals(7L, m.getValue());
+            }
+            else if (m instanceof TotalPhysicalMemorySize)
+            {
+                assertEquals(11L, m.getValue());
+            }
+            else if (m instanceof SystemLoadAverage)
+            {
+                assertEquals(13.0, m.getValue());
+            }
+            else if (m instanceof SystemCpuLoad)
+            {
+                assertEquals(0.17, m.getValue());
+            }
+            else
+            {
+                fail("metric " + m + " should not be here");
+            }
+        }
+
     }
 
+    // snapshotMetrics() -----------------------------------------------------------------------------------------------
+
+    @Test
+    public void snapshotMetrics() throws Exception
+    {
+        Set<Class<? extends Metric>> metricTypes = new HashSet<>();
+        metricTypes.add(SystemLoadAverage.class);
+        metricTypes.add(SystemCpuLoad.class);
+        metricTypes.add(FreePhysicalMemorySize.class);
+        metricTypes.add(TotalPhysicalMemorySize.class);
+
+        Set<Metric> metrics = SamplingIntervalUtil.snapshotMetrics(metricTypes);
+
+        assertEquals(4, metrics.size());
+
+        for(Metric m: metrics)
+        {
+            assertNotNull(m.getValue());
+        }
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

@@ -41,17 +41,29 @@ public class TotalPhysicalMemorySize implements Metric
         return INSTANCE;
     }
 
-
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private Number value;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    @SuppressWarnings("UnusedDeclaration")
+    public TotalPhysicalMemorySize()
+    {
+        this(getJava7OperatingSystemMXBean().getTotalPhysicalMemorySize());
+    }
+
+    public TotalPhysicalMemorySize(long value)
+    {
+        this.value = value;
+    }
 
     // Metric implementation ------------------------------------------------------------------------------------------
 
     @Override
     public Number getValue()
     {
-        return getJava7OperatingSystemMXBean().getTotalPhysicalMemorySize();
+        return value;
     }
 
     @Override

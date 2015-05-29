@@ -38,7 +38,9 @@ public class SystemCpuLoadTest extends MetricTest
 
     protected Metric getMetricToTest() throws Exception
     {
-        return new SystemCpuLoad();
+        // build the new instance the way client code does it
+        return SystemCpuLoad.class.newInstance();
+
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

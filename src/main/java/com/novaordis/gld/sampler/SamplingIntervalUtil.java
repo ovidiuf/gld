@@ -18,6 +18,7 @@ package com.novaordis.gld.sampler;
 
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.sampler.metrics.Metric;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +33,8 @@ import java.util.Set;
 public class SamplingIntervalUtil
 {
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(SamplingIntervalUtil.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -68,6 +71,9 @@ public class SamplingIntervalUtil
         long start = recorded.getStartMs();
         boolean annotationsProcessed = false;
 
+        // metrics should propagate the same values
+        Set<Metric> metrics = recorded.getMetrics();
+
         for(Class<? extends Operation> ot : recorded.getOperationTypes())
         {
             CounterValues valuesToBeDistributed = recorded.getCounterValues(ot);
@@ -86,6 +92,7 @@ public class SamplingIntervalUtil
                 if (si == null)
                 {
                     si = new SamplingIntervalImpl(start, duration, recorded.getOperationTypes());
+                    si.setMetrics(new HashSet<>(metrics)); // make a copy of the map
                     result[i] = si;
                     start += duration;
                 }
@@ -162,10 +169,18 @@ public class SamplingIntervalUtil
     {
         Set<Metric> result = new HashSet<>();
 
-//        for(Metric m: metrics)
-//        {
-//            result.add(m.getValue());
-//        }
+        for(Class<? extends Metric> mt: metricTypes)
+        {
+            try
+            {
+                Metric m = mt.newInstance();
+                result.add(m);
+            }
+            catch(Exception e)
+            {
+                log.warn("could not create Metric instance from " + mt, e);
+            }
+        }
 
         return result;
 

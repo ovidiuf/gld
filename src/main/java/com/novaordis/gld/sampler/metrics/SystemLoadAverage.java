@@ -45,14 +45,27 @@ public class SystemLoadAverage implements Metric
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private Number value;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    @SuppressWarnings("UnusedDeclaration")
+    public SystemLoadAverage()
+    {
+        this(getOperatingSystemMXBean().getSystemLoadAverage());
+    }
+
+    public SystemLoadAverage(double value)
+    {
+        this.value = value;
+    }
 
     // Metric implementation ------------------------------------------------------------------------------------------
 
     @Override
     public Number getValue()
     {
-        return getOperatingSystemMXBean().getSystemLoadAverage();
+        return value;
     }
 
     @Override

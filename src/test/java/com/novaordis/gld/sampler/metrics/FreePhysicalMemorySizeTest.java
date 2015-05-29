@@ -38,7 +38,9 @@ public class FreePhysicalMemorySizeTest extends MetricTest
 
     protected Metric getMetricToTest() throws Exception
     {
-        return new FreePhysicalMemorySize();
+        // build the new instance the way client code does it
+        return FreePhysicalMemorySize.class.newInstance();
+
     }
 
     // Private ---------------------------------------------------------------------------------------------------------
