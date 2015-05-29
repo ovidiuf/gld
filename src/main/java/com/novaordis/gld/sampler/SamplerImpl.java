@@ -22,8 +22,10 @@ import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -49,7 +51,7 @@ public class SamplerImpl extends TimerTask implements Sampler
     private Timer samplingTimer;
 
     private volatile boolean started;
-    private volatile boolean shuttingDown;
+    private volatile boolean stopping;
 
     final Map<Class<? extends Operation>, Counter> counters;
     final List<String> annotations;
@@ -62,7 +64,7 @@ public class SamplerImpl extends TimerTask implements Sampler
 
     private SamplingIntervalImpl current;
 
-    private List<Metric> metrics;
+    private Set<Class<? extends Metric>> metricTypes;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -81,10 +83,10 @@ public class SamplerImpl extends TimerTask implements Sampler
         this.annotations = new CopyOnWriteArrayList<>();
         this.lastRunTimestamp = -1L;
         verifySamplingIntervalsRelationship();
-        this.shuttingDown = false;
+        this.stopping = false;
         this.mutex = new Object();
         this.runCounter = 0L;
-        this.metrics = new ArrayList<>();
+        this.metricTypes = new HashSet<>();
 
         log.debug(this + " created, sampling task run interval " + samplingTaskRunIntervalMs +
             " ms, sampling interval " + samplingIntervalMs + " ms");
@@ -114,23 +116,22 @@ public class SamplerImpl extends TimerTask implements Sampler
             throw new IllegalStateException("no operations were registered");
         }
 
-        // execute the sampling timer functionality ourselves, to initiate the state
+        // execute an initial sampling run to initialize the state
+
         run();
+
+        samplingTimer = new Timer("Sampling Thread", true);
 
         if (samplingTaskRunIntervalMs <= 0)
         {
             log.warn("the sampling task run interval is " + (samplingTaskRunIntervalMs == 0 ? "0" : "negative") +
                 ", no sampling tasks will run");
-
         }
         else
         {
-            // start the timer and schedule a task only if the sampling task run interval is larger than 0, otherwise
-            // just make it look like it started
-            samplingTimer = new Timer("Sampling Thread", true);
+            // the run interval is larger than 0, schedule sampling tasks ...
             samplingTimer.scheduleAtFixedRate(this, samplingTaskRunIntervalMs, samplingTaskRunIntervalMs);
         }
-
 
         started = true;
         log.debug(this + " started");
@@ -152,27 +153,16 @@ public class SamplerImpl extends TimerTask implements Sampler
 
         log.debug(this + " stopping");
 
-        // tell the last task to shut the timer down
-        shuttingDown = true;
+        // cancel all tasks, less the one that is currently executing.
+        samplingTimer.cancel();
 
-        if (samplingTimer != null)
-        {
-            // wait until the last sample is written, it will happen in at most
-            // (samplingIntervalMs + samplingTaskRunIntervalMs) milliseconds or it won't happen at all
-            try
-            {
-                waitUntilNextSamplingTaskFinishes(samplingIntervalMs + samplingTaskRunIntervalMs + 500L);
-            }
-            catch (InterruptedException e)
-            {
-                throw new IllegalStateException("interrupted while waiting for last sampling task to finish", e);
-            }
+        // get into "stopping", this will tell the last task to cancel the timer
+        stopping = true;
 
-            // redundantly cancel the sampler in case the sampling tasks didn't, no harm in canceling it twice
-            samplingTimer.cancel();
-            samplingTimer = null;
-        }
+        // do the final run that will collect leftover statistics
+        run();
 
+        samplingTimer = null;
         started = false;
     }
 
@@ -253,10 +243,13 @@ public class SamplerImpl extends TimerTask implements Sampler
         return consumers.add(consumer);
     }
 
+    /**
+     * @see Sampler#registerMetric(Class)
+     */
     @Override
-    public boolean registerMetric(Metric m)
+    public boolean registerMetric(Class<? extends Metric> metricType)
     {
-        return metrics.add(m);
+        return metricTypes.add(metricType);
     }
 
     @Override
@@ -277,6 +270,8 @@ public class SamplerImpl extends TimerTask implements Sampler
         {
             throw new IllegalStateException(this + " not started");
         }
+
+        // DO NOT log anything in here, this invocation must be very fast.
 
         // locate the counter corresponding to the operation being recorded - the map is never written concurrently so
         // we don't need to take any special synchronization precautions.
@@ -309,7 +304,7 @@ public class SamplerImpl extends TimerTask implements Sampler
                 long siTs = (thisRunTimestamp / 1000) * 1000L;
                 current = new SamplingIntervalImpl(siTs, samplingIntervalMs, counters.keySet());
 
-                log.debug("run " + runCounter + ": sampling interval initialized, beginning to collect statistics");
+                log.debug("run " + runCounter + ": sampling interval initialized to " + current + ", beginning to collect statistics");
             }
 
             if (debug) { log.debug("run " + runCounter + ": sampling task executing" + (lastRunTimestamp == -1 ? "" : ", collecting statistics from the last " + (thisRunTimestamp - lastRunTimestamp) + " ms")); }
@@ -323,43 +318,45 @@ public class SamplerImpl extends TimerTask implements Sampler
 
             collectAndResetCountersAndAnnotations();
 
-            if (thisRunTimestamp - current.getStartMs() < samplingIntervalMs)
+            if (!stopping && (thisRunTimestamp - current.getStartMs() < samplingIntervalMs))
             {
-                // not ready to wrap up the current sampling interval, we're done for the time being
+                // not ready to wrap up the current sampling interval, we're done for the time being - this only happens
+                // if we're not stopping. If we're stopping, we must collect the remaining stats so we go beyond this
+                // point
                 return;
             }
 
-            // we're right on the edge of the sampling interval or we went beyond it
+            // we're right on the edge of the sampling interval, we went beyond it or we're stopping
 
-            long pastCurrent = thisRunTimestamp - current.getEndMs();
-
-            if (pastCurrent < 0)
-            {
-                throw new IllegalStateException(
-                    "this run should have been occurred after the end of the current sampling interval " + current +
-                        " but it did occur before at " + thisRunTimestamp);
-            }
-
-            current.setMetrics(SamplingIntervalUtil.snapshotMetrics(metrics));
+            current.setMetrics(SamplingIntervalUtil.snapshotMetrics(metricTypes));
 
             SamplingInterval last = current;
 
             // if more than one sample has accumulated, extrapolate values across multiple samples and send all of them
             // to consumers (although, for a sampling run interval smaller than the sampling interval, multiple samples
             // is an unlikely occurrence)
-            int n = (int)(pastCurrent / samplingIntervalMs);
+
+            // pastCurrent can be negative if we're the first and the last run
+            long pastCurrent = thisRunTimestamp - current.getEndMs();
+            int n = pastCurrent < 0 ? 0 : (int)(pastCurrent / samplingIntervalMs);
 
             if (debug) { log.debug("we are " + pastCurrent + " ms past the last recording sampling interval end, we will generate " + (n + 1) + " full sampling interval(s)"); }
-
-            long newCurrentStart = last.getEndMs() + n * samplingIntervalMs;
-            current = new SamplingIntervalImpl(newCurrentStart, samplingIntervalMs, counters.keySet());
 
             // extrapolate the statistics collected in current over n + 1 intervals (n + the last recorded one).
             SamplingInterval[] intervals = SamplingIntervalUtil.extrapolate(last, n);
 
             sendSamplingIntervalsToConsumers(intervals);
 
-            if (debug) { log.debug("current sampling interval " + current); }
+            // initialize a new sampling interval, but only if we're not stopping
+            if (!stopping)
+            {
+                long newCurrentStart = last.getEndMs() + n * samplingIntervalMs;
+                current = new SamplingIntervalImpl(newCurrentStart, samplingIntervalMs, counters.keySet());
+                if (debug)
+                {
+                    log.debug("current sampling interval " + current);
+                }
+            }
         }
         catch(Throwable t)
         {
@@ -369,21 +366,14 @@ public class SamplerImpl extends TimerTask implements Sampler
         {
             lastRunTimestamp = thisRunTimestamp;
 
-            if (shuttingDown)
+            if (stopping)
             {
-                log.debug(this + " is shutting down, this is the last sampling task run");
+                log.debug(this + " is stopping, this is the last sampling task run");
 
                 // cancel the timer, no further tasks will be scheduled. From javadoc: Note that calling this method
                 // from within the run method of a timer task that was invoked by this timer absolutely guarantees that
                 // the ongoing task execution is the last task execution that will ever be performed by this timer.
-                if (samplingTimer != null)
-                {
-                    samplingTimer.cancel();
-                    log.debug("sampling timer canceled");
-                }
-
-                // send whatever is accumulated so far to the sample consumers
-                sendSamplingIntervalsToConsumers(current);
+                samplingTimer.cancel();
             }
 
             // release all threads waiting on mutex for the sampler task to finish, regardless whether it was

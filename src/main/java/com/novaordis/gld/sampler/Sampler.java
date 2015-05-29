@@ -101,6 +101,9 @@ public interface Sampler
      *
      * @exception IllegalStateException if attempting to register an operation after the sampler was started.
      * @exception IllegalArgumentException on illegal operation type.
+     *
+     * @return the corresponding counter that was created upon registering the operation type.
+     *
      */
     Counter registerOperation(Class<? extends Operation> operationType);
 
@@ -110,12 +113,13 @@ public interface Sampler
     boolean registerConsumer(SamplingConsumer consumer);
 
     /**
-     * Registers a system-wide metric to be included with each sampling interval.
+     * Registers a system-wide metric type. Values for this metric will be generated and included with each sampling
+     * interval.
      *
      * @return true if the metric was successfully registered. A reason *not* to successfully register a metric would
      * be if the metric was already registered.
      */
-    boolean registerMetric(Metric m);
+    boolean registerMetric(Class<? extends Metric> metricType);
 
     /**
      * Starts the sampler. Once started, the sampler will continuously and regularly produce samples each

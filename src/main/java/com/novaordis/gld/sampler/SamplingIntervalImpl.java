@@ -17,7 +17,6 @@
 package com.novaordis.gld.sampler;
 
 import com.novaordis.gld.Operation;
-import com.novaordis.gld.sampler.metrics.MeasureUnit;
 import com.novaordis.gld.sampler.metrics.Metric;
 import org.apache.log4j.Logger;
 
@@ -50,7 +49,7 @@ public class SamplingIntervalImpl implements SamplingInterval
     private Set<Class<? extends Operation>> operationTypes;
     private Map<Class<? extends Operation>, CounterValuesImpl> values;
     private List<String> annotations;
-    private List<Number> metricValues;
+    private Set<Metric> metrics;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -146,10 +145,13 @@ public class SamplingIntervalImpl implements SamplingInterval
         return annotations;
     }
 
+    /**
+     * @see SamplingInterval#getMetrics()
+     */
     @Override
-    public List<Number> getMetricValues()
+    public Set<Metric> getMetrics()
     {
-        return metricValues;
+        return metrics;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -193,9 +195,9 @@ public class SamplingIntervalImpl implements SamplingInterval
         annotations.add(s);
     }
 
-    public void setMetrics(List<Number> metricValues)
+    public void setMetrics(Set<Metric> metrics)
     {
-        this.metricValues = metricValues;
+        this.metrics = metrics;
     }
 
     @Override

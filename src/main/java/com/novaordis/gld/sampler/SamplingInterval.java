@@ -56,8 +56,8 @@ public interface SamplingInterval
     List<String> getAnnotations();
 
     /**
-     * @see Sampler#registerMetric(Metric)
+     * @see Sampler#registerMetric(Class)
      */
-    List<Number> getMetricValues();
+    Set<Metric> getMetrics();
 
 }

@@ -28,6 +28,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -429,10 +430,10 @@ public abstract class SamplerTest
             }
         });
 
-        assertTrue(sampler.registerMetric(new SystemCpuLoad()));
-        assertTrue(sampler.registerMetric(new SystemLoadAverage()));
-        assertTrue(sampler.registerMetric(new FreePhysicalMemorySize()));
-        assertTrue(sampler.registerMetric(new FreePhysicalMemorySize()));
+        assertTrue(sampler.registerMetric(SystemCpuLoad.class));
+        assertTrue(sampler.registerMetric(SystemLoadAverage.class));
+        assertTrue(sampler.registerMetric(FreePhysicalMemorySize.class));
+        assertTrue(sampler.registerMetric(FreePhysicalMemorySize.class));
 
         sampler.start();
 
@@ -449,23 +450,17 @@ public abstract class SamplerTest
         {
             // sampling interval instances must have system-wide metrics
 
-            List<Number> metricValues = si.getMetricValues();
+            Set<Metric> metrics = si.getMetrics();
 
-            assertNotNull("null metric values - this probably means SamplingInterval extrapolation did not work for metrics", metricValues);
+            assertNotNull("null metric values - this probably means SamplingInterval extrapolation did not work for metrics", metrics);
 
-            assertEquals(4, metricValues.size());
-            assertTrue(metricValues.get(0) != null);
-            log.info(metricValues.get(0));
+            assertEquals(4, metrics.size());
 
-            assertTrue(metricValues.get(1) != null);
-            log.info(metricValues.get(1));
-
-            assertTrue(metricValues.get(2) != null);
-            log.info(metricValues.get(2));
-
-            assertTrue(metricValues.get(3) != null);
-            log.info(metricValues.get(3));
-
+            for(Metric m: metrics)
+            {
+                assertTrue(m.getValue() != null);
+                log.info(m);
+            }
         }
     }
 

@@ -21,6 +21,7 @@ import com.novaordis.gld.sampler.metrics.Metric;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -157,16 +158,17 @@ public class SamplingIntervalUtil
         return result;
     }
 
-    public static List<Number> snapshotMetrics(List<Metric> metrics)
+    public static Set<Metric> snapshotMetrics(Set<Class<? extends Metric>> metricTypes)
     {
-        List<Number> result = new ArrayList<>();
+        Set<Metric> result = new HashSet<>();
 
-        for(Metric m: metrics)
-        {
-            result.add(m.getValue());
-        }
+//        for(Metric m: metrics)
+//        {
+//            result.add(m.getValue());
+//        }
 
         return result;
+
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------
