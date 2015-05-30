@@ -218,7 +218,7 @@ Load Strategies
             Example:
 
             gld load --service activemq --threads 10 --load-strategy send \
-                 --nodes node1.example.com:61616 --username admin --password \
+                 --nodes node1.example.com:61616 --username admin --password admin123 \
                  --queue TEST --endpoint-policy REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION \
                  --max-operations 1
 
@@ -235,7 +235,7 @@ Load Strategies
             Example:
 
             gld load --service activemq --threads 10 --load-strategy receive \
-                 --nodes node1.example.com:61616 --username admin --password \
+                 --nodes node1.example.com:61616 --username admin --password admin123 \
                  --queue TEST --endpoint-policy REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION \
                  --max-operations 1
 
