@@ -95,11 +95,11 @@ public class CSVFormatterTest
             CSVFormat.TIMESTAMP_FORMAT.format(ts) + ", " +
                 "777, " +
                 "0.22, " +
-                "0.00, " +
+                "0, " +
                 "4.4, " +
                 "50.5, " +
-                "2, " +
-                "8, " +
+                "2.0, " +
+                "8.0, " +
                 "this is an annotation";
 
         log.info(expected);

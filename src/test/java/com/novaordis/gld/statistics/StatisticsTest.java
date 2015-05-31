@@ -76,6 +76,24 @@ public class StatisticsTest
     }
 
     @Test
+    public void multiplicationFactor_BYTE_to_KILOBYTE() throws Exception
+    {
+        assertEquals(1024L, Statistics.multiplicationFactor(MeasureUnit.BYTE, MeasureUnit.KILOBYTE));
+    }
+
+    @Test
+    public void multiplicationFactor_BYTE_to_MEGABYTE() throws Exception
+    {
+        assertEquals(1024L * 1024L, Statistics.multiplicationFactor(MeasureUnit.BYTE, MeasureUnit.MEGABYTE));
+    }
+
+    @Test
+    public void multiplicationFactor_BYTE_to_GIGABYTE() throws Exception
+    {
+        assertEquals(1024L * 1024L * 1024L, Statistics.multiplicationFactor(MeasureUnit.BYTE, MeasureUnit.GIGABYTE));
+    }
+
+    @Test
     public void multiplicationFactor_incompatible_sourceNullType() throws Exception
     {
         try
@@ -115,6 +133,16 @@ public class StatisticsTest
         {
             log.info(e.getMessage());
         }
+    }
+
+    // convert ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void convert() throws Exception
+    {
+        long value = 8L * 1024L * 1024L * 1024L; // 8 GB
+        double result = Statistics.convert(value, MeasureUnit.BYTE, MeasureUnit.GIGABYTE);
+        assertEquals(8.0, result, 0.001);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

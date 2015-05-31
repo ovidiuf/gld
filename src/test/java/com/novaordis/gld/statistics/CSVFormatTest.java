@@ -184,6 +184,8 @@ public class CSVFormatTest extends FormatTest
         assertEquals("MockOperation Failure Rate (ops/sec)", result);
     }
 
+    // metrics ---------------------------------------------------------------------------------------------------------
+
     @Test
     public void orderMetrics() throws Exception
     {
@@ -255,18 +257,37 @@ public class CSVFormatTest extends FormatTest
     }
 
     @Test
+    public void formatMetric_MEMORY() throws Exception
+    {
+        CSVFormat format = getFormatToTest();
+
+        MockMetric m = new MockMetric("MOCK MEMORY", MeasureUnit.BYTE);
+        m.setValue(8L * 1024 * 1024 * 1024);
+        format.setMemoryUnit(MeasureUnit.GIGABYTE);
+
+
+        String result = format.formatMetric(m);
+        log.info(result);
+        assertEquals("8.00", result);
+    }
+
+    // notes -----------------------------------------------------------------------------------------------------------
+
+    @Test
     public void notesLabel() throws Exception
     {
         CSVFormat format = getFormatToTest();
         assertEquals(CSVFormat.NOTES_HEADER_LABEL, format.getNotesHeader());
     }
 
+    // formatRate() ----------------------------------------------------------------------------------------------------
+
     @Test
     public void formatRate() throws Exception
     {
         CSVFormat format = getFormatToTest();
         String result = format.formatRate(777.0, MeasureUnit.SECOND);
-        assertEquals("777.00", result);
+        assertEquals("777", result);
     }
 
     @Test
@@ -274,7 +295,7 @@ public class CSVFormatTest extends FormatTest
     {
         CSVFormat format = getFormatToTest();
         String result = format.formatRate(123.456, MeasureUnit.SECOND);
-        assertEquals("123.46", result);
+        assertEquals("123", result);
     }
 
     @Test
@@ -282,8 +303,10 @@ public class CSVFormatTest extends FormatTest
     {
         CSVFormat format = getFormatToTest();
         String result = format.formatRate(77.999, MeasureUnit.SECOND);
-        assertEquals("78.00", result);
+        assertEquals("78", result);
     }
+
+    // formatAverageDuration() -----------------------------------------------------------------------------------------
 
     @Test
     public void formatAverageDuration_NANOSECOND_to_MILLISECOND() throws Exception
@@ -304,7 +327,6 @@ public class CSVFormatTest extends FormatTest
         String result = format.formatAverageDuration(0.11, MeasureUnit.MILLISECOND);
         assertEquals("0.11", result);
     }
-
 
     // Package protected -----------------------------------------------------------------------------------------------
 

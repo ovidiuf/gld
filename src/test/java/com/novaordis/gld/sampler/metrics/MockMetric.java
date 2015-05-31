@@ -27,6 +27,7 @@ public class MockMetric implements Metric
     private String label;
     private MetricType metricType;
     private MeasureUnit measureUnit;
+    private Number value;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -38,8 +39,28 @@ public class MockMetric implements Metric
     public MockMetric(String label, MeasureUnit measureUnit, MetricType metricType)
     {
         this.label = label;
-        this.metricType = metricType;
-        this.measureUnit = measureUnit;
+
+        if (measureUnit != null)
+        {
+            this.measureUnit = measureUnit;
+            MetricType mumt = measureUnit.getMetricType();
+            if (mumt != null)
+            {
+                this.metricType = mumt;
+            }
+        }
+
+        if (metricType != null)
+        {
+            if (this.metricType != null && !this.metricType.equals(metricType))
+            {
+                throw new IllegalArgumentException(
+                    "the measure unit " + measureUnit + "'s metric type " + this.metricType +
+                        " is not compatible with the metric type given as argument " + metricType);
+            }
+
+            this.metricType = metricType;
+        }
     }
 
     // Metric implementation -------------------------------------------------------------------------------------------
@@ -47,7 +68,7 @@ public class MockMetric implements Metric
     @Override
     public Number getValue()
     {
-        throw new RuntimeException("getValue() NOT YET IMPLEMENTED");
+        return value;
     }
 
     @Override
@@ -81,6 +102,17 @@ public class MockMetric implements Metric
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public void setValue(Number value)
+    {
+        this.value = value;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "" + label + " " + value + " " + measureUnit;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

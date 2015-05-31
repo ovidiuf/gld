@@ -54,7 +54,8 @@ public class Statistics
     }
 
     /**
-     * How many times a source unit should be multiplied to obtain a destination unit.
+     * How many times a value expressed in source unit should be multiplied to obtain the same value expressed in the
+     * destination unit.
      */
     public static long multiplicationFactor(MeasureUnit source, MeasureUnit destination)
     {
@@ -75,6 +76,22 @@ public class Statistics
             }
         }
 
+        if (MeasureUnit.BYTE.equals(source))
+        {
+            if (MeasureUnit.KILOBYTE.equals(destination))
+            {
+                return 1024L;
+            }
+            else if (MeasureUnit.MEGABYTE.equals(destination))
+            {
+                return 1048576L;
+            }
+            else if (MeasureUnit.GIGABYTE.equals(destination))
+            {
+                return 1073741824L;
+            }
+        }
+
         MetricType smt = source.getMetricType();
         MetricType dmt = destination.getMetricType();
 
@@ -86,6 +103,10 @@ public class Statistics
         throw new RuntimeException("don't know the multiplication factor from source " + source + " to destination " + destination);
     }
 
+    public static double convert(double value, MeasureUnit source, MeasureUnit target)
+    {
+        return value / multiplicationFactor(source, target);
+    }
 
     // Attributes ------------------------------------------------------------------------------------------------------
 

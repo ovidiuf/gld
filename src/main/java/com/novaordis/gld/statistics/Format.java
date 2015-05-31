@@ -44,6 +44,9 @@ public interface Format
 
     String getSuccessAverageDurationHeader(Class<? extends Operation> operationType);
 
+    /**
+     * Displays operation rates per time unit. Even if rate is float, the display will always show integral values.
+     */
     String formatRate(double rate, MeasureUnit measureUnitForOneUnitTheRateIsCalculatedAgainst);
     String formatAverageDuration(double averageDuration, MeasureUnit timeUnit);
 

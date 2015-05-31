@@ -21,6 +21,7 @@ import com.novaordis.gld.sampler.metrics.MeasureUnit;
 import com.novaordis.gld.sampler.metrics.MetricType;
 import com.novaordis.gld.sampler.metrics.Metric;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +36,11 @@ public class CSVFormat implements Format
     // Constants -------------------------------------------------------------------------------------------------------
 
     public static final java.text.Format TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
+
+    // a number of operations per unit of time - don't display the decimal points.
+    public static final java.text.Format RATE_FORMAT = new DecimalFormat("#0");
+
+    public static final java.text.Format FLOATING_POINT_FORMAT = new DecimalFormat("#0.0#");
 
     public static final String TIMESTAMP_HEADER_LABEL = "Time";
     public static final String NOTES_HEADER_LABEL = "Notes";
@@ -155,10 +161,13 @@ public class CSVFormat implements Format
                 averageOperationDurationTimeUnit.abbreviation() + ")";
     }
 
+    /**
+     * @see Format#formatRate(double, MeasureUnit)
+     */
     @Override
     public String formatRate(double rate, MeasureUnit measureUnitForUnitTheRateIsCalculatedAgainst)
     {
-        return String.format("%1$.2f", rate);
+        return RATE_FORMAT.format(rate);
     }
 
     @Override
@@ -166,7 +175,7 @@ public class CSVFormat implements Format
     {
         MeasureUnit defaultTimeUnit = getAverageOperationDurationTimeUnit();
         double ad = averageDuration / Statistics.multiplicationFactor(timeUnit, defaultTimeUnit);
-        return String.format("%1$.2f", ad);
+        return FLOATING_POINT_FORMAT.format(ad);
     }
 
     @Override
@@ -189,8 +198,19 @@ public class CSVFormat implements Format
     @Override
     public String formatMetric(Metric m)
     {
-        // TODO
-        return m.getValue().toString();
+        double outputValue;
+
+        if (MetricType.MEMORY.equals(m.getMetricType()))
+        {
+            // we convert memory metrics in the format's default
+            outputValue = Statistics.convert(m.getValue().doubleValue(), m.getMeasureUnit(), getMemoryUnit());
+        }
+        else
+        {
+            outputValue = m.getValue().doubleValue();
+        }
+
+        return FLOATING_POINT_FORMAT.format(outputValue);
     }
 
     @Override
