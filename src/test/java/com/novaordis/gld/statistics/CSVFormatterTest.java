@@ -58,7 +58,7 @@ public class CSVFormatterTest
         operationTypes.add(MockOperation.class);
 
         SamplingIntervalImpl si = new SamplingIntervalImpl(ts, durationMs, operationTypes);
-        si.setCounterValues(MockOperation.class, new CounterValuesImpl(777L, 777L * 220000L, durationMs * 1000000L));
+        si.setCounterValues(MockOperation.class, new CounterValuesImpl(777L, 777L * 220000L));
         Set<Metric> metrics = new HashSet<>();
         metrics.add(new FreePhysicalMemorySize(2L * 1024 * 1024 * 1024));
         metrics.add(new TotalPhysicalMemorySize(8L * 1024 * 1024 * 1024));

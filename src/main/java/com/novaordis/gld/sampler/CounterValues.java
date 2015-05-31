@@ -25,28 +25,18 @@ import java.util.Set;
 public interface CounterValues
 {
     /**
-     * The duration of the interval (in nanoseconds) the underlying counter values have been collected within.
-     */
-    long getIntervalNano();
-
-    /**
-     * @return the number of successful operations accumulated within the current interval, whose length can be
-     * obtained with getIntervalNano().
-     *
-     * @see CounterValues#getIntervalNano();
+     * @return the number of successful operations accumulated since the counter was last reset.
      */
     long getSuccessCount();
 
     /**
-     * @return the cumulated duration (in nanoseconds) for all successful operations within the current interval, whose
-     * length can be obtained with getIntervalNano().
-     *
-     * @see CounterValues#getIntervalNano();
+     * @return the cumulated duration (in nanoseconds) for all successful operations counted since the counter was
+     * last reset.
      */
     long getSuccessCumulatedDurationNano();
 
     /**
-     * The failure types seen during the current interval.
+     * The failure types seen since the counter was last reset.
      *
      * The failure type set is cumulative: once a failure has been reported for a specific operation, that failure
      * type will be always present in subsequent counters generated for that operation, even if the associated counters
@@ -58,10 +48,8 @@ public interface CounterValues
     Set<Class<? extends Throwable>> getFailureTypes();
 
     /**
-     * @return the number of failed operations accumulated within the current interval, whose length can be
-     * obtained with getIntervalNano(). The counter does not differentiate on failure type, it includes all failures.
-     *
-     * @see CounterValues#getIntervalNano();
+     * @return the number of failed operations counted since the counter was last reset. The counter does not
+     * differentiate on failure type, it includes all failures.
      */
     long getFailureCount();
 
@@ -69,18 +57,14 @@ public interface CounterValues
      * @param failureType the class implementing the failure. It must be the exact exception class, superclasses are
      *                    ignored.
      *
-     * @return the failure count for a specific failure type, as encountered during the current interval, whose length
-     * can be obtained with getIntervalNano(). Return 0L if there's no such failure type.
-     *
-     * @see CounterValues#getIntervalNano();
+     * @return the failure count for a specific failure type, as counted since this counter was last reset. Return 0L
+     * if there's no such failure type.
      */
     long getFailureCount(Class<? extends Throwable> failureType);
 
     /**
-     * @return the cumulated duration (in nanoseconds) for all failed operations within the current interval, whose
-     * length can be obtained with getIntervalNano().
-     *
-     * @see CounterValues#getIntervalNano();
+     * @return the cumulated duration (in nanoseconds) for all failed operations counted since this counter was last
+     * reset.
      */
     long getFailureCumulatedDurationNano();
 
@@ -88,10 +72,8 @@ public interface CounterValues
      * @param failureType the class implementing the failure. It must be the exact exception class, superclasses are
      *                    ignored.
      *
-     * @return the cumulated time (in nanoseconds) for a specific failure type within the current interval, whose
-     * length can be obtained with getIntervalNano().
-     *
-     * @see CounterValues#getIntervalNano();
+     * @return the cumulated time (in nanoseconds) for a specific failure type counted since this counter was last
+     * reset.
      */
     long getFailureCumulatedDurationNano(Class<? extends Throwable> failureType);
 

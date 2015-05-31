@@ -76,6 +76,12 @@ public class StatisticsTest
     }
 
     @Test
+    public void multiplicationFactor_MILLISECOND_to_SECOND() throws Exception
+    {
+        assertEquals(1000L, Statistics.multiplicationFactor(MeasureUnit.MILLISECOND, MeasureUnit.SECOND));
+    }
+
+    @Test
     public void multiplicationFactor_BYTE_to_KILOBYTE() throws Exception
     {
         assertEquals(1024L, Statistics.multiplicationFactor(MeasureUnit.BYTE, MeasureUnit.KILOBYTE));

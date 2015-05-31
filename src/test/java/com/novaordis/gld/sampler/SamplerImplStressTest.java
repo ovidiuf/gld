@@ -16,6 +16,8 @@
 
 package com.novaordis.gld.sampler;
 
+import com.novaordis.gld.sampler.metrics.MeasureUnit;
+import com.novaordis.gld.statistics.Statistics;
 import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -154,19 +156,24 @@ public class SamplerImplStressTest
         for(SamplingInterval si: samples)
         {
             CounterValues cv = si.getCounterValues(MockOperation.class);
-            long sc = cv.getSuccessCount();
-            long scd = cv.getSuccessCumulatedDurationNano();
 
-            double a = ((double)scd)/sc;
+            long successCount = cv.getSuccessCount();
+            long successCumulatedDuration = cv.getSuccessCumulatedDurationNano();
 
-            log.info("sample " + index++ + ": " + si + " " + sc + " invocations, " +
-                (sc == 0 ? "N/A" : DECIMAL_FORMAT.format(a)) + " ns/invocation");
+            double averageRequestDuration = ((double) successCumulatedDuration)/ successCount;
+            double successPerSec = Statistics.calculateRate(
+                successCount, si.getDurationMs(), MeasureUnit.MILLISECOND, MeasureUnit.SECOND);
+
+            log.info("sample " + index++ + ": " + si + " " +
+                successCount + " invocations, " +
+                (successCount == 0 ? "N/A" : DECIMAL_FORMAT.format(averageRequestDuration)) + " ns/invocation, " +
+                successPerSec + " ops/sec");
 
             assertEquals(0L, cv.getFailureCount());
             assertEquals(0L, cv.getFailureCumulatedDurationNano());
 
-            totalSc += sc;
-            totalScd += scd;
+            totalSc += successCount;
+            totalScd += successCumulatedDuration;
         }
 
         double sampledAverage = ((double)totalScd)/totalSc;

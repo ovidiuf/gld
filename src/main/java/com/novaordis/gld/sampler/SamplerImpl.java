@@ -311,7 +311,7 @@ public class SamplerImpl extends TimerTask implements Sampler
                 log.debug("run " + runCounter + ": sampling interval initialized to " + current + ", beginning to collect statistics");
             }
 
-            if (debug) { log.debug("run " + runCounter + ": sampling task executing" + (lastRunTimestamp == -1 ? "" : ", collecting statistics from the last " + (thisRunTimestamp - lastRunTimestamp) + " ms")); }
+            if (debug) { log.debug("run " + runCounter + ": sampling task executing" + (lastRunTimestamp == -1 ? "" : ", collecting statistics from last " + (thisRunTimestamp - lastRunTimestamp) + " ms")); }
 
             // we need to collect and reset counters and annotations irrespective of whether run falls within the
             // current sampling interval or outside it; since we don't have a precise way of determining when exactly

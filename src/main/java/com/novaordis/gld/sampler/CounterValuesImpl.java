@@ -31,8 +31,6 @@ public class CounterValuesImpl implements CounterValues
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private long intervalNano;
-
     private long successCount;
     private long successCumulatedDurationNano;
 
@@ -51,24 +49,22 @@ public class CounterValuesImpl implements CounterValues
      */
     public CounterValuesImpl()
     {
-        this(0L, 0L, 0L, null);
+        this(0L, 0L, null);
     }
 
-    public CounterValuesImpl(long successCount, long successCumulatedDurationNano, long intervalNano)
+    public CounterValuesImpl(long successCount, long successCumulatedDurationNano)
     {
-        this(successCount, successCumulatedDurationNano, intervalNano, null);
+        this(successCount, successCumulatedDurationNano, null);
     }
 
     /**
      * @param failureCounters a map associating failure types to failure counters.
-     * @param intervalNano the time interval in nanoseconds the counter correspond to.
      *
      * @throws IllegalArgumentException on invalid failure array
      */
-    public CounterValuesImpl(long successCount, long successCumulatedDurationNano, long intervalNano,
+    public CounterValuesImpl(long successCount, long successCumulatedDurationNano,
                              Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters)
     {
-        this.intervalNano = intervalNano;
         this.successCount = successCount;
         this.successCumulatedDurationNano = successCumulatedDurationNano;
 
@@ -83,12 +79,6 @@ public class CounterValuesImpl implements CounterValues
     }
 
     // CounterValues implementation ------------------------------------------------------------------------------------
-
-    @Override
-    public long getIntervalNano()
-    {
-        return intervalNano;
-    }
 
     @Override
     public long getSuccessCount()
@@ -198,7 +188,6 @@ public class CounterValuesImpl implements CounterValues
      */
     public void incrementWith(CounterValues other)
     {
-        intervalNano += other.getIntervalNano();
         successCount += other.getSuccessCount();
         successCumulatedDurationNano += other.getSuccessCumulatedDurationNano();
 

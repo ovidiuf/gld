@@ -75,6 +75,13 @@ public class Statistics
                 return 1000000000L;
             }
         }
+        else if (MeasureUnit.MILLISECOND.equals(source))
+        {
+            if (MeasureUnit.SECOND.equals(destination))
+            {
+                return 1000L;
+            }
+        }
 
         if (MeasureUnit.BYTE.equals(source))
         {

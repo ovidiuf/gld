@@ -76,7 +76,6 @@ public class SamplingIntervalUtil
         {
             CounterValues valuesToBeDistributed = recorded.getCounterValues(ot);
 
-            long intervalNano = valuesToBeDistributed.getIntervalNano();
             long successCount = 0L;
             long successCumulatedDuration = 0L;
 
@@ -156,7 +155,7 @@ public class SamplingIntervalUtil
                     failures.put(ft, ifc);
                 }
 
-                CounterValuesImpl cv = new CounterValuesImpl(sc, scd, intervalNano, failures);
+                CounterValuesImpl cv = new CounterValuesImpl(sc, scd, failures);
                 si.setCounterValues(ot, cv);
             }
         }

@@ -84,20 +84,14 @@ public class CSVFormatter implements SamplingConsumer
             else
             {
                 CounterValues v = si.getCounterValues(ot);
-                long intervalDurationNano = v.getIntervalNano();
-
-                if (intervalDurationNano != 1000L * 1000000L)
-                {
-                    log.warn("interval duration different from standard 1 sec, currently " + intervalDurationNano + " ns");
-                }
 
                 long sc = v.getSuccessCount();
                 long scdNano = v.getSuccessCumulatedDurationNano();
-                double sr = calculateRate(sc, intervalDurationNano, MeasureUnit.NANOSECOND, MeasureUnit.SECOND);
+                double sr = calculateRate(sc, si.getDurationMs(), MeasureUnit.MILLISECOND, MeasureUnit.SECOND);
                 double adMs = calculateAverageDuration(sc, scdNano, MeasureUnit.NANOSECOND, MeasureUnit.MILLISECOND);
 
                 long fc = v.getFailureCount();
-                double fr = calculateRate(fc, intervalDurationNano, MeasureUnit.NANOSECOND, MeasureUnit.SECOND);
+                double fr = calculateRate(fc, si.getDurationMs(), MeasureUnit.MILLISECOND, MeasureUnit.SECOND);
 
                 s += csvFormat.formatRate(sr, MeasureUnit.SECOND) + ", ";
                 s += csvFormat.formatAverageDuration(adMs, MeasureUnit.MILLISECOND) + ", ";
