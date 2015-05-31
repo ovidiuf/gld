@@ -23,6 +23,8 @@ import com.novaordis.gld.sampler.SamplingConsumer;
 import com.novaordis.gld.sampler.metrics.Metric;
 import org.apache.log4j.Logger;
 
+import java.util.List;
+
 public class MockSampler implements Sampler
 {
     // Constants -------------------------------------------------------------------------------------------------------
@@ -71,6 +73,12 @@ public class MockSampler implements Sampler
     public boolean registerConsumer(SamplingConsumer consumer)
     {
         throw new RuntimeException("registerConsumer() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public List<SamplingConsumer> getConsumers()
+    {
+        throw new RuntimeException("getConsumers() NOT YET IMPLEMENTED");
     }
 
     @Override

@@ -17,20 +17,27 @@
 package com.novaordis.gld;
 
 import com.novaordis.gld.command.Load;
+import com.novaordis.gld.sampler.Sampler;
+import com.novaordis.gld.sampler.SamplingConsumer;
 import com.novaordis.gld.service.cache.EmbeddedCacheService;
 import com.novaordis.gld.service.jms.activemq.ActiveMQService;
-import com.novaordis.gld.statistics.CollectorBasedCsvStatistics;
+import com.novaordis.gld.statistics.CSVFormatter;
 import com.novaordis.utilities.Files;
 import com.novaordis.utilities.testing.Tests;
 import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.List;
 
-public class ConfigurationImplTest extends Assert
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+public class ConfigurationImplTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -360,7 +367,7 @@ public class ConfigurationImplTest extends Assert
     // --statistics ----------------------------------------------------------------------------------------------------
 
     @Test
-    public void defaultStatistics() throws Exception
+    public void defaultSampler() throws Exception
     {
         ConfigurationImpl c = new ConfigurationImpl(new String[]
             {
@@ -369,12 +376,12 @@ public class ConfigurationImplTest extends Assert
                 "embedded",
             });
 
-        CollectorBasedCsvStatistics s = (CollectorBasedCsvStatistics)c.getSampler();
-        s.close();
+        Sampler s = c.getSampler();
+        assertNotNull(s);
     }
 
     @Test
-    public void csvStatistics() throws Exception
+    public void csvSampler() throws Exception
     {
         ConfigurationImpl c = new ConfigurationImpl(new String[]
             {
@@ -385,8 +392,14 @@ public class ConfigurationImplTest extends Assert
                 "csv"
             });
 
-        CollectorBasedCsvStatistics s = (CollectorBasedCsvStatistics)c.getSampler();
-        s.close();
+        Sampler s = c.getSampler();
+        List<SamplingConsumer> consumers = s.getConsumers();
+
+        // should get the console CSV consumer
+        assertEquals(1, consumers.size());
+
+        SamplingConsumer consumer = consumers.get(0);
+        assertTrue(consumer instanceof CSVFormatter);
     }
 
     @Test

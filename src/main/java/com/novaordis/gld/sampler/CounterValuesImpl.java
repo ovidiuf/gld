@@ -31,6 +31,8 @@ public class CounterValuesImpl implements CounterValues
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private long intervalNano;
+
     private long successCount;
     private long successCumulatedDurationNano;
 
@@ -41,8 +43,6 @@ public class CounterValuesImpl implements CounterValues
 
     // null means it was not calculated yet
     private Long failureCumulatedDurationNano;
-
-    private long intervalNano;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -198,6 +198,7 @@ public class CounterValuesImpl implements CounterValues
      */
     public void incrementWith(CounterValues other)
     {
+        intervalNano += other.getIntervalNano();
         successCount += other.getSuccessCount();
         successCumulatedDurationNano += other.getSuccessCumulatedDurationNano();
 
@@ -231,8 +232,6 @@ public class CounterValuesImpl implements CounterValues
         // since we modified the failure counters, we re-set the pre-calculated aggregated values
         failureCount = null;
         failureCumulatedDurationNano = null;
-
-        throw new RuntimeException("incrementWith() THIS IS WHERE WE SHOULD ALSO INCREMENT THE INTERVAL");
     }
 
     @Override

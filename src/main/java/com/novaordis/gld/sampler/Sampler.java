@@ -19,6 +19,9 @@ package com.novaordis.gld.sampler;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.sampler.metrics.Metric;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * A fixed-interval sampler. Once started, the sampler will continuously and regularly produce samples each
  * <b>samplingIntervalMs</b>milliseconds and send them to all registered SampleConsumers.
@@ -111,6 +114,11 @@ public interface Sampler
      * @return whether consumer was successfully added or not.
      */
     boolean registerConsumer(SamplingConsumer consumer);
+
+    /**
+     * @return registered consumers, in the order in which they were registered.
+     */
+    List<SamplingConsumer> getConsumers();
 
     /**
      * Registers a system-wide metric type. Values for this metric will be generated and included with each sampling

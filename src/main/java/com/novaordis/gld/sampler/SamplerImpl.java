@@ -241,6 +241,12 @@ public class SamplerImpl extends TimerTask implements Sampler
         return consumers.add(consumer);
     }
 
+    @Override
+    public List<SamplingConsumer> getConsumers()
+    {
+        return consumers;
+    }
+
     /**
      * @see Sampler#registerMetric(Class)
      */
