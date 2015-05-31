@@ -108,14 +108,16 @@ public class SamplingIntervalImplTest extends SamplingIntervalTest
         assertNotNull(values);
         assertEquals(0L, values.getSuccessCount());
         assertEquals(0L, values.getSuccessCumulatedDurationNano());
+        assertEquals(0L, values.getIntervalNano());
 
-        si.setCounterValues(MockOperation.class, new CounterValuesImpl(7L, 11L, null));
+        si.setCounterValues(MockOperation.class, new CounterValuesImpl(7L, 11L, 13L, null));
         si.addAnnotation("blah");
         si.addAnnotation("blah2");
 
         values = si.getCounterValues(MockOperation.class);
         assertEquals(7L, values.getSuccessCount());
         assertEquals(11L, values.getSuccessCumulatedDurationNano());
+        assertEquals(13L, values.getIntervalNano());
 
         annotations = si.getAnnotations();
         assertEquals(2, annotations.size());
@@ -136,7 +138,8 @@ public class SamplingIntervalImplTest extends SamplingIntervalTest
         Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters = new HashMap<>();
         failureCounters.put(SocketException.class, new ImmutableFailureCounter(1L, 2L));
         failureCounters.put(ConnectException.class, new ImmutableFailureCounter(3L, 4L));
-        CounterValues cv = new CounterValuesImpl(5L, 6L, failureCounters);
+
+        CounterValues cv = new CounterValuesImpl(5L, 6L, 101L, failureCounters);
 
         si.incrementCounterValues(MockOperation.class, cv);
 
@@ -145,6 +148,7 @@ public class SamplingIntervalImplTest extends SamplingIntervalTest
         Set<Class<? extends Throwable>> failureTypes;
 
         CounterValues cv1 = si.getCounterValues(MockOperation.class);
+        assertEquals(101L, cv1.getIntervalNano());
         assertEquals(5L, cv1.getSuccessCount());
         assertEquals(6L, cv1.getSuccessCumulatedDurationNano());
         assertEquals(1L + 3L, cv1.getFailureCount());
@@ -162,6 +166,7 @@ public class SamplingIntervalImplTest extends SamplingIntervalTest
 
         // there was no set or increment, must get counters set to zero
 
+        assertEquals(0L, cv2.getIntervalNano());
         assertEquals(0L, cv2.getSuccessCount());
         assertEquals(0L, cv2.getSuccessCumulatedDurationNano());
         assertEquals(0L, cv2.getFailureCount());
@@ -173,11 +178,12 @@ public class SamplingIntervalImplTest extends SamplingIntervalTest
         failureCounters = new HashMap<>();
         failureCounters.put(ConnectException.class, new ImmutableFailureCounter(7L, 8L));
         failureCounters.put(IOException.class, new ImmutableFailureCounter(9L, 10L));
-        cv = new CounterValuesImpl(11L, 12L, failureCounters);
+        cv = new CounterValuesImpl(11L, 12L, 102L, failureCounters);
 
         si.incrementCounterValues(MockOperation.class, cv);
 
         CounterValues cv3 = si.getCounterValues(MockOperation.class);
+        assertEquals(101L + 102L, cv3.getIntervalNano());
         assertEquals(5L + 11L, cv3.getSuccessCount());
         assertEquals(6L + 12L, cv3.getSuccessCumulatedDurationNano());
         assertEquals(1L + 3L + 7L + 9L, cv3.getFailureCount());
@@ -197,11 +203,13 @@ public class SamplingIntervalImplTest extends SamplingIntervalTest
         failureCounters = new HashMap<>();
         failureCounters.put(SocketException.class, new ImmutableFailureCounter(13L, 14L));
         failureCounters.put(ConnectException.class, new ImmutableFailureCounter(15L, 16L));
-        cv = new CounterValuesImpl(17L, 18L, failureCounters);
+
+        cv = new CounterValuesImpl(17L, 18L, 201L, failureCounters);
 
         si.incrementCounterValues(AnotherTypeOfMockOperation.class, cv);
 
         CounterValues cv4 = si.getCounterValues(AnotherTypeOfMockOperation.class);
+        assertEquals(201L, cv4.getIntervalNano());
         assertEquals(17L, cv4.getSuccessCount());
         assertEquals(18L, cv4.getSuccessCumulatedDurationNano());
         assertEquals(13L + 15L, cv4.getFailureCount());

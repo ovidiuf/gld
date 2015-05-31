@@ -17,12 +17,17 @@
 package com.novaordis.gld.statistics;
 
 import com.novaordis.ac.Handler;
-import com.novaordis.gld.RedisFailure;
+import com.novaordis.gld.statistics.CollectorBasedCsvStatistics;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
-public class SampleHandler implements Handler
+/**
+ * DO NOT throw this away yet, we might need the logic to revive detailed exception reporting.
+ *
+ * See ConfigurationImpl.setExceptionFile()
+ */
+public class ThrowableHandler implements Handler
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -30,23 +35,13 @@ public class SampleHandler implements Handler
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    // we don't want it to be buffered, we want to go to disk as soon as possible when a line is ready, we won't
-    // block anything because the work is done on a dedicated thread
     private PrintWriter pw;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    /**
-     * May be null, and in this case send content to stdout.
-     */
-    public SampleHandler(String fileName) throws Exception
+    public ThrowableHandler(String exceptionFileName) throws Exception
     {
-        this(fileName == null ? new PrintWriter(System.out) : new PrintWriter(new FileWriter(fileName)));
-    }
-
-    SampleHandler(PrintWriter pw) throws Exception
-    {
-        this.pw = pw;
+        pw = new PrintWriter(new FileWriter(exceptionFileName));
     }
 
     // Handler implementation ------------------------------------------------------------------------------------------
@@ -54,33 +49,28 @@ public class SampleHandler implements Handler
     @Override
     public boolean canHandle(Object o)
     {
-        return o != null &&
-            (o instanceof SamplingInterval || o instanceof String || o instanceof Headers);
+        return o != null && (Throwable.class.isAssignableFrom(o.getClass()));
     }
 
     @Override
     public void handle(long timestamp, String threadName, Object o)
     {
-        if (o instanceof Headers)
+        if (pw == null)
         {
-            pw.println(SamplingInterval.getCsvHeaders());
+            return;
         }
-        else if (o instanceof String)
-        {
-            // generate an empty CSV line and append the comment at the end
-            String line = SamplingInterval.
-                toCsvLine(false, timestamp, null, null, null, null, null,
-                    RedisFailure.NULL_COUNTERS, null, null, null, null, null, null, (String)o);
 
-            pw.println(line);
+        Throwable t = (Throwable)o;
+
+        try
+        {
+            //pw.print(CollectorBasedCsvStatistics.TIMESTAMP_FORMAT_MS.format(timestamp) + ", " + threadName + ": ");
+            t.printStackTrace(pw);
             pw.flush();
         }
-        else
+        catch(Exception e)
         {
-            SamplingInterval si = (SamplingInterval)o;
-            pw.println(si);
-            pw.flush();
-            si.markProcessed();;
+            e.printStackTrace();
         }
     }
 
@@ -89,7 +79,14 @@ public class SampleHandler implements Handler
     {
         if (pw != null)
         {
-            pw.close();
+            try
+            {
+                pw.close();
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -19,8 +19,10 @@ package com.novaordis.gld.sampler.metrics;
 /**
  * A metric (usually system-wide) such as load average, cpu load, various memory values to be read and included with
  * each sample.
+ *
+ * The comparable interface is used to sort a set of metrics for display.
  */
-public interface Metric
+public interface Metric extends Comparable<Metric>
 {
     /**
      * @return the value of the metric at the time the method was invoked. Could be an Integer, Double, etc, depending
@@ -35,7 +37,15 @@ public interface Metric
     String getLabel();
 
     /**
-     * The measure unit of the values returned by getValue();
+     * May be null.
+     */
+    MetricType getMetricType();
+
+    /**
+     * The measure unit of the values returned by getValue(). If the metric does not have a measure unit, this
+     * method will return null.
      */
     MeasureUnit getMeasureUnit();
+
+    int getDisplayRank();
 }

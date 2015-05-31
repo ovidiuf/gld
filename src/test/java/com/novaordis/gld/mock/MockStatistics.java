@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class MockStatistics implements Statistics
 {
     // Constants -------------------------------------------------------------------------------------------------------

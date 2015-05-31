@@ -18,8 +18,8 @@ package com.novaordis.gld.util;
 
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.MultiThreadedRunner;
-import com.novaordis.gld.Statistics;
 import com.novaordis.gld.Util;
+import com.novaordis.gld.sampler.Sampler;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -46,6 +46,7 @@ public class CommandLineConsole implements Runnable
     private Configuration configuration;
     private String line;
 
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private BlockingQueue<Object> quitQueue;
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -57,7 +58,7 @@ public class CommandLineConsole implements Runnable
         this.thread = new Thread(this, "gld command line console");
         thread.setDaemon(true);
         setIn(System.in);
-        this.quitQueue = new ArrayBlockingQueue<Object>(1);
+        this.quitQueue = new ArrayBlockingQueue<>(1);
     }
 
     // Runnable implementation -----------------------------------------------------------------------------------------
@@ -162,10 +163,10 @@ public class CommandLineConsole implements Runnable
                 // only send non-empty content to the log
                 line = line.trim();
 
-                Statistics statistics;
-                if (!line.isEmpty() && ((statistics = configuration.getStatistics()) != null))
+                Sampler sampler;
+                if (!line.isEmpty() && ((sampler = configuration.getSampler()) != null))
                 {
-                    statistics.annotate(line);
+                    sampler.annotate(line);
                 }
             }
         }

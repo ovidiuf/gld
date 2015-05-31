@@ -22,6 +22,7 @@ import com.novaordis.gld.SingleThreadedRunnerTest;
 import com.novaordis.gld.keystore.RandomKeyGenerator;
 import com.novaordis.gld.mock.MockCacheService;
 import com.novaordis.gld.mock.MockConfiguration;
+import com.novaordis.gld.mock.MockSampler;
 import com.novaordis.gld.mock.MockStatistics;
 import com.novaordis.gld.operations.cache.Read;
 import com.novaordis.gld.operations.cache.Write;
@@ -41,6 +42,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
 {
@@ -285,8 +287,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
         MockConfiguration mc = new MockConfiguration();
         mc.setCacheService(mcs);
 
-        MockStatistics ms = new MockStatistics(false);
-        ms.setDoneAfterNRecords(1);
+        MockSampler ms = new MockSampler();
 
         CyclicBarrier barrier = new CyclicBarrier(1);
 
@@ -305,14 +306,16 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
 
         st.run();
 
-        List<MockStatistics.OperationThrowablePair> recorded = ms.getRecorded();
-        assertEquals(1, recorded.size());
+        fail("RETURN HERE");
 
-        Read r = (Read)recorded.get(0).operation;
-        assertNull(recorded.get(0).throwable);
-
-        assertTrue(r.hasBeenPerformed());
-        assertNull(r.getValue());
+//        List<MockStatistics.OperationThrowablePair> recorded = ms.getRecorded();
+//        assertEquals(1, recorded.size());
+//
+//        Read r = (Read)recorded.get(0).operation;
+//        assertNull(recorded.get(0).throwable);
+//
+//        assertTrue(r.hasBeenPerformed());
+//        assertNull(r.getValue());
     }
 
     @Test
@@ -323,8 +326,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
         MockConfiguration mc = new MockConfiguration();
         mc.setCacheService(mcs);
 
-        MockStatistics ms = new MockStatistics(false);
-        ms.setDoneAfterNRecords(2);
+        MockSampler ms = new MockSampler();
 
         CyclicBarrier barrier = new CyclicBarrier(1);
 
@@ -343,32 +345,34 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
 
         st.run();
 
-        List<MockStatistics.OperationThrowablePair> recorded = ms.getRecorded();
-        assertEquals(2, recorded.size());
+        fail("RETURN HERE");
 
-        Read r = (Read)recorded.get(0).operation;
-        Throwable t = recorded.get(0).throwable;
-
-        assertTrue(r.hasBeenPerformed());
-        assertNull(r.getValue());
-        String key = r.getKey();
-        log.info("key=" + key);
-        assertNull(t);
-
-        Write w = (Write)recorded.get(1).operation;
-        Throwable t2 = recorded.get(1).throwable;
-
-        assertEquals(key, w.getKey());
-        String value = w.getValue();
-        log.info("key=" + key);
-        assertNull(t2);
-
-
-        //
-        // make sure the key was written in cache
-        //
-
-        assertEquals(value, mcs.get(key));
+//        List<MockStatistics.OperationThrowablePair> recorded = ms.getRecorded();
+//        assertEquals(2, recorded.size());
+//
+//        Read r = (Read)recorded.get(0).operation;
+//        Throwable t = recorded.get(0).throwable;
+//
+//        assertTrue(r.hasBeenPerformed());
+//        assertNull(r.getValue());
+//        String key = r.getKey();
+//        log.info("key=" + key);
+//        assertNull(t);
+//
+//        Write w = (Write)recorded.get(1).operation;
+//        Throwable t2 = recorded.get(1).throwable;
+//
+//        assertEquals(key, w.getKey());
+//        String value = w.getValue();
+//        log.info("key=" + key);
+//        assertNull(t2);
+//
+//
+//        //
+//        // make sure the key was written in cache
+//        //
+//
+//        assertEquals(value, mcs.get(key));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

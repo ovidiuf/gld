@@ -14,63 +14,56 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.mock;
+package com.novaordis.gld.statistics;
 
-import com.novaordis.ac.Handler;
-import com.novaordis.gld.statistics.DeprecatedSamplingInterval;
+import com.novaordis.gld.UserErrorException;
+import com.novaordis.utilities.testing.Tests;
 import org.apache.log4j.Logger;
+import org.junit.After;
+import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-public class MockHandler implements Handler
+public class SamplerConfiguratorTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(MockHandler.class);
+    private static final Logger log = Logger.getLogger(SamplerConfiguratorTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private List<DeprecatedSamplingInterval> samplingIntervals;
-
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    public MockHandler()
-    {
-        this.samplingIntervals = new ArrayList<DeprecatedSamplingInterval>();
-    }
-
-    // Handler implementation ------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean canHandle(Object o)
-    {
-        // doesn't matter, we don't even look at this in the mock setup
-        return true;
-    }
-
-    @Override
-    public void handle(long timestamp, String threadName, Object o)
-    {
-        if (o instanceof DeprecatedSamplingInterval)
-        {
-            samplingIntervals.add((DeprecatedSamplingInterval) o);
-        }
-    }
-
-    @Override
-    public void close()
-    {
-
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public List<DeprecatedSamplingInterval> getSamplingIntervals()
+    @After
+    public void scratchCleanup() throws Exception
     {
-        return samplingIntervals;
+        Tests.cleanup();
+    }
+
+    @Test
+    public void attemptToWriteADirectory() throws Exception
+    {
+        File d = new File(Tests.getScratchDirectory(), "test-dir");
+        assertTrue(d.mkdir());
+        assertTrue(d.isDirectory());
+
+        String outputFile = d.getPath();
+
+        try
+        {
+            SamplerConfigurator.getSampler(outputFile, "csv");
+            fail("should fail on account of attempting to write a directory");
+        }
+        catch(UserErrorException e)
+        {
+            log.info(e.getMessage());
+        }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

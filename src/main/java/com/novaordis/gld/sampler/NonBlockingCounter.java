@@ -47,6 +47,7 @@ public class NonBlockingCounter implements Counter
     private AtomicLong successCount;
     private AtomicLong cumulatedSuccessTimeNano;
     private ConcurrentMap<Class<? extends Throwable>, NonBlockingFailureCounter> failureCounters;
+    private AtomicLong countingIntervalStartNano;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -56,6 +57,7 @@ public class NonBlockingCounter implements Counter
         this.successCount = new AtomicLong(0L);
         this.cumulatedSuccessTimeNano = new AtomicLong(0L);
         this.failureCounters = new ConcurrentHashMap<>();
+        this.countingIntervalStartNano = new AtomicLong(System.nanoTime());
 
         log.debug(this + " created");
     }
@@ -113,6 +115,9 @@ public class NonBlockingCounter implements Counter
         }
     }
 
+    /**
+     * @see Counter#getCounterValuesAndReset()
+     */
     @Override
     public CounterValues getCounterValuesAndReset()
     {
@@ -133,7 +138,10 @@ public class NonBlockingCounter implements Counter
             failureCounterSnapshot.put(failureType, ifc);
         }
 
-        return new CounterValuesImpl(sc, cstn, failureCounterSnapshot);
+        long now = System.nanoTime();
+        long previousCountingIntervalStartNano = countingIntervalStartNano.getAndSet(now);
+
+        return new CounterValuesImpl(sc, cstn, now - previousCountingIntervalStartNano, failureCounterSnapshot);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

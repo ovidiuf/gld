@@ -29,6 +29,8 @@ public class SystemLoadAverage implements Metric
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
+    public static final int DISPLAY_RANK = 30000;
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     private static OperatingSystemMXBean INSTANCE;
@@ -60,6 +62,18 @@ public class SystemLoadAverage implements Metric
         this.value = value;
     }
 
+    // Comparable implementation ---------------------------------------------------------------------------------------
+
+    /**
+     * @see Comparable#compareTo(Object)
+     */
+    @SuppressWarnings("NullableProblems")
+    @Override
+    public int compareTo( Metric o)
+    {
+        return getDisplayRank() - o.getDisplayRank();
+    }
+
     // Metric implementation ------------------------------------------------------------------------------------------
 
     @Override
@@ -71,13 +85,29 @@ public class SystemLoadAverage implements Metric
     @Override
     public String getLabel()
     {
-        return "system load average";
+        return "System Load Average";
     }
 
     @Override
+    public MetricType getMetricType()
+    {
+        return null;
+    }
+
+    /**
+     * No measure unit.
+     * @return null.
+     */
+    @Override
     public MeasureUnit getMeasureUnit()
     {
-        return MeasureUnit.NONE;
+        return null;
+    }
+
+    @Override
+    public int getDisplayRank()
+    {
+        return DISPLAY_RANK;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

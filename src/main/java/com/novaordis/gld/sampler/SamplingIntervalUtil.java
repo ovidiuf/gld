@@ -20,10 +20,8 @@ import com.novaordis.gld.Operation;
 import com.novaordis.gld.sampler.metrics.Metric;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -78,6 +76,7 @@ public class SamplingIntervalUtil
         {
             CounterValues valuesToBeDistributed = recorded.getCounterValues(ot);
 
+            long intervalNano = valuesToBeDistributed.getIntervalNano();
             long successCount = 0L;
             long successCumulatedDuration = 0L;
 
@@ -157,7 +156,7 @@ public class SamplingIntervalUtil
                     failures.put(ft, ifc);
                 }
 
-                CounterValuesImpl cv = new CounterValuesImpl(sc, scd, failures);
+                CounterValuesImpl cv = new CounterValuesImpl(sc, scd, intervalNano, failures);
                 si.setCounterValues(ot, cv);
             }
         }

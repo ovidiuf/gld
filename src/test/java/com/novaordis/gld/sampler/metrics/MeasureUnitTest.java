@@ -14,23 +14,15 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.statistics;
+package com.novaordis.gld.sampler.metrics;
 
-import com.novaordis.gld.RedisFailure;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintWriter;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-public class SampleHandlerTest
+public class MeasureUnitTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = Logger.getLogger(SampleHandlerTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -41,52 +33,21 @@ public class SampleHandlerTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void processSample() throws Exception
+    public void kilobyte() throws Exception
     {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-        PrintWriter pw = new PrintWriter(baos);
-        SampleHandler sh = new SampleHandler(pw);
-
-        long timestamp = 10L;
-
-        SamplingInterval si =
-            new SamplingInterval(timestamp, 1L, 2L, 3L, 4L, 5L, new long[] { 6L }, 7.0, 8.0, 9.0, 10.0, 11L, 12L);
-
-        assertTrue(sh.canHandle(si));
-
-        sh.handle(timestamp, "my thread", si);
-
-        String s = baos.toString();
-
-        String expected = SamplingInterval.
-            toCsvLine(false, timestamp, 1L, 2L, 3L, 4L, 5L, new Long[]{6L}, 7.0, 8.0, 9.0, 10.0, 11L, 12L, null) + "\n";
-
-        assertEquals(expected, s);
+        MeasureUnit u = MeasureUnit.KILOBYTE;
+        assertEquals("KB", u.abbreviation());
+        assertEquals(MetricType.MEMORY, u.getMetricType());
     }
 
     @Test
-    public void processString() throws Exception
+    public void millisecond() throws Exception
     {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-        PrintWriter pw = new PrintWriter(baos);
-        SampleHandler sh = new SampleHandler(pw);
-
-        long timestamp = 11L;
-
-        String o = "this is a message to go to file";
-
-        assertTrue(sh.canHandle(o));
-
-        sh.handle(timestamp, "my thread", o);
-
-        String s = baos.toString();
-
-        String expected = SamplingInterval.
-            toCsvLine(false, timestamp, null, null, null, null, null, RedisFailure.NULL_COUNTERS, null, null, null, null, null, null, null) + "\n";
-        expected = expected.replace("\n", "this is a message to go to file\n");
-
-        assertEquals(expected, s);
+        MeasureUnit u = MeasureUnit.MILLISECOND;
+        assertEquals("ms", u.abbreviation());
+        assertEquals(MetricType.TIME, u.getMetricType());
     }
+
 
     // Package protected -----------------------------------------------------------------------------------------------
 

@@ -18,7 +18,6 @@ package com.novaordis.gld.sampler;
 
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.sampler.metrics.FreePhysicalMemorySize;
-import com.novaordis.gld.sampler.metrics.MeasureUnit;
 import com.novaordis.gld.sampler.metrics.Metric;
 import com.novaordis.gld.sampler.metrics.SystemCpuLoad;
 import com.novaordis.gld.sampler.metrics.SystemLoadAverage;
@@ -31,7 +30,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -75,13 +73,14 @@ public class SamplingIntervalUtilTest
     @Test
     public void extrapolate_extraSamples_is_0() throws Exception
     {
+        long durationMs = 5L;
         Set<Class<? extends Operation>> operationTypes = new HashSet<>();
         operationTypes.add(MockOperation.class);
-        SamplingIntervalImpl si = new SamplingIntervalImpl(1L, 5L, operationTypes);
+        SamplingIntervalImpl si = new SamplingIntervalImpl(1L, durationMs, operationTypes);
         Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters = new HashMap<>();
         failureCounters.put(SocketException.class, new ImmutableFailureCounter(1L, 2L));
         failureCounters.put(ConnectException.class, new ImmutableFailureCounter(3L, 4L));
-        CounterValuesImpl cv = new CounterValuesImpl(5L, 6L, failureCounters);
+        CounterValuesImpl cv = new CounterValuesImpl(5L, 6L, durationMs * 1000000L, failureCounters);
         si.setCounterValues(MockOperation.class, cv);
         si.addAnnotation("annotation 1");
         si.addAnnotation("annotation 2");
@@ -103,7 +102,7 @@ public class SamplingIntervalUtilTest
         // make sure nothing changed
 
         assertEquals(1L, si2.getStartMs());
-        assertEquals(5L, si2.getDurationMs());
+        assertEquals(durationMs, si2.getDurationMs());
         assertEquals(1, si2.getOperationTypes().size());
         assertTrue(si2.getOperationTypes().contains(MockOperation.class));
         CounterValues cv2 = si2.getCounterValues(MockOperation.class);
@@ -145,18 +144,21 @@ public class SamplingIntervalUtilTest
                 fail("metric " + m + " should not be here");
             }
         }
+
+        fail("make sure the CounterValues interval has the proper value");
     }
 
     @Test
     public void extrapolate_extraSamples_is_1() throws Exception
     {
+        long durationMs = 5L;
         Set<Class<? extends Operation>> operationTypes = new HashSet<>();
         operationTypes.add(MockOperation.class);
-        SamplingIntervalImpl si = new SamplingIntervalImpl(1L, 5L, operationTypes);
+        SamplingIntervalImpl si = new SamplingIntervalImpl(1L, durationMs, operationTypes);
         Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters = new HashMap<>();
         failureCounters.put(SocketException.class, new ImmutableFailureCounter(1L, 2L));
         failureCounters.put(ConnectException.class, new ImmutableFailureCounter(3L, 4L));
-        CounterValuesImpl cv = new CounterValuesImpl(5L, 6L, failureCounters);
+        CounterValuesImpl cv = new CounterValuesImpl(5L, 6L, durationMs * 1000000L, failureCounters);
         si.setCounterValues(MockOperation.class, cv);
         si.addAnnotation("annotation 1");
         si.addAnnotation("annotation 2");
@@ -177,7 +179,7 @@ public class SamplingIntervalUtilTest
         // first sampling interval
 
         assertEquals(1L, si2.getStartMs());
-        assertEquals(5L, si2.getDurationMs());
+        assertEquals(durationMs, si2.getDurationMs());
         assertEquals(6L, si2.getEndMs());
         assertEquals(1, si2.getOperationTypes().size());
         assertTrue(si2.getOperationTypes().contains(MockOperation.class));
@@ -233,7 +235,7 @@ public class SamplingIntervalUtilTest
         // the second sampling interval
 
         assertEquals(6L, si3.getStartMs());
-        assertEquals(5L, si3.getDurationMs());
+        assertEquals(durationMs, si3.getDurationMs());
         assertEquals(11L, si3.getEndMs());
         assertEquals(1, si3.getOperationTypes().size());
         assertTrue(si3.getOperationTypes().contains(MockOperation.class));
@@ -283,27 +285,31 @@ public class SamplingIntervalUtilTest
                 fail("metric " + m + " should not be here");
             }
         }
+
+        fail("make sure the CounterValues interval has the proper value");
+
     }
 
     @Test
     public void extrapolate_extraSamples_is_1_twoOperations() throws Exception
     {
+        long durationMs = 200L;
         Set<Class<? extends Operation>> operationTypes = new HashSet<>();
         operationTypes.add(MockOperation.class);
         operationTypes.add(AnotherTypeOfMockOperation.class);
 
-        SamplingIntervalImpl si = new SamplingIntervalImpl(100L, 200L, operationTypes);
+        SamplingIntervalImpl si = new SamplingIntervalImpl(100L, durationMs, operationTypes);
 
         Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters = new HashMap<>();
         failureCounters.put(SocketException.class, new ImmutableFailureCounter(1L, 2L));
         failureCounters.put(ConnectException.class, new ImmutableFailureCounter(3L, 4L));
-        CounterValuesImpl cv = new CounterValuesImpl(5L, 6L, failureCounters);
+        CounterValuesImpl cv = new CounterValuesImpl(5L, 6L, durationMs * 1000000L, failureCounters);
         si.setCounterValues(MockOperation.class, cv);
 
         failureCounters = new HashMap<>();
         failureCounters.put(SocketException.class, new ImmutableFailureCounter(7L, 8L));
         failureCounters.put(ConnectException.class, new ImmutableFailureCounter(9L, 10L));
-        cv = new CounterValuesImpl(11L, 12L, failureCounters);
+        cv = new CounterValuesImpl(11L, 12L, durationMs * 1000000L, failureCounters);
         si.setCounterValues(AnotherTypeOfMockOperation.class, cv);
 
         si.addAnnotation("annotation 1");
@@ -326,7 +332,7 @@ public class SamplingIntervalUtilTest
         // first sampling interval
 
         assertEquals(100L, si2.getStartMs());
-        assertEquals(200L, si2.getDurationMs());
+        assertEquals(durationMs, si2.getDurationMs());
         assertEquals(300L, si2.getEndMs());
 
         assertEquals(2, si2.getOperationTypes().size());
@@ -410,7 +416,7 @@ public class SamplingIntervalUtilTest
         // the second sampling interval
 
         assertEquals(300L, si3.getStartMs());
-        assertEquals(200L, si3.getDurationMs());
+        assertEquals(durationMs, si3.getDurationMs());
         assertEquals(500L, si3.getEndMs());
         assertEquals(2, si3.getOperationTypes().size());
         assertTrue(si3.getOperationTypes().contains(MockOperation.class));
@@ -487,19 +493,23 @@ public class SamplingIntervalUtilTest
                 fail("metric " + m + " should not be here");
             }
         }
+
+        fail("make sure the CounterValues interval has the proper value");
+
     }
 
     @Test
     public void extrapolate_extraSamples_is_2() throws Exception
     {
+        long durationMs = 785L;
         Set<Class<? extends Operation>> operationTypes = new HashSet<>();
         operationTypes.add(MockOperation.class);
-        SamplingIntervalImpl si = new SamplingIntervalImpl(1000L, 785L, operationTypes);
+        SamplingIntervalImpl si = new SamplingIntervalImpl(1000L, durationMs, operationTypes);
         Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters = new HashMap<>();
         failureCounters.put(SocketException.class, new ImmutableFailureCounter(1L, 2L));
         failureCounters.put(ConnectException.class, new ImmutableFailureCounter(3L, 4L));
         failureCounters.put(IOException.class, new ImmutableFailureCounter(50000L, 60000L));
-        CounterValuesImpl cv = new CounterValuesImpl(5L, 6L, failureCounters);
+        CounterValuesImpl cv = new CounterValuesImpl(5L, 6L, durationMs * 1000000L, failureCounters);
         si.setCounterValues(MockOperation.class, cv);
         si.addAnnotation("annotation 1");
         si.addAnnotation("annotation 2");
@@ -521,8 +531,8 @@ public class SamplingIntervalUtilTest
         // sample 0
 
         assertEquals(1000L, si2.getStartMs());
-        assertEquals(785L, si2.getDurationMs());
-        assertEquals(1000L + 785L, si2.getEndMs());
+        assertEquals(durationMs, si2.getDurationMs());
+        assertEquals(1000L + durationMs, si2.getEndMs());
 
         assertEquals(2, si2.getAnnotations().size());
         assertEquals("annotation 1", si2.getAnnotations().get(0));
@@ -577,9 +587,9 @@ public class SamplingIntervalUtilTest
 
         // sample 1
 
-        assertEquals(1000L + 785L, si3.getStartMs());
-        assertEquals(785L, si3.getDurationMs());
-        assertEquals(1000L + 785L + 785L, si3.getEndMs());
+        assertEquals(1000L + durationMs, si3.getStartMs());
+        assertEquals(durationMs, si3.getDurationMs());
+        assertEquals(1000L + durationMs + durationMs, si3.getEndMs());
 
         assertEquals(0, si3.getAnnotations().size());
 
@@ -632,9 +642,9 @@ public class SamplingIntervalUtilTest
 
         // sample 2
 
-        assertEquals(1000L + 785L + 785L, si4.getStartMs());
-        assertEquals(785L, si4.getDurationMs());
-        assertEquals(1000L + 785L + 785L + 785L, si4.getEndMs());
+        assertEquals(1000L + durationMs + durationMs, si4.getStartMs());
+        assertEquals(durationMs, si4.getDurationMs());
+        assertEquals(1000L + durationMs + durationMs + durationMs, si4.getEndMs());
 
         assertEquals(0, si4.getAnnotations().size());
 
@@ -691,6 +701,8 @@ public class SamplingIntervalUtilTest
                 fail("metric " + m + " should not be here");
             }
         }
+
+        fail("make sure the CounterValues interval has the proper value");
 
     }
 

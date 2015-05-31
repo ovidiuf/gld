@@ -42,6 +42,8 @@ public class CounterValuesImpl implements CounterValues
     // null means it was not calculated yet
     private Long failureCumulatedDurationNano;
 
+    private long intervalNano;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
@@ -49,17 +51,24 @@ public class CounterValuesImpl implements CounterValues
      */
     public CounterValuesImpl()
     {
-        this(0L, 0L, null);
+        this(0L, 0L, 0L, null);
+    }
+
+    public CounterValuesImpl(long successCount, long successCumulatedDurationNano, long intervalNano)
+    {
+        this(successCount, successCumulatedDurationNano, intervalNano, null);
     }
 
     /**
      * @param failureCounters a map associating failure types to failure counters.
+     * @param intervalNano the time interval in nanoseconds the counter correspond to.
      *
      * @throws IllegalArgumentException on invalid failure array
      */
-    public CounterValuesImpl(long successCount, long successCumulatedDurationNano,
+    public CounterValuesImpl(long successCount, long successCumulatedDurationNano, long intervalNano,
                              Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounters)
     {
+        this.intervalNano = intervalNano;
         this.successCount = successCount;
         this.successCumulatedDurationNano = successCumulatedDurationNano;
 
@@ -74,6 +83,12 @@ public class CounterValuesImpl implements CounterValues
     }
 
     // CounterValues implementation ------------------------------------------------------------------------------------
+
+    @Override
+    public long getIntervalNano()
+    {
+        return intervalNano;
+    }
 
     @Override
     public long getSuccessCount()
@@ -216,6 +231,8 @@ public class CounterValuesImpl implements CounterValues
         // since we modified the failure counters, we re-set the pre-calculated aggregated values
         failureCount = null;
         failureCumulatedDurationNano = null;
+
+        throw new RuntimeException("incrementWith() THIS IS WHERE WE SHOULD ALSO INCREMENT THE INTERVAL");
     }
 
     @Override

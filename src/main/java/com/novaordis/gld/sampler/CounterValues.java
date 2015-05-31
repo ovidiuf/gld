@@ -21,29 +21,47 @@ import java.util.Set;
 /**
  * Instances are NOT supposed to be accessed concurrently from multiple threads and must not be thread safe, for
  * performance reasons. The Counter implementations provide protection for those situations.
- *
- * Immutable (read-only) interface.
  */
 public interface CounterValues
 {
+    /**
+     * The duration of the interval (in nanoseconds) the underlying counter values have been collected within.
+     */
+    long getIntervalNano();
+
+    /**
+     * @return the number of successful operations accumulated within the current interval, whose length can be
+     * obtained with getIntervalNano().
+     *
+     * @see CounterValues#getIntervalNano();
+     */
     long getSuccessCount();
 
     /**
-     * @return the cumulated duration (in nanoseconds) for all successful operations.
+     * @return the cumulated duration (in nanoseconds) for all successful operations within the current interval, whose
+     * length can be obtained with getIntervalNano().
+     *
+     * @see CounterValues#getIntervalNano();
      */
     long getSuccessCumulatedDurationNano();
 
     /**
+     * The failure types seen during the current interval.
+     *
      * The failure type set is cumulative: once a failure has been reported for a specific operation, that failure
      * type will be always present in subsequent counters generated for that operation, even if the associated counters
-     * will be zero if that failure does not show up again.
+     * will be zero if that failure does not show up again. TODO: we may not want that - consider refactoring and
+     * letting the upper layer worry about failure management.
      *
      * @return may be empty, never null.
      */
     Set<Class<? extends Throwable>> getFailureTypes();
 
     /**
-     * @return the total failure count. Does not differentiates on type.
+     * @return the number of failed operations accumulated within the current interval, whose length can be
+     * obtained with getIntervalNano(). The counter does not differentiate on failure type, it includes all failures.
+     *
+     * @see CounterValues#getIntervalNano();
      */
     long getFailureCount();
 
@@ -51,12 +69,18 @@ public interface CounterValues
      * @param failureType the class implementing the failure. It must be the exact exception class, superclasses are
      *                    ignored.
      *
-     * @return the failure count for a specific failure type. Return 0L if there's no such failure type.
+     * @return the failure count for a specific failure type, as encountered during the current interval, whose length
+     * can be obtained with getIntervalNano(). Return 0L if there's no such failure type.
+     *
+     * @see CounterValues#getIntervalNano();
      */
     long getFailureCount(Class<? extends Throwable> failureType);
 
     /**
-     * @return the cumulated time (in nanoseconds) for all failed operations.
+     * @return the cumulated duration (in nanoseconds) for all failed operations within the current interval, whose
+     * length can be obtained with getIntervalNano().
+     *
+     * @see CounterValues#getIntervalNano();
      */
     long getFailureCumulatedDurationNano();
 
@@ -64,10 +88,11 @@ public interface CounterValues
      * @param failureType the class implementing the failure. It must be the exact exception class, superclasses are
      *                    ignored.
      *
-     * @return the cumulated time (in nanoseconds) for a specific failure type.
+     * @return the cumulated time (in nanoseconds) for a specific failure type within the current interval, whose
+     * length can be obtained with getIntervalNano().
+     *
+     * @see CounterValues#getIntervalNano();
      */
     long getFailureCumulatedDurationNano(Class<? extends Throwable> failureType);
-
-
 
 }

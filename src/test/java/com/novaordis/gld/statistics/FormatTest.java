@@ -14,68 +14,30 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.mock;
+package com.novaordis.gld.statistics;
 
-import com.novaordis.ac.Handler;
-import com.novaordis.gld.statistics.DeprecatedSamplingInterval;
+import com.novaordis.gld.sampler.metrics.MeasureUnit;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class MockHandler implements Handler
+public abstract class FormatTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(MockHandler.class);
+    private static final Logger log = Logger.getLogger(FormatTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private List<DeprecatedSamplingInterval> samplingIntervals;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockHandler()
-    {
-        this.samplingIntervals = new ArrayList<DeprecatedSamplingInterval>();
-    }
-
-    // Handler implementation ------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean canHandle(Object o)
-    {
-        // doesn't matter, we don't even look at this in the mock setup
-        return true;
-    }
-
-    @Override
-    public void handle(long timestamp, String threadName, Object o)
-    {
-        if (o instanceof DeprecatedSamplingInterval)
-        {
-            samplingIntervals.add((DeprecatedSamplingInterval) o);
-        }
-    }
-
-    @Override
-    public void close()
-    {
-
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public List<DeprecatedSamplingInterval> getSamplingIntervals()
-    {
-        return samplingIntervals;
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected abstract Format getFormatToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

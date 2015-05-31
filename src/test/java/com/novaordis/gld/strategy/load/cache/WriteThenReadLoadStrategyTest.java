@@ -461,76 +461,78 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
     @Test
     public void integration_WriteThenRead_SingleThreadedRunner() throws Exception
     {
-        File storeFile = new File(Tests.getScratchDir(), "test-keys.txt");
+        fail("RETURN HERE");
 
-        MockCacheService mcs = new MockCacheService();
-
-        MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(mcs);
-
-        MockStatistics ms = new MockStatistics(false);
-        ms.setDoneAfterNRecords(2);
-
-        CyclicBarrier barrier = new CyclicBarrier(1);
-
-        mc.setKeySize(3);
-        mc.setValueSize(7);
-        mc.setUseDifferentValues(false);
-        mc.setKeyStoreFile(storeFile.getPath());
-
-
-        WriteThenReadLoadStrategy wtr = new WriteThenReadLoadStrategy();
-
-        // only writes
-        List<String> arguments = new ArrayList<>();
-        arguments.add("--read-to-write");
-        arguments.add("0");
-
-        wtr.configure(mc, arguments, 0);
-
-        KeyStore ks = wtr.getKeyStore();
-        ks.start();
-
-        assertTrue(ks instanceof WriteOnlyFileKeyStore);
-
-        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, wtr, ms, barrier);
-        SingleThreadedRunnerTest.setRunning(st);
-
-        st.run();
-
-        List<MockStatistics.OperationThrowablePair> recorded = ms.getRecorded();
-        assertEquals(2, recorded.size());
-
-        Write w = (Write)recorded.get(0).operation;
-        assertNull(recorded.get(0).throwable);
-
-        String key = w.getKey();
-        String value = w.getValue();
-
-        assertNotNull(key);
-        assertNotNull(value);
-
-        Write w2 = (Write)recorded.get(1).operation;
-        assertNull(recorded.get(1).throwable);
-
-        String key2 = w2.getKey();
-        String value2 = w2.getValue();
-
-        assertNotNull(key2);
-        assertNotNull(value2);
-
-        // make sure the key is in
-
-        // 1. cache
-
-        assertEquals(value, mcs.get(key));
-        assertEquals(value2, mcs.get(key2));
-
-        // 2. key storeFile
-
-        String content = Files.read(storeFile);
-
-        assertEquals(key + "\n" + key2 + "\n", content);
+//        File storeFile = new File(Tests.getScratchDir(), "test-keys.txt");
+//
+//        MockCacheService mcs = new MockCacheService();
+//
+//        MockConfiguration mc = new MockConfiguration();
+//        mc.setCacheService(mcs);
+//
+//        MockStatistics ms = new MockStatistics(false);
+//        ms.setDoneAfterNRecords(2);
+//
+//        CyclicBarrier barrier = new CyclicBarrier(1);
+//
+//        mc.setKeySize(3);
+//        mc.setValueSize(7);
+//        mc.setUseDifferentValues(false);
+//        mc.setKeyStoreFile(storeFile.getPath());
+//
+//
+//        WriteThenReadLoadStrategy wtr = new WriteThenReadLoadStrategy();
+//
+//        // only writes
+//        List<String> arguments = new ArrayList<>();
+//        arguments.add("--read-to-write");
+//        arguments.add("0");
+//
+//        wtr.configure(mc, arguments, 0);
+//
+//        KeyStore ks = wtr.getKeyStore();
+//        ks.start();
+//
+//        assertTrue(ks instanceof WriteOnlyFileKeyStore);
+//
+//        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, wtr, ms, barrier);
+//        SingleThreadedRunnerTest.setRunning(st);
+//
+//        st.run();
+//
+//        List<MockStatistics.OperationThrowablePair> recorded = ms.getRecorded();
+//        assertEquals(2, recorded.size());
+//
+//        Write w = (Write)recorded.get(0).operation;
+//        assertNull(recorded.get(0).throwable);
+//
+//        String key = w.getKey();
+//        String value = w.getValue();
+//
+//        assertNotNull(key);
+//        assertNotNull(value);
+//
+//        Write w2 = (Write)recorded.get(1).operation;
+//        assertNull(recorded.get(1).throwable);
+//
+//        String key2 = w2.getKey();
+//        String value2 = w2.getValue();
+//
+//        assertNotNull(key2);
+//        assertNotNull(value2);
+//
+//        // make sure the key is in
+//
+//        // 1. cache
+//
+//        assertEquals(value, mcs.get(key));
+//        assertEquals(value2, mcs.get(key2));
+//
+//        // 2. key storeFile
+//
+//        String content = Files.read(storeFile);
+//
+//        assertEquals(key + "\n" + key2 + "\n", content);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

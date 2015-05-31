@@ -22,6 +22,7 @@ import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.Operation;
 
 import java.util.List;
+import java.util.Set;
 
 public class NoopLoadStrategy implements LoadStrategy
 {
@@ -59,6 +60,12 @@ public class NoopLoadStrategy implements LoadStrategy
     {
         // noop
         return null;
+    }
+
+    @Override
+    public Set<Class<? extends Operation>> getOperationTypes()
+    {
+        throw new RuntimeException("getOperationTypes() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.statistics;
+package com.novaordis.gld.sampler.metrics;
 
-class Headers
+public class MockMeasureUnit implements MeasureUnit
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -24,7 +24,34 @@ class Headers
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String abbreviation;
+    private MetricType metricType;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public MockMeasureUnit(String abbreviation)
+    {
+        this.abbreviation = abbreviation;
+    }
+    public MockMeasureUnit(String abbreviation, MetricType metricType)
+    {
+        this.abbreviation = abbreviation;
+        this.metricType = metricType;
+    }
+
+    // MeasureUnit implementation --------------------------------------------------------------------------------------
+
+    @Override
+    public String abbreviation()
+    {
+        return abbreviation;
+    }
+
+    @Override
+    public MetricType getMetricType()
+    {
+        return metricType;
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 

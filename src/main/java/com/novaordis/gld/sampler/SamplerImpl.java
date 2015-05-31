@@ -60,8 +60,6 @@ public class SamplerImpl extends TimerTask implements Sampler
 
     private long lastRunTimestamp;
 
-    private final Object mutex;
-
     private SamplingIntervalImpl current;
 
     private Set<Class<? extends Metric>> metricTypes;
@@ -84,7 +82,6 @@ public class SamplerImpl extends TimerTask implements Sampler
         this.lastRunTimestamp = -1L;
         verifySamplingIntervalsRelationship();
         this.stopping = false;
-        this.mutex = new Object();
         this.runCounter = 0L;
         this.metricTypes = new HashSet<>();
 
@@ -222,6 +219,7 @@ public class SamplerImpl extends TimerTask implements Sampler
 
         Counter counter = new NonBlockingCounter(operationType);
         counters.put(operationType, counter);
+        log.debug("operation " + operationType.getName() + " registered with " + this);
         return counter;
     }
 
@@ -375,14 +373,6 @@ public class SamplerImpl extends TimerTask implements Sampler
                 // the ongoing task execution is the last task execution that will ever be performed by this timer.
                 samplingTimer.cancel();
             }
-
-            // release all threads waiting on mutex for the sampler task to finish, regardless whether it was
-            // successful or it failed
-            synchronized (mutex)
-            {
-                if (debug) { log.debug("releasing all other threads waiting on " + this + "'s mutex"); }
-                mutex.notifyAll();
-            }
         }
     }
 
@@ -395,33 +385,6 @@ public class SamplerImpl extends TimerTask implements Sampler
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
-
-    /**
-     * Puts the calling thread on wait until the next sampler task finishes running or timeout occurs. Currently
-     * only used for testing.
-     *
-     * @param timeout in ms. null means wait until notified.
-     *
-     * @see Object#wait(long)
-     *
-     * @throws InterruptedException
-     */
-    void waitUntilNextSamplingTaskFinishes(Long timeout) throws InterruptedException
-    {
-        synchronized (mutex)
-        {
-            if (timeout == null)
-            {
-                log.debug("blocking on " + this + "'s mutex with no timeout");
-                mutex.wait();
-            }
-            else
-            {
-                log.debug("blocking on " + this + "'s mutex with a timeout of " + timeout + " ms");
-                mutex.wait(timeout);
-            }
-        }
-    }
 
     /**
      * For testing only.

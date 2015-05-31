@@ -369,7 +369,7 @@ public class ConfigurationImplTest extends Assert
                 "embedded",
             });
 
-        CollectorBasedCsvStatistics s = (CollectorBasedCsvStatistics)c.getStatistics();
+        CollectorBasedCsvStatistics s = (CollectorBasedCsvStatistics)c.getSampler();
         s.close();
     }
 
@@ -385,7 +385,7 @@ public class ConfigurationImplTest extends Assert
                 "csv"
             });
 
-        CollectorBasedCsvStatistics s = (CollectorBasedCsvStatistics)c.getStatistics();
+        CollectorBasedCsvStatistics s = (CollectorBasedCsvStatistics)c.getSampler();
         s.close();
     }
 
@@ -401,7 +401,7 @@ public class ConfigurationImplTest extends Assert
                 "none"
             });
 
-        assertNull(c.getStatistics());
+        assertNull(c.getSampler());
     }
 
     @Test

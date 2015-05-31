@@ -49,7 +49,8 @@ public interface Counter
 
     /**
      * @return all this counter's values (successful operations count, successful operations cumulated time, failure
-     *         counters, etc.) and reset all values.
+     *         counters, etc.) and reset all values, including the interval start timestamp. This method is designed
+     *         to be called periodically, always from the same thread - the thread that manages counter statistics.
      *
      * @see CounterValues
      */

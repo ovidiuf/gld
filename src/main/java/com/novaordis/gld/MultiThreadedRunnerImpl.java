@@ -16,12 +16,13 @@
 
 package com.novaordis.gld;
 
-import com.novaordis.gld.statistics.CollectorBasedCsvStatistics;
+import com.novaordis.gld.sampler.Sampler;
 import com.novaordis.gld.util.CommandLineConsole;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CyclicBarrier;
 
 public class MultiThreadedRunnerImpl implements MultiThreadedRunner
@@ -34,15 +35,15 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Configuration configuration;
+    private Configuration conf;
     private List<SingleThreadedRunner> singleThreadedRunners;
     private volatile boolean running;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MultiThreadedRunnerImpl(Configuration configuration)
+    public MultiThreadedRunnerImpl(Configuration conf)
     {
-        this.configuration = configuration;
+        this.conf = conf;
         this.singleThreadedRunners = new ArrayList<>();
 
     }
@@ -69,29 +70,35 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
     public void runConcurrently() throws Exception
     {
         running = true;
-        Service service = configuration.getService();
-        LoadStrategy loadStrategy = configuration.getLoadStrategy();
-        Statistics statistics = configuration.getStatistics();
+        Sampler sampler = conf.getSampler();
+        Service service = conf.getService();
         CommandLineConsole commandLineConsole = null;
+        LoadStrategy loadStrategy = conf.getLoadStrategy();
 
-        if (!configuration.inBackground() && statistics != null)
+        if (sampler != null)
         {
-            commandLineConsole = new CommandLineConsole(configuration, this);
+            registerOperationTypes(sampler, loadStrategy);
+            sampler.start();
+        }
+
+        if (!conf.inBackground() && sampler != null)
+        {
+            commandLineConsole = new CommandLineConsole(conf, this);
         }
 
         try
         {
             // configuration.getThreads() + the main thread that runs this code
-            final CyclicBarrier runnerThreadsBarrier = new CyclicBarrier(configuration.getThreads() + 1);
+            final CyclicBarrier barrier = new CyclicBarrier(conf.getThreads() + 1);
 
-            for (int i = 0; i < configuration.getThreads(); i++)
+            for (int i = 0; i < conf.getThreads(); i++)
             {
                 String name = "CLD Runner " + i;
 
-                SingleThreadedRunner r =
-                    new SingleThreadedRunner(name, configuration, loadStrategy, statistics, runnerThreadsBarrier);
+                SingleThreadedRunner r = new SingleThreadedRunner(name, conf, loadStrategy, sampler, barrier);
 
                 singleThreadedRunners.add(r);
+
                 r.start();
             }
 
@@ -102,13 +109,13 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
 
             log.debug("waiting for " + singleThreadedRunners.size() + " SingleThreadedRunner(s) to finish ...");
 
-            runnerThreadsBarrier.await();
+            barrier.await();
 
             log.debug(singleThreadedRunners.size() + " SingleThreadedRunner(s) have finished");
 
             if (commandLineConsole != null)
             {
-                if (configuration.waitForConsoleQuit())
+                if (conf.waitForConsoleQuit())
                 {
                     log.debug("waiting for console to issue quit ...");
                     commandLineConsole.waitForExplicitQuit();
@@ -122,11 +129,6 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
         }
         finally
         {
-            if (statistics != null)
-            {
-                statistics.close();
-            }
-
             if (service != null)
             {
                 service.stop();
@@ -139,12 +141,12 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
                 keyStore.stop();
             }
 
-            running = false;
-        }
+            if (sampler != null)
+            {
+                sampler.stop();
+            }
 
-        if (statistics != null)
-        {
-            System.out.println(((CollectorBasedCsvStatistics)statistics).aggregatesToString());
+            running = false;
         }
     }
 
@@ -159,6 +161,15 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private void registerOperationTypes(Sampler sampler, LoadStrategy loadStrategy)
+    {
+        Set<Class<? extends Operation>> operationTypes = loadStrategy.getOperationTypes();
+        for(Class<? extends Operation> ot: operationTypes)
+        {
+            sampler.registerOperation(ot);
+        }
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

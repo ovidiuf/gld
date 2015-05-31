@@ -162,6 +162,8 @@ public class SamplingIntervalImpl implements SamplingInterval
      *
      * The implementation operates under the assumption that the only thread invoking this method is the sampling
      * thread, so the implementation is NOT thread safe.
+     *
+     * Mostly used by the sample extrapolation algorithms.
      */
     public void setCounterValues(Class<? extends Operation> operationType, CounterValuesImpl counterValues)
     {

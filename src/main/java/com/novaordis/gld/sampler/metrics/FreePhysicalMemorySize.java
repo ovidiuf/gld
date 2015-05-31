@@ -27,6 +27,8 @@ public class FreePhysicalMemorySize implements Metric
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
+    public static final int DISPLAY_RANK = 40000;
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     private static OperatingSystemMXBean INSTANCE;
@@ -59,6 +61,17 @@ public class FreePhysicalMemorySize implements Metric
         this.value = value;
     }
 
+    // Comparable implementation ---------------------------------------------------------------------------------------
+
+    /**
+     * @see Comparable#compareTo(Object)
+     */
+    @Override
+    public int compareTo(Metric o)
+    {
+        return getDisplayRank() - o.getDisplayRank();
+    }
+
     // Metric implementation ------------------------------------------------------------------------------------------
 
     @Override
@@ -70,13 +83,25 @@ public class FreePhysicalMemorySize implements Metric
     @Override
     public String getLabel()
     {
-        return "free O/S physical memory";
+        return "Free O/S Physical Memory";
+    }
+
+    @Override
+    public MetricType getMetricType()
+    {
+        return MetricType.MEMORY;
     }
 
     @Override
     public MeasureUnit getMeasureUnit()
     {
         return MeasureUnit.BYTE;
+    }
+
+    @Override
+    public int getDisplayRank()
+    {
+        return DISPLAY_RANK;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

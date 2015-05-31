@@ -27,11 +27,12 @@ import com.novaordis.gld.command.Status;
 import com.novaordis.gld.command.Stop;
 import com.novaordis.gld.command.Test;
 import com.novaordis.gld.command.Version;
+import com.novaordis.gld.sampler.Sampler;
 import com.novaordis.gld.service.EmbeddedGenericService;
 import com.novaordis.gld.service.cache.EmbeddedCacheService;
 import com.novaordis.gld.service.jms.activemq.ActiveMQService;
 import com.novaordis.gld.service.cache.infinispan.InfinispanService;
-import com.novaordis.gld.statistics.StatisticsFactory;
+import com.novaordis.gld.statistics.SamplerConfigurator;
 import com.novaordis.gld.strategy.load.LoadStrategyFactory;
 
 import java.io.BufferedReader;
@@ -73,7 +74,6 @@ public class ConfigurationImpl implements Configuration
     private String password;
     private long keyExpirationSecs;
     private Properties configurationFileContent;
-    private String exceptionFile;
     private String cacheName;
     private String keyStoreFile;
     private String username;
@@ -84,7 +84,7 @@ public class ConfigurationImpl implements Configuration
 
     private Service service;
 
-    private Statistics statistics;
+    private Sampler sampler;
 
     private String serviceString;
 
@@ -228,7 +228,7 @@ public class ConfigurationImpl implements Configuration
     @Override
     public String getExceptionFile()
     {
-        return exceptionFile;
+        return null;
     }
 
     /**
@@ -280,15 +280,15 @@ public class ConfigurationImpl implements Configuration
     }
 
     @Override
-    public Statistics getStatistics()
+    public Sampler getSampler()
     {
-        return statistics;
+        return sampler;
     }
 
     @Override
-    public void setStatistics(Statistics statistics)
+    public void setSampler(Sampler sampler)
     {
-        this.statistics = statistics;
+        this.sampler = sampler;
     }
 
     @Override
@@ -557,12 +557,14 @@ public class ConfigurationImpl implements Configuration
             {
                 if (i < arguments.size() - 1)
                 {
-                    exceptionFile = arguments.get(++i);
+                    String arg = arguments.get(++i);
 
-                    if (exceptionFile.startsWith("--"))
+                    if (arg.startsWith("--"))
                     {
                         throw new UserErrorException("a file name (and not another option) must follow --exception-file");
                     }
+
+                    setExceptionFile(arg);
                 }
             }
             else if ("--cache".equals(crt))
@@ -724,9 +726,11 @@ public class ConfigurationImpl implements Configuration
             outputFileName = configurationFileContent.getProperty("output");
         }
 
-        if (exceptionFile == null && configurationFileContent != null && configurationFileContent.get("exception-file") != null)
+        String arg;
+        if (configurationFileContent != null &&
+            ((arg = (String)configurationFileContent.get("exception-file")) != null))
         {
-            exceptionFile = (String)configurationFileContent.get("exception-file");
+            setExceptionFile(arg);
         }
 
         // we should get either "nodes" (which means the service is Sharded Jedis-based) or "proxy", which means
@@ -772,7 +776,7 @@ public class ConfigurationImpl implements Configuration
 
         command.initialize();
 
-        this.statistics = StatisticsFactory.getInstance(this, statisticsString);
+        this.sampler = SamplerConfigurator.getSampler(getOutputFile(), statisticsString);
     }
 
     /**
@@ -914,6 +918,14 @@ public class ConfigurationImpl implements Configuration
 
         return result;
     }
+
+    private void setExceptionFile(String s)
+    {
+        throw new UserErrorException(
+            "currently we don't support dumping specific exception information into a file (" + s +
+                "), but this feature can be revived if needed. See com.novaordis.gld.statistics.ThrowableHandler");
+    }
+
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

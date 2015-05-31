@@ -19,8 +19,10 @@ package com.novaordis.gld.strategy.load;
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.KeyStore;
 import com.novaordis.gld.LoadStrategy;
+import com.novaordis.gld.Operation;
 
 import java.util.List;
+import java.util.Set;
 
 public abstract class LoadStrategyBase implements LoadStrategy
 {
@@ -80,6 +82,12 @@ public abstract class LoadStrategyBase implements LoadStrategy
     public KeyStore getKeyStore()
     {
         return keyStore;
+    }
+
+    @Override
+    public Set<Class<? extends Operation>> getOperationTypes()
+    {
+        throw new RuntimeException("getOperationTypes() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

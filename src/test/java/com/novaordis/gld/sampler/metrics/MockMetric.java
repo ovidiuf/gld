@@ -14,15 +14,9 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld;
+package com.novaordis.gld.sampler.metrics;
 
-import com.novaordis.ac.Handler;
-import com.novaordis.gld.statistics.CollectorBasedCsvStatistics;
-
-import java.io.FileWriter;
-import java.io.PrintWriter;
-
-public class ThrowableHandler implements Handler
+public class MockMetric implements Metric
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -30,59 +24,60 @@ public class ThrowableHandler implements Handler
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private PrintWriter pw;
+    private String label;
+    private MetricType metricType;
+    private MeasureUnit measureUnit;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public ThrowableHandler(String exceptionFileName) throws Exception
+    public MockMetric(String label, MeasureUnit measureUnit)
     {
-        pw = new PrintWriter(new FileWriter(exceptionFileName));
+        this(label, measureUnit, null);
     }
 
-    // Handler implementation ------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean canHandle(Object o)
+    public MockMetric(String label, MeasureUnit measureUnit, MetricType metricType)
     {
-        return o != null && (Throwable.class.isAssignableFrom(o.getClass()));
+        this.label = label;
+        this.metricType = metricType;
+        this.measureUnit = measureUnit;
     }
 
+    // Metric implementation -------------------------------------------------------------------------------------------
+
     @Override
-    public void handle(long timestamp, String threadName, Object o)
+    public Number getValue()
     {
-        if (pw == null)
-        {
-            return;
-        }
-
-        Throwable t = (Throwable)o;
-
-        try
-        {
-            pw.print(CollectorBasedCsvStatistics.TIMESTAMP_FORMAT_MS.format(timestamp) + ", " + threadName + ": ");
-            t.printStackTrace(pw);
-            pw.flush();
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
+        throw new RuntimeException("getValue() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void close()
+    public String getLabel()
     {
-        if (pw != null)
-        {
-            try
-            {
-                pw.close();
-            }
-            catch(Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
+        return label;
+    }
+
+    @Override
+    public MetricType getMetricType()
+    {
+        return metricType;
+    }
+
+    @Override
+    public MeasureUnit getMeasureUnit()
+    {
+        return measureUnit;
+    }
+
+    @Override
+    public int getDisplayRank()
+    {
+        throw new RuntimeException("getDisplayRank() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public int compareTo(Metric o)
+    {
+        throw new RuntimeException("compareTo() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

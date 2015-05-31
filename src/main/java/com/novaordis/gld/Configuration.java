@@ -16,6 +16,8 @@
 
 package com.novaordis.gld;
 
+import com.novaordis.gld.sampler.Sampler;
+
 import java.util.List;
 import java.util.Properties;
 
@@ -31,17 +33,16 @@ public interface Configuration
 
     void setStorageStrategy(StorageStrategy storageStrategy);
 
-
     Command getCommand();
 
     void setCommand(Command c);
 
     /**
-     * May return null, meaning no statistics will be generated.
+     * May return null, which means no sampling will be performed and no statistics will be generated.
      */
-    Statistics getStatistics();
+    Sampler getSampler();
 
-    void setStatistics(Statistics s);
+    void setSampler(Sampler s);
 
     /**
      * Set with --threads
@@ -91,7 +92,7 @@ public interface Configuration
     boolean isUseDifferentValues();
 
     /**
-     * May be null.
+     * May be null which means "do not write statistics to file".
      */
     String getOutputFile();
 
@@ -127,6 +128,7 @@ public interface Configuration
     Properties getConfigurationFileContent();
 
     boolean waitForConsoleQuit();
+
     void setWaitForConsoleQuit(boolean b);
 
 }

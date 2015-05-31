@@ -29,6 +29,8 @@ public class SystemCpuLoad implements Metric
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
+    public static final int DISPLAY_RANK = 30010;
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     private static OperatingSystemMXBean INSTANCE;
@@ -60,6 +62,17 @@ public class SystemCpuLoad implements Metric
         this.value = value;
     }
 
+    // Comparable implementation ---------------------------------------------------------------------------------------
+
+    /**
+     * @see Comparable#compareTo(Object)
+     */
+    @Override
+    public int compareTo(Metric o)
+    {
+        return getDisplayRank() - o.getDisplayRank();
+    }
+
     // Metric implementation ------------------------------------------------------------------------------------------
 
     @Override
@@ -71,13 +84,25 @@ public class SystemCpuLoad implements Metric
     @Override
     public String getLabel()
     {
-        return "system CPU load";
+        return "System CPU Load";
+    }
+
+    @Override
+    public MetricType getMetricType()
+    {
+        return null;
     }
 
     @Override
     public MeasureUnit getMeasureUnit()
     {
         return MeasureUnit.PERCENTAGE;
+    }
+
+    @Override
+    public int getDisplayRank()
+    {
+        return DISPLAY_RANK;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

@@ -37,11 +37,6 @@ import java.util.Arrays;
 @Deprecated
 public class CollectorBasedCsvStatistics implements Statistics
 {
-    // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = Logger.getLogger(CollectorBasedCsvStatistics.class);
-
-    public static final Format TIMESTAMP_FORMAT_MS = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
     public static final Format TIMESTAMP_FORMAT_SEC = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     public static final Format DURATION_MS_FORMAT = new DecimalFormat("#.0");
     public static final Format LOAD_FORMAT = new DecimalFormat("#.00");
@@ -50,10 +45,6 @@ public class CollectorBasedCsvStatistics implements Statistics
     public static final long NANOS_IN_MILLS = 1000L * 1000L;
     public static final long DEFAULT_SAMPLING_INTERVAL_MS = 1000L; // 1 second
     public static final int BYTES_IN_MB = 1024 * 1024;
-
-    // Static ----------------------------------------------------------------------------------------------------------
-
-    // Attributes ------------------------------------------------------------------------------------------------------
 
     /**
      * An array with failure counters, indexed by failure type.
@@ -147,7 +138,7 @@ public class CollectorBasedCsvStatistics implements Statistics
     @Override
     public void record(long t0Ms, long t0Nano, long t1Nano, Operation op, Throwable t)
     {
-        SamplingInterval si = null;
+        DeprecatedSamplingInterval si = null;
 
         synchronized (this)
         {
@@ -160,7 +151,7 @@ public class CollectorBasedCsvStatistics implements Statistics
             {
                 firstSample = false;
                 startTimestamp = t0Ms;
-                csvStatsCollector.handOver(new Headers());
+                //csvStatsCollector.handOver(new Headers());
             }
 
             operationsLeft--;
@@ -200,7 +191,7 @@ public class CollectorBasedCsvStatistics implements Statistics
                 long usedHeap = systemStats.getHeapUsed();
                 long committedHeap = systemStats.getHeapCommitted();
 
-                si = new SamplingInterval(
+                si = new DeprecatedSamplingInterval(
                     samplingIntervalStartMs,
                     validReadsCountInSample,
                     readHitsInSample,
@@ -223,7 +214,7 @@ public class CollectorBasedCsvStatistics implements Statistics
                 // enter empty samples and we interpolate the system metrics
                 for(int i = 1; i <= skipped; i ++)
                 {
-                    si = new SamplingInterval(samplingIntervalStartMs + i * samplingIntervalMs,
+                    si = new DeprecatedSamplingInterval(samplingIntervalStartMs + i * samplingIntervalMs,
                         0, 0, 0, 0, 0, RedisFailure.EMPTY_PRIMITIVE_COUNTERS, systemLoadAverage,
                         systemCpuLoad, processCpuLoad, -1.0, usedHeap, committedHeap);
                     csvStatsCollector.handOver(si);
@@ -283,7 +274,7 @@ public class CollectorBasedCsvStatistics implements Statistics
 
         if (closed && si != null)
         {
-            log.debug("waiting for the last sample to be processed ...");
+            //log.debug("waiting for the last sample to be processed ...");
             si.waitUntilProcessed();
         }
     }
@@ -391,10 +382,10 @@ public class CollectorBasedCsvStatistics implements Statistics
      */
     void close(long timeStampMs)
     {
-        log.debug(this + " sending a close notification");
-        record(timeStampMs, 0L, 0L, new InternalClosingOperation(), null);
-        log.debug(this + " sent the close notification");
-        csvStatsCollector.dispose();
+//        log.debug(this + " sending a close notification");
+//        record(timeStampMs, 0L, 0L, new InternalClosingOperation(), null);
+//        log.debug(this + " sent the close notification");
+//        csvStatsCollector.dispose();
     }
 
     // Protected -------------------------------------------------------------------------------------------------------

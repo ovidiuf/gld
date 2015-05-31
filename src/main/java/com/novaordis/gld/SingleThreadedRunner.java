@@ -17,6 +17,7 @@
 package com.novaordis.gld;
 
 import com.novaordis.gld.operations.cache.Write;
+import com.novaordis.gld.sampler.Sampler;
 import org.apache.log4j.Logger;
 
 import java.util.concurrent.CyclicBarrier;
@@ -31,19 +32,14 @@ public class SingleThreadedRunner implements Runnable
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String name;
-
-    final private LoadStrategy loadStrategy;
-    final private Statistics statistics;
-    final private CyclicBarrier allSingleThreadedRunnersBarrier;
-
-    final private Service service;
-
     private long sleep;
-
-    final private Thread thread;
-
+    private String name;
     private KeyStore keyStore;
+    final private Thread thread;
+    final private Service service;
+    final private Sampler sampler;
+    final private LoadStrategy loadStrategy;
+    final private CyclicBarrier allSingleThreadedRunnersBarrier;
 
     // we want to keep this package private because we want to be able to mark the runner as "running" without
     // actually starting the thread, for testing
@@ -52,10 +48,10 @@ public class SingleThreadedRunner implements Runnable
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
-     * @param statistics may be null
+     * @param sampler may be null.
      */
-    public SingleThreadedRunner(String name, Configuration config, LoadStrategy loadStrategy,
-                                Statistics statistics, CyclicBarrier barrier)
+    public SingleThreadedRunner(
+        String name, Configuration config, LoadStrategy loadStrategy, Sampler sampler, CyclicBarrier barrier)
     {
         if (config == null)
         {
@@ -68,12 +64,13 @@ public class SingleThreadedRunner implements Runnable
         }
 
         this.name = name;
-        this.allSingleThreadedRunnersBarrier = barrier;
-        this.statistics = statistics;
+
+        this.sampler = sampler;
         this.sleep = config.getSleep();
         this.loadStrategy = loadStrategy;
-        this.keyStore = loadStrategy.getKeyStore();
         this.service = config.getService();
+        this.keyStore = loadStrategy.getKeyStore();
+        this.allSingleThreadedRunnersBarrier = barrier;
 
         if (service == null)
         {
@@ -153,32 +150,25 @@ public class SingleThreadedRunner implements Runnable
 
     private void loopUntilStoppedOrOutOfOperations() throws Exception
     {
+        long operationCounter = 0L;
         String lastWrittenKey = null;
         Operation lastOperation = null;
-        long operationCounter = 0L;
 
         while (running)
         {
-            // not fully thread-safe, in the worst case we'll send N more operations than --max-operations, where
-            // N is the number of threads.
-            if (statistics != null && statistics.areWeDone())
-            {
-                System.out.println(Thread.currentThread().getName() + " reached the end of the counter, exiting");
-                return;
-            }
 
             Operation op = loadStrategy.next(lastOperation, lastWrittenKey);
 
             if (op == null)
             {
                 // the strategy ran out of keys, it's time to finish
-                log.debug(Thread.currentThread().getName() + " ran out of operations, " +
-                    operationCounter + " operations processed by this thread, exiting");
+                log.debug(Thread.currentThread().getName() + " ran out of operations, " + operationCounter +
+                    " operations processed by this thread, exiting");
                 return;
             }
 
-            operationCounter ++;
             lastOperation = op;
+            operationCounter ++;
 
             long t1 = -1L;
             Exception ex = null;
@@ -188,6 +178,7 @@ public class SingleThreadedRunner implements Runnable
             try
             {
                 op.perform(service);
+
                 t1 = System.nanoTime();
 
                 if (op instanceof Write && keyStore != null && !keyStore.isReadOnly())
@@ -205,9 +196,9 @@ public class SingleThreadedRunner implements Runnable
             }
             finally
             {
-                if (statistics != null)
+                if (sampler != null)
                 {
-                    statistics.record(t0Ms, t0, t1, op, ex);
+                    sampler.record(t0Ms, t0, t1, op, ex);
                 }
 
                 if (sleep > 0)
@@ -218,7 +209,7 @@ public class SingleThreadedRunner implements Runnable
                     }
                     catch (InterruptedException e)
                     {
-                        // ignore
+                        log.warn("interrupted while sleeping");
                     }
                 }
             }

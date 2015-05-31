@@ -17,6 +17,9 @@
 package com.novaordis.gld.sampler.metrics;
 
 import org.apache.log4j.Logger;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class TotalPhysicalMemorySizeTest extends MetricTest
 {
@@ -32,11 +35,17 @@ public class TotalPhysicalMemorySizeTest extends MetricTest
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    @Test
+    public void weAreMemory() throws Exception
+    {
+        assertEquals(MetricType.MEMORY, getMetricToTest().getMetricType());
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected Metric getMetricToTest() throws Exception
+    protected TotalPhysicalMemorySize getMetricToTest() throws Exception
     {
         // build the new instance the way client code does it
         return TotalPhysicalMemorySize.class.newInstance();
