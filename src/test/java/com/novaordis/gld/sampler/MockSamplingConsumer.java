@@ -14,62 +14,42 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.mock;
-
-import com.novaordis.ac.Handler;
-import com.novaordis.gld.statistics.DeprecatedSamplingInterval;
-import org.apache.log4j.Logger;
+package com.novaordis.gld.sampler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Deprecated
-public class MockHandler implements Handler
+public class MockSamplingConsumer implements SamplingConsumer
 {
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = Logger.getLogger(MockHandler.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private List<DeprecatedSamplingInterval> samplingIntervals;
+    private List<SamplingInterval> samplingIntervals;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockHandler()
+    public MockSamplingConsumer()
     {
-        this.samplingIntervals = new ArrayList<DeprecatedSamplingInterval>();
+        this.samplingIntervals = new ArrayList<>();
     }
 
-    // Handler implementation ------------------------------------------------------------------------------------------
+    // SamplingConsumer implementation ---------------------------------------------------------------------------------
 
     @Override
-    public boolean canHandle(Object o)
+    public void consume(SamplingInterval... samplingIntervals)
     {
-        // doesn't matter, we don't even look at this in the mock setup
-        return true;
-    }
-
-    @Override
-    public void handle(long timestamp, String threadName, Object o)
-    {
-        if (o instanceof DeprecatedSamplingInterval)
+        for(SamplingInterval si: samplingIntervals)
         {
-            samplingIntervals.add((DeprecatedSamplingInterval) o);
+            this.samplingIntervals.add(si);
         }
-    }
-
-    @Override
-    public void close()
-    {
-
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public List<DeprecatedSamplingInterval> getSamplingIntervals()
+    public List<SamplingInterval> getSamplingIntervals()
     {
         return samplingIntervals;
     }

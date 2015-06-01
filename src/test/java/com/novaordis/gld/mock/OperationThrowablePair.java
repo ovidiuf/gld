@@ -16,62 +16,37 @@
 
 package com.novaordis.gld.mock;
 
-import com.novaordis.ac.Handler;
-import com.novaordis.gld.statistics.DeprecatedSamplingInterval;
+import com.novaordis.gld.Operation;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
 
-@Deprecated
-public class MockHandler implements Handler
+public class OperationThrowablePair
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(MockHandler.class);
+    private static final Logger log = Logger.getLogger(com.novaordis.gld.mock.OperationThrowablePair.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private List<DeprecatedSamplingInterval> samplingIntervals;
+    public Operation operation;
+    public Throwable throwable;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockHandler()
+    OperationThrowablePair(Operation operation, Throwable throwable)
     {
-        this.samplingIntervals = new ArrayList<DeprecatedSamplingInterval>();
-    }
-
-    // Handler implementation ------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean canHandle(Object o)
-    {
-        // doesn't matter, we don't even look at this in the mock setup
-        return true;
-    }
-
-    @Override
-    public void handle(long timestamp, String threadName, Object o)
-    {
-        if (o instanceof DeprecatedSamplingInterval)
-        {
-            samplingIntervals.add((DeprecatedSamplingInterval) o);
-        }
-    }
-
-    @Override
-    public void close()
-    {
-
+        this.operation = operation;
+        this.throwable = throwable;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public List<DeprecatedSamplingInterval> getSamplingIntervals()
+    @Override
+    public String toString()
     {
-        return samplingIntervals;
+        return "OperationThrowablePair[" + operation + "," + throwable + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

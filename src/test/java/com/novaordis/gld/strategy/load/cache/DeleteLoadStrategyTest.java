@@ -17,7 +17,6 @@
 package com.novaordis.gld.strategy.load.cache;
 
 import com.novaordis.gld.Configuration;
-import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.keystore.SetKeyStore;
 import com.novaordis.gld.mock.MockCacheService;
 import com.novaordis.gld.mock.MockConfiguration;
@@ -93,7 +92,7 @@ public class DeleteLoadStrategyTest extends LoadStrategyTest
         Set<String> expected = new HashSet<>(backingMap.keySet());
 
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(mockCacheService);
+        mc.setService(mockCacheService);
 
         DeleteLoadStrategy dk = new DeleteLoadStrategy();
 
@@ -134,7 +133,7 @@ public class DeleteLoadStrategyTest extends LoadStrategyTest
         Set<String> expected = new HashSet<>(backingMap.keySet());
 
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(mockCacheService);
+        mc.setService(mockCacheService);
 
         // keys to delete - smaller than the number of keys in "cache".
         int keysToDelete = 2;
@@ -186,7 +185,7 @@ public class DeleteLoadStrategyTest extends LoadStrategyTest
         Set<String> expected = new HashSet<>(backingMap.keySet());
 
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(mockCacheService);
+        mc.setService(mockCacheService);
 
         // keys to delete - larger thant the number of keys in "cache"
         int keysToDelete = 7;

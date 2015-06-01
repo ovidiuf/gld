@@ -242,6 +242,36 @@ public abstract class CounterTest
         assertEquals(0, v2.getFailureCount(Throwable.class));
     }
 
+    @Test
+    public void updateImmuneToTrailingNull() throws Exception
+    {
+        Counter c = getCounterToTest(MockOperation.class);
+
+        // this should be fine
+        c.update(0L, 2L, 4L, null);
+
+        CounterValues cv = c.getCounterValuesAndReset();
+
+        assertEquals(1, cv.getSuccessCount());
+        assertEquals(2L, cv.getSuccessCumulatedDurationNano());
+    }
+
+    @Test
+    public void updateImmuneToTrailingNullWhenWrappedInAnArray() throws Exception
+    {
+        Counter c = getCounterToTest(MockOperation.class);
+
+        Exception e = null;
+
+        // this should be fine
+        c.update(0L, 2L, 4L, e);
+
+        CounterValues cv = c.getCounterValuesAndReset();
+
+        assertEquals(1, cv.getSuccessCount());
+        assertEquals(2L, cv.getSuccessCumulatedDurationNano());
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

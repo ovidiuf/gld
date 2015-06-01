@@ -20,7 +20,7 @@ import com.novaordis.gld.Command;
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.Node;
-import com.novaordis.gld.CacheService;
+import com.novaordis.gld.Service;
 import com.novaordis.gld.StorageStrategy;
 import com.novaordis.gld.sampler.Sampler;
 
@@ -42,7 +42,7 @@ public class MockConfiguration implements Configuration
     private long sleep;
     private boolean useDifferentValues;
 
-    private CacheService cacheService;
+    private Service service;
     private LoadStrategy loadStrategy;
     private StorageStrategy storageStrategy;
 
@@ -68,9 +68,9 @@ public class MockConfiguration implements Configuration
     // Configuration implementation ------------------------------------------------------------------------------------
 
     @Override
-    public CacheService getService()
+    public Service getService()
     {
-        return cacheService;
+        return service;
     }
 
     @Override
@@ -252,9 +252,9 @@ public class MockConfiguration implements Configuration
         this.keyStoreFile = s;
     }
 
-    public void setCacheService(CacheService cs)
+    public void setService(Service cs)
     {
-        this.cacheService = cs;
+        this.service = cs;
     }
 
     public void setUseDifferentValues(boolean b)

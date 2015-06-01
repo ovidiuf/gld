@@ -23,6 +23,7 @@ import com.novaordis.gld.sampler.SamplingConsumer;
 import com.novaordis.gld.sampler.metrics.Metric;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MockSampler implements Sampler
@@ -35,7 +36,14 @@ public class MockSampler implements Sampler
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private List<OperationThrowablePair> recorded;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public MockSampler()
+    {
+        this.recorded = new ArrayList<>();
+    }
 
     // Sampler implementation ------------------------------------------------------------------------------------------
 
@@ -109,7 +117,7 @@ public class MockSampler implements Sampler
     @Override
     public void record(long t0Ms, long t0Nano, long t1Nano, Operation op, Throwable... t)
     {
-        throw new RuntimeException("record() NOT YET IMPLEMENTED");
+        recorded.add(new OperationThrowablePair(op, t.length == 0 ? null : t[0]));
     }
 
     @Override
@@ -125,6 +133,13 @@ public class MockSampler implements Sampler
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public List<OperationThrowablePair> getRecorded()
+    {
+        return recorded;
+    }
+
+    // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 

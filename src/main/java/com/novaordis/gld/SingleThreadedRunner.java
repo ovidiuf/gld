@@ -63,8 +63,12 @@ public class SingleThreadedRunner implements Runnable
             throw new IllegalArgumentException("null barrier");
         }
 
-        this.name = name;
+        if (sampler == null)
+        {
+            throw new IllegalArgumentException("null sampler");
+        }
 
+        this.name = name;
         this.sampler = sampler;
         this.sleep = config.getSleep();
         this.loadStrategy = loadStrategy;

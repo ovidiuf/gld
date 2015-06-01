@@ -144,8 +144,6 @@ public class SamplingIntervalUtilTest
                 fail("metric " + m + " should not be here");
             }
         }
-
-        fail("make sure the CounterValues interval has the proper value");
     }
 
     @Test
@@ -285,9 +283,6 @@ public class SamplingIntervalUtilTest
                 fail("metric " + m + " should not be here");
             }
         }
-
-        fail("make sure the CounterValues interval has the proper value");
-
     }
 
     @Test
@@ -493,9 +488,6 @@ public class SamplingIntervalUtilTest
                 fail("metric " + m + " should not be here");
             }
         }
-
-        fail("make sure the CounterValues interval has the proper value");
-
     }
 
     @Test
@@ -701,9 +693,6 @@ public class SamplingIntervalUtilTest
                 fail("metric " + m + " should not be here");
             }
         }
-
-        fail("make sure the CounterValues interval has the proper value");
-
     }
 
     // snapshotMetrics() -----------------------------------------------------------------------------------------------

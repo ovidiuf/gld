@@ -32,6 +32,7 @@ import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -393,13 +394,8 @@ public class ConfigurationImplTest
             });
 
         Sampler s = c.getSampler();
-        List<SamplingConsumer> consumers = s.getConsumers();
-
-        // should get the console CSV consumer
-        assertEquals(1, consumers.size());
-
-        SamplingConsumer consumer = consumers.get(0);
-        assertTrue(consumer instanceof CSVFormatter);
+        assertNotNull(s);
+        assertFalse(s.isStarted());
     }
 
     @Test

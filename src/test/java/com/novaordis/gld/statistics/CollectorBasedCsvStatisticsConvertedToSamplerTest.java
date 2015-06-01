@@ -16,28 +16,34 @@
 
 package com.novaordis.gld.statistics;
 
-import com.novaordis.ac.Collector;
-import com.novaordis.ac.CollectorFactory;
-import com.novaordis.gld.RedisFailure;
-import com.novaordis.gld.mock.MockCollector;
-import com.novaordis.gld.mock.MockHandler;
 import com.novaordis.gld.operations.cache.Read;
 import com.novaordis.gld.operations.cache.Write;
+import com.novaordis.gld.sampler.CounterValues;
+import com.novaordis.gld.sampler.MockSamplingConsumer;
+import com.novaordis.gld.sampler.Sampler;
+import com.novaordis.gld.sampler.SamplerImpl;
+import com.novaordis.gld.sampler.SamplingInterval;
 import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class CollectorBasedCsvStatisticsTest extends Assert
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+public class CollectorBasedCsvStatisticsConvertedToSamplerTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(CollectorBasedCsvStatisticsTest.class);
+    private static final Logger log = Logger.getLogger(CollectorBasedCsvStatisticsConvertedToSamplerTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -53,57 +59,91 @@ public class CollectorBasedCsvStatisticsTest extends Assert
     @Test
     public void lifeCycleIntegrationTest() throws Exception
     {
-        fail("RETURN HERE");
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(2048);
-//        PrintWriter pw = new PrintWriter(baos);
-//        SampleHandler sh = new SampleHandler(pw);
-//
-//        Collector collector = CollectorFactory.getInstance("TEST COLLECTOR", Thread.NORM_PRIORITY + 1);
-//        collector.registerHandler(sh);
-//
-//        CollectorBasedCsvStatistics s = new CollectorBasedCsvStatistics(collector);
-//
-//        MockOperation mo = new MockOperation();
-//
-//        s.record(1L, 0L, 0L, mo, null);
-//
-//        // we don't allow it even a sampling interval - this is to make sure we capture even the fast
-//        // single operations
-//        s.close(1L + CollectorBasedCsvStatistics.DEFAULT_SAMPLING_INTERVAL_MS - 1);
-//
-//        // make sure we can't call record anymore
-//
-//        try
-//        {
-//            s.record(CollectorBasedCsvStatistics.DEFAULT_SAMPLING_INTERVAL_MS + 1, 0L, 0L, mo, null);
-//            fail("should have failed with IllegalStateException, statistics are closed");
-//        }
-//        catch(IllegalStateException e)
-//        {
-//            log.info(e.getMessage());
-//        }
-//
-//        collector.dispose();
-//
-//        // make sure we get the headers and statistics for 1 operation
-//
-//        String output = new String(baos.toByteArray());
-//        log.info(output);
-//
-//        StringTokenizer st = new StringTokenizer(output, "\n");
-//        assertTrue(st.hasMoreTokens());
-//        String headers = st.nextToken();
-//        assertEquals(DeprecatedSamplingInterval.getCsvHeaders(), headers);
-//        assertTrue(st.hasMoreTokens());
-//        String samples = st.nextToken();
-//        assertFalse(st.hasMoreTokens());
-//
-//        // make sure we record one sample
-//        StringTokenizer lineTokenizer = new StringTokenizer(samples, ",");
-//        String timestamp = lineTokenizer.nextToken();
-//        assertEquals(CollectorBasedCsvStatistics.TIMESTAMP_FORMAT_MS.format(1L), timestamp);
-//        String throughput = lineTokenizer.nextToken();
-//        assertEquals("1", throughput.trim());
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(2048);
+        PrintWriter pw = new PrintWriter(new OutputStreamWriter(baos));
+        CSVFormatter csvFormatter = new CSVFormatter(pw);
+
+        Sampler s = new SamplerImpl(0L, 1000L);
+        s.registerOperation(MockOperation.class);
+        s.registerConsumer(csvFormatter);
+
+        s.start();
+
+        MockOperation mo = new MockOperation();
+
+        // the sampling interval will start on the second mark right before this time:
+        long t0 = System.currentTimeMillis();
+
+        // 2 ms
+        //noinspection PointlessArithmeticExpression
+        s.record(1L, 1L * 1000000L, 3L * 1000000L, mo);
+
+        // we don't allow it even a sampling interval - this is to make sure we capture even the fast
+        // single operations
+        s.stop();
+
+        // make sure we can't call record anymore
+
+        try
+        {
+            s.record(System.currentTimeMillis(), 0L, 0L, mo);
+            fail("should have failed with IllegalStateException, sampler is stopped");
+        }
+        catch(IllegalStateException e)
+        {
+            log.info(e.getMessage());
+        }
+
+        // make sure we get the headers and statistics for 1 operation
+
+        String output = new String(baos.toByteArray());
+        log.info(output);
+
+        StringTokenizer st = new StringTokenizer(output, "\n");
+        assertTrue(st.hasMoreTokens());
+        String headers = st.nextToken();
+        StringTokenizer lineTokenizer = new StringTokenizer(headers, ",");
+
+        assertTrue(lineTokenizer.hasMoreTokens());
+        String token = lineTokenizer.nextToken().trim();
+        assertEquals("Time", token);
+
+        assertTrue(lineTokenizer.hasMoreTokens());
+        token = lineTokenizer.nextToken().trim();
+        assertEquals("MockOperation Success Rate (ops/sec)", token);
+
+        assertTrue(lineTokenizer.hasMoreTokens());
+        token = lineTokenizer.nextToken().trim();
+        assertEquals("MockOperation Average Duration (ms)", token);
+
+        assertTrue(lineTokenizer.hasMoreTokens());
+        token = lineTokenizer.nextToken().trim();
+        assertEquals("MockOperation Failure Rate (ops/sec)", token);
+
+        assertTrue(lineTokenizer.hasMoreTokens());
+        token = lineTokenizer.nextToken().trim();
+        assertEquals("Notes", token);
+
+        assertFalse(lineTokenizer.hasMoreTokens());
+
+        assertTrue(st.hasMoreTokens());
+        String samples = st.nextToken();
+        assertFalse(st.hasMoreTokens());
+
+        // make sure we record one sample
+        lineTokenizer = new StringTokenizer(samples, ",");
+        String timestamp = lineTokenizer.nextToken();
+        long t = ((Date)CSVFormat.TIMESTAMP_FORMAT.parseObject(timestamp)).getTime();
+        long secondMark = (t0 / 1000L) * 1000L;
+        assertEquals(secondMark, t);
+
+        // success count
+        String success = lineTokenizer.nextToken();
+        assertEquals("1", success.trim());
+
+        // duration
+        String duration = lineTokenizer.nextToken();
+        assertEquals("2.0", duration.trim());
     }
 
     // record ----------------------------------------------------------------------------------------------------------
@@ -111,170 +151,114 @@ public class CollectorBasedCsvStatisticsTest extends Assert
     @Test
     public void recordSimpleRead() throws Exception
     {
-        fail("RETURN HERE");
+        MockSamplingConsumer mc = new MockSamplingConsumer();
 
-//        MockHandler mh = new MockHandler();
-//        Collector mc = new MockCollector(mh);
-//
-//        CollectorBasedCsvStatistics s = new CollectorBasedCsvStatistics(mc, 5L);
-//
-//        Read r = new Read("a");
-//
-//        s.record(0L, 10L, 20L, r, null);
-//
-//        assertTrue(mh.getSamplingIntervals().isEmpty());
-//
-//        Read r2 = new Read("b");
-//
-//        s.record(2L, 10L, 20L, r2, null);
-//
-//        assertTrue(mh.getSamplingIntervals().isEmpty());
-//
-//        Read r3 = new Read("c");
-//
-//        s.record(4L, 10L, 20L, r3, null);
-//
-//        assertTrue(mh.getSamplingIntervals().isEmpty());
-//
-//        Read r4 = new Read("d");
-//
-//        // this goes over the sampling interval boundaries so it triggers sending a sample to the collector
-//        s.record(6L, 10L, 20L, r4, null);
-//
-//        List<DeprecatedSamplingInterval> samplingIntervals = mh.getSamplingIntervals();
-//
-//        assertEquals(1, samplingIntervals.size());
-//
-//        DeprecatedSamplingInterval i = samplingIntervals.get(0);
-//
-//        assertEquals(0L, i.getIntervalStartMs());
-//        assertEquals(3, i.getValidOperationsCount());
-//        assertEquals(3, i.getValidReadsCount());
-//        assertEquals(0, i.getValidWritesCount());
-//        assertEquals(30L, i.getCumulatedValidReadsTimeNano());
-//        assertEquals(0L, i.getCumulatedValidWritesTimeNano());
-//
-//        log.debug(".");
+        Sampler s = new SamplerImpl(0L, 1000L);
+        s.registerOperation(Read.class);
+        s.registerConsumer(mc);
+
+        s.start();
+
+        Read r = new Read("a");
+
+        s.record(0L, 10L, 20L, r);
+
+        assertTrue(mc.getSamplingIntervals().isEmpty());
+
+        Read r2 = new Read("b");
+
+        s.record(2L, 10L, 20L, r2);
+
+        assertTrue(mc.getSamplingIntervals().isEmpty());
+
+        Read r3 = new Read("c");
+
+        s.record(4L, 10L, 20L, r3);
+
+        assertTrue(mc.getSamplingIntervals().isEmpty());
+
+        // this triggers collection and a SamplingInterval to be sent to consumer
+
+        //
+        // WARNING: IF DEBUGGING, WE'LL ACCUMULATE MORE THAN ONE SAMPLE
+        //
+
+        s.stop();
+
+        List<SamplingInterval> samplingIntervals = mc.getSamplingIntervals();
+
+        assertEquals(1, samplingIntervals.size());
+
+        SamplingInterval i = samplingIntervals.get(0);
+
+        CounterValues cv = i.getCounterValues(Read.class);
+
+        assertEquals(3, cv.getSuccessCount());
+        assertEquals(30L, cv.getSuccessCumulatedDurationNano());
     }
 
     @Test
     public void recordCombinedReadAndWrite() throws Exception
     {
-        fail("RETURN HERE");
+        MockSamplingConsumer mc = new MockSamplingConsumer();
 
-//        MockHandler mh = new MockHandler();
-//        Collector mc = new MockCollector(mh);
-//
-//        CollectorBasedCsvStatistics s = new CollectorBasedCsvStatistics(mc, 5L);
-//
-//        Read r = new Read("a");
-//
-//        s.record(0L, 10L, 11L, r, null);
-//
-//        assertTrue(mh.getSamplingIntervals().isEmpty());
-//
-//        Write w = new Write("TEST-KEY", "TEST-VALUE");
-//
-//        s.record(2L, 20L, 22L, w, null);
-//
-//        assertTrue(mh.getSamplingIntervals().isEmpty());
-//
-//        Read r2 = new Read("b");
-//
-//        s.record(4L, 30L, 33L, r2, null);
-//
-//        assertTrue(mh.getSamplingIntervals().isEmpty());
-//
-//        Write w2 = new Write("TEST-KEY2", "TEST-VALUE2");
-//
-//        // this goes over the sampling interval boundaries so it triggers sending a sample to the collector
-//        s.record(6L, 10L, 20L, w2, null);
-//
-//        List<DeprecatedSamplingInterval> samplingIntervals = mh.getSamplingIntervals();
-//
-//        assertEquals(1, samplingIntervals.size());
-//
-//        DeprecatedSamplingInterval i = samplingIntervals.get(0);
-//
-//        assertEquals(0L, i.getIntervalStartMs());
-//        assertEquals(3, i.getValidOperationsCount());
-//        assertEquals(2, i.getValidReadsCount());
-//        assertEquals(1, i.getValidWritesCount());
-//        assertEquals(4L, i.getCumulatedValidReadsTimeNano());
-//        assertEquals(2L, i.getCumulatedValidWritesTimeNano());
-    }
+        Sampler s = new SamplerImpl(0L, 1000L);
+        s.registerOperation(Read.class);
+        s.registerOperation(Write.class);
+        s.registerConsumer(mc);
 
-    @Test
-    public void recordIntervalEdge() throws Exception
-    {
-        fail("RETURN HERE");
+        s.start();
 
-//        MockHandler mh = new MockHandler();
-//        Collector mc = new MockCollector(mh);
-//
-//        CollectorBasedCsvStatistics s = new CollectorBasedCsvStatistics(mc, 4L);
-//
-//        Write w = new Write("TEST-KEY", "TEST-VALUE");
-//
-//        s.record(0L, 10L, 11L, w, null);
-//
-//        assertTrue(mh.getSamplingIntervals().isEmpty());
-//
-//        Write w2 = new Write("TEST-KEY2", "TEST-VALUE2");
-//
-//        s.record(2L, 20L, 22L, w2, null);
-//
-//        assertTrue(mh.getSamplingIntervals().isEmpty());
-//
-//        Write w3 = new Write("TEST-KEY3", "TEST-VALUE3");
-//
-//        // this is the edge of the interval
-//        s.record(4L, 30L, 33L, w3, null);
-//
-//        assertTrue(mh.getSamplingIntervals().isEmpty());
-//
-//        Write w4 = new Write("TEST-KEY4", "TEST-VALUE4");
-//
-//        // this goes over the sampling interval boundaries so it triggers sending a sample to the collector
-//        s.record(6L, 40L, 44L, w4, null);
-//
-//        List<DeprecatedSamplingInterval> samplingIntervals = mh.getSamplingIntervals();
-//
-//        assertEquals(1, samplingIntervals.size());
-//
-//        DeprecatedSamplingInterval i = samplingIntervals.get(0);
-//
-//        assertEquals(0L, i.getIntervalStartMs());
-//        assertEquals(3, i.getValidOperationsCount());
-//        assertEquals(0, i.getValidReadsCount());
-//        assertEquals(3, i.getValidWritesCount());
-//        assertEquals(0L, i.getCumulatedValidReadsTimeNano());
-//        assertEquals(6L, i.getCumulatedValidWritesTimeNano());
-//
-//
-//        samplingIntervals.clear();
-//
-//        Write w5 = new Write("TEST-KEY5", "TEST-VALUE5");
-//
-//        // make sure the 6 ms sample is counted
-//        s.record(9L, 50L, 55L, w5, null);
-//
-//        assertEquals(1, samplingIntervals.size());
-//
-//        i = samplingIntervals.get(0);
-//
-//        assertEquals(4L, i.getIntervalStartMs());
-//        assertEquals(1, i.getValidOperationsCount());
-//        assertEquals(0, i.getValidReadsCount());
-//        assertEquals(1, i.getValidWritesCount());
-//        assertEquals(0L, i.getCumulatedValidReadsTimeNano());
-//        assertEquals(4L, i.getCumulatedValidWritesTimeNano());
+        Read r = new Read("a");
+
+        s.record(0L, 10L, 11L, r);
+
+        assertTrue(mc.getSamplingIntervals().isEmpty());
+
+        Write w = new Write("TEST-KEY", "TEST-VALUE");
+
+        s.record(2L, 20L, 22L, w);
+
+        assertTrue(mc.getSamplingIntervals().isEmpty());
+
+        Read r2 = new Read("b");
+
+        s.record(4L, 30L, 33L, r2);
+
+        assertTrue(mc.getSamplingIntervals().isEmpty());
+
+        // this triggers collection and a SamplingInterval to be sent to consumer
+
+        //
+        // WARNING: IF DEBUGGING, WE'LL ACCUMULATE MORE THAN ONE SAMPLE
+        //
+
+        s.stop();
+
+        List<SamplingInterval> samplingIntervals = mc.getSamplingIntervals();
+
+        assertEquals(1, samplingIntervals.size());
+
+        SamplingInterval i = samplingIntervals.get(0);
+
+        CounterValues readValues = i.getCounterValues(Read.class);
+        CounterValues writeValues = i.getCounterValues(Write.class);
+
+        assertEquals(2, readValues.getSuccessCount());
+        assertEquals(4L, readValues.getSuccessCumulatedDurationNano());
+
+        assertEquals(1, writeValues.getSuccessCount());
+        assertEquals(2L, writeValues.getSuccessCumulatedDurationNano());
     }
 
     @Test
     public void recordEmptyInterval() throws Exception
     {
-        fail("RETURN HERE");
+        //
+        // TODO convert this test from Collector-based sampler to the new Sampler, preserving semantics
+        //
+
+        fail("NEEDS CONVERSION FROM COLLECTOR-BASED SAMPLER TO Sampler");
 
 //        MockHandler mh = new MockHandler();
 //        Collector mc = new MockCollector(mh);
@@ -341,7 +325,11 @@ public class CollectorBasedCsvStatisticsTest extends Assert
     @Test
     public void connectionRefusedIndex_OnePerInterval() throws Exception
     {
-        fail("RETURN HERE");
+        //
+        // TODO convert this test from Collector-based sampler to the new Sampler, preserving semantics
+        //
+
+        fail("NEEDS CONVERSION FROM COLLECTOR-BASED SAMPLER TO Sampler WHEN WORKING ON ERROR HANDLING");
 
 //        MockHandler mh = new MockHandler();
 //        Collector mc = new MockCollector(mh);
@@ -396,7 +384,11 @@ public class CollectorBasedCsvStatisticsTest extends Assert
     @Test
     public void readTimedOut_TwoPerInterval() throws Exception
     {
-        fail("RETURN HERE");
+        //
+        // TODO convert this test from Collector-based sampler to the new Sampler, preserving semantics
+        //
+
+        fail("NEEDS CONVERSION FROM COLLECTOR-BASED SAMPLER TO Sampler WHEN WORKING ON ERROR HANDLING");
 
 //        MockHandler mh = new MockHandler();
 //        Collector mc = new MockCollector(mh);
@@ -456,7 +448,11 @@ public class CollectorBasedCsvStatisticsTest extends Assert
     @Test
     public void unknownException() throws Exception
     {
-        fail("RETURN HERE");
+        //
+        // TODO convert this test from Collector-based sampler to the new Sampler, preserving semantics
+        //
+
+        fail("NEEDS CONVERSION FROM COLLECTOR-BASED SAMPLER TO Sampler WHEN WORKING ON ERROR HANDLING");
 
 //        MockHandler mh = new MockHandler();
 //        Collector mc = new MockCollector(mh);
@@ -511,7 +507,11 @@ public class CollectorBasedCsvStatisticsTest extends Assert
     @Test
     public void combinedJedisUnknownReplyAndUnknownException() throws Exception
     {
-        fail("RETURN HERE");
+        //
+        // TODO convert this test from Collector-based sampler to the new Sampler, preserving semantics
+        //
+
+        fail("NEEDS CONVERSION FROM COLLECTOR-BASED SAMPLER TO Sampler WHEN WORKING ON ERROR HANDLING");
 
 //        MockHandler mh = new MockHandler();
 //        Collector mc = new MockCollector(mh);

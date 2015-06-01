@@ -17,13 +17,7 @@
 package com.novaordis.gld.strategy.load.cache;
 
 import com.novaordis.gld.Operation;
-import com.novaordis.gld.SingleThreadedRunner;
-import com.novaordis.gld.SingleThreadedRunnerTest;
-import com.novaordis.gld.keystore.RandomKeyGenerator;
-import com.novaordis.gld.mock.MockCacheService;
 import com.novaordis.gld.mock.MockConfiguration;
-import com.novaordis.gld.mock.MockSampler;
-import com.novaordis.gld.mock.MockStatistics;
 import com.novaordis.gld.operations.cache.Read;
 import com.novaordis.gld.operations.cache.Write;
 import com.novaordis.gld.strategy.load.LoadStrategyTest;
@@ -35,13 +29,10 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.CyclicBarrier;
 
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
@@ -282,33 +273,35 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
     @Test
     public void integration_ReadThenWriteOnMiss_SingleThreadedRunner_OneOperation() throws Exception
     {
-        MockCacheService mcs = new MockCacheService();
+        // TODO this test fails because in the previous version, the Statistics instance used to interrupt the runner,
+        // but now the Sampler just records and does not interrupt. We need to fix the ReadThenWriteOnMissLoadStrategy
+        // to know how to stop
+        fail("RETURN TO THIS WHEN YOU NEED CACHE LOAD TO RUN (1)");
 
-        MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(mcs);
-
-        MockSampler ms = new MockSampler();
-
-        CyclicBarrier barrier = new CyclicBarrier(1);
-
-        ReadThenWriteOnMissLoadStrategy rtwom = new ReadThenWriteOnMissLoadStrategy();
-
-        mc.setKeySize(1);
-        mc.setValueSize(1);
-        mc.setUseDifferentValues(false);
-
-        rtwom.configure(mc, Collections.<String>emptyList(), 0);
-
-        assertTrue(rtwom.getKeyStore() instanceof RandomKeyGenerator);
-
-        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, rtwom, ms, barrier);
-        SingleThreadedRunnerTest.setRunning(st);
-
-        st.run();
-
-        fail("RETURN HERE");
-
-//        List<MockStatistics.OperationThrowablePair> recorded = ms.getRecorded();
+//        MockCacheService mcs = new MockCacheService();
+//        MockConfiguration mc = new MockConfiguration();
+//        mc.setCacheService(mcs);
+//
+//        MockSampler ms = new MockSampler();
+//
+//        CyclicBarrier barrier = new CyclicBarrier(1);
+//
+//        ReadThenWriteOnMissLoadStrategy rtwom = new ReadThenWriteOnMissLoadStrategy();
+//
+//        mc.setKeySize(1);
+//        mc.setValueSize(1);
+//        mc.setUseDifferentValues(false);
+//
+//        rtwom.configure(mc, Collections.<String>emptyList(), 0);
+//
+//        assertTrue(rtwom.getKeyStore() instanceof RandomKeyGenerator);
+//
+//        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, rtwom, ms, barrier);
+//        SingleThreadedRunnerTest.setRunning(st);
+//
+//        st.run();
+//
+//        List<OperationThrowablePair> recorded = ms.getRecorded();
 //        assertEquals(1, recorded.size());
 //
 //        Read r = (Read)recorded.get(0).operation;
@@ -321,33 +314,37 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
     @Test
     public void integration_ReadThenWriteOnMiss_SingleThreadedRunner_ReadThenWrite() throws Exception
     {
-        MockCacheService mcs = new MockCacheService();
+        // TODO integration_ReadThenWriteOnMiss_SingleThreadedRunner_ReadThenWrite(): this test fails because in the
+        // previous version, the Statistics instance used to interrupt the runner, but now the Sampler just records and
+        // does not interrupt. We need to fix the ReadThenWriteOnMissLoadStrategy to know how to stop
 
-        MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(mcs);
+        fail("RETURN TO THIS WHEN YOU NEED CACHE LOAD TO RUN (2)");
 
-        MockSampler ms = new MockSampler();
-
-        CyclicBarrier barrier = new CyclicBarrier(1);
-
-        ReadThenWriteOnMissLoadStrategy rtwom = new ReadThenWriteOnMissLoadStrategy();
-
-        mc.setKeySize(1);
-        mc.setValueSize(1);
-        mc.setUseDifferentValues(false);
-
-        rtwom.configure(mc, Collections.<String>emptyList(), 0);
-
-        assertTrue(rtwom.getKeyStore() instanceof RandomKeyGenerator);
-
-        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, rtwom, ms, barrier);
-        SingleThreadedRunnerTest.setRunning(st);
-
-        st.run();
-
-        fail("RETURN HERE");
-
-//        List<MockStatistics.OperationThrowablePair> recorded = ms.getRecorded();
+//        MockCacheService mcs = new MockCacheService();
+//
+//        MockConfiguration mc = new MockConfiguration();
+//        mc.setCacheService(mcs);
+//
+//        MockSampler ms = new MockSampler();
+//
+//        CyclicBarrier barrier = new CyclicBarrier(1);
+//
+//        ReadThenWriteOnMissLoadStrategy rtwom = new ReadThenWriteOnMissLoadStrategy();
+//
+//        mc.setKeySize(1);
+//        mc.setValueSize(1);
+//        mc.setUseDifferentValues(false);
+//
+//        rtwom.configure(mc, Collections.<String>emptyList(), 0);
+//
+//        assertTrue(rtwom.getKeyStore() instanceof RandomKeyGenerator);
+//
+//        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, rtwom, ms, barrier);
+//        SingleThreadedRunnerTest.setRunning(st);
+//
+//        st.run();
+//
+//        List<OperationThrowablePair> recorded = ms.getRecorded();
 //        assertEquals(2, recorded.size());
 //
 //        Read r = (Read)recorded.get(0).operation;
@@ -366,7 +363,6 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
 //        String value = w.getValue();
 //        log.info("key=" + key);
 //        assertNull(t2);
-//
 //
 //        //
 //        // make sure the key was written in cache

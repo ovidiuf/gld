@@ -19,6 +19,7 @@ package com.novaordis.gld.sampler.metrics;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public abstract class MetricTest
@@ -46,7 +47,21 @@ public abstract class MetricTest
 
         MeasureUnit mu = m.getMeasureUnit();
 
-        assertNotNull(mu);
+        // measure unit can be null
+
+        // however, if it is not null, and it has a type, make sure it is the same as the metric's
+
+        if (mu != null)
+        {
+            MetricType mt = mu.getMetricType();
+
+            MetricType mt2 = m.getMetricType();
+
+            if (mt != null || mt2 != null)
+            {
+                assertEquals(mt, mt2);
+            }
+        }
 
         String label = m.getLabel();
 

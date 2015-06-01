@@ -16,32 +16,19 @@
 
 package com.novaordis.gld.strategy.load.cache;
 
-import com.novaordis.gld.KeyStore;
 import com.novaordis.gld.Operation;
-import com.novaordis.gld.SingleThreadedRunner;
-import com.novaordis.gld.SingleThreadedRunnerTest;
-import com.novaordis.gld.keystore.WriteOnlyFileKeyStore;
-import com.novaordis.gld.mock.MockCacheService;
 import com.novaordis.gld.mock.MockConfiguration;
-import com.novaordis.gld.mock.MockStatistics;
 import com.novaordis.gld.operations.cache.Read;
 import com.novaordis.gld.operations.cache.Write;
 import com.novaordis.gld.strategy.load.LoadStrategyTest;
-import com.novaordis.utilities.Files;
 import com.novaordis.utilities.testing.Tests;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Test;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CyclicBarrier;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -461,7 +448,11 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
     @Test
     public void integration_WriteThenRead_SingleThreadedRunner() throws Exception
     {
-        fail("RETURN HERE");
+        // TODO integration_WriteThenRead_SingleThreadedRunner(): this test fails because in the previous version,
+        // the Statistics instance used to interrupt the runner, but now the Sampler just records and does not
+        // interrupt. We need to fix the WriteThenReadLoadStrategy to know how to stop.
+
+        fail("RETURN TO THIS WHEN YOU NEED CACHE LOAD TO RUN (3)");
 
 //        File storeFile = new File(Tests.getScratchDir(), "test-keys.txt");
 //
@@ -470,8 +461,7 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
 //        MockConfiguration mc = new MockConfiguration();
 //        mc.setCacheService(mcs);
 //
-//        MockStatistics ms = new MockStatistics(false);
-//        ms.setDoneAfterNRecords(2);
+//        MockSampler ms = new MockSampler();
 //
 //        CyclicBarrier barrier = new CyclicBarrier(1);
 //
@@ -479,7 +469,6 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
 //        mc.setValueSize(7);
 //        mc.setUseDifferentValues(false);
 //        mc.setKeyStoreFile(storeFile.getPath());
-//
 //
 //        WriteThenReadLoadStrategy wtr = new WriteThenReadLoadStrategy();
 //
@@ -500,7 +489,7 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
 //
 //        st.run();
 //
-//        List<MockStatistics.OperationThrowablePair> recorded = ms.getRecorded();
+//        List<OperationThrowablePair> recorded = ms.getRecorded();
 //        assertEquals(2, recorded.size());
 //
 //        Write w = (Write)recorded.get(0).operation;

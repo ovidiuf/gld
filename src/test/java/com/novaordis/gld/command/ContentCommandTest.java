@@ -16,8 +16,8 @@
 
 package com.novaordis.gld.command;
 
-import com.novaordis.gld.CacheService;
 import com.novaordis.gld.Configuration;
+import com.novaordis.gld.Service;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.mock.MockCacheService;
 import com.novaordis.gld.mock.MockConfiguration;
@@ -47,14 +47,15 @@ public class ContentCommandTest extends CommandTest
     public void defaultContentCommandConfiguration() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(new MockCacheService());
+        mc.setService(new MockCacheService());
         Content content = getCommandToTest(mc);
         content.initialize();
 
         StdoutStorageStrategy ss = (StdoutStorageStrategy)content.getStorageStrategy();
         assertNotNull(ss);
 
-        CacheService cs = mc.getService();
+
+        Service cs = mc.getService();
         assertTrue(cs.isStarted());
     }
 
@@ -62,7 +63,7 @@ public class ContentCommandTest extends CommandTest
     public void keyCountOnly() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(new MockCacheService());
+        mc.setService(new MockCacheService());
         Content content = getCommandToTest(mc);
         content.addArgument("--key-count-only");
         content.initialize();
@@ -74,7 +75,7 @@ public class ContentCommandTest extends CommandTest
     public void missingStrategy() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(new MockCacheService());
+        mc.setService(new MockCacheService());
         Content content = getCommandToTest(mc);
 
         content.addArgument("--storage-strategy");
@@ -98,7 +99,7 @@ public class ContentCommandTest extends CommandTest
     public void unknownStrategy() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(new MockCacheService());
+        mc.setService(new MockCacheService());
         Content content = getCommandToTest(mc);
 
         content.addArgument("--storage-strategy");
@@ -122,7 +123,7 @@ public class ContentCommandTest extends CommandTest
     public void strategy_stdout() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(new MockCacheService());
+        mc.setService(new MockCacheService());
         Content content = getCommandToTest(mc);
 
         content.addArgument("--storage-strategy");
@@ -138,7 +139,7 @@ public class ContentCommandTest extends CommandTest
     public void strategy_Stdout() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(new MockCacheService());
+        mc.setService(new MockCacheService());
         Content content = getCommandToTest(mc);
 
         content.addArgument("--storage-strategy");

@@ -100,12 +100,14 @@ public class CSVFormatter implements SamplingConsumer
         }
 
         Set<Metric> metrics = si.getMetrics();
-        List<Metric> orderedMetrics = csvFormat.orderMetrics(metrics);
-
-        for(Metric m: orderedMetrics)
+        if (metrics != null)
         {
-            s += headers ? csvFormat.getMetricHeader(m) : csvFormat.formatMetric(m);
-            s+= ", ";
+            List<Metric> orderedMetrics = csvFormat.orderMetrics(metrics);
+            for (Metric m : orderedMetrics)
+            {
+                s += headers ? csvFormat.getMetricHeader(m) : csvFormat.formatMetric(m);
+                s += ", ";
+            }
         }
 
         if (headers)

@@ -73,7 +73,7 @@ public class DeleteCommandTest extends CommandTest
         MockCacheService mockCacheService = new MockCacheService();
 
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(mockCacheService);
+        mc.setService(mockCacheService);
 
         mockCacheService.stop();
         assertFalse(mockCacheService.isStarted());
@@ -188,7 +188,7 @@ public class DeleteCommandTest extends CommandTest
     public void keyCount() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(new MockCacheService());
+        mc.setService(new MockCacheService());
         Delete d = new Delete(mc);
         d.addArgument("--key-count");
         d.addArgument("3");

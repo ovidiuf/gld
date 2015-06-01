@@ -23,6 +23,7 @@ import com.novaordis.gld.strategy.load.LoadStrategyBase;
 import org.apache.log4j.Logger;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * We keep this class in this package ("com.novaordis.gld.strategy.load") and not in the mock package
@@ -42,7 +43,28 @@ public class MockLoadStrategy extends LoadStrategyBase
     private String mockArgument;
     private String mockLoadArgument;
 
+    private AtomicInteger remainingOperations;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    /**
+     * Will generate an unlimited number of operations.
+     */
+    public MockLoadStrategy()
+    {
+        this(-1);
+    }
+
+    /**
+     * @param operationCount the number of operations to generate.
+     */
+    public MockLoadStrategy(int operationCount)
+    {
+        if (operationCount >= 0)
+        {
+            remainingOperations = new AtomicInteger(operationCount);
+        }
+    }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
 
@@ -69,6 +91,14 @@ public class MockLoadStrategy extends LoadStrategyBase
     @Override
     public Operation next(Operation lastOperation, String lastWrittenKey)
     {
+        if (remainingOperations != null)
+        {
+            if (remainingOperations.getAndDecrement() <= 0)
+            {
+                return null;
+            }
+        }
+
         return new MockOperation();
     }
 

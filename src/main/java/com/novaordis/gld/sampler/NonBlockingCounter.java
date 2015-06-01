@@ -81,7 +81,7 @@ public class NonBlockingCounter implements Counter
             throw new IllegalArgumentException("t1 " + t1Nano + " precedes t0 " + t0Nano);
         }
 
-        if (t.length == 0)
+        if (t == null || t.length == 0 || (t[0] == null))
         {
             // success
 

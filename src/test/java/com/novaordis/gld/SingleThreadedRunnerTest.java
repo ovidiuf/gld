@@ -16,9 +16,22 @@
 
 package com.novaordis.gld;
 
+import com.novaordis.gld.mock.MockCacheService;
+import com.novaordis.gld.mock.MockConfiguration;
+import com.novaordis.gld.mock.MockKeyStore;
+import com.novaordis.gld.sampler.Sampler;
+import com.novaordis.gld.sampler.SamplerImpl;
+import com.novaordis.gld.strategy.load.cache.MockLoadStrategy;
+import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import java.util.concurrent.CyclicBarrier;
+
+import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class SingleThreadedRunnerTest
@@ -29,11 +42,6 @@ public class SingleThreadedRunnerTest
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    public static void setRunning(SingleThreadedRunner r)
-    {
-        r.running = true;
-    }
-
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -43,123 +51,124 @@ public class SingleThreadedRunnerTest
     @Test
     public void nullConfig() throws Exception
     {
-        fail("RETURN HERE");
-//        try
-//        {
-//            new SingleThreadedRunner(
-//                "TEST", null, new MockLoadStrategy(), new CollectorBasedCsvStatistics(null), new CyclicBarrier(1));
-//            fail("should fail with IllegalArgumentException, null config");
-//        }
-//        catch(IllegalArgumentException e)
-//        {
-//            log.info(e.getMessage());
-//        }
+        try
+        {
+            new SingleThreadedRunner("TEST", null, new MockLoadStrategy(), new SamplerImpl(), new CyclicBarrier(1));
+            fail("should fail with IllegalArgumentException, null config");
+        }
+        catch(IllegalArgumentException e)
+        {
+            log.info(e.getMessage());
+        }
     }
 
     @Test
-    public void nullStatistics() throws Exception
+    public void nullSampler() throws Exception
     {
-        fail("RETURN HERE");
-//
-//        try
-//        {
-//            new SingleThreadedRunner(
-//                "TEST", new MockConfiguration(), new MockLoadStrategy(), null, new CyclicBarrier(1));
-//            fail("should fail with IllegalArgumentException, null statistics");
-//        }
-//        catch(IllegalArgumentException e)
-//        {
-//            log.info(e.getMessage());
-//        }
+        MockConfiguration mc = new MockConfiguration();
+        mc.setService(new MockCacheService());
+        try
+        {
+            new SingleThreadedRunner("TEST", mc, new MockLoadStrategy(), null, new CyclicBarrier(1));
+            fail("should fail with IllegalArgumentException, null sampler");
+        }
+        catch(IllegalArgumentException e)
+        {
+            log.info(e.getMessage());
+        }
     }
 
     @Test
     public void nullBarrier() throws Exception
     {
-        fail("RETURN HERE");
-
-//        try
-//        {
-//            new SingleThreadedRunner(
-//                "TEST", new MockConfiguration(), new MockLoadStrategy(), new MockStatistics(), null);
-//            fail("should fail with IllegalArgumentException, null barrier");
-//        }
-//        catch(IllegalArgumentException e)
-//        {
-//            log.info(e.getMessage());
-//        }
+        try
+        {
+            new SingleThreadedRunner(
+                "TEST", new MockConfiguration(), new MockLoadStrategy(), new SamplerImpl(), null);
+            fail("should fail with IllegalArgumentException, null barrier");
+        }
+        catch(IllegalArgumentException e)
+        {
+            log.info(e.getMessage());
+        }
     }
 
     @Test
-    public void nullCacheService() throws Exception
+    public void nullService() throws Exception
     {
-        fail("RETURN HERE");
+        MockConfiguration mc = new MockConfiguration();
 
-//        MockConfiguration mc = new MockConfiguration();
-//
-//        assertNull(mc.getService());
-//
-//        try
-//        {
-//            new SingleThreadedRunner(
-//                "TEST", mc, new MockLoadStrategy(), new MockStatistics(), new CyclicBarrier(1));
-//            fail("should fail with IllegalArgumentException, null barrier");
-//        }
-//        catch(IllegalArgumentException e)
-//        {
-//            log.info(e.getMessage());
-//        }
+        assertNull(mc.getService());
+
+        try
+        {
+            new SingleThreadedRunner(
+                "TEST", mc, new MockLoadStrategy(), new SamplerImpl(), new CyclicBarrier(1));
+            fail("should fail with IllegalArgumentException, null service");
+        }
+        catch(IllegalArgumentException e)
+        {
+            log.info(e.getMessage());
+        }
     }
 
     @Test
     public void constructorAndRun() throws Exception
     {
-        fail("RETURN HERE");
+        MockConfiguration mc = new MockConfiguration();
+        mc.setService(new MockCacheService());
 
-//        MockConfiguration mc = new MockConfiguration();
-//        mc.setCacheService(new MockCacheService());
-//        MockStatistics ms = new MockStatistics();
-//        LoadStrategy mls = new MockLoadStrategy();
-//        CyclicBarrier cb = new CyclicBarrier(1);
-//
-//        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, mls, ms, cb);
-//
-//        assertEquals("TEST", st.getName());
-//
-//        // we simulate the running runner
-//        st.running = true;
-//
-//        st.run();
-//
-//        assertEquals(0, cb.getNumberWaiting());
+        LoadStrategy mls = new MockLoadStrategy(1);
+
+        Sampler s = new SamplerImpl(0L, 1000L);
+        s.registerOperation(MockOperation.class);
+
+        CyclicBarrier cb = new CyclicBarrier(1);
+
+        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, mls, s, cb);
+
+        assertEquals("TEST", st.getName());
+
+        // we simulate the running runner
+        st.running = true;
+
+        s.start();
+
+        st.run();
+
+        assertEquals(0, cb.getNumberWaiting());
     }
 
     @Test
     public void insureThatKeyStoreIsClosedOnExit() throws Exception
     {
-        fail("RETURN HERE");
+        MockConfiguration mc = new MockConfiguration();
+        mc.setService(new MockCacheService());
 
-//        MockConfiguration mc = new MockConfiguration();
-//        mc.setCacheService(new MockCacheService());
-//        MockStatistics ms = new MockStatistics();
-//
-//        MockKeyStore mks = new MockKeyStore();
-//        MockLoadStrategy mockLoadStrategy = new MockLoadStrategy();
-//        mockLoadStrategy.setKeyStore(mks);
-//        CyclicBarrier cb = new CyclicBarrier(1);
-//
-//        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, mockLoadStrategy, ms, cb);
-//
-//        KeyStore ks = mockLoadStrategy.getKeyStore();
-//        ks.start();
-//        assertTrue(ks.isStarted());
-//
-//        // we simulate the running runner
-//        st.running = true;
-//
-//        st.run();
-//
-//        assertFalse(ks.isStarted());
+        MockKeyStore mks = new MockKeyStore();
+        MockLoadStrategy mockLoadStrategy = new MockLoadStrategy(1);
+        mockLoadStrategy.setKeyStore(mks);
+
+        Sampler s = new SamplerImpl(0L, 1000L);
+        s.registerOperation(MockOperation.class);
+
+        CyclicBarrier cb = new CyclicBarrier(1);
+
+        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, mockLoadStrategy, s, cb);
+
+        KeyStore ks = mockLoadStrategy.getKeyStore();
+        ks.start();
+
+        assertTrue(ks.isStarted());
+
+        // we simulate the running runner
+        st.running = true;
+
+        s.start();
+
+        st.run();
+
+        assertFalse(ks.isStarted());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

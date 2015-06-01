@@ -23,6 +23,8 @@ public class Statistics
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
+    public static final long NANOSECONDS_IN_A_MILLISECOND = 1000000L;
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     /**
@@ -50,6 +52,11 @@ public class Statistics
     public static double calculateAverageDuration(
         long count, long cumulatedDuration, MeasureUnit cumulatedDurationUnit, MeasureUnit targetUnit)
     {
+        if (count == 0)
+        {
+            return 0;
+        }
+
         return (double)cumulatedDuration / count / multiplicationFactor(cumulatedDurationUnit, targetUnit);
     }
 
@@ -68,7 +75,7 @@ public class Statistics
         {
             if (MeasureUnit.MILLISECOND.equals(destination))
             {
-                return 1000000L;
+                return NANOSECONDS_IN_A_MILLISECOND;
             }
             else if (MeasureUnit.SECOND.equals(destination))
             {

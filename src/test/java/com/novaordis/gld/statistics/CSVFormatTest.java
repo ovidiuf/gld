@@ -31,6 +31,8 @@ import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -257,6 +259,25 @@ public class CSVFormatTest extends FormatTest
     }
 
     @Test
+    public void getMetricHeader_MetricNameContainsCommas() throws Exception
+    {
+        MeasureUnit customTimeMeasureUnit = new MockMeasureUnit(MetricType.TIME, "supersec");
+        Metric timeMetric = new MockMetric("This is a, Metric, whose Name contains commas,", customTimeMeasureUnit);
+
+        assertEquals(MetricType.TIME, timeMetric.getMetricType());
+
+        CSVFormat format = getFormatToTest();
+
+        String expected = "\"This is a, Metric, whose Name contains commas, (supersec)\"";
+        String result = format.getMetricHeader(timeMetric);
+
+        log.info("expected: " + expected);
+        log.info("produced: " + result);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
     public void formatMetric_MEMORY() throws Exception
     {
         CSVFormat format = getFormatToTest();
@@ -268,7 +289,7 @@ public class CSVFormatTest extends FormatTest
 
         String result = format.formatMetric(m);
         log.info(result);
-        assertEquals("8.00", result);
+        assertEquals("8.0", result);
     }
 
     // notes -----------------------------------------------------------------------------------------------------------
@@ -326,6 +347,53 @@ public class CSVFormatTest extends FormatTest
 
         String result = format.formatAverageDuration(0.11, MeasureUnit.MILLISECOND);
         assertEquals("0.11", result);
+    }
+
+    // formatNotes() ---------------------------------------------------------------------------------------------------
+
+    @Test
+    public void formatNotes_NullList() throws Exception
+    {
+        CSVFormat format = getFormatToTest();
+        assertEquals("", format.formatNotes(null));
+    }
+
+    @Test
+    public void formatNotes_EmptyList() throws Exception
+    {
+        CSVFormat format = getFormatToTest();
+        assertEquals("", format.formatNotes(new ArrayList<String>()));
+    }
+
+    @Test
+    public void formatNotes_OneElement() throws Exception
+    {
+        CSVFormat format = getFormatToTest();
+
+        String result = format.formatNotes(Arrays.asList("this is an annotation"));
+        assertEquals("this is an annotation", result);
+    }
+
+    @Test
+    public void formatNotes_MultipleElements() throws Exception
+    {
+        CSVFormat format = getFormatToTest();
+
+        String result = format.formatNotes(Arrays.asList("this is an annotation", "this is another annotation"));
+        assertEquals("this is an annotation; this is another annotation", result);
+    }
+
+    @Test
+    public void formatNotes_NoteContainsComma() throws Exception
+    {
+        CSVFormat format = getFormatToTest();
+
+        String expected = "\"this, contains, several, commas\"";
+        String result = format.formatNotes(Arrays.asList("this, contains, several, commas"));
+
+        log.info("expected: " + expected);
+        log.info("produced: " + result);
+        assertEquals(expected, result);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

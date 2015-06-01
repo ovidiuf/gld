@@ -25,6 +25,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -192,7 +193,15 @@ public class CSVFormat implements Format
         }
 
         String a = mu == null ? null : mu.abbreviation();
-        return s + (a == null ? "" : " (" + a + ")");
+        s = s + (a == null ? "" : " (" + a + ")");
+
+        // enclose in quotas if it contains commas
+        if (s.indexOf(',') != -1)
+        {
+            s = '"' + s + '"';
+        }
+
+        return s;
     }
 
     @Override
@@ -222,11 +231,28 @@ public class CSVFormat implements Format
     @Override
     public String formatNotes(List<String> notes)
     {
-        // TODO
         String s = "";
-        for(String n: notes)
+
+        boolean containsComma = false;
+
+        if (notes != null)
         {
-            s += n;
+            for (Iterator<String> i = notes.iterator(); i.hasNext(); )
+            {
+                s += i.next();
+
+                containsComma = containsComma || s.indexOf(',') != -1;
+
+                if (i.hasNext())
+                {
+                    s += "; ";
+                }
+            }
+        }
+
+        if (containsComma)
+        {
+            s = '"' + s + '"';
         }
 
         return s;

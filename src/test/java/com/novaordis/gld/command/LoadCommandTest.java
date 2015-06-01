@@ -59,7 +59,7 @@ public class LoadCommandTest extends CommandTest
     public void noStrategySpecified_UseDefault() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(new MockCacheService());
+        mc.setService(new MockCacheService());
 
         Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
@@ -81,7 +81,7 @@ public class LoadCommandTest extends CommandTest
     public void missingStrategyName() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(new MockCacheService());
+        mc.setService(new MockCacheService());
 
         Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
@@ -104,7 +104,7 @@ public class LoadCommandTest extends CommandTest
     public void nonExistentStrategy() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(new MockCacheService());
+        mc.setService(new MockCacheService());
 
         Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
@@ -130,7 +130,7 @@ public class LoadCommandTest extends CommandTest
     public void strategyInstantiationFailure() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(new MockCacheService());
+        mc.setService(new MockCacheService());
 
         Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
@@ -157,7 +157,7 @@ public class LoadCommandTest extends CommandTest
     public void notALoadStrategy() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(new MockCacheService());
+        mc.setService(new MockCacheService());
 
         Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
@@ -186,7 +186,7 @@ public class LoadCommandTest extends CommandTest
     public void validLoadStrategy() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(new MockCacheService());
+        mc.setService(new MockCacheService());
 
         Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
@@ -210,7 +210,7 @@ public class LoadCommandTest extends CommandTest
     public void defaultLoadStrategyWithCustomStorageStrategy() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(new MockCacheService());
+        mc.setService(new MockCacheService());
 
         Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
@@ -238,7 +238,7 @@ public class LoadCommandTest extends CommandTest
     public void customLoadStrategyWithCustomStorageStrategy() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(new MockCacheService());
+        mc.setService(new MockCacheService());
 
         Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
@@ -273,7 +273,7 @@ public class LoadCommandTest extends CommandTest
     public void missingReadToWriteValue() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(new MockCacheService());
+        mc.setService(new MockCacheService());
 
         Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
@@ -294,7 +294,7 @@ public class LoadCommandTest extends CommandTest
     public void missingWriteToReadValue() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(new MockCacheService());
+        mc.setService(new MockCacheService());
 
         Load load = new Load(mc, Collections.<String>emptyList(), 0);
 
@@ -315,7 +315,7 @@ public class LoadCommandTest extends CommandTest
     public void misspelledRatio() throws Exception
     {
         MockConfiguration mc = new MockConfiguration();
-        mc.setCacheService(new MockCacheService());
+        mc.setService(new MockCacheService());
 
         Load load = new Load(mc, Collections.<String>emptyList(), 0);
 

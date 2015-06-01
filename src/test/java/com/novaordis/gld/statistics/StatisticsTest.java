@@ -55,6 +55,16 @@ public class StatisticsTest
         assertEquals(5.55, ad, 0.0001);
     }
 
+    @Test
+    public void calculateAverageDuration_ZeroCount() throws Exception
+    {
+        long count = 0;
+        long duration = 0L;
+        double ad = Statistics.calculateAverageDuration(count, duration, MeasureUnit.NANOSECOND, MeasureUnit.MILLISECOND);
+
+        assertEquals(0, ad, 0.0001);
+    }
+
     // multiplicationFactor --------------------------------------------------------------------------------------------
 
     @Test

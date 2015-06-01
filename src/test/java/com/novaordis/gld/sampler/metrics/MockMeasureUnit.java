@@ -33,7 +33,7 @@ public class MockMeasureUnit implements MeasureUnit
     {
         this.abbreviation = abbreviation;
     }
-    public MockMeasureUnit(String abbreviation, MetricType metricType)
+    public MockMeasureUnit(MetricType metricType, String abbreviation)
     {
         this.abbreviation = abbreviation;
         this.metricType = metricType;
