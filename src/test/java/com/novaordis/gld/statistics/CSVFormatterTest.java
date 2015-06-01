@@ -31,8 +31,13 @@ import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -358,6 +363,52 @@ public class CSVFormatterTest
 
         assertEquals(expected, line);
     }
+
+    // stop() ----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void stop_SystemOut() throws Exception
+    {
+        Writer w = new OutputStreamWriter(System.out);
+
+        CSVFormatter csvFormatter = new CSVFormatter(w);
+
+        csvFormatter.stop();
+    }
+
+    @Test
+    public void stop_MyWriter() throws Exception
+    {
+        final AtomicBoolean closed = new AtomicBoolean(false);
+
+        Writer w = new Writer()
+        {
+            @Override
+            public void write(char[] cbuf, int off, int len) throws IOException
+            {
+            }
+
+            @Override
+            public void flush() throws IOException
+            {
+            }
+
+            @Override
+            public void close() throws IOException
+            {
+                closed.set(true);
+            }
+        };
+
+        CSVFormatter csvFormatter = new CSVFormatter(w);
+
+        csvFormatter.stop();
+
+        assertTrue(closed.get());
+
+
+    }
+
 
     // Package protected -----------------------------------------------------------------------------------------------
 

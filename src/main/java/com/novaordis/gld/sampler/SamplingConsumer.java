@@ -23,7 +23,15 @@ public interface SamplingConsumer
      *
      * @param samplingIntervals if multiple intervals are sent, they are guaranteed to be successive identical
      *                          intervals. The implementation should throw IllegalArgumentException if they are not.
+     *
+     * @exception  if something goes wrong consuming. The sampler will most likely ignore the failure and push the
+     * sampling interval to other registered consumers.
      */
-    void consume(SamplingInterval... samplingIntervals);
+    void consume(SamplingInterval... samplingIntervals) throws Exception;
+
+    /**
+     * Invoked by the associated sampler. Gives the consumer a chance to stop and free up resources.
+     */
+    void stop();
 
 }

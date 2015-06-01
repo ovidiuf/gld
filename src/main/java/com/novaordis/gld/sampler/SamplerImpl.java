@@ -159,6 +159,8 @@ public class SamplerImpl extends TimerTask implements Sampler
         // do the final run that will collect leftover statistics
         run();
 
+        stopConsumers();
+
         samplingTimer = null;
         started = false;
     }
@@ -488,6 +490,28 @@ public class SamplerImpl extends TimerTask implements Sampler
             {
                 // protect ourselves against malfunctioning consumers
                 log.warn("sampling consumer " + c + " failed to handle a sampling interval instance", t);
+            }
+        }
+    }
+
+    private void stopConsumers()
+    {
+        if (consumers == null)
+        {
+            return;
+        }
+
+        for (SamplingConsumer c : consumers)
+        {
+            try
+            {
+                log.debug(this + " attempting to stop " + c);
+                c.stop();
+            }
+            catch (Throwable t)
+            {
+                // protect ourselves against malfunctioning consumers
+                log.warn("sampling consumer " + c + " failed to handle stop gracefully", t);
             }
         }
     }

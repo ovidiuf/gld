@@ -26,8 +26,6 @@ import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -75,17 +73,8 @@ public abstract class SamplerTest
         Counter counter = sampler.registerOperation(MockOperation.class);
         assertNotNull(counter);
 
-        final List<SamplingInterval> samplingIntervals = new ArrayList<>();
-
-        assertTrue(sampler.registerConsumer(new SamplingConsumer()
-        {
-            public void consume(SamplingInterval... sis)
-            {
-                // simply accumulate the sampling intervals
-                samplingIntervals.addAll(Arrays.asList(sis));
-            }
-
-        }));
+        MockSamplingConsumer msc = new MockSamplingConsumer();
+        assertTrue(sampler.registerConsumer(msc));
 
         long testSamplingTaskRunInterval = 250L;
         sampler.setSamplingTaskRunIntervalMs(testSamplingTaskRunInterval);
@@ -131,6 +120,8 @@ public abstract class SamplerTest
         {
             log.info(e.getMessage());
         }
+
+        final List<SamplingInterval> samplingIntervals = msc.getSamplingIntervals();
 
         // make sure the generated samples reflect the one operation sent into the sampler
         assertFalse(samplingIntervals.isEmpty());
@@ -327,21 +318,16 @@ public abstract class SamplerTest
     {
         Sampler sampler = getSamplerToTest();
         sampler.registerOperation(MockOperation.class);
-        final List<SamplingInterval> sil = new ArrayList<>();
-        sampler.registerConsumer(new SamplingConsumer()
-        {
-            @Override
-            public void consume(SamplingInterval... sis)
-            {
-                sil.addAll(Arrays.asList(sis));
-            }
-        });
+        MockSamplingConsumer msc = new MockSamplingConsumer();
+        sampler.registerConsumer(msc);
 
         sampler.start();
 
         sampler.annotate("test");
 
         sampler.stop();
+
+        List<SamplingInterval> sil = msc.getSamplingIntervals();
 
         // at least one of the samples has the comment, but not more than one
         String annotation = null;
@@ -370,21 +356,17 @@ public abstract class SamplerTest
     {
         Sampler sampler = getSamplerToTest();
         sampler.registerOperation(MockOperation.class);
-        final List<SamplingInterval> sil = new ArrayList<>();
-        sampler.registerConsumer(new SamplingConsumer()
-        {
-            @Override
-            public void consume(SamplingInterval... sis)
-            {
-                sil.addAll(Arrays.asList(sis));
-            }
-        });
+
+        MockSamplingConsumer msc = new MockSamplingConsumer();
+        sampler.registerConsumer(msc);
         sampler.start();
 
         sampler.annotate("test");
         sampler.record(0L, 1L, 2L, new MockOperation());
 
         sampler.stop();
+
+        List<SamplingInterval> sil = msc.getSamplingIntervals();
 
         assertFalse(sil.isEmpty());
 
@@ -431,15 +413,9 @@ public abstract class SamplerTest
         sampler.setSamplingTaskRunIntervalMs(samplingTaskRunInterval);
         sampler.setSamplingIntervalMs(samplingInterval);
         sampler.registerOperation(MockOperation.class);
-        final List<SamplingInterval> sil = new ArrayList<>();
-        sampler.registerConsumer(new SamplingConsumer()
-        {
-            @Override
-            public void consume(SamplingInterval... sis)
-            {
-                sil.addAll(Arrays.asList(sis));
-            }
-        });
+
+        MockSamplingConsumer msc = new MockSamplingConsumer();
+        sampler.registerConsumer(msc);
 
         assertTrue(sampler.registerMetric(SystemCpuLoad.class));
         assertTrue(sampler.registerMetric(SystemLoadAverage.class));
@@ -454,6 +430,8 @@ public abstract class SamplerTest
         Thread.sleep(2 * samplingInterval);
 
         sampler.stop(); // this will populate the sampler interval
+
+        List<SamplingInterval> sil = msc.getSamplingIntervals();
 
         assertFalse(sil.isEmpty());
 
@@ -470,6 +448,38 @@ public abstract class SamplerTest
                 log.info(m);
             }
         }
+    }
+
+    // stop ------------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void verifyThatStopPropagatesToConsumers() throws Exception
+    {
+        Sampler s = getSamplerToTest();
+
+        s.registerOperation(MockOperation.class);
+
+        MockSamplingConsumer consumer1 = new MockSamplingConsumer();
+        MockSamplingConsumer consumer2 = new MockSamplingConsumer();
+
+        assertTrue(s.registerConsumer(consumer1));
+        assertTrue(s.registerConsumer(consumer2));
+
+        s.start();
+
+        assertTrue(s.isStarted());
+
+        assertFalse(consumer1.wasStopped());
+        assertFalse(consumer2.wasStopped());
+
+        consumer1.setStopBroken(true);
+
+        s.stop();
+
+        assertFalse(s.isStarted());
+
+        assertTrue(consumer1.wasStopped());
+        assertTrue(consumer2.wasStopped());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

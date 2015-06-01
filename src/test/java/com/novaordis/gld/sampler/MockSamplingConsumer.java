@@ -29,21 +29,40 @@ public class MockSamplingConsumer implements SamplingConsumer
 
     private List<SamplingInterval> samplingIntervals;
 
+    private boolean wasStopped;
+    private boolean stopBroken;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockSamplingConsumer()
     {
         this.samplingIntervals = new ArrayList<>();
+        this.wasStopped = false;
     }
 
     // SamplingConsumer implementation ---------------------------------------------------------------------------------
 
     @Override
-    public void consume(SamplingInterval... samplingIntervals)
+    public void consume(SamplingInterval... samplingIntervals) throws Exception
     {
         for(SamplingInterval si: samplingIntervals)
         {
             this.samplingIntervals.add(si);
+        }
+    }
+
+    @Override
+    public void stop()
+    {
+        synchronized (this)
+        {
+            wasStopped = true;
+
+            if (stopBroken)
+            {
+                // simulate failure
+                throw new RuntimeException(this + " SYNTHETICALLY FAILED TO STOP CLEANLY");
+            }
         }
     }
 
@@ -52,6 +71,16 @@ public class MockSamplingConsumer implements SamplingConsumer
     public List<SamplingInterval> getSamplingIntervals()
     {
         return samplingIntervals;
+    }
+
+    public synchronized boolean wasStopped()
+    {
+        return wasStopped;
+    }
+
+    public void setStopBroken(boolean b)
+    {
+        this.stopBroken = b;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

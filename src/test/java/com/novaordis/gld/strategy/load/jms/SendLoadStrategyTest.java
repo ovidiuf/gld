@@ -18,6 +18,7 @@ package com.novaordis.gld.strategy.load.jms;
 
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.LoadStrategy;
+import com.novaordis.gld.Operation;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.command.Load;
 import com.novaordis.gld.mock.MockConfiguration;
@@ -28,6 +29,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -48,6 +50,8 @@ public class SendLoadStrategyTest extends JmsLoadStrategyTest
 
     // Overrides -------------------------------------------------------------------------------------------------------
 
+    // Public ----------------------------------------------------------------------------------------------------------
+
     @Override
     @Test
     public void nullArguments() throws Exception
@@ -65,8 +69,6 @@ public class SendLoadStrategyTest extends JmsLoadStrategyTest
             log.info(e.getMessage());
         }
     }
-
-    // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
     public void next() throws Exception
@@ -94,6 +96,17 @@ public class SendLoadStrategyTest extends JmsLoadStrategyTest
 
         Send send3 = (Send) sls.next(null, null);
         assertNull(send3);
+    }
+
+    @Test
+    public void operationTypes() throws Exception
+    {
+        SendLoadStrategy ls = getLoadStrategyToTest();
+
+        Set<Class<? extends Operation>> operationTypes = ls.getOperationTypes();
+
+        assertEquals(1, operationTypes.size());
+        assertTrue(operationTypes.contains(Send.class));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

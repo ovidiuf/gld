@@ -17,15 +17,28 @@
 package com.novaordis.gld.strategy.load.jms;
 
 import com.novaordis.gld.Configuration;
+import com.novaordis.gld.Operation;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.Util;
 import com.novaordis.gld.operations.jms.Receive;
+import com.novaordis.gld.operations.jms.Send;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ReceiveLoadStrategy extends JmsLoadStrategy
 {
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Set<Class<? extends Operation>> OPERATION_TYPES;
+
+    static
+    {
+        OPERATION_TYPES = new HashSet<>();
+        OPERATION_TYPES.add(Receive.class);
+    }
+
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -78,13 +91,21 @@ public class ReceiveLoadStrategy extends JmsLoadStrategy
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    // Protected -------------------------------------------------------------------------------------------------------
+    // JmsLoadStrategy overrides ---------------------------------------------------------------------------------------
 
     @Override
     protected Receive createInstance()
     {
         return new Receive(this);
     }
+
+    @Override
+    public Set<Class<? extends Operation>> getOperationTypes()
+    {
+        return OPERATION_TYPES;
+    }
+
+    // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -152,6 +152,9 @@ public interface Sampler
      * stop() is guaranteed to allow for one more full sampling run after it was called and to trigger generation of
      * a final sampling interval that will contain all events recorded from the same thread that called stop().
      *
+     * The implementation should propagate the event to all registered consumers to give them a chance to free up
+     * resources they may be holding.
+     *
      * @see Sampler#record(long, long, long, Operation, java.lang.Throwable...)
      */
     void stop();

@@ -17,10 +17,6 @@
 package com.novaordis.gld.command;
 
 import com.novaordis.gld.ConfigurationImpl;
-import com.novaordis.gld.statistics.CollectorBasedCsvStatistics;
-import com.novaordis.gld.Util;
-
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Test extends CommandBase
 {
@@ -55,20 +51,6 @@ public class Test extends CommandBase
     public void execute() throws Exception
     {
         insureInitialized();
-
-        long t0 = System.nanoTime();
-        long iterations = 10000000;
-        for (int i = 0; i < iterations; i ++)
-        {
-            Util.getRandomKey(ThreadLocalRandom.current(), 70);
-            //Util.getRandomKeyUUID(70);
-        }
-        long t1 = System.nanoTime();
-
-        double msecs = ((double)(t1 - t0))/ CollectorBasedCsvStatistics.NANOS_IN_MILLS;
-        double ips = ((double)iterations)/msecs;
-
-        System.out.println(CollectorBasedCsvStatistics.DURATION_MS_FORMAT.format(ips) + " iterations per ms");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

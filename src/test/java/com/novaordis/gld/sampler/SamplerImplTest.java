@@ -113,15 +113,9 @@ public class SamplerImplTest extends SamplerTest
         // the sampling task run interval is 0, meaning no timer task will be registered
         SamplerImpl s = new SamplerImpl(0L, samplingInterval);
         s.registerOperation(MockOperation.class);
-        //s.registerMetric()
-        s.registerConsumer(new SamplingConsumer()
-        {
-            @Override
-            public void consume(SamplingInterval... sis)
-            {
-                // noop
-            }
-        });
+
+        MockSamplingConsumer msc = new MockSamplingConsumer();
+        s.registerConsumer(msc);
 
         assertTrue(s.getLastRunTimestamp() <= 0);
 

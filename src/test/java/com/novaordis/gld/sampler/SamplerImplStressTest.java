@@ -24,8 +24,6 @@ import org.junit.Test;
 
 import java.text.DecimalFormat;
 import java.text.Format;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.atomic.AtomicLong;
@@ -54,16 +52,8 @@ public class SamplerImplStressTest
         final SamplerImpl s = new SamplerImpl(250L, interval);
         s.registerOperation(MockOperation.class);
 
-        final List<SamplingInterval> samples = new ArrayList<>();
-
-        s.registerConsumer(new SamplingConsumer()
-        {
-            @Override
-            public void consume(SamplingInterval... si)
-            {
-                samples.addAll(Arrays.asList(si));
-            }
-        });
+        MockSamplingConsumer msc = new MockSamplingConsumer();
+        s.registerConsumer(msc);
 
         s.start();
 
@@ -123,6 +113,8 @@ public class SamplerImplStressTest
         s.stop();
 
         log.info("sampler stopped");
+
+        List<SamplingInterval> samples = msc.getSamplingIntervals();
 
         log.info(samples.size() + " samples collected");
 

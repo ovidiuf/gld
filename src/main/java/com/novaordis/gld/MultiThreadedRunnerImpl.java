@@ -81,7 +81,7 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
             sampler.start();
         }
 
-        if (!conf.inBackground() && sampler != null)
+        if (!conf.inBackground())
         {
             commandLineConsole = new CommandLineConsole(conf, this);
         }

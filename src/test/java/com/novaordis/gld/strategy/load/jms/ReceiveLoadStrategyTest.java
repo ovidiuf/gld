@@ -18,6 +18,7 @@ package com.novaordis.gld.strategy.load.jms;
 
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.LoadStrategy;
+import com.novaordis.gld.Operation;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.command.Load;
 import com.novaordis.gld.mock.MockConfiguration;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -128,6 +130,17 @@ public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest
 
         Receive receive3 = (Receive)rld.next(null, null);
         assertNull(receive3);
+    }
+
+    @Test
+    public void operationTypes() throws Exception
+    {
+        ReceiveLoadStrategy ls = getLoadStrategyToTest();
+
+        Set<Class<? extends Operation>> operationTypes = ls.getOperationTypes();
+
+        assertEquals(1, operationTypes.size());
+        assertTrue(operationTypes.contains(Receive.class));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

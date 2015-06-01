@@ -24,7 +24,8 @@ import com.novaordis.gld.sampler.metrics.MeasureUnit;
 import com.novaordis.gld.sampler.metrics.Metric;
 import org.apache.log4j.Logger;
 
-import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
 import java.util.Set;
 
@@ -39,15 +40,17 @@ public class CSVFormatter implements SamplingConsumer
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    public static void writeHeaders(SamplingInterval si, Format format, PrintWriter pw)
+    public static void writeHeaders(SamplingInterval si, Format format, Writer w) throws IOException
     {
-        pw.println(toLine(si, format, true));
+        String headers = toLine(si, format, true);
+        w.write(headers + "\n");
     }
 
-    public static void writeLine(PrintWriter pw, SamplingInterval si, Format format)
+    public static void writeLine(SamplingInterval si, Format format, Writer w) throws IOException
     {
-        pw.println(toLine(si, format, false));
-        pw.flush();
+        String line = toLine(si, format, false);
+        w.write(line + "\n");
+        w.flush();
     }
 
     /**
@@ -141,33 +144,53 @@ public class CSVFormatter implements SamplingConsumer
 
     // we don't want it to be buffered, we want to go to disk as soon as possible when a line is ready, we won't
     // block anything because the work is done on a dedicated thread
-    private PrintWriter pw;
+    private Writer w;
 
     private CSVFormat csvFormat;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public CSVFormatter(PrintWriter pw)
+    public CSVFormatter(Writer w)
     {
-        this.pw = pw;
+        this.w = w;
         this.writeHeaders = true;
         this.csvFormat = new CSVFormat();
     }
 
     // SamplingConsumer implementation ---------------------------------------------------------------------------------
 
+    /**
+     * @see SamplingConsumer#consume(SamplingInterval...)
+     */
     @Override
-    public void consume(SamplingInterval... samplingIntervals)
+    public void consume(SamplingInterval... samplingIntervals) throws Exception
     {
         if (writeHeaders)
         {
             writeHeaders = false;
-            writeHeaders(samplingIntervals[0], csvFormat, pw);
+            writeHeaders(samplingIntervals[0], csvFormat, w);
         }
 
         for(SamplingInterval si: samplingIntervals)
         {
-            writeLine(pw, si, csvFormat);
+            writeLine(si, csvFormat, w);
+        }
+    }
+
+    @Override
+    public void stop()
+    {
+        // close the underlying Writer
+        if (w != null)
+        {
+            try
+            {
+                w.close();
+            }
+            catch(IOException e)
+            {
+                log.warn(this + " failed to close the underlying writer", e);
+            }
         }
     }
 

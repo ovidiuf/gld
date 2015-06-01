@@ -16,25 +16,30 @@
 
 package com.novaordis.gld.strategy.load.jms;
 
+import com.novaordis.gld.Operation;
 import com.novaordis.gld.operations.jms.Send;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SendLoadStrategy extends JmsLoadStrategy
 {
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Set<Class<? extends Operation>> OPERATION_TYPES;
+
+    static
+    {
+        OPERATION_TYPES = new HashSet<>();
+        OPERATION_TYPES.add(Send.class);
+    }
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    // JmsLoadStrategy overrides ---------------------------------------------------------------------------------------
-
-    @Override
-    protected Send createInstance()
-    {
-        return new Send(this);
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
@@ -44,6 +49,20 @@ public class SendLoadStrategy extends JmsLoadStrategy
         long remainingOperations = getRemainingOperations();
         return "SendLoadStrategy[remaining=" +
             (remainingOperations == Long.MAX_VALUE ? "unlimited" : remainingOperations ) + "]";
+    }
+
+    // JmsLoadStrategy overrides ---------------------------------------------------------------------------------------
+
+    @Override
+    protected Send createInstance()
+    {
+        return new Send(this);
+    }
+
+    @Override
+    public Set<Class<? extends Operation>> getOperationTypes()
+    {
+        return OPERATION_TYPES;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

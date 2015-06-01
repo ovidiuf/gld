@@ -26,8 +26,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -60,15 +58,8 @@ public class SamplerImplWorkBenchTest
         // the sampling task run interval is 0, meaning no timer task will be registered
         SamplerImpl s = new SamplerImpl(0L, samplingIntervalMs);
         s.registerOperation(MockOperation.class);
-        final List<SamplingInterval> collectedSamplingIntervals = new ArrayList<>();
-        s.registerConsumer(new SamplingConsumer()
-        {
-            @Override
-            public void consume(SamplingInterval... samplingInterval)
-            {
-                collectedSamplingIntervals.addAll(Arrays.asList(samplingInterval));
-            }
-        });
+        MockSamplingConsumer msc = new MockSamplingConsumer();
+        s.registerConsumer(msc);
 
         assertTrue(s.getLastRunTimestamp() <= 0);
 
@@ -248,6 +239,8 @@ public class SamplerImplWorkBenchTest
         // verify that the sampling consumer got the correct values
         //
 
+        List<SamplingInterval> collectedSamplingIntervals = msc.getSamplingIntervals();
+
         assertEquals(1, collectedSamplingIntervals.size());
         SamplingInterval si = collectedSamplingIntervals.get(0);
 
@@ -321,15 +314,8 @@ public class SamplerImplWorkBenchTest
         // the sampling task run interval is 0, meaning no timer task will be registered
         SamplerImpl s = new SamplerImpl(0L, samplingIntervalMs);
         s.registerOperation(MockOperation.class);
-        final List<SamplingInterval> collectedSamplingIntervals = new ArrayList<>();
-        s.registerConsumer(new SamplingConsumer()
-        {
-            @Override
-            public void consume(SamplingInterval... samplingInterval)
-            {
-                collectedSamplingIntervals.addAll(Arrays.asList(samplingInterval));
-            }
-        });
+        MockSamplingConsumer msc = new MockSamplingConsumer();
+        s.registerConsumer(msc);
 
         // run 1 - internal to start(). We're not actually starting anything because the sampling task interval is 0,
         // but the sampler will look/ like it started; this will also run the first initialization run()
@@ -354,6 +340,8 @@ public class SamplerImplWorkBenchTest
 
         // run 3 - it should send at least numberOfSamplingIntervals samples
         s.run();
+
+        List<SamplingInterval> collectedSamplingIntervals = msc.getSamplingIntervals();
 
         int n = collectedSamplingIntervals.size();
 
@@ -429,15 +417,8 @@ public class SamplerImplWorkBenchTest
         SamplerImpl s = new SamplerImpl(0L, samplingIntervalMs);
         s.registerOperation(MockOperation.class);
         s.registerMetric(SystemLoadAverage.class);
-        final List<SamplingInterval> collectedSamplingIntervals = new ArrayList<>();
-        s.registerConsumer(new SamplingConsumer()
-        {
-            @Override
-            public void consume(SamplingInterval... samplingInterval)
-            {
-                collectedSamplingIntervals.addAll(Arrays.asList(samplingInterval));
-            }
-        });
+        MockSamplingConsumer msc = new MockSamplingConsumer();
+        s.registerConsumer(msc);
 
         s.start();
 
@@ -448,6 +429,8 @@ public class SamplerImplWorkBenchTest
         s.annotate("annotation 1");
 
         s.stop();
+
+        List<SamplingInterval> collectedSamplingIntervals = msc.getSamplingIntervals();
 
         // normally we should generate one sample, but we could generate more if we debug and put the execution on hold
         assertFalse(collectedSamplingIntervals.isEmpty());
