@@ -77,18 +77,13 @@ public class ConfigurationImpl implements Configuration
     private String cacheName;
     private String keyStoreFile;
     private String username;
-
     private LoadStrategy loadStrategy;
-
     private StorageStrategy storageStrategy;
-
     private Service service;
-
     private Sampler sampler;
-
     private String serviceString;
-
     private boolean waitForConsoleQuit;
+    private boolean background;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -294,7 +289,7 @@ public class ConfigurationImpl implements Configuration
     @Override
     public boolean inBackground()
     {
-        return command != null && (command instanceof Start);
+        return background;
     }
 
     @Override
@@ -623,6 +618,10 @@ public class ConfigurationImpl implements Configuration
                 {
                     serviceString = arguments.get(++i);
                 }
+            }
+            else if ("--background".equals(crt))
+            {
+                background = true;
             }
             else if (command != null)
             {

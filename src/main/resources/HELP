@@ -1,8 +1,8 @@
 
-Generic Load Driver ${version}
+Generic Load Driver ${version}, released on ${release_date}
 
 gld (Generic Load Driver) is a program that sends operations into services (caches, JMS providers,
-etc. and collects client-side statistics.  The program can also be used for  HA testing,  content
+etc.  and collects client-side statistics.  The program can also be used for  HA testing,  content
 queries and in general for any client-side activity simulation.
 
 Usage:
@@ -32,24 +32,35 @@ Global Options:
 
     --username <username>
 
-    --password - if the Redis node(s) are password protected, read the password from the first line
-       of the current directory's .gld.password file. If the file does not exist, complain. Note that
-       if you do set a password and the Redis node is not password protected, you'll get an error
-       similar to "JedisDataException: ERR Client sent AUTH, but no password is set". In order to
-       protect the password, it's good practice to chmod go-rwx .gld.password and delete as soon as
-       you don't need it.
+    --password <password>
 
-    --conf <configuration-file> - the file to read configuration from. If the same configuration
-       parameter is specified both on command linea and the configuration file, the command line value
-       takes precedence.
+    --conf <configuration-file>  -  the file to read configuration from. If the same configuration
+        parameter is specified both  on command linea and the configuration file, the command line
+        value takes precedence.
 
-       WARNING - configuration file support not fully implemented yet.
+        WARNING - configuration file support not fully implemented yet.
+
+    --background - By default,  gld clients start in an interactive mode,  where the user is given
+        access  to  an interactive console  that can be used to control the run,   generate thread
+        dumps, annotate the logs, etc.  By specifying  '--background',  the console is not started
+        and the gld process simply generates the load, writes statistics in a local file and exits
+        when it  reaches  the load limit or it is being told externally to stop.   The command for
+        stopping gld processes is "gld stop" (see below).
+
 
 Commands:
 
     help
 
     version
+
+    stop - stops gld processes. If a list of PIDs is given, it will stop those. Otherwise it will
+        stop all gld processes found on the system. TODO under development, more to be added here.
+
+        Example:
+
+            stop [pid1 pid2 ...]
+
 
     content - dumps the key-value space into local storage (stdout, single flat file, hierarchical
       directory structure or other format). The default behavior is to dump key-value pairs at stdout.
@@ -90,13 +101,13 @@ Commands:
 
       Options:
 
-        --load-strategy <strategy-name> - the name of the load strategy. The load driver searches its
-          classpath for a class with the same name, which must implement the LoadStrategy interface.
-          For a list of available strategies, see "Load Strategies" section below. If not specified
-          the default strategy is "WriteThenRead".
+        --load-strategy <strategy-name> - the name of the load strategy.  The load driver searches
+            its classpath for a class  with the same name,  which must implement  the LoadStrategy
+            interface.   For a list of available strategies,  see "Load Strategies" section below.
+            If not specified the default strategy is "WriteThenRead".
 
-        --output <filename> - the CSV file to write collected statistics into. If not explicitly
-              specified, gld will dump statistics at stdout.
+        --output <filename>  -  the file  to write  collected statistics into.   If not explicitly
+            specified, gld will send statistics at stdout. TODO: make this a global option.
 
         --cache <cache-name> - the name of the cache. If not specified, the default cache will
               be used.
@@ -239,6 +250,7 @@ Load Strategies
                  --queue TEST --endpoint-policy REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION \
                  --max-operations 1
 
-Authors:
+Author:
 
     Ovidiu Feodorov <ovidiu@novaordis.com>
+
