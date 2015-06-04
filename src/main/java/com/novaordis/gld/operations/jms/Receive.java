@@ -61,7 +61,7 @@ public class Receive extends JmsOperation
             m = jmsConsumer.receive(timeoutMs);
         }
 
-        System.out.println(m.getJMSMessageID());
+        //System.out.println(m.getJMSMessageID());
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
