@@ -53,7 +53,10 @@ public class Version extends CommandBase
     {
         insureInitialized();
 
-        Util.displayContentFromClasspath("VERSION");
+        String version = Util.getVersion();
+        String releaseDate = Util.getReleaseDate();
+
+        System.out.println("version " + version + ", released on " + releaseDate);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

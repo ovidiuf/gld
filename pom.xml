@@ -31,6 +31,8 @@
         <test.scratch.directory>target/test-scratch</test.scratch.directory>
         <test.log.directory>target</test.log.directory>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.build.timestamp.format>MM/dd/yy</maven.build.timestamp.format>
+        <release_date>${maven.build.timestamp}</release_date>
     </properties>
 
     <build>

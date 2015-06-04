@@ -19,6 +19,7 @@ package com.novaordis.gld;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
@@ -27,6 +28,7 @@ import java.lang.management.ThreadMXBean;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Random;
 import java.util.UUID;
 
@@ -224,6 +226,62 @@ public class Util
         }
 
         System.out.println("failed to load the '" + fileName + "' file content from classpath");
+    }
+
+    /**
+     * @return null if the metadata file is not found or there was a read failure (also a log warning is generated).
+     */
+    public static String getVersion()
+    {
+        return getReleaseMetadata("version");
+    }
+
+    /**
+     * @return null if the metadata file is not found or there was a read failure (also a log warning is generated).
+     */
+    public static String getReleaseDate()
+    {
+        return getReleaseMetadata("release_date");
+    }
+
+    /**
+     * @return null if the metadata file is not found or there was a read failure (also a log warning is generated).
+     */
+    public static String getReleaseMetadata(String propertyName)
+    {
+        String releaseMetadataFileName = "VERSION";
+
+        ClassLoader cl = Util.class.getClassLoader();
+
+        InputStream is = cl.getResourceAsStream(releaseMetadataFileName);
+
+        if (is == null)
+        {
+            log.warn("release metadata file \"" + releaseMetadataFileName + "\" not found on the classpath");
+            return null;
+        }
+
+        Properties properties = new Properties();
+
+        try
+        {
+            properties.load(is);
+        }
+        catch(IOException e)
+        {
+            log.warn("failed to read the release metadata file \"" + releaseMetadataFileName + "\"", e);
+            return null;
+        }
+
+        String value = properties.getProperty(propertyName);
+
+        if (value == null)
+        {
+            log.warn("no '" + propertyName + "' property found in \"" + releaseMetadataFileName + "\"");
+            return null;
+        }
+
+        return value;
     }
 
     /**
