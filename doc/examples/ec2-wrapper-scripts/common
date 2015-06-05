@@ -1,0 +1,39 @@
+#!/bin/bash
+#
+#
+#
+
+if [ "${LOAD_STRATEGY}" = "send" ]; then
+
+    [ -z "${MESSAGES}" ] && { echo "the number of messages to send is not defined, use export MESSAGES=... in the wrapper script" 1>&2; exit 1; }
+
+    load_strategy_specific_configuration="--service com.novaordis.gld.service.jms.activemq.CollocatedBrokerService --memoryUsage 1GB --max-operations ${MESSAGES}"
+
+elif [ "${LOAD_STRATEGY}" = "receive" ]; then
+
+    load_strategy_specific_configuration="--service activemq"
+
+else
+    echo "unknown strategy '${LOAD_STRATEGY}'" 1>&2; exit 1
+fi
+
+#
+# common configuration
+#
+
+[ -z "${THREADS}" ] && { echo "the number of threads is not defined, use export THREADS=... in the wrapper script" 1>&2; exit 1; }
+[ -z "${NODES}" ] && { echo "the target broker nodes is not defined, use export NODES=... in the wrapper script" 1>&2; exit 1; }
+[ -z "${QUEUE}" ] && { echo "the target queue is not defined, use export QUEUE=... in the wrapper script" 1>&2; exit 1; }
+
+output=/home/ec2-user/${LOAD_STRATEGY}.csv
+
+gld load \
+--background \
+--load-strategy ${LOAD_STRATEGY} ${load_strategy_specific_configuration} \
+--threads ${THREADS} \
+--nodes "${NODES}" \
+--queue ${QUEUE} \
+--username admin \
+--password admin123 \
+--output ${output}
+

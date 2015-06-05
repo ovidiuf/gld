@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+#
+#
+
+export LOAD_STRATEGY=$(basename $0)
+export THREADS=1
+export NODES=b01:61616
+export QUEUE=TEST
+
+common_logic=$(dirname $0)/common; [ ! -x ${common_logic} ] &&  { echo "${common_logic} does not exist or is not executable" 1>&2; exit 1; }
+${common_logic}
