@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#
+# https://github.com/NovaOrdis/gld/blob/master/doc/examples/ec2-wrapper-scripts/receive
 #
 
 export LOAD_STRATEGY=$(basename $0)
