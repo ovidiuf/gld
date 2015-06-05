@@ -150,7 +150,6 @@
             <scope>test</scope>
         </dependency>
 
-
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
@@ -184,12 +183,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-client</artifactId>
-            <version>5.10.1</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.6</version>
@@ -201,32 +194,59 @@
             <version>1.7.6</version>
         </dependency>
 
-
         <!--
             These dependencies are introduced by Spring and Embedded ActiveMQ
         -->
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>4.1.6.RELEASE</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jms</artifactId>
             <version>4.1.6.RELEASE</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.xbean</groupId>
             <artifactId>xbean-spring</artifactId>
             <version>3.6</version>
         </dependency>
+
+        <!--
+           This is needed when we *don't* embed the broker.
+        -->
+        <!--
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-client</artifactId>
+            <version>5.10.1</version>
+        </dependency>
+        -->
+
         <!--
             This is needed by org.apache.activemq.xbean.PooledBrokerFactoryBean
         -->
+
+        <!--
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-all</artifactId>
             <version>5.10.1</version>
+        </dependency>
+        -->
+
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-all</artifactId>
+            <!-- 
+               This one does not work.
+            -->
+            <!-- <version>5.9.0.redhat-611423</version> -->
+            <version>5.9.0.redhat-610379</version>
         </dependency>
 
         <!--
