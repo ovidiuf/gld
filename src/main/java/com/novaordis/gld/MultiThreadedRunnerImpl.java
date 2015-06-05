@@ -36,16 +36,30 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private Configuration conf;
+
+    private Service service;
+    private LoadStrategy loadStrategy;
     private List<SingleThreadedRunner> singleThreadedRunners;
+    private CyclicBarrier barrier;
+
+    private CommandLineConsole commandLineConsole;
+
+    private Sampler sampler;
+
+    private int threadCount;
     private volatile boolean running;
+
+    private ExitGuard exitGuard;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MultiThreadedRunnerImpl(Configuration conf)
     {
+        this.running = false;
         this.conf = conf;
-        this.singleThreadedRunners = new ArrayList<>();
-
+        this.threadCount = conf.getThreads();
+        this.singleThreadedRunners = new ArrayList<>(threadCount);
+        this.exitGuard = new ExitGuard();
     }
 
     // MultiThreadRunner implementation --------------------------------------------------------------------------------
@@ -56,42 +70,22 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
         return running;
     }
 
+    /**
+     * Initializes dependencies, starts multiple SingleThreadedRunners in parallel, wait until those finish, shut
+     * down dependencies and return.
+     *
+     * @see com.novaordis.gld.MultiThreadedRunner#run()
+     */
     @Override
-    public void stop()
-    {
-        for (SingleThreadedRunner r : singleThreadedRunners)
-        {
-            r.stop();
-        }
-    }
-
-    // Public ----------------------------------------------------------------------------------------------------------
-
-    public void runConcurrently() throws Exception
+    public void run() throws Exception
     {
         running = true;
-        Sampler sampler = conf.getSampler();
-        Service service = conf.getService();
-        CommandLineConsole commandLineConsole = null;
-        LoadStrategy loadStrategy = conf.getLoadStrategy();
-
-        if (sampler != null)
-        {
-            registerOperationTypes(sampler, loadStrategy);
-            sampler.start();
-        }
-
-        if (!conf.inBackground())
-        {
-            commandLineConsole = new CommandLineConsole(conf, this);
-        }
 
         try
         {
-            // configuration.getThreads() + the main thread that runs this code
-            final CyclicBarrier barrier = new CyclicBarrier(conf.getThreads() + 1);
+            initializeDependencies();
 
-            for (int i = 0; i < conf.getThreads(); i++)
+            for (int i = 0; i < threadCount; i++)
             {
                 String name = "CLD Runner " + i;
 
@@ -100,11 +94,6 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
                 singleThreadedRunners.add(r);
 
                 r.start();
-            }
-
-            if (commandLineConsole != null)
-            {
-                commandLineConsole.start();
             }
 
             log.debug("waiting for " + singleThreadedRunners.size() + " SingleThreadedRunner(s) to finish ...");
@@ -126,6 +115,9 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
                     commandLineConsole.stop(); // no more input needed from the console so dispose of it
                 }
             }
+
+            exitGuard.waitUntilExitIsAllowed();
+
         }
         finally
         {
@@ -151,9 +143,25 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
     }
 
     @Override
+    public void stop()
+    {
+        for (SingleThreadedRunner r : singleThreadedRunners)
+        {
+            r.stop();
+        }
+    }
+
+    // Public ----------------------------------------------------------------------------------------------------------
+
+    public ExitGuard getExitGuard()
+    {
+        return exitGuard;
+    }
+
+    @Override
     public String toString()
     {
-        return "MultiThreadedRunner[" + Integer.toHexString(System.identityHashCode(this)) + "]";
+        return "MultiThreadedRunner[" + Integer.toHexString(System.identityHashCode(this)) + "](" + threadCount + ")";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -162,13 +170,42 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
 
     // Private ---------------------------------------------------------------------------------------------------------
 
-    private void registerOperationTypes(Sampler sampler, LoadStrategy loadStrategy)
+    private void initializeDependencies() throws Exception
     {
-        Set<Class<? extends Operation>> operationTypes = loadStrategy.getOperationTypes();
-        for(Class<? extends Operation> ot: operationTypes)
+        this.service = conf.getService();
+        this.sampler = conf.getSampler();
+        this.loadStrategy = conf.getLoadStrategy();
+
+        if (service == null)
         {
-            sampler.registerOperation(ot);
+            throw new IllegalStateException("null service");
         }
+
+        if (!service.isStarted())
+        {
+            service.start();
+        }
+
+        if (sampler != null)
+        {
+            // initialize the sampler operations
+            Set<Class<? extends Operation>> operationTypes = loadStrategy.getOperationTypes();
+            for(Class<? extends Operation> ot: operationTypes)
+            {
+                sampler.registerOperation(ot);
+            }
+
+            sampler.start();
+        }
+
+        if (!conf.inBackground())
+        {
+            commandLineConsole = new CommandLineConsole(conf, this);
+            commandLineConsole.start();
+        }
+
+        // threadCount + the main thread that runs this code
+        barrier = new CyclicBarrier(threadCount + 1);
     }
 
     // Inner classes ---------------------------------------------------------------------------------------------------

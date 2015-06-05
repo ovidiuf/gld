@@ -22,7 +22,9 @@ import com.novaordis.gld.Operation;
 import com.novaordis.gld.strategy.load.LoadStrategyBase;
 import org.apache.log4j.Logger;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -102,6 +104,14 @@ public class MockLoadStrategy extends LoadStrategyBase
         return new MockOperation();
     }
 
+    @Override
+    public Set<Class<? extends Operation>> getOperationTypes()
+    {
+        HashSet<Class<? extends Operation>> result = new HashSet<>();
+        result.add(MockOperation.class);
+        return result;
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     public void setKeyStore(KeyStore ks)
@@ -122,6 +132,20 @@ public class MockLoadStrategy extends LoadStrategyBase
     public String getMockLoadArgument()
     {
         return mockLoadArgument;
+    }
+
+    public int getRemainingOperations()
+    {
+        int i = remainingOperations.get();
+
+        // the counter is decremented under 0, and that has "0" semantics
+
+        if (i < 0)
+        {
+            i = 0;
+        }
+
+        return i;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

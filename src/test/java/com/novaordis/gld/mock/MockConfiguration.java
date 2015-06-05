@@ -36,14 +36,21 @@ public class MockConfiguration implements Configuration
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private String keyStoreFile;
+
     private String exceptionFile;
+
     private int keySize;
+
     private int valueSize;
+
     private long sleep;
+
     private boolean useDifferentValues;
 
     private Service service;
+    
     private LoadStrategy loadStrategy;
+
     private StorageStrategy storageStrategy;
 
     private Command command;
@@ -51,6 +58,10 @@ public class MockConfiguration implements Configuration
     private String username;
 
     private boolean waitForConsoleQuit;
+
+    private int threads;
+
+    private Sampler sampler;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -63,6 +74,7 @@ public class MockConfiguration implements Configuration
         this.sleep = -1;
         this.useDifferentValues = false;
         this.exceptionFile = null;
+        this.threads = 1;
     }
 
     // Configuration implementation ------------------------------------------------------------------------------------
@@ -112,19 +124,19 @@ public class MockConfiguration implements Configuration
     @Override
     public Sampler getSampler()
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        return sampler;
     }
 
     @Override
     public void setSampler(Sampler s)
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        this.sampler = s;
     }
 
     @Override
     public int getThreads()
     {
-        return 0;
+        return threads;
     }
 
     @Override
@@ -260,6 +272,11 @@ public class MockConfiguration implements Configuration
     public void setUseDifferentValues(boolean b)
     {
         this.useDifferentValues = b;
+    }
+
+    public void setThreads(int threads)
+    {
+        this.threads = threads;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

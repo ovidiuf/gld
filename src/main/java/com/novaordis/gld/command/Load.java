@@ -100,7 +100,7 @@ public class Load extends CommandBase
     {
         insureInitialized();
 
-        new MultiThreadedRunnerImpl(getConfiguration()).runConcurrently();
+        new MultiThreadedRunnerImpl(getConfiguration()).run();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

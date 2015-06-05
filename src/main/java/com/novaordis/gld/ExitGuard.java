@@ -14,67 +14,58 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.mock;
+package com.novaordis.gld;
 
-import com.novaordis.gld.MultiThreadedRunner;
+import org.apache.log4j.Logger;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CountDownLatch;
 
-public class MockMultiThreadRunner implements MultiThreadedRunner
+/**
+ * Manages exit policy. Depending on the application configuration, it allows the invoking thread to continue, thus
+ * allowing the application to exit, or it puts it on wait, pending the arrival of an exit condition (Ctrl-C, SIGTERM,
+ * etc.)
+ */
+public class ExitGuard
 {
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(ExitGuard.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private BlockingQueue<String> stopRendezvous = new ArrayBlockingQueue<>(1);
-
-    private boolean running = true;
+    private CountDownLatch latch;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockMultiThreadRunner()
+    public ExitGuard()
     {
-    }
-
-    // MultiThreadRunner implementation --------------------------------------------------------------------------------
-
-    @Override
-    public boolean isRunning()
-    {
-        return running;
-    }
-
-    @Override
-    public void run()
-    {
-        throw new RuntimeException("run() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void stop()
-    {
-        try
-        {
-            stopRendezvous.put("");
-
-            running = false;
-        }
-        catch(Exception e)
-        {
-            throw new IllegalStateException("failed to put in rendezvous", e);
-        }
+        this.latch = new CountDownLatch(1);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public void waitToBeStopped() throws Exception
+    public void waitUntilExitIsAllowed()
     {
-        stopRendezvous.take();
+        try
+        {
+            log.debug("preventing exit until allowed");
+            latch.await();
+            log.debug("exit allowed");
+        }
+        catch(InterruptedException e)
+        {
+            throw new IllegalStateException("interrupted while awaiting to exit", e);
+        }
     }
+
+    public void allowExit()
+    {
+        log.debug(this + " configured to allow exit");
+        latch.countDown();
+    }
+
 
     // Package protected -----------------------------------------------------------------------------------------------
 

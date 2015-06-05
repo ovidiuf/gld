@@ -94,7 +94,9 @@ public class Delete extends CommandBase
     {
         insureInitialized();
 
-        new MultiThreadedRunnerImpl(getConfiguration()).runConcurrently();
+        new MultiThreadedRunnerImpl(getConfiguration()).run();
+
+        // the command will exit when all parallel threads finish - no exit guard here ...
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

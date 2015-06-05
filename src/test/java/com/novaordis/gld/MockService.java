@@ -14,66 +14,89 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.mock;
+package com.novaordis.gld;
 
-import com.novaordis.gld.MultiThreadedRunner;
+import org.apache.log4j.Logger;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+import java.util.List;
 
-public class MockMultiThreadRunner implements MultiThreadedRunner
+public class MockService implements Service
 {
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(MockService.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private BlockingQueue<String> stopRendezvous = new ArrayBlockingQueue<>(1);
+    private boolean started;
 
-    private boolean running = true;
+    private boolean wasStarted;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockMultiThreadRunner()
-    {
-    }
-
-    // MultiThreadRunner implementation --------------------------------------------------------------------------------
+    // Service implementation ------------------------------------------------------------------------------------------
 
     @Override
-    public boolean isRunning()
+    public void setConfiguration(Configuration c)
     {
-        return running;
+        throw new RuntimeException("setConfiguration() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void run()
+    public void setTarget(List<Node> nodes)
     {
-        throw new RuntimeException("run() NOT YET IMPLEMENTED");
+        throw new RuntimeException("setTarget() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void stop()
+    public void configure(List<String> commandLineArguments) throws UserErrorException
     {
-        try
-        {
-            stopRendezvous.put("");
+        throw new RuntimeException("configure() NOT YET IMPLEMENTED");
+    }
 
-            running = false;
-        }
-        catch(Exception e)
-        {
-            throw new IllegalStateException("failed to put in rendezvous", e);
-        }
+    @Override
+    public ContentType getContentType()
+    {
+        throw new RuntimeException("getContentType() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void start() throws Exception
+    {
+        started = true;
+        wasStarted = true;
+        log.info(this + " started");
+    }
+
+    @Override
+    public void stop() throws Exception
+    {
+        started = false;
+        log.info(this + " stopped");
+    }
+
+    @Override
+    public boolean isStarted()
+    {
+        return started;
+    }
+
+    @Override
+    public void perform(Operation o) throws Exception
+    {
+        throw new RuntimeException("perform() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public void waitToBeStopped() throws Exception
+    /**
+     * @return true if start() method was called at least once
+     */
+    public boolean wasStarted()
     {
-        stopRendezvous.take();
+        return wasStarted;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

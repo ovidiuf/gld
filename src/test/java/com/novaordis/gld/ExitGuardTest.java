@@ -14,66 +14,28 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.mock;
+package com.novaordis.gld;
 
-import com.novaordis.gld.MultiThreadedRunner;
+import org.apache.log4j.Logger;
+import org.junit.Test;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-
-public class MockMultiThreadRunner implements MultiThreadedRunner
+public class ExitGuardTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(ExitGuardTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private BlockingQueue<String> stopRendezvous = new ArrayBlockingQueue<>(1);
-
-    private boolean running = true;
-
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    public MockMultiThreadRunner()
-    {
-    }
-
-    // MultiThreadRunner implementation --------------------------------------------------------------------------------
-
-    @Override
-    public boolean isRunning()
-    {
-        return running;
-    }
-
-    @Override
-    public void run()
-    {
-        throw new RuntimeException("run() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void stop()
-    {
-        try
-        {
-            stopRendezvous.put("");
-
-            running = false;
-        }
-        catch(Exception e)
-        {
-            throw new IllegalStateException("failed to put in rendezvous", e);
-        }
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public void waitToBeStopped() throws Exception
+    @Test
+    public void happyPath() throws Exception
     {
-        stopRendezvous.take();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

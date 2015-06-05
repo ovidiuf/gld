@@ -24,7 +24,9 @@ import com.novaordis.gld.sampler.metrics.Metric;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MockSampler implements Sampler
 {
@@ -38,11 +40,20 @@ public class MockSampler implements Sampler
 
     private List<OperationThrowablePair> recorded;
 
+    private Set<Class<? extends Operation>> operations;
+
+    private boolean started;
+
+    private boolean wasStarted;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockSampler()
     {
         this.recorded = new ArrayList<>();
+        this.operations = new HashSet<>();
+        this.started = false;
+        this.wasStarted = false;
     }
 
     // Sampler implementation ------------------------------------------------------------------------------------------
@@ -74,7 +85,8 @@ public class MockSampler implements Sampler
     @Override
     public Counter registerOperation(Class<? extends Operation> operationType)
     {
-        throw new RuntimeException("registerOperation() NOT YET IMPLEMENTED");
+        operations.add(operationType);
+        return null;
     }
 
     @Override
@@ -98,20 +110,22 @@ public class MockSampler implements Sampler
     @Override
     public void start()
     {
+        started = true;
+        wasStarted = true;
         log.info(this + " started");
-        throw new RuntimeException("start() NOT YET IMPLEMENTED");
     }
 
     @Override
     public boolean isStarted()
     {
-        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
+        return started;
     }
 
     @Override
     public void stop()
     {
-        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
+        started = false;
+        log.info(this + " stopped");
     }
 
     @Override
@@ -134,9 +148,18 @@ public class MockSampler implements Sampler
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    @SuppressWarnings("UnusedDeclaration")
     public List<OperationThrowablePair> getRecorded()
     {
         return recorded;
+    }
+
+    /**
+     * @return true if start() method was called at least once
+     */
+    public boolean wasStarted()
+    {
+        return wasStarted;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

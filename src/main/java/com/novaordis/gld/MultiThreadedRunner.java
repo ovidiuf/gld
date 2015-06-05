@@ -20,5 +20,11 @@ public interface MultiThreadedRunner
 {
     boolean isRunning();
 
+    /**
+     * Run on multiple threads. When all threads finish, return.
+     */
+    void run() throws Exception;
+
     void stop() throws Exception;
+
 }
