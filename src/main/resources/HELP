@@ -54,6 +54,8 @@ Commands:
 
     version
 
+    status - process status.
+
     stop  - stops gld processes by sending SIGTERM into the corresponding JVMs.  If a list of PIDs
       is given,  it will stop those.  Otherwise it wil stop all gld processes found on the system.
       TODO under development, more to be added here.

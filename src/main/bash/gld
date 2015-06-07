@@ -82,7 +82,7 @@ function stop()
         pids=$(get-gld-pids) || fail "failed to get gld pids"
     fi
 
-    [ -z "${pids}" ] && { echo "no gld processes running on the system"; exit 0; }
+    [ -z "${pids}" ] && { echo "no gld processes running on $(uname -n)"; exit 0; }
 
     local signal=""
     local signal_name="SIGTERM"
@@ -96,6 +96,14 @@ function stop()
             echo "sent ${signal_name} into gld processes (${pid})" || \
             echo "fail to send ${signal_name} into gld processes with pid ${pid}"
     done
+}
+
+function status()
+{
+    local pids
+    pids=$(get-gld-pids) || fail "failed to get gld pids"
+    [ -z "${pids}" ] && { echo "no gld processes running on $(uname -n)"; exit 0; }
+    echo "${pids}"
 }
 
 debug_args=""
@@ -115,6 +123,8 @@ while [ "$1" != "" ]; do
     elif [ "$1" = "stop" ]; then
         shift;
         stop $@ && exit 0 || exit 1
+    elif [ "$1" = "status" ]; then
+        status && exit 0
     else
         args="${args} $1"
     fi
