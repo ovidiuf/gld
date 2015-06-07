@@ -54,12 +54,15 @@ Commands:
 
     version
 
-    stop - stops gld processes. If a list of PIDs is given, it will stop those. Otherwise it will
-        stop all gld processes found on the system. TODO under development, more to be added here.
+    stop  - stops gld processes by sending SIGTERM into the corresponding JVMs.  If a list of PIDs
+      is given,  it will stop those.  Otherwise it wil stop all gld processes found on the system.
+      TODO under development, more to be added here.
 
-        Example:
+                    stop [--force] [pid1 pid2 ...]
 
-            stop [pid1 pid2 ...]
+        Options:
+
+          --force - sends SIGKILL instead of SIGTERM.
 
 
     content - dumps the key-value space into local storage (stdout, single flat file, hierarchical

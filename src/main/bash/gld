@@ -65,8 +65,18 @@ function get-gld-pids()
 function stop()
 {
     local pids
+    local force=false
 
-    while [ -n "$1" ]; do [ "${pids}" = "" ] && pids=$1 || pids="${pids} $1"; shift; done
+    while [ -n "$1" ]; do
+        if [ "$1" = "--force" ]; then
+            force=true;
+        elif [ ${1:0:2} = "--" ]; then
+            fail "unknown stop option '$1'"
+        else
+            [ "${pids}" = "" ] && pids=$1 || pids="${pids} $1"
+        fi
+        shift
+    done
 
     if [ "${pids}" = "" ]; then
         pids=$(get-gld-pids) || fail "failed to get gld pids"
@@ -74,8 +84,17 @@ function stop()
 
     [ -z "${pids}" ] && { echo "no gld processes running on the system"; exit 0; }
 
+    local signal=""
+    local signal_name="SIGTERM"
+    if ${force}; then
+        signal="-9"
+        signal_name="SIGKILL"
+    fi
+
     for pid in ${pids}; do
-        kill ${pid} && echo "stopped gld (${pid})" || echo "fail to stop gld with pid ${pid}"
+        kill ${signal} ${pid} && \
+            echo "sent ${signal_name} into gld processes (${pid})" || \
+            echo "fail to send ${signal_name} into gld processes with pid ${pid}"
     done
 }
 
