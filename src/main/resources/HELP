@@ -111,31 +111,33 @@ Commands:
             interface.   For a list of available strategies,  see "Load Strategies" section below.
             If not specified the default strategy is "WriteThenRead".
 
-        --output <filename>  -  the file  to write  collected statistics into.   If not explicitly
-            specified, gld will send statistics at stdout. TODO: make this a global option.
-
-        --cache <cache-name> - the name of the cache. If not specified, the default cache will
-              be used.
+        --threads <thread-count>  -  the number of threads to send concurrent operations.  Default
+            value 1.
 
         --max-operations  -  the total number of operations  (cache reads or writes,  JMS messages
           sent or received)  to send into the target service.  If not specifies,  the  default  is
           "unlimited",  meaning  the driver  will continuously send  operations  until  explicitly
           stopped.
 
-        --threads <thread-count> - the number of threads to send concurrent operations.
-              Default value 1.
+        --sleep <ms>   -    the number of milliseconds to sleep  after each operation is completed
+            (successfully or not).  The default value is 0,  which means the load driver will send
+            operations continuously.
+
+        --key-size <number-of-characters>. Default is 70.
+
+        --value-size|--payload-size <number-of-characters> For JMS text messages, the text message
+            size. For cache key-value pairs, the value size. The default is 5000.
+
+        --output <filename>  -  the file  to write  collected statistics into.   If not explicitly
+            specified, gld will send statistics at stdout. TODO: make this a global option.
+
+        --cache <cache-name> - the name of the cache. If not specified, the default cache will
+              be used.
 
         --max-total <count> - the Apache pool "MaxTotal" parameter. Default value 100.
 
         --max-wait-millis <timeout> - the Apache pool "MaxWaitMillis" parameter. Default value
               1000 ms (1 second).
-
-        --sleep <ms> - the number of milliseconds to sleep after each operation. Default is 0,
-              meaning "send continuously".
-
-        --key-size <number-of-characters>. Default is 70.
-
-        --value-size <number-of-characters>. Default is 6000.
 
         --expiration <seconds>. Key expiration time in seconds. By default, keys don't expire.
 

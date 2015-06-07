@@ -20,6 +20,8 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageProducer;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmbeddedMessageProducer implements MessageProducer
 {
@@ -31,6 +33,7 @@ public class EmbeddedMessageProducer implements MessageProducer
 
     private Destination destination;
     private boolean closed;
+    private List<Message> messagesSentByThisProducer;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -38,6 +41,7 @@ public class EmbeddedMessageProducer implements MessageProducer
     {
         this.destination = destination;
         this.closed = false;
+        this.messagesSentByThisProducer = new ArrayList<>();
     }
 
     // MessageProducer implementation ----------------------------------------------------------------------------------
@@ -116,7 +120,7 @@ public class EmbeddedMessageProducer implements MessageProducer
     @Override
     public void send(Message message) throws JMSException
     {
-        // noop for the time being
+        messagesSentByThisProducer.add(message);
     }
 
     @Override
@@ -148,6 +152,11 @@ public class EmbeddedMessageProducer implements MessageProducer
     public boolean isClosed()
     {
         return closed;
+    }
+
+    public List<Message> getMessagesSentByThisProducer()
+    {
+        return messagesSentByThisProducer;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -56,7 +56,7 @@ public class SendLoadStrategyTest extends JmsLoadStrategyTest
     @Test
     public void nullArguments() throws Exception
     {
-        LoadStrategy s = getLoadStrategyToTest();
+        LoadStrategy s = getLoadStrategyToTest(null, null, -1);
         Configuration c = new MockConfiguration();
 
         try
@@ -73,7 +73,7 @@ public class SendLoadStrategyTest extends JmsLoadStrategyTest
     @Test
     public void next() throws Exception
     {
-        SendLoadStrategy sls = getLoadStrategyToTest();
+        SendLoadStrategy sls = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = new ArrayList<>(Arrays.asList("--queue", "test"));
 
@@ -101,7 +101,7 @@ public class SendLoadStrategyTest extends JmsLoadStrategyTest
     @Test
     public void operationTypes() throws Exception
     {
-        SendLoadStrategy ls = getLoadStrategyToTest();
+        SendLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         Set<Class<? extends Operation>> operationTypes = ls.getOperationTypes();
 
@@ -109,14 +109,40 @@ public class SendLoadStrategyTest extends JmsLoadStrategyTest
         assertTrue(operationTypes.contains(Send.class));
     }
 
+    @Test
+    public void messageSize() throws Exception
+    {
+        int messageSize = 1275;
+
+        List<String> args = new ArrayList<>(Arrays.asList("--queue", "test"));
+
+        MockConfiguration mc = new MockConfiguration();
+        mc.setValueSize(messageSize);
+
+        SendLoadStrategy ls = getLoadStrategyToTest(mc, args, 0);
+
+        assertEquals(messageSize, ls.getMessageSize());
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
+    /**
+     * @see com.novaordis.gld.strategy.load.LoadStrategyTest#getLoadStrategyToTest(Configuration, List, int)
+     */
     @Override
-    protected SendLoadStrategy getLoadStrategyToTest()
+    protected SendLoadStrategy getLoadStrategyToTest(Configuration config, List<String> arguments, int from)
+        throws Exception
     {
-        return new SendLoadStrategy();
+        SendLoadStrategy ls = new SendLoadStrategy();
+
+        if (config != null)
+        {
+            ls.configure(config, arguments, from);
+        }
+
+        return ls;
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

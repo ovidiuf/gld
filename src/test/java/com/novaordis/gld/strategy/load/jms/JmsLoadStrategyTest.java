@@ -16,6 +16,7 @@
 
 package com.novaordis.gld.strategy.load.jms;
 
+import com.novaordis.gld.Configuration;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.command.Load;
 import com.novaordis.gld.mock.MockConfiguration;
@@ -48,9 +49,9 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void defaultReuseSessionIsTrue()
+    public void defaultReuseSessionIsTrue() throws Exception
     {
-        JmsLoadStrategy jms = getLoadStrategyToTest();
+        JmsLoadStrategy jms = getLoadStrategyToTest(null, null, -1);
         assertEquals(EndpointPolicy.REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION, jms.getEndpointPolicy());
         log.debug(jms);
     }
@@ -60,7 +61,7 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
     @Test
     public void noDestination() throws Exception
     {
-        JmsLoadStrategy jms = getLoadStrategyToTest();
+        JmsLoadStrategy jms = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = new ArrayList<>(Arrays.asList("--something", "else"));
 
@@ -78,7 +79,7 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
     @Test
     public void queue() throws Exception
     {
-        JmsLoadStrategy jms = getLoadStrategyToTest();
+        JmsLoadStrategy jms = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = new ArrayList<>(Arrays.asList("--queue", "blah"));
 
@@ -94,7 +95,7 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
     @Test
     public void topic() throws Exception
     {
-        JmsLoadStrategy jms = getLoadStrategyToTest();
+        JmsLoadStrategy jms = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = new ArrayList<>(Arrays.asList("--topic", "blah"));
 
@@ -110,7 +111,7 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
     @Test
     public void bothQueueAndTopic() throws Exception
     {
-        JmsLoadStrategy jms = getLoadStrategyToTest();
+        JmsLoadStrategy jms = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = new ArrayList<>(Arrays.asList("--topic", "blah", "--queue", "blah2"));
 
@@ -130,7 +131,7 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
     @Test
     public void noMaxOperations() throws Exception
     {
-        JmsLoadStrategy jms = getLoadStrategyToTest();
+        JmsLoadStrategy jms = getLoadStrategyToTest(null, null, -1);
         assertEquals(Long.MAX_VALUE, jms.getRemainingOperations());
     }
 
@@ -142,7 +143,7 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
         // load will register itself with configuration
         new Load(mc, new ArrayList<>(Arrays.asList("--max-operations", "777")), 0);
 
-        JmsLoadStrategy jms = getLoadStrategyToTest();
+        JmsLoadStrategy jms = getLoadStrategyToTest(null, null, -1);
         jms.configure(mc, new ArrayList<>(Arrays.asList("--queue", "test")), 0);
 
         assertEquals(777L, jms.getRemainingOperations());
@@ -153,7 +154,7 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
     @Test
     public void defaultEndpointPolicy() throws Exception
     {
-        JmsLoadStrategy jms = getLoadStrategyToTest();
+        JmsLoadStrategy jms = getLoadStrategyToTest(null, null, -1);
         assertEquals(EndpointPolicy.REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION, jms.getEndpointPolicy());
     }
 
@@ -163,7 +164,7 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
         MockConfiguration mc = new MockConfiguration();
         new Load(mc, Collections.<String>emptyList(), 0);
 
-        JmsLoadStrategy jms = getLoadStrategyToTest();
+        JmsLoadStrategy jms = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = new ArrayList<>(Arrays.asList(
             "--endpoint-policy", "NEW_SESSION_NEW_ENDPOINT_PER_OPERATION", "--topic", "test"));
@@ -178,7 +179,7 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
     {
         MockConfiguration mc = new MockConfiguration();
 
-        JmsLoadStrategy jms = getLoadStrategyToTest();
+        JmsLoadStrategy jms = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = new ArrayList<>(Arrays.asList(
             "--queue", "test", "--endpoint-policy", "THERE-IS-NO-SUCH-ENDPOINT-POLICY"));
@@ -203,8 +204,12 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
 
     // Protected -------------------------------------------------------------------------------------------------------
 
+    /**
+     * @see LoadStrategyTest#getLoadStrategyToTest(Configuration, List, int)
+     */
     @Override
-    protected abstract JmsLoadStrategy getLoadStrategyToTest();
+    protected abstract JmsLoadStrategy getLoadStrategyToTest(Configuration config, List<String> arguments, int from)
+        throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

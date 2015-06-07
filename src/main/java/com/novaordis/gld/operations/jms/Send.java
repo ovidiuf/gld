@@ -18,12 +18,11 @@ package com.novaordis.gld.operations.jms;
 
 import com.novaordis.gld.service.jms.JmsEndpoint;
 import com.novaordis.gld.service.jms.Producer;
-import com.novaordis.gld.strategy.load.jms.JmsLoadStrategy;
+import com.novaordis.gld.strategy.load.jms.SendLoadStrategy;
 
-import javax.jms.Destination;
-import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 
 public class Send extends JmsOperation
 {
@@ -33,11 +32,18 @@ public class Send extends JmsOperation
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String payload;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Send(JmsLoadStrategy loadStrategy)
+    public Send(SendLoadStrategy sendLoadStrategy)
     {
-        super(loadStrategy);
+        super(sendLoadStrategy);
+
+        // create the payload outside the perform() method to influence as little as possible the execution duration;
+        // in this specific case we reuse the message created by the strategy (and presumably cached), because we are
+        // not interested creating distinct message bodies, we're only interested in the payload length
+        payload = sendLoadStrategy.getMessagePayload();
     }
 
     // JmsOperation overrides ------------------------------------------------------------------------------------------
@@ -48,7 +54,9 @@ public class Send extends JmsOperation
         Producer producerEndpoint = (Producer)endpoint;
         Session session = producerEndpoint.getSession();
         MessageProducer jmsProducer = producerEndpoint.getProducer();
-        Message m = session.createTextMessage();
+
+        TextMessage m = session.createTextMessage(payload);
+
         jmsProducer.send(m);
     }
 

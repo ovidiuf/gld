@@ -16,11 +16,14 @@
 
 package com.novaordis.gld.strategy.load.jms;
 
+import com.novaordis.gld.Configuration;
 import com.novaordis.gld.Operation;
+import com.novaordis.gld.Util;
 import com.novaordis.gld.operations.jms.Send;
 
-import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 public class SendLoadStrategy extends JmsLoadStrategy
@@ -39,19 +42,32 @@ public class SendLoadStrategy extends JmsLoadStrategy
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private int messageSize;
+    private String cachedMessagePayload;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Public ----------------------------------------------------------------------------------------------------------
+    // LoadStrategy/JmsLoadStrategy overrides --------------------------------------------------------------------------
 
+    /**
+     * For the time being we use the global configuration option --value-size as the message size.
+     *
+     * TODO: this must be refactored, it should be a JMS specific configuration item (like --message-size).
+     *
+     * @see com.novaordis.gld.LoadStrategy#configure(com.novaordis.gld.Configuration, java.util.List, int)
+     */
     @Override
-    public String toString()
+    public void configure(Configuration configuration, List<String> arguments, int from) throws Exception
     {
-        long remainingOperations = getRemainingOperations();
-        return "SendLoadStrategy[remaining=" +
-            (remainingOperations == Long.MAX_VALUE ? "unlimited" : remainingOperations ) + "]";
+        super.configure(configuration, arguments, from);
+        setMessageSize(configuration.getValueSize());
     }
 
-    // JmsLoadStrategy overrides ---------------------------------------------------------------------------------------
+    @Override
+    public Set<Class<? extends Operation>> getOperationTypes()
+    {
+        return OPERATION_TYPES;
+    }
 
     @Override
     protected Send createInstance()
@@ -59,10 +75,44 @@ public class SendLoadStrategy extends JmsLoadStrategy
         return new Send(this);
     }
 
-    @Override
-    public Set<Class<? extends Operation>> getOperationTypes()
+    // Public ----------------------------------------------------------------------------------------------------------
+
+    public void setMessageSize(int messageSize)
     {
-        return OPERATION_TYPES;
+        this.messageSize = messageSize;
+    }
+
+    public int getMessageSize()
+    {
+        return messageSize;
+    }
+
+    /**
+     * Allow the strategy to provide a message payload (presumably cached) to speed the operation generation.
+     */
+    public String getMessagePayload()
+    {
+        if (cachedMessagePayload == null)
+        {
+            if (messageSize <= 0)
+            {
+                cachedMessagePayload = "";
+            }
+            else
+            {
+                cachedMessagePayload = Util.getRandomString(new Random(System.currentTimeMillis()), messageSize, 5);
+            }
+        }
+
+        return cachedMessagePayload;
+    }
+
+    @Override
+    public String toString()
+    {
+        long remainingOperations = getRemainingOperations();
+        return "SendLoadStrategy[remaining=" +
+            (remainingOperations == Long.MAX_VALUE ? "unlimited" : remainingOperations ) + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

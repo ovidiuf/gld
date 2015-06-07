@@ -136,7 +136,7 @@ public abstract class JmsLoadStrategy extends LoadStrategyBase
 
     /**
      * Parse context-relevant command line arguments and removes them from the list. If not finding the arguments
-     * we need in the list, try the configuration second
+     * we need in the list, try the configuration second. It's not sensitive to null, null is fine and it is ignored.
      */
     private void processContextRelevantArguments(List<String> arguments, int from) throws UserErrorException
     {
@@ -193,26 +193,29 @@ public abstract class JmsLoadStrategy extends LoadStrategyBase
 
         Load load = (Load)getConfiguration().getCommand();
 
-        Long maxOperations = load.getMaxOperations();
-
-        if (maxOperations == null)
+        if (load != null)
         {
-            // try the configuration file
-            // TODO need to refactor this for a consistent command-line/configuration file approach
-            Properties p = getConfiguration().getConfigurationFileContent();
-            if (p != null)
+            Long maxOperations = load.getMaxOperations();
+
+            if (maxOperations == null)
             {
-                String s = p.getProperty("message-count");
-                if (s != null)
+                // try the configuration file
+                // TODO need to refactor this for a consistent command-line/configuration file approach
+                Properties p = getConfiguration().getConfigurationFileContent();
+                if (p != null)
                 {
-                    maxOperations = Long.parseLong(s);
+                    String s = p.getProperty("message-count");
+                    if (s != null)
+                    {
+                        maxOperations = Long.parseLong(s);
+                    }
                 }
             }
-        }
 
-        if (maxOperations != null)
-        {
-            remainingOperations = new AtomicLong(maxOperations);
+            if (maxOperations != null)
+            {
+                remainingOperations = new AtomicLong(maxOperations);
+            }
         }
     }
 

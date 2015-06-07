@@ -23,6 +23,7 @@ import com.novaordis.gld.strategy.load.jms.ReceiveLoadStrategy;
 
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
+import javax.jms.TextMessage;
 
 public class Receive extends JmsOperation
 {
@@ -62,6 +63,12 @@ public class Receive extends JmsOperation
         }
 
         //System.out.println(m.getJMSMessageID());
+
+        if (m instanceof TextMessage)
+        {
+            String payload = ((TextMessage)m).getText();
+            System.out.println(payload.length() + ": " + payload);
+        }
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

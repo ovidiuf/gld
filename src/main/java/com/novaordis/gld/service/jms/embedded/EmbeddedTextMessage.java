@@ -48,13 +48,13 @@ public class EmbeddedTextMessage implements TextMessage
     @Override
     public void setText(String s) throws JMSException
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        this.text = s;
     }
 
     @Override
     public String getText() throws JMSException
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        return text;
     }
 
     @Override

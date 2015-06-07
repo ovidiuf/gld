@@ -23,7 +23,6 @@ import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.command.Load;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.operations.jms.Receive;
-import com.novaordis.gld.strategy.load.cache.WriteThenReadLoadStrategy;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
@@ -56,7 +55,7 @@ public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest
     @Test
     public void nullArguments() throws Exception
     {
-        LoadStrategy s = getLoadStrategyToTest();
+        LoadStrategy s = getLoadStrategyToTest(null, null, -1);
         Configuration c = new MockConfiguration();
 
         try
@@ -75,7 +74,7 @@ public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest
     @Test
     public void timeout() throws Exception
     {
-        ReceiveLoadStrategy rld = getLoadStrategyToTest();
+        ReceiveLoadStrategy rld = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = new ArrayList<>(Arrays.asList("--queue", "test", "--timeout", "7"));
 
@@ -90,7 +89,7 @@ public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest
     @Test
     public void noTimeout() throws Exception
     {
-        ReceiveLoadStrategy rld = getLoadStrategyToTest();
+        ReceiveLoadStrategy rld = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = new ArrayList<>(Arrays.asList("--queue", "test"));
 
@@ -105,7 +104,7 @@ public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest
     @Test
     public void next() throws Exception
     {
-        ReceiveLoadStrategy rld = getLoadStrategyToTest();
+        ReceiveLoadStrategy rld = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = new ArrayList<>(Arrays.asList("--queue", "test", "--timeout", "7"));
 
@@ -135,7 +134,7 @@ public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest
     @Test
     public void operationTypes() throws Exception
     {
-        ReceiveLoadStrategy ls = getLoadStrategyToTest();
+        ReceiveLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         Set<Class<? extends Operation>> operationTypes = ls.getOperationTypes();
 
@@ -147,8 +146,12 @@ public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest
 
     // Protected -------------------------------------------------------------------------------------------------------
 
+    /**
+     * @see com.novaordis.gld.strategy.load.LoadStrategyTest#getLoadStrategyToTest(Configuration, List, int)
+     */
     @Override
-    protected ReceiveLoadStrategy getLoadStrategyToTest()
+    protected ReceiveLoadStrategy getLoadStrategyToTest(Configuration config, List<String> arguments, int from)
+        throws Exception
     {
         return new ReceiveLoadStrategy();
     }

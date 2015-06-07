@@ -18,10 +18,8 @@ package com.novaordis.gld;
 
 import com.novaordis.gld.command.Load;
 import com.novaordis.gld.sampler.Sampler;
-import com.novaordis.gld.sampler.SamplingConsumer;
 import com.novaordis.gld.service.cache.EmbeddedCacheService;
 import com.novaordis.gld.service.jms.activemq.ActiveMQService;
-import com.novaordis.gld.statistics.CSVFormatter;
 import com.novaordis.utilities.Files;
 import com.novaordis.utilities.testing.Tests;
 import org.apache.log4j.Logger;
@@ -146,7 +144,7 @@ public class ConfigurationImplTest
         assertEquals(10002, n2.getPort());
     }
 
-    // key-size --------------------------------------------------------------------------------------------------------
+    // key/value/payload size ------------------------------------------------------------------------------------------
 
     @Test
     public void keySizeValueSize() throws Exception
@@ -163,6 +161,21 @@ public class ConfigurationImplTest
         assertEquals(77, c.getValueSize());
         assertEquals(-1L, c.getKeyExpirationSecs());
     }
+
+    @Test
+    public void payloadSize() throws Exception
+    {
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--nodes", "embedded",
+                "--payload-size", "7878"
+            });
+
+        assertEquals(7878, c.getValueSize());
+    }
+
+    // expiration ------------------------------------------------------------------------------------------------------
 
     @Test
     public void expiration() throws Exception
@@ -437,7 +450,7 @@ public class ConfigurationImplTest
     // miscellaneous ---------------------------------------------------------------------------------------------------
 
     @Test
-    public void miscellanous() throws Exception
+    public void miscellaneous() throws Exception
     {
 
         try
@@ -501,6 +514,26 @@ public class ConfigurationImplTest
         assertTrue(command instanceof Load);
         Service s = c.getService();
         assertTrue(s instanceof ActiveMQService);
+    }
+
+    // --sleep ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void sleep() throws Exception
+    {
+        ConfigurationImpl c = new ConfigurationImpl(new String[]
+            {
+                "load",
+                "--nodes",
+                "embedded",
+                "--sleep",
+                "200"
+            });
+
+        Command command = c.getCommand();
+        assertTrue(command instanceof Load);
+
+        assertEquals(200L, c.getSleepMs());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

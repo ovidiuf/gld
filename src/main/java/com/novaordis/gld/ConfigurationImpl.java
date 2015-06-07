@@ -54,7 +54,7 @@ public class ConfigurationImpl implements Configuration
     public static final int DEFAULT_KEY_SIZE = 70;
 
     // based on production data analysis
-    public static final int DEFAULT_VALUE_SIZE = 6000;
+    public static final int DEFAULT_VALUE_SIZE = 5000;
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -155,10 +155,10 @@ public class ConfigurationImpl implements Configuration
     }
 
     /**
-     * @see Configuration#getSleep()
+     * @see Configuration#getSleepMs()
      */
     @Override
-    public long getSleep()
+    public long getSleepMs()
     {
         return sleep;
     }
@@ -518,7 +518,7 @@ public class ConfigurationImpl implements Configuration
                     keySize = Integer.parseInt(arguments.get(++i));
                 }
             }
-            else if ("--value-size".equals(crt))
+            else if ("--value-size".equals(crt) || "--payload-size".equals(crt))
             {
                 if (i < arguments.size() - 1)
                 {

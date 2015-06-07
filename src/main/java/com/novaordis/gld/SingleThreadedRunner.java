@@ -32,7 +32,7 @@ public class SingleThreadedRunner implements Runnable
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private long sleep;
+    private long sleepMs;
     private String name;
     private KeyStore keyStore;
     final private Thread thread;
@@ -70,7 +70,7 @@ public class SingleThreadedRunner implements Runnable
 
         this.name = name;
         this.sampler = sampler;
-        this.sleep = config.getSleep();
+        this.sleepMs = config.getSleepMs();
         this.loadStrategy = loadStrategy;
         this.service = config.getService();
         this.keyStore = loadStrategy.getKeyStore();
@@ -200,16 +200,14 @@ public class SingleThreadedRunner implements Runnable
             }
             finally
             {
-                if (sampler != null)
-                {
-                    sampler.record(t0Ms, t0, t1, op, ex);
-                }
+                // sampler is never null, the constructor insures that
+                sampler.record(t0Ms, t0, t1, op, ex);
 
-                if (sleep > 0)
+                if (sleepMs > 0)
                 {
                     try
                     {
-                        Thread.sleep(sleep);
+                        Thread.sleep(sleepMs);
                     }
                     catch (InterruptedException e)
                     {

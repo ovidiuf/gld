@@ -36,32 +36,19 @@ public class MockConfiguration implements Configuration
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private String keyStoreFile;
-
     private String exceptionFile;
-
     private int keySize;
-
     private int valueSize;
-
-    private long sleep;
-
     private boolean useDifferentValues;
-
     private Service service;
-    
     private LoadStrategy loadStrategy;
-
     private StorageStrategy storageStrategy;
-
     private Command command;
-
     private String username;
-
     private boolean waitForConsoleQuit;
-
     private int threads;
-
     private Sampler sampler;
+    private long sleepMs;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -71,10 +58,10 @@ public class MockConfiguration implements Configuration
         this.username = null;
         this.keySize = 1;
         this.valueSize = 1;
-        this.sleep = -1;
         this.useDifferentValues = false;
         this.exceptionFile = null;
         this.threads = 1;
+        this.sleepMs = -1L;
     }
 
     // Configuration implementation ------------------------------------------------------------------------------------
@@ -158,9 +145,9 @@ public class MockConfiguration implements Configuration
     }
 
     @Override
-    public long getSleep()
+    public long getSleepMs()
     {
-        return sleep;
+        return sleepMs;
     }
 
     @Override
@@ -277,6 +264,11 @@ public class MockConfiguration implements Configuration
     public void setThreads(int threads)
     {
         this.threads = threads;
+    }
+
+    public void setSleepMs(long sleepMs)
+    {
+        this.sleepMs = sleepMs;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

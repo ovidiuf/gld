@@ -114,7 +114,7 @@ public class EmbeddedSession implements Session
     @Override
     public TextMessage createTextMessage(String s) throws JMSException
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        return new EmbeddedTextMessage(s);
     }
 
     @Override

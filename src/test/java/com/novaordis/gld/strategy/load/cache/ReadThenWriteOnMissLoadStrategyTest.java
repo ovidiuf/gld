@@ -16,6 +16,7 @@
 
 package com.novaordis.gld.strategy.load.cache;
 
+import com.novaordis.gld.Configuration;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.operations.cache.Read;
@@ -29,6 +30,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
@@ -58,7 +60,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
     @Test
     public void hit_noKeyStore() throws Exception
     {
-        ReadThenWriteOnMissLoadStrategy rtwom = getLoadStrategyToTest();
+        ReadThenWriteOnMissLoadStrategy rtwom = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
         mc.setKeySize(11);
@@ -96,7 +98,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
     @Test
     public void miss_noKeyStore() throws Exception
     {
-        ReadThenWriteOnMissLoadStrategy rtwom = getLoadStrategyToTest();
+        ReadThenWriteOnMissLoadStrategy rtwom = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
         mc.setKeySize(11);
@@ -133,7 +135,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
     @Test
     public void readAfterWrite_noKeyStore() throws Exception
     {
-        ReadThenWriteOnMissLoadStrategy rtwom = getLoadStrategyToTest();
+        ReadThenWriteOnMissLoadStrategy rtwom = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
         mc.setKeySize(11);
@@ -161,7 +163,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
         File keyStoreFile = new File(Tests.getScratchDir(), "keys.txt");
         Files.write(keyStoreFile, "KEY0\nKEY1\nKEY2\n");
 
-        ReadThenWriteOnMissLoadStrategy rtwom = getLoadStrategyToTest();
+        ReadThenWriteOnMissLoadStrategy rtwom = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
         mc.setKeySize(11);
@@ -202,7 +204,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
         File keyStoreFile = new File(Tests.getScratchDir(), "keys.txt");
         Files.write(keyStoreFile, "KEY0\nKEY1\nKEY2\n");
 
-        ReadThenWriteOnMissLoadStrategy rtwom = getLoadStrategyToTest();
+        ReadThenWriteOnMissLoadStrategy rtwom = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
         mc.setKeySize(11);
@@ -243,7 +245,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
         File keyStoreFile = new File(Tests.getScratchDir(), "keys.txt");
         Files.write(keyStoreFile, "KEY0\nKEY1\nKEY2\n");
 
-        ReadThenWriteOnMissLoadStrategy rtwom = getLoadStrategyToTest();
+        ReadThenWriteOnMissLoadStrategy rtwom = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
         mc.setKeySize(11);
@@ -375,8 +377,12 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
 
     // Protected -------------------------------------------------------------------------------------------------------
 
+    /**
+     * @see LoadStrategyTest#getLoadStrategyToTest(Configuration, List, int)
+     */
     @Override
-    protected ReadThenWriteOnMissLoadStrategy getLoadStrategyToTest() throws Exception
+    protected ReadThenWriteOnMissLoadStrategy getLoadStrategyToTest(
+        Configuration config, List<String> arguments, int from) throws Exception
     {
         return new ReadThenWriteOnMissLoadStrategy();
     }

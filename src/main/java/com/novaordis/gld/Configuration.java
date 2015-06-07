@@ -71,10 +71,10 @@ public interface Configuration
     List<Node> getNodes();
 
     /**
-     * The sleep time in milliseconds after writing/reading a key. Default is 0 - don't sleep, execute next. Negative
+     * The sleep time in milliseconds after executing an operation.. Default is 0 - don't sleep, execute next. Negative
      * also means "don't sleep".
      */
-    long getSleep();
+    long getSleepMs();
 
     /**
      * The key size, in characters. Default is 10.

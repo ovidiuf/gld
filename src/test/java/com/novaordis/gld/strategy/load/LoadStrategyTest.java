@@ -25,7 +25,6 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public abstract class LoadStrategyTest
@@ -45,7 +44,7 @@ public abstract class LoadStrategyTest
     @Test
     public void nullArguments() throws Exception
     {
-        LoadStrategy s = getLoadStrategyToTest();
+        LoadStrategy s = getLoadStrategyToTest(null, null, -1);
 
         Configuration c = new MockConfiguration();
 
@@ -57,7 +56,7 @@ public abstract class LoadStrategyTest
     @Test
     public void fromOutOfBounds_InferiorLimit() throws Exception
     {
-        LoadStrategy s = getLoadStrategyToTest();
+        LoadStrategy s = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = Arrays.asList("blah", "blah", "blah");
 
@@ -75,7 +74,7 @@ public abstract class LoadStrategyTest
     @Test
     public void fromOutOfBounds_SuperiorLimit() throws Exception
     {
-        LoadStrategy s = getLoadStrategyToTest();
+        LoadStrategy s = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = Arrays.asList("blah", "blah", "blah");
 
@@ -93,7 +92,7 @@ public abstract class LoadStrategyTest
     @Test
     public void nullConfiguration() throws Exception
     {
-        LoadStrategy s = getLoadStrategyToTest();
+        LoadStrategy s = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = Arrays.asList("blah", "blah", "blah");
 
@@ -111,7 +110,7 @@ public abstract class LoadStrategyTest
     @Test
     public void unconfiguredStrategyFailsUponFirstUsage() throws Exception
     {
-        LoadStrategy s = getLoadStrategyToTest();
+        LoadStrategy s = getLoadStrategyToTest(null, null, -1);
 
         try
         {
@@ -129,9 +128,14 @@ public abstract class LoadStrategyTest
     // Protected -------------------------------------------------------------------------------------------------------
 
     /**
-     * @return an unconfigured strategy.
+     * @param config - configuration instance. Can be null.
+     * @param arguments - strategy-specific arguments. Can be null.
+     * @param from - the argument in the list of strategy-specific arguments.
+     * @return a strategy that can be fully configured or not configured, depending on the config, arguments and from
+     *     values.
      */
-    protected abstract LoadStrategy getLoadStrategyToTest() throws Exception;
+    protected abstract LoadStrategy getLoadStrategyToTest(Configuration config, List<String> arguments, int from)
+        throws Exception;
 
 
     // Private ---------------------------------------------------------------------------------------------------------

@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -61,7 +62,7 @@ public class DeleteLoadStrategyTest extends LoadStrategyTest
     @Test
     public void nullArguments() throws Exception
     {
-        DeleteLoadStrategy s = getLoadStrategyToTest();
+        DeleteLoadStrategy s = getLoadStrategyToTest(null, null, -1);
 
         try
         {
@@ -233,8 +234,12 @@ public class DeleteLoadStrategyTest extends LoadStrategyTest
 
     // Protected -------------------------------------------------------------------------------------------------------
 
+    /**
+     * @see LoadStrategyTest#getLoadStrategyToTest(Configuration, List, int)
+     */
     @Override
-    protected DeleteLoadStrategy getLoadStrategyToTest()
+    protected DeleteLoadStrategy getLoadStrategyToTest(Configuration config, List<String> arguments, int from)
+        throws Exception
     {
         return new DeleteLoadStrategy();
     }

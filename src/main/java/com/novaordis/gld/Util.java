@@ -47,6 +47,8 @@ public class Util
     /**
      * Naive implementation - come up with something smarter.
      *
+     * @param random - the Random instance to use while generated the value. We are exposing it externally to give
+     *        the caller a chance to provide an efficient Random (such as
      * @param totalLength - the total length of the string.
      * @param randomSectionLength - the length of the random section of the string. If randomSectionLength
      *       is smaller than totalLength, the final string consists in identical repeated sections; the section that

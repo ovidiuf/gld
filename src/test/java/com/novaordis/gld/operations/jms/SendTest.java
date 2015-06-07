@@ -22,16 +22,18 @@ import com.novaordis.gld.service.jms.embedded.EmbeddedQueue;
 import com.novaordis.gld.service.jms.embedded.EmbeddedSession;
 import com.novaordis.gld.strategy.load.jms.JmsLoadStrategy;
 import com.novaordis.gld.strategy.load.jms.SendLoadStrategy;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import javax.jms.Message;
 import javax.jms.Session;
+import javax.jms.TextMessage;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class SendTest extends JmsOperationTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = Logger.getLogger(SendTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -45,6 +47,7 @@ public class SendTest extends JmsOperationTest
     public void perform() throws Exception
     {
         SendLoadStrategy loadStrategy = new SendLoadStrategy();
+
         Send send = getJmsOperationToTest(loadStrategy);
 
         EmbeddedQueue jmsQueue = new EmbeddedQueue("TEST");
@@ -56,6 +59,30 @@ public class SendTest extends JmsOperationTest
         send.perform(endpoint);
     }
 
+    @Test
+    public void perform_SpecificMessageSize() throws Exception
+    {
+        int messageSize = 758;
+
+        SendLoadStrategy loadStrategy = new SendLoadStrategy();
+        loadStrategy.setMessageSize(messageSize);
+
+        Send send = getJmsOperationToTest(loadStrategy);
+
+        EmbeddedQueue jmsQueue = new EmbeddedQueue("TEST");
+        EmbeddedSession jmsSession = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
+        EmbeddedMessageProducer jmsProducer = (EmbeddedMessageProducer)jmsSession.createProducer(jmsQueue);
+
+        Producer endpoint = new Producer(jmsProducer, jmsSession);
+
+        send.perform(endpoint);
+
+        List<Message> messages = jmsProducer.getMessagesSentByThisProducer();
+        assertEquals(1, messages.size());
+        Message m = messages.get(0);
+        assertEquals(messageSize, ((TextMessage)m).getText().length());
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
@@ -63,7 +90,7 @@ public class SendTest extends JmsOperationTest
     @Override
     protected Send getJmsOperationToTest(JmsLoadStrategy loadStrategy)
     {
-        return new Send(loadStrategy);
+        return new Send((SendLoadStrategy)loadStrategy);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

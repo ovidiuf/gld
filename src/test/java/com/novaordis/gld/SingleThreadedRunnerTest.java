@@ -19,6 +19,7 @@ package com.novaordis.gld;
 import com.novaordis.gld.mock.MockCacheService;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.mock.MockKeyStore;
+import com.novaordis.gld.mock.MockSampler;
 import com.novaordis.gld.sampler.Sampler;
 import com.novaordis.gld.sampler.SamplerImpl;
 import com.novaordis.gld.strategy.load.cache.MockLoadStrategy;
@@ -169,6 +170,32 @@ public class SingleThreadedRunnerTest
         st.run();
 
         assertFalse(ks.isStarted());
+    }
+
+    @Test
+    public void insureSleepWorks() throws Exception
+    {
+        long sleepMs = 250L;
+
+        MockConfiguration mc = new MockConfiguration();
+        mc.setSleepMs(sleepMs);
+        mc.setService(new MockService());
+
+        MockSampler mockSampler = new MockSampler();
+        MockLoadStrategy mockLoadStrategy = new MockLoadStrategy(1);
+
+        CyclicBarrier barrier = new CyclicBarrier(1);
+
+        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, mockLoadStrategy, mockSampler, barrier);
+        st.running = true;
+
+        long t0 = System.currentTimeMillis();
+
+        st.run();
+
+        long t1 = System.currentTimeMillis();
+
+        assertTrue(t1 - t0 >= sleepMs);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

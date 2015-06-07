@@ -16,6 +16,7 @@
 
 package com.novaordis.gld.strategy.load.cache;
 
+import com.novaordis.gld.Configuration;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.operations.cache.Read;
@@ -59,7 +60,7 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
     @Test
     public void configure() throws Exception
     {
-        WriteThenReadLoadStrategy ls = getLoadStrategyToTest();
+        WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
 
@@ -73,7 +74,7 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
     @Test
     public void onlyWrites() throws Exception
     {
-        WriteThenReadLoadStrategy ls = getLoadStrategyToTest();
+        WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
         mc.setKeySize(1);
@@ -111,7 +112,7 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
     @Test
     public void readToWrite_0_SameResultsWhenWePassLastOperation() throws Exception
     {
-        WriteThenReadLoadStrategy ls = getLoadStrategyToTest();
+        WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
         mc.setKeySize(1);
@@ -154,7 +155,7 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
     @Test
     public void readToWrite_1() throws Exception
     {
-        WriteThenReadLoadStrategy ls = getLoadStrategyToTest();
+        WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
         mc.setKeySize(1);
@@ -192,7 +193,7 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
     @Test
     public void readToWrite_2() throws Exception
     {
-        WriteThenReadLoadStrategy ls = getLoadStrategyToTest();
+        WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
         mc.setKeySize(1);
@@ -233,7 +234,7 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
     @Test
     public void readToWrite_3() throws Exception
     {
-        WriteThenReadLoadStrategy ls = getLoadStrategyToTest();
+        WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
         mc.setKeySize(1);
@@ -280,7 +281,7 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
     @Test
     public void writeToRead_0() throws Exception
     {
-        WriteThenReadLoadStrategy ls = getLoadStrategyToTest();
+        WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
         mc.setKeySize(1);
@@ -318,7 +319,7 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
     @Test
     public void writeToRead_1() throws Exception
     {
-        WriteThenReadLoadStrategy ls = getLoadStrategyToTest();
+        WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
         mc.setKeySize(1);
@@ -356,7 +357,7 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
     @Test
     public void writeToRead_2() throws Exception
     {
-        WriteThenReadLoadStrategy ls = getLoadStrategyToTest();
+        WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
         mc.setKeySize(1);
@@ -397,7 +398,7 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
     @Test
     public void writeToRead_3() throws Exception
     {
-        WriteThenReadLoadStrategy ls = getLoadStrategyToTest();
+        WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
         mc.setKeySize(1);
@@ -528,8 +529,12 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
 
     // Protected -------------------------------------------------------------------------------------------------------
 
+    /**
+     * @see com.novaordis.gld.strategy.load.LoadStrategyTest#getLoadStrategyToTest(Configuration, List, int)
+     */
     @Override
-    protected WriteThenReadLoadStrategy getLoadStrategyToTest()
+    protected WriteThenReadLoadStrategy getLoadStrategyToTest(Configuration config, List<String> arguments, int from)
+        throws Exception
     {
         return new WriteThenReadLoadStrategy();
     }
