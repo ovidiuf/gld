@@ -152,9 +152,10 @@ command="${java_bin} -Xms${memory} -Xmx${memory} -cp ${classpath} ${debug_args} 
 ${verbose} && echo "${command}" 1>&2;
 
 if ${background}; then
-    ${command} &
+    nohup ${command} 1>./gld.log 2>&1 < /dev/null &
     pid=$!
     echo "gld launched in background (pid ${pid}), use gld stop|status to interact with it"
+    sleep 1
 else
     ${command}
 fi
