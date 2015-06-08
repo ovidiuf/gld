@@ -22,6 +22,7 @@ import com.novaordis.gld.Operation;
 import com.novaordis.gld.StorageStrategy;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.Util;
+import com.novaordis.gld.command.Load;
 import com.novaordis.gld.keystore.ReadOnlyFileKeyStore;
 import com.novaordis.gld.keystore.ExperimentalKeyStore;
 import com.novaordis.gld.keystore.WriteOnlyFileKeyStore;
@@ -32,6 +33,7 @@ import com.novaordis.gld.strategy.storage.HierarchicalStorageStrategy;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * A load strategy that attempts to write a key (either randomly generated or read from a local reference store) then
@@ -63,6 +65,8 @@ public class WriteThenReadLoadStrategy extends LoadStrategyBase
 
     private ReadWriteRatio readWriteRatio;
 
+    private AtomicLong remainingOperations;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public WriteThenReadLoadStrategy()
@@ -88,6 +92,14 @@ public class WriteThenReadLoadStrategy extends LoadStrategyBase
         this.keySize = conf.getKeySize();
         this.valueSize = conf.getValueSize();
         this.useDifferentValues = conf.isUseDifferentValues();
+
+        // TODO this is fishy, refactor both here and in JmsLoadStrategy
+        Load load = (Load)getConfiguration().getCommand();
+        Long maxOperations;
+        if (load != null && (maxOperations = load.getMaxOperations()) != null)
+        {
+            remainingOperations = new AtomicLong(maxOperations);
+        }
 
         this.indexInSeries = 0;
 
@@ -138,6 +150,13 @@ public class WriteThenReadLoadStrategy extends LoadStrategyBase
         if (indexInSeries == -1)
         {
             throw new IllegalStateException(this + " not properly configured");
+        }
+
+        if (remainingOperations != null && remainingOperations.getAndDecrement() <= 0)
+        {
+            // out of operations
+            remainingOperations.set(0);
+            return null;
         }
 
         // we ignore the last operation, the result come in pre-determined series

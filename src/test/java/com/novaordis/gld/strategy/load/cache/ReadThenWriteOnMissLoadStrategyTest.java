@@ -18,7 +18,14 @@ package com.novaordis.gld.strategy.load.cache;
 
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.Operation;
+import com.novaordis.gld.SingleThreadedRunner;
+import com.novaordis.gld.SingleThreadedRunnerTest;
+import com.novaordis.gld.command.Load;
+import com.novaordis.gld.keystore.RandomKeyGenerator;
+import com.novaordis.gld.mock.MockCacheService;
 import com.novaordis.gld.mock.MockConfiguration;
+import com.novaordis.gld.mock.MockSampler;
+import com.novaordis.gld.mock.OperationThrowablePair;
 import com.novaordis.gld.operations.cache.Read;
 import com.novaordis.gld.operations.cache.Write;
 import com.novaordis.gld.strategy.load.LoadStrategyTest;
@@ -29,13 +36,17 @@ import org.junit.After;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CyclicBarrier;
 
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
 {
@@ -273,104 +284,92 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
     //
 
     @Test
-    public void integration_ReadThenWriteOnMiss_SingleThreadedRunner_OneOperation() throws Exception
+    public void integration_ReadThenWriteOnMiss_SingleThreadedRunner_ReadThenOutOfOps() throws Exception
     {
-        // TODO this test fails because in the previous version, the Statistics instance used to interrupt the runner,
-        // but now the Sampler just records and does not interrupt. We need to fix the ReadThenWriteOnMissLoadStrategy
-        // to know how to stop
-        fail("RETURN TO THIS WHEN YOU NEED CACHE LOAD TO RUN (1)");
+        MockCacheService mcs = new MockCacheService()
+        {
+            @Override
+            public String get(String key)
+            {
+                // we override get() to return a hit for any key
+                return "SYNTHETIC-HIT";
+            }
+        };
 
-//        MockCacheService mcs = new MockCacheService();
-//        MockConfiguration mc = new MockConfiguration();
-//        mc.setCacheService(mcs);
-//
-//        MockSampler ms = new MockSampler();
-//
-//        CyclicBarrier barrier = new CyclicBarrier(1);
-//
-//        ReadThenWriteOnMissLoadStrategy rtwom = new ReadThenWriteOnMissLoadStrategy();
-//
-//        mc.setKeySize(1);
-//        mc.setValueSize(1);
-//        mc.setUseDifferentValues(false);
-//
-//        rtwom.configure(mc, Collections.<String>emptyList(), 0);
-//
-//        assertTrue(rtwom.getKeyStore() instanceof RandomKeyGenerator);
-//
-//        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, rtwom, ms, barrier);
-//        SingleThreadedRunnerTest.setRunning(st);
-//
-//        st.run();
-//
-//        List<OperationThrowablePair> recorded = ms.getRecorded();
-//        assertEquals(1, recorded.size());
-//
-//        Read r = (Read)recorded.get(0).operation;
-//        assertNull(recorded.get(0).throwable);
-//
-//        assertTrue(r.hasBeenPerformed());
-//        assertNull(r.getValue());
+        MockConfiguration mc = new MockConfiguration();
+        mc.setKeySize(1);
+        mc.setValueSize(1);
+        mc.setUseDifferentValues(false);
+        mc.setService(mcs);
+        mc.setCommand(new Load(mc, new ArrayList<>(Arrays.asList("--max-operations", "1")), 0));
+
+        ReadThenWriteOnMissLoadStrategy rtwom = new ReadThenWriteOnMissLoadStrategy();
+        rtwom.configure(mc, Collections.<String>emptyList(), 0);
+        assertTrue(rtwom.getKeyStore() instanceof RandomKeyGenerator);
+
+        MockSampler ms = new MockSampler();
+        CyclicBarrier barrier = new CyclicBarrier(1);
+        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, rtwom, ms, barrier);
+        SingleThreadedRunnerTest.setRunning(st);
+
+        st.run();
+
+        List<OperationThrowablePair> recorded = ms.getRecorded();
+
+        // we should record a read and a write
+        assertEquals(1, recorded.size());
+
+        Read r = (Read)recorded.get(0).operation;
+        assertNull(recorded.get(0).throwable);
+        assertTrue(r.hasBeenPerformed());
+        assertNotNull(r.getKey());
+        assertEquals("SYNTHETIC-HIT", r.getValue());
     }
 
     @Test
     public void integration_ReadThenWriteOnMiss_SingleThreadedRunner_ReadThenWrite() throws Exception
     {
-        // TODO integration_ReadThenWriteOnMiss_SingleThreadedRunner_ReadThenWrite(): this test fails because in the
-        // previous version, the Statistics instance used to interrupt the runner, but now the Sampler just records and
-        // does not interrupt. We need to fix the ReadThenWriteOnMissLoadStrategy to know how to stop
+        MockCacheService mcs = new MockCacheService();
+        MockConfiguration mc = new MockConfiguration();
+        mc.setKeySize(1);
+        mc.setValueSize(1);
+        mc.setUseDifferentValues(false);
+        mc.setService(mcs);
+        mc.setCommand(new Load(mc, new ArrayList<>(Arrays.asList("--max-operations", "1")), 0));
 
-        fail("RETURN TO THIS WHEN YOU NEED CACHE LOAD TO RUN (2)");
+        ReadThenWriteOnMissLoadStrategy rtwom = new ReadThenWriteOnMissLoadStrategy();
+        rtwom.configure(mc, Collections.<String>emptyList(), 0);
+        assertTrue(rtwom.getKeyStore() instanceof RandomKeyGenerator);
 
-//        MockCacheService mcs = new MockCacheService();
-//
-//        MockConfiguration mc = new MockConfiguration();
-//        mc.setCacheService(mcs);
-//
-//        MockSampler ms = new MockSampler();
-//
-//        CyclicBarrier barrier = new CyclicBarrier(1);
-//
-//        ReadThenWriteOnMissLoadStrategy rtwom = new ReadThenWriteOnMissLoadStrategy();
-//
-//        mc.setKeySize(1);
-//        mc.setValueSize(1);
-//        mc.setUseDifferentValues(false);
-//
-//        rtwom.configure(mc, Collections.<String>emptyList(), 0);
-//
-//        assertTrue(rtwom.getKeyStore() instanceof RandomKeyGenerator);
-//
-//        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, rtwom, ms, barrier);
-//        SingleThreadedRunnerTest.setRunning(st);
-//
-//        st.run();
-//
-//        List<OperationThrowablePair> recorded = ms.getRecorded();
-//        assertEquals(2, recorded.size());
-//
-//        Read r = (Read)recorded.get(0).operation;
-//        Throwable t = recorded.get(0).throwable;
-//
-//        assertTrue(r.hasBeenPerformed());
-//        assertNull(r.getValue());
-//        String key = r.getKey();
-//        log.info("key=" + key);
-//        assertNull(t);
-//
-//        Write w = (Write)recorded.get(1).operation;
-//        Throwable t2 = recorded.get(1).throwable;
-//
-//        assertEquals(key, w.getKey());
-//        String value = w.getValue();
-//        log.info("key=" + key);
-//        assertNull(t2);
-//
-//        //
-//        // make sure the key was written in cache
-//        //
-//
-//        assertEquals(value, mcs.get(key));
+        MockSampler ms = new MockSampler();
+        CyclicBarrier barrier = new CyclicBarrier(1);
+        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, rtwom, ms, barrier);
+        SingleThreadedRunnerTest.setRunning(st);
+
+        st.run();
+
+        List<OperationThrowablePair> recorded = ms.getRecorded();
+
+        // we should record a read and a write
+        assertEquals(2, recorded.size());
+
+        Read r = (Read)recorded.get(0).operation;
+        assertNull(recorded.get(0).throwable);
+        assertTrue(r.hasBeenPerformed());
+        String key = r.getKey();
+        assertNotNull(key);
+        assertNull(r.getValue());
+
+        Write w = (Write)recorded.get(1).operation;
+        assertNull(recorded.get(1).throwable);
+        assertTrue(w.isSuccessful());
+        String value = w.getValue();
+
+        //
+        // make sure the key was written in cache
+        //
+
+        assertEquals(value, mcs.get(key));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

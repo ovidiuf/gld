@@ -20,6 +20,7 @@ import com.novaordis.gld.Configuration;
 import com.novaordis.gld.KeyStore;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.Util;
+import com.novaordis.gld.command.Load;
 import com.novaordis.gld.keystore.RandomKeyGenerator;
 import com.novaordis.gld.keystore.ReadOnlyFileKeyStore;
 import com.novaordis.gld.operations.cache.Read;
@@ -70,12 +71,21 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase
         int valueSize = conf.getValueSize();
         boolean useDifferentValues = conf.isUseDifferentValues();
 
+        // TODO this is fishy, refactor both here and in JmsLoadStrategy
+        Load load = (Load)getConfiguration().getCommand();
+        Long maxOperations = null;
+
+        if (load != null)
+        {
+            maxOperations = load.getMaxOperations();
+        }
+
         String keyStoreFile = conf.getKeyStoreFile();
         KeyStore keyStore;
 
         if (keyStoreFile == null)
         {
-            keyStore = new RandomKeyGenerator(keySize);
+            keyStore = new RandomKeyGenerator(keySize, maxOperations);
         }
         else
         {
@@ -101,14 +111,12 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase
             throw new IllegalStateException(this + " not properly configured");
         }
 
-        KeyStore keyStore = getKeyStore();
-
         Operation result;
 
         if (lastOperation == null)
         {
             // start with a read
-            result = new Read(keyStore.get());
+            result = getNextRead();
         }
         else if (lastOperation instanceof Read)
         {
@@ -118,7 +126,7 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase
 
             if (lastRead.getValue() != null)
             {
-                result = new Read(keyStore.get());
+                result = getNextRead();
             }
             else
             {
@@ -128,7 +136,7 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase
         else if (lastOperation instanceof Write)
         {
             // read follows a write
-            result = new Read(keyStore.get());
+            result = getNextRead();
         }
         else
         {
@@ -145,6 +153,22 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    /**
+     * @return a non-null next Read if the key store has not run out of read operations, or null if it has.
+     */
+    private Read getNextRead()
+    {
+        String key =  getKeyStore().get();
+
+        if (key == null)
+        {
+            // the key store ran out of keys, so we ran out of operations, return null
+            return null;
+        }
+
+        return new Read(key);
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

@@ -43,6 +43,14 @@ public class SingleThreadedRunnerTest
 
     // Static ----------------------------------------------------------------------------------------------------------
 
+    /**
+     * Use this to enable run() for individual invocations.
+     */
+    public static void setRunning(SingleThreadedRunner st)
+    {
+        st.running = true;
+    }
+
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -131,7 +139,7 @@ public class SingleThreadedRunnerTest
         assertEquals("TEST", st.getName());
 
         // we simulate the running runner
-        st.running = true;
+        setRunning(st);
 
         s.start();
 
@@ -163,7 +171,7 @@ public class SingleThreadedRunnerTest
         assertTrue(ks.isStarted());
 
         // we simulate the running runner
-        st.running = true;
+        setRunning(st);
 
         s.start();
 
@@ -187,7 +195,7 @@ public class SingleThreadedRunnerTest
         CyclicBarrier barrier = new CyclicBarrier(1);
 
         SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, mockLoadStrategy, mockSampler, barrier);
-        st.running = true;
+        setRunning(st);
 
         long t0 = System.currentTimeMillis();
 

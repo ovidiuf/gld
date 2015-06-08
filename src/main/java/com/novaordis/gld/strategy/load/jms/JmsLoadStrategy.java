@@ -191,6 +191,7 @@ public abstract class JmsLoadStrategy extends LoadStrategyBase
             }
         }
 
+        // TODO this is fishy, refactor both here and in ReadThenWriteOnMissLoadStrategy
         Load load = (Load)getConfiguration().getCommand();
 
         if (load != null)

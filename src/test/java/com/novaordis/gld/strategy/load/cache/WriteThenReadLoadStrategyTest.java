@@ -17,21 +17,35 @@
 package com.novaordis.gld.strategy.load.cache;
 
 import com.novaordis.gld.Configuration;
+import com.novaordis.gld.KeyStore;
 import com.novaordis.gld.Operation;
+import com.novaordis.gld.SingleThreadedRunner;
+import com.novaordis.gld.SingleThreadedRunnerTest;
+import com.novaordis.gld.command.Load;
+import com.novaordis.gld.keystore.WriteOnlyFileKeyStore;
+import com.novaordis.gld.mock.MockCacheService;
 import com.novaordis.gld.mock.MockConfiguration;
+import com.novaordis.gld.mock.MockSampler;
+import com.novaordis.gld.mock.OperationThrowablePair;
 import com.novaordis.gld.operations.cache.Read;
 import com.novaordis.gld.operations.cache.Write;
 import com.novaordis.gld.strategy.load.LoadStrategyTest;
+import com.novaordis.utilities.Files;
 import com.novaordis.utilities.testing.Tests;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CyclicBarrier;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
 {
@@ -449,80 +463,74 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
     @Test
     public void integration_WriteThenRead_SingleThreadedRunner() throws Exception
     {
-        // TODO integration_WriteThenRead_SingleThreadedRunner(): this test fails because in the previous version,
-        // the Statistics instance used to interrupt the runner, but now the Sampler just records and does not
-        // interrupt. We need to fix the WriteThenReadLoadStrategy to know how to stop.
+        File storeFile = new File(Tests.getScratchDir(), "test-keys.txt");
 
-        fail("RETURN TO THIS WHEN YOU NEED CACHE LOAD TO RUN (3)");
+        MockCacheService mcs = new MockCacheService();
 
-//        File storeFile = new File(Tests.getScratchDir(), "test-keys.txt");
-//
-//        MockCacheService mcs = new MockCacheService();
-//
-//        MockConfiguration mc = new MockConfiguration();
-//        mc.setCacheService(mcs);
-//
-//        MockSampler ms = new MockSampler();
-//
-//        CyclicBarrier barrier = new CyclicBarrier(1);
-//
-//        mc.setKeySize(3);
-//        mc.setValueSize(7);
-//        mc.setUseDifferentValues(false);
-//        mc.setKeyStoreFile(storeFile.getPath());
-//
-//        WriteThenReadLoadStrategy wtr = new WriteThenReadLoadStrategy();
-//
-//        // only writes
-//        List<String> arguments = new ArrayList<>();
-//        arguments.add("--read-to-write");
-//        arguments.add("0");
-//
-//        wtr.configure(mc, arguments, 0);
-//
-//        KeyStore ks = wtr.getKeyStore();
-//        ks.start();
-//
-//        assertTrue(ks instanceof WriteOnlyFileKeyStore);
-//
-//        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, wtr, ms, barrier);
-//        SingleThreadedRunnerTest.setRunning(st);
-//
-//        st.run();
-//
-//        List<OperationThrowablePair> recorded = ms.getRecorded();
-//        assertEquals(2, recorded.size());
-//
-//        Write w = (Write)recorded.get(0).operation;
-//        assertNull(recorded.get(0).throwable);
-//
-//        String key = w.getKey();
-//        String value = w.getValue();
-//
-//        assertNotNull(key);
-//        assertNotNull(value);
-//
-//        Write w2 = (Write)recorded.get(1).operation;
-//        assertNull(recorded.get(1).throwable);
-//
-//        String key2 = w2.getKey();
-//        String value2 = w2.getValue();
-//
-//        assertNotNull(key2);
-//        assertNotNull(value2);
-//
-//        // make sure the key is in
-//
-//        // 1. cache
-//
-//        assertEquals(value, mcs.get(key));
-//        assertEquals(value2, mcs.get(key2));
-//
-//        // 2. key storeFile
-//
-//        String content = Files.read(storeFile);
-//
-//        assertEquals(key + "\n" + key2 + "\n", content);
+        MockConfiguration mc = new MockConfiguration();
+        mc.setService(mcs);
+
+        MockSampler ms = new MockSampler();
+        CyclicBarrier barrier = new CyclicBarrier(1);
+
+        mc.setKeySize(3);
+        mc.setValueSize(7);
+        mc.setUseDifferentValues(false);
+        mc.setKeyStoreFile(storeFile.getPath());
+        mc.setCommand(new Load(mc, new ArrayList<>(Arrays.asList("--max-operations", "2")), 0));
+
+        WriteThenReadLoadStrategy wtr = new WriteThenReadLoadStrategy();
+
+        // only writes
+        List<String> arguments = new ArrayList<>();
+        arguments.add("--read-to-write");
+        arguments.add("0");
+
+        wtr.configure(mc, arguments, 0);
+
+        KeyStore ks = wtr.getKeyStore();
+        ks.start();
+
+        assertTrue(ks instanceof WriteOnlyFileKeyStore);
+
+        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, wtr, ms, barrier);
+        SingleThreadedRunnerTest.setRunning(st);
+
+        st.run();
+
+        List<OperationThrowablePair> recorded = ms.getRecorded();
+        assertEquals(2, recorded.size());
+
+        Write w = (Write)recorded.get(0).operation;
+        assertNull(recorded.get(0).throwable);
+
+        String key = w.getKey();
+        String value = w.getValue();
+
+        assertNotNull(key);
+        assertNotNull(value);
+
+        Write w2 = (Write)recorded.get(1).operation;
+        assertNull(recorded.get(1).throwable);
+
+        String key2 = w2.getKey();
+        String value2 = w2.getValue();
+
+        assertNotNull(key2);
+        assertNotNull(value2);
+
+        // make sure the key is in
+
+        // 1. cache
+
+        assertEquals(value, mcs.get(key));
+        assertEquals(value2, mcs.get(key2));
+
+        // 2. key storeFile
+
+        String content = Files.read(storeFile);
+
+        assertEquals(key + "\n" + key2 + "\n", content);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

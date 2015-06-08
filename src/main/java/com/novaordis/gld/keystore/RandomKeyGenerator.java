@@ -20,10 +20,7 @@ import com.novaordis.gld.KeyStore;
 import com.novaordis.gld.Util;
 
 import java.util.concurrent.ThreadLocalRandom;
-
-/**
- * This implementation reads the entire key space in memory on startup and then keeps cycling through it.
- */
+import java.util.concurrent.atomic.AtomicLong;
 
 public class RandomKeyGenerator implements KeyStore
 {
@@ -35,6 +32,7 @@ public class RandomKeyGenerator implements KeyStore
 
     private volatile boolean started;
     private int keyLength;
+    private AtomicLong remainingKeys;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -42,11 +40,27 @@ public class RandomKeyGenerator implements KeyStore
      * Auto-starting.
      *
      * @param keyLength - the length of the keys that will be generated.
+     * @param maxKeys - the maximum number of keys to return after get() starts to return null. A null, zero or negative
+     *                value means "return an unlimited number of keys"
+     */
+    public RandomKeyGenerator(int keyLength, Long maxKeys) throws Exception
+    {
+        this.keyLength = keyLength;
+
+        if (maxKeys != null && maxKeys > 0)
+        {
+            this.remainingKeys = new AtomicLong(maxKeys);
+        }
+
+        start();
+    }
+
+    /**
+     * @see RandomKeyGenerator#RandomKeyGenerator(int, Long)
      */
     public RandomKeyGenerator(int keyLength) throws Exception
     {
-        this.keyLength = keyLength;
-        start();
+        this(keyLength, null);
     }
 
     // KeyStore implementation -----------------------------------------------------------------------------------------
@@ -72,6 +86,12 @@ public class RandomKeyGenerator implements KeyStore
     @Override
     public String get()
     {
+        if (remainingKeys != null && remainingKeys.getAndDecrement() <= 0)
+        {
+            remainingKeys.set(0);
+            return null;
+        }
+
         //noinspection UnnecessaryLocalVariable
         String result = Util.getRandomKey(ThreadLocalRandom.current(), keyLength);
         return result;

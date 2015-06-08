@@ -20,6 +20,8 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 public class RandomKeyGeneratorTest
@@ -62,6 +64,31 @@ public class RandomKeyGeneratorTest
         log.info(s);
         assertEquals(keySize, s.length());
     }
+
+    @Test
+    public void get_maxKeys() throws Exception
+    {
+        int keySize = 10;
+        long maxKeys = 3;
+        RandomKeyGenerator rkg = new RandomKeyGenerator(keySize, maxKeys);
+
+        String s = rkg.get();
+        assertNotNull(s);
+        assertEquals(keySize, s.length());
+
+        s = rkg.get();
+        assertNotNull(s);
+
+        s = rkg.get();
+        assertNotNull(s);
+
+        s = rkg.get();
+        assertNull(s);
+
+        s = rkg.get();
+        assertNull(s);
+    }
+
 
     // Package protected -----------------------------------------------------------------------------------------------
 
