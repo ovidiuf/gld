@@ -20,6 +20,7 @@ import com.novaordis.gld.service.jms.Consumer;
 import com.novaordis.gld.service.jms.JmsEndpoint;
 import com.novaordis.gld.strategy.load.jms.Destination;
 import com.novaordis.gld.strategy.load.jms.ReceiveLoadStrategy;
+import org.apache.log4j.Logger;
 
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
@@ -28,6 +29,9 @@ import javax.jms.TextMessage;
 public class Receive extends JmsOperation
 {
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(Receive.class);
+    private static final boolean trace = log.isTraceEnabled();
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -62,12 +66,16 @@ public class Receive extends JmsOperation
             m = jmsConsumer.receive(timeoutMs);
         }
 
-        //System.out.println(m.getJMSMessageID());
-
-        if (m instanceof TextMessage)
+        if (trace)
         {
-            String payload = ((TextMessage)m).getText();
-            System.out.println(payload.length() + ": " + payload);
+            String messageID = m.getJMSMessageID();
+            String textPayload = null;
+            if (m instanceof TextMessage)
+            {
+                textPayload = ((TextMessage)m).getText();
+            }
+
+            log.trace(messageID + ": " + (textPayload == null ? "0:null" : textPayload.length() + ":" + textPayload));
         }
     }
 

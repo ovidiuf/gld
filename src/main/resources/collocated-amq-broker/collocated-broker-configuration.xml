@@ -138,7 +138,7 @@
                                         aware of the number of the number of consumers connected to the stand alone
                                         broker and moves the bottleneck to the stand alone broker
                  Having 8 network connectors should increase the forwarding speed by 8x or something similar. -->
-            <amq:networkConnector name="one_connection_to_nob-_STARTPREFIXgld.collocated.activemq.broker.id_ENDSUFFIX"
+            <amq:networkConnector name="one_connection_to_nob_from-_STARTPREFIXgld.collocated.activemq.broker.id_ENDSUFFIX"
                                   uri="static:failover:(_STARTPREFIXgld.collocated.activemq.broker.target.nodes_ENDSUFFIX)?randomize=true&amp;maxReconnectAttempts=0"
                                   duplex="false"
                                   conduitSubscriptions="false"
@@ -149,7 +149,7 @@
                                   userName="admin"
                                   password="admin123"/>
 
-            <amq:networkConnector name="two_connection_to_nob-_STARTPREFIXgld.collocated.activemq.broker.id_ENDSUFFIX"
+            <amq:networkConnector name="two_connection_to_nob-from-_STARTPREFIXgld.collocated.activemq.broker.id_ENDSUFFIX"
                                   uri="static:failover:(_STARTPREFIXgld.collocated.activemq.broker.target.nodes_ENDSUFFIX)?randomize=true&amp;maxReconnectAttempts=0"
                                   duplex="false"
                                   conduitSubscriptions="false"
@@ -160,7 +160,7 @@
                                   userName="admin"
                                   password="admin123"/>
 
-            <amq:networkConnector name="three_connection_to_nob-_STARTPREFIXgld.collocated.activemq.broker.id_ENDSUFFIX"
+            <amq:networkConnector name="three_connection_to_nob-from-_STARTPREFIXgld.collocated.activemq.broker.id_ENDSUFFIX"
                                   uri="static:failover:(_STARTPREFIXgld.collocated.activemq.broker.target.nodes_ENDSUFFIX)?randomize=true&amp;maxReconnectAttempts=0"
                                   duplex="false"
                                   conduitSubscriptions="false"
@@ -171,7 +171,7 @@
                                   userName="admin"
                                   password="admin123"/>
 
-            <amq:networkConnector name="four_connection_to_nob-_STARTPREFIXgld.collocated.activemq.broker.id_ENDSUFFIX"
+            <amq:networkConnector name="four_connection_to_nob-from-_STARTPREFIXgld.collocated.activemq.broker.id_ENDSUFFIX"
                                   uri="static:failover:(_STARTPREFIXgld.collocated.activemq.broker.target.nodes_ENDSUFFIX)?randomize=true&amp;maxReconnectAttempts=0"
                                   duplex="false"
                                   conduitSubscriptions="false"

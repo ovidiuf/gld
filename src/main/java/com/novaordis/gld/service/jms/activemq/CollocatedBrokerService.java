@@ -21,7 +21,7 @@ import com.novaordis.gld.ContentType;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.UserErrorException;
-import com.novaordis.gld.operations.jms.JmsOperation;
+import com.novaordis.gld.operations.jms.Send;
 import com.novaordis.utilities.Files;
 import org.apache.log4j.Logger;
 import org.springframework.context.support.GenericXmlApplicationContext;
@@ -67,6 +67,7 @@ public class CollocatedBrokerService implements com.novaordis.gld.Service
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(CollocatedBrokerService.class);
+    private static final boolean trace = log.isTraceEnabled();
 
     public static final String DEFAULT_LOCAL_DIRECTORY = "/tmp/gld";
     public static final String DEFAULT_BROKER_ID = "gld.0";
@@ -163,7 +164,7 @@ public class CollocatedBrokerService implements com.novaordis.gld.Service
             {
                 if (i == commandLineArguments.size() - 1)
                 {
-                    throw new UserErrorException("a value must follow after --directory");
+                    throw new UserErrorException("a value must follow after --broker-id");
                 }
 
                 commandLineArguments.remove(i);
@@ -235,23 +236,33 @@ public class CollocatedBrokerService implements com.novaordis.gld.Service
             throw new IllegalStateException(this + " not started");
         }
 
-        if (!(o instanceof JmsOperation))
+        if (!(o instanceof Send))
         {
-            throw new IllegalArgumentException(o + " is not a JMS operation");
+            throw new IllegalArgumentException(o + " is not a Send operation");
         }
 
-        log.debug(this + " performing " + o);
+        Send send = (Send)o;
+        final String payload = send.getPayload();
+
+        if (trace) { log.trace(this + " performing " + send); }
 
         // figure what session to use based on the current policy in place
-        final JmsOperation jmsOperation = (JmsOperation)o;
-        String destinationName = jmsOperation.getDestination().getName();
+        String destinationName = send.getDestination().getName();
 
         jmsTemplate.send(destinationName, new MessageCreator()
         {
             @Override
             public Message createMessage(final Session session) throws JMSException
             {
-                return session.createTextMessage();
+                if (payload == null)
+                {
+                    return session.createTextMessage();
+                }
+                else
+                {
+                    return session.createTextMessage(payload);
+                }
+
             }
         });
     }

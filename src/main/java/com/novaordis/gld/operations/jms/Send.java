@@ -19,6 +19,7 @@ package com.novaordis.gld.operations.jms;
 import com.novaordis.gld.service.jms.JmsEndpoint;
 import com.novaordis.gld.service.jms.Producer;
 import com.novaordis.gld.strategy.load.jms.SendLoadStrategy;
+import org.apache.log4j.Logger;
 
 import javax.jms.MessageProducer;
 import javax.jms.Session;
@@ -27,6 +28,9 @@ import javax.jms.TextMessage;
 public class Send extends JmsOperation
 {
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(Send.class);
+    private static final boolean trace = log.isTraceEnabled();
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -57,10 +61,20 @@ public class Send extends JmsOperation
 
         TextMessage m = session.createTextMessage(payload);
 
+        if (trace) { log.trace("sending message with payload \"" + payload + "\""); }
+
         jmsProducer.send(m);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    /**
+     * May be null.
+     */
+    public String getPayload()
+    {
+        return payload;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

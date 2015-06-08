@@ -244,8 +244,8 @@
             <!-- 
                This one does not work.
             -->
-            <!-- <version>5.9.0.redhat-611423</version> -->
-            <version>5.9.0.redhat-610379</version>
+            <version>5.9.0.redhat-611423</version>
+            <!-- <version>5.9.0.redhat-610379</version> -->
         </dependency>
 
         <!--

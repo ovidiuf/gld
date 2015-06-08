@@ -160,7 +160,6 @@ public class SingleThreadedRunner implements Runnable
 
         while (running)
         {
-
             Operation op = loadStrategy.next(lastOperation, lastWrittenKey);
 
             if (op == null)
@@ -197,6 +196,8 @@ public class SingleThreadedRunner implements Runnable
             {
                 t1 = System.nanoTime();
                 ex = e;
+
+                log.info("operation failed: " + e.getMessage(), e);
             }
             finally
             {
