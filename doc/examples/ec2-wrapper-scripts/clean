@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Clean logs and statistics.
+#
+
+rm ~/*.csv && echo "all *.csv files removed"
+rm ~/*.log && echo "all *.log files removed"

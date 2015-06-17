@@ -1,17 +1,32 @@
 #!/bin/bash
-#
-# https://github.com/NovaOrdis/gld/blob/master/doc/examples/ec2-wrapper-scripts/common
-#
+
+foreground=false
+while [ -n "$1" ]; do
+    if [ "$1" = "--foreground" ]; then
+        foreground=true
+    fi
+    shift
+done
 
 if [ "${LOAD_STRATEGY}" = "send" ]; then
 
     [ -z "${MESSAGES}" ] && { echo "the number of messages to send is not defined, use export MESSAGES=... in the wrapper script" 1>&2; exit 1; }
+    [ -z "${MESSAGE_SIZE}" ] && { echo "the message size is not defined, use export MESSAGE_SIZE=... in the wrapper script" 1>&2; exit 1; }
+    [ -z "${SLEEP}" ] && SLEEP=-1 # no sleep
 
-    load_strategy_specific_configuration="--service com.novaordis.gld.service.jms.activemq.CollocatedBrokerService --memoryUsage 1GB --max-operations ${MESSAGES}"
+    load_strategy_specific_configuration="\
+--service com.novaordis.gld.service.jms.activemq.CollocatedBrokerService \
+--memoryUsage 1GB \
+--broker-id $(uname -n) \
+--max-operations ${MESSAGES} \
+--payload-size ${MESSAGE_SIZE} \
+--sleep ${SLEEP}"
+    output_file_name=produce.csv
 
 elif [ "${LOAD_STRATEGY}" = "receive" ]; then
 
     load_strategy_specific_configuration="--service activemq"
+    output_file_name=consume.csv
 
 else
     echo "unknown strategy '${LOAD_STRATEGY}'" 1>&2; exit 1
@@ -25,15 +40,21 @@ fi
 [ -z "${NODES}" ] && { echo "the target broker nodes is not defined, use export NODES=... in the wrapper script" 1>&2; exit 1; }
 [ -z "${QUEUE}" ] && { echo "the target queue is not defined, use export QUEUE=... in the wrapper script" 1>&2; exit 1; }
 
-output=/home/ec2-user/${LOAD_STRATEGY}.csv
+output=/home/ec2-user/${output_file_name}
+
+if ${foreground}; then
+    foreground_or_background="--foreground"
+else
+    foreground_or_background="--background"
+fi
 
 gld load \
---background \
+${foreground_or_background} \
 --load-strategy ${LOAD_STRATEGY} ${load_strategy_specific_configuration} \
 --threads ${THREADS} \
 --nodes "${NODES}" \
 --queue ${QUEUE} \
 --username admin \
 --password admin123 \
---output ${output}
+--output ${output} 
 
