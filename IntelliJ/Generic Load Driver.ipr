@@ -24,6 +24,12 @@
         <processorPath useClasspath="true" />
         <module name="Cache Load Driver" />
         <module name="cld" />
+      </profile>
+      <profile default="false" name="Annotation profile for gld" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
         <module name="gld" />
       </profile>
     </annotationProcessing>
@@ -263,26 +269,15 @@
         <root url="jar://$MAVEN_REPOSITORY$/com/novaordis/utilities/novaordis-utilities/1.0/novaordis-utilities-1.0-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: commons-logging:commons-logging:1.2">
+    <library name="Maven: commons-logging:commons-logging:1.0.3">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.2/commons-logging-1.2.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.0.3/commons-logging-1.0.3.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.2/commons-logging-1.2-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.0.3/commons-logging-1.0.3-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.2/commons-logging-1.2-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: commons-pool:commons-pool:1.6.redhat-6">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/commons-pool/commons-pool/1.6.redhat-6/commons-pool-1.6.redhat-6.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/commons-pool/commons-pool/1.6.redhat-6/commons-pool-1.6.redhat-6-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/commons-pool/commons-pool/1.6.redhat-6/commons-pool-1.6.redhat-6-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.0.3/commons-logging-1.0.3-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: javax.jms:jms:1.1">
@@ -318,15 +313,15 @@
         <root url="jar://$MAVEN_REPOSITORY$/log4j/log4j/1.2.14/log4j-1.2.14-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.apache.activemq:activemq-all:5.10.1">
+    <library name="Maven: org.apache.activemq:activemq-all:5.9.0.redhat-611423">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/apache/activemq/activemq-all/5.10.1/activemq-all-5.10.1.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/activemq/activemq-all/5.9.0.redhat-611423/activemq-all-5.9.0.redhat-611423.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/apache/activemq/activemq-all/5.10.1/activemq-all-5.10.1-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/activemq/activemq-all/5.9.0.redhat-611423/activemq-all-5.9.0.redhat-611423-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/apache/activemq/activemq-all/5.10.1/activemq-all-5.10.1-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/activemq/activemq-all/5.9.0.redhat-611423/activemq-all-5.9.0.redhat-611423-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.apache.activemq:activemq-client:5.10.1">
@@ -352,37 +347,15 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-pool2/2.2/commons-pool2-2.2-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:1.0.1">
+    <library name="Maven: org.apache.xbean:xbean-spring:3.6">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/apache/geronimo/specs/geronimo-j2ee-management_1.1_spec/1.0.1/geronimo-j2ee-management_1.1_spec-1.0.1.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/xbean/xbean-spring/3.6/xbean-spring-3.6.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/apache/geronimo/specs/geronimo-j2ee-management_1.1_spec/1.0.1/geronimo-j2ee-management_1.1_spec-1.0.1-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/xbean/xbean-spring/3.6/xbean-spring-3.6-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/apache/geronimo/specs/geronimo-j2ee-management_1.1_spec/1.0.1/geronimo-j2ee-management_1.1_spec-1.0.1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1.1/geronimo-jms_1.1_spec-1.1.1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1.1/geronimo-jms_1.1_spec-1.1.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1.1/geronimo-jms_1.1_spec-1.1.1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.fusesource.hawtbuf:hawtbuf:1.10">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/fusesource/hawtbuf/hawtbuf/1.10/hawtbuf-1.10.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/fusesource/hawtbuf/hawtbuf/1.10/hawtbuf-1.10-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/fusesource/hawtbuf/hawtbuf/1.10/hawtbuf-1.10-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/xbean/xbean-spring/3.6/xbean-spring-3.6-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.hamcrest:hamcrest-core:1.3">
@@ -405,72 +378,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/infinispan/infinispan-client-hotrod/6.1.2.Final-redhat-1/infinispan-client-hotrod-6.1.2.Final-redhat-1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.infinispan:infinispan-commons:6.1.2.Final-redhat-1">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/infinispan/infinispan-commons/6.1.2.Final-redhat-1/infinispan-commons-6.1.2.Final-redhat-1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/infinispan/infinispan-commons/6.1.2.Final-redhat-1/infinispan-commons-6.1.2.Final-redhat-1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/infinispan/infinispan-commons/6.1.2.Final-redhat-1/infinispan-commons-6.1.2.Final-redhat-1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.jboss.logging:jboss-logging:3.1.2.GA-redhat-1">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/jboss/logging/jboss-logging/3.1.2.GA-redhat-1/jboss-logging-3.1.2.GA-redhat-1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/jboss/logging/jboss-logging/3.1.2.GA-redhat-1/jboss-logging-3.1.2.GA-redhat-1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/jboss/logging/jboss-logging/3.1.2.GA-redhat-1/jboss-logging-3.1.2.GA-redhat-1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.jboss.marshalling:jboss-marshalling-river:1.4.5.Final-redhat-1">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/jboss/marshalling/jboss-marshalling-river/1.4.5.Final-redhat-1/jboss-marshalling-river-1.4.5.Final-redhat-1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/jboss/marshalling/jboss-marshalling-river/1.4.5.Final-redhat-1/jboss-marshalling-river-1.4.5.Final-redhat-1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/jboss/marshalling/jboss-marshalling-river/1.4.5.Final-redhat-1/jboss-marshalling-river-1.4.5.Final-redhat-1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.jboss.marshalling:jboss-marshalling:1.4.5.Final-redhat-1">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/jboss/marshalling/jboss-marshalling/1.4.5.Final-redhat-1/jboss-marshalling-1.4.5.Final-redhat-1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/jboss/marshalling/jboss-marshalling/1.4.5.Final-redhat-1/jboss-marshalling-1.4.5.Final-redhat-1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/jboss/marshalling/jboss-marshalling/1.4.5.Final-redhat-1/jboss-marshalling-1.4.5.Final-redhat-1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.osgi:org.osgi.compendium:4.3.1">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/osgi/org.osgi.compendium/4.3.1/org.osgi.compendium-4.3.1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/osgi/org.osgi.compendium/4.3.1/org.osgi.compendium-4.3.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/osgi/org.osgi.compendium/4.3.1/org.osgi.compendium-4.3.1-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: org.osgi:org.osgi.core:4.3.1">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/osgi/org.osgi.core/4.3.1/org.osgi.core-4.3.1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/osgi/org.osgi.core/4.3.1/org.osgi.core-4.3.1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/osgi/org.osgi.core/4.3.1/org.osgi.core-4.3.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.slf4j:slf4j-api:1.7.6">
