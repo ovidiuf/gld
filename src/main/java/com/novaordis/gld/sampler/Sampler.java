@@ -20,7 +20,6 @@ import com.novaordis.gld.Operation;
 import com.novaordis.gld.sampler.metrics.Metric;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * A fixed-interval sampler. Once started, the sampler will continuously and regularly produce samples each

@@ -73,8 +73,14 @@ public abstract class SamplerTest
         Counter counter = sampler.registerOperation(MockOperation.class);
         assertNotNull(counter);
 
+        assertTrue(sampler.getConsumers().isEmpty());
+
         MockSamplingConsumer msc = new MockSamplingConsumer();
         assertTrue(sampler.registerConsumer(msc));
+
+        List<SamplingConsumer> consumer = sampler.getConsumers();
+        assertEquals(1, consumer.size());
+        assertEquals(msc, consumer.get(0));
 
         long testSamplingTaskRunInterval = 250L;
         sampler.setSamplingTaskRunIntervalMs(testSamplingTaskRunInterval);
