@@ -244,6 +244,13 @@
             <!-- <version>5.9.0.redhat-610379</version> -->
             <version>5.9.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-pool</artifactId>
+            <version>5.9.0</version>
+        </dependency>
+
         <!--
             END OF Spring/Embedded ActiveMQ Dependencies
         -->

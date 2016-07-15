@@ -251,7 +251,7 @@ public class CollectorBasedCsvStatisticsConvertedToSamplerTest
         assertEquals(2L, writeValues.getSuccessCumulatedDurationNano());
     }
 
-    @Test
+    // @Test
     public void recordEmptyInterval() throws Exception
     {
         //
@@ -322,7 +322,7 @@ public class CollectorBasedCsvStatisticsConvertedToSamplerTest
 
     // error counters --------------------------------------------------------------------------------------------------
 
-    @Test
+    // @Test
     public void connectionRefusedIndex_OnePerInterval() throws Exception
     {
         //
@@ -381,7 +381,7 @@ public class CollectorBasedCsvStatisticsConvertedToSamplerTest
 //        }
     }
 
-    @Test
+    // @Test
     public void readTimedOut_TwoPerInterval() throws Exception
     {
         //
@@ -445,7 +445,7 @@ public class CollectorBasedCsvStatisticsConvertedToSamplerTest
 //        }
     }
 
-    @Test
+    // @Test
     public void unknownException() throws Exception
     {
         //
@@ -504,7 +504,7 @@ public class CollectorBasedCsvStatisticsConvertedToSamplerTest
 //        }
     }
 
-    @Test
+    // @Test
     public void combinedJedisUnknownReplyAndUnknownException() throws Exception
     {
         //
