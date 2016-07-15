@@ -25,6 +25,13 @@
     <packaging>jar</packaging>
     <version>1.0.1</version>
 
+    <repositories>
+        <repository>
+            <id>jboss-datagrid-6.5.1-maven-repository</id>
+            <url>file:///Users/ovidiu/runtime/jboss-datagrid-6.5.1-maven-repository</url>
+        </repository>
+    </repositories>
+
     <properties>
         <java.version>1.7</java.version>
         <test.scratch.directory>target/test-scratch</test.scratch.directory>
@@ -149,27 +156,24 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>2.6.0</version>
-        </dependency>
-
-
-        <!-- JBoss Data Grid 6.2.1 dependency -->
         <!--
-        <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-client-hotrod</artifactId>
-            <version>6.0.3.Final-redhat-3</version>
-        </dependency>
+            JBoss Data Grid
         -->
 
         <!-- JBoss Data Grid 6.3.2 dependency -->
         <dependency>
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-client-hotrod</artifactId>
-            <version>6.1.2.Final-redhat-1</version>
+            <version>6.3.1.Final-redhat-1</version>
+        </dependency>
+
+        <!--
+            redis
+        -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.6.0</version>
         </dependency>
 
         <!--
@@ -180,41 +184,34 @@
             <artifactId>jms</artifactId>
             <version>1.1</version>
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.6</version>
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.6</version>
         </dependency>
-
         <!--
             These dependencies are introduced by Spring and Embedded ActiveMQ
         -->
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>4.1.6.RELEASE</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jms</artifactId>
             <version>4.1.6.RELEASE</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.xbean</groupId>
             <artifactId>xbean-spring</artifactId>
             <version>3.6</version>
         </dependency>
-
         <!--
            This is needed when we *don't* embed the broker.
         -->
@@ -225,11 +222,9 @@
             <version>5.10.1</version>
         </dependency>
         -->
-
         <!--
             This is needed by org.apache.activemq.xbean.PooledBrokerFactoryBean
         -->
-
         <!--
         <dependency>
             <groupId>org.apache.activemq</groupId>
@@ -237,17 +232,18 @@
             <version>5.10.1</version>
         </dependency>
         -->
-
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-all</artifactId>
             <!-- 
                This one does not work.
             -->
+            <!--
             <version>5.9.0.redhat-611423</version>
+            -->
             <!-- <version>5.9.0.redhat-610379</version> -->
+            <version>5.9.0</version>
         </dependency>
-
         <!--
             END OF Spring/Embedded ActiveMQ Dependencies
         -->
