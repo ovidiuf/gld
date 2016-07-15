@@ -31,7 +31,9 @@ import com.novaordis.gld.operations.cache.Write;
 import com.novaordis.gld.strategy.load.LoadStrategyBase;
 import com.novaordis.gld.strategy.storage.HierarchicalStorageStrategy;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -229,6 +231,17 @@ public class WriteThenReadLoadStrategy extends LoadStrategyBase
         indexInSeries = (indexInSeries + 1) % (seriesSize + 1);
 
         return o;
+    }
+
+    @Override
+    public Set<Class<? extends Operation>> getOperationTypes()
+    {
+        Set<Class<? extends Operation>> operations = new HashSet<>();
+
+        operations.add(Read.class);
+        operations.add(Write.class);
+
+        return operations;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
