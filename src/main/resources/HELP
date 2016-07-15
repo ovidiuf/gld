@@ -28,7 +28,7 @@ Global Options:
       testing.
 
     --statistics <csv|none>.  By default, the load driver produces CSV statistics.  Statistics can
-      be turned of by specifying 'node'.
+      be turned off by specifying 'none'.
 
     --username <username>
 
@@ -256,8 +256,4 @@ Load Strategies
                  --nodes node1.example.com:61616 --username admin --password admin123 \
                  --queue TEST --endpoint-policy REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION \
                  --max-operations 1
-
-Author:
-
-    Ovidiu Feodorov <ovidiu@novaordis.com>
 
