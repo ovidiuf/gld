@@ -24,8 +24,6 @@ Global Options:
 
 Commands:
 
-    install [-f|--force]
-
     release <info|snapshot|minor|major|patch|"version-string">
 
         If 'info' is used, returns the current version information.
@@ -53,6 +51,12 @@ Commands:
 
         --no-push - changes won't be pushed into the remote repository. Useful when the release
           process takes place offline. The changes will have to be manually pushed later.
+
+        --no-tests - won't run the test suite upon release. Not usually recommended, unless we're
+          releasing a snapshot.
+
+
+    install [-f|--force]
 
      test - internal release tools testing shortcut. Advanced users only.
 
@@ -1060,9 +1064,11 @@ function do-release() {
     # options:
     #
     #  --no-push
+    #  --no-tests
     #
 
     local do_push_option=true
+    local run_tests_option=true
 
     local i=0
     while [ ${i} -lt ${#arguments[*]} ]; do
@@ -1074,6 +1080,8 @@ function do-release() {
         if [ "${arg:0:2}" = "--" ]; then
             if [ "--no-push" = ${arg} ]; then
                 do_push_option=false
+            elif [ "--no-tests" = ${arg} ]; then
+                run_tests_option=false
             else
                 fail "unknown option: ${arg}"
             fi
@@ -1111,7 +1119,9 @@ function do-release() {
     # run the tests with the new version
     #
 
-    mvn clean test || fail "test suite failed after version increment, manual intervention required"
+    if ${run_tests_option}; then
+        mvn clean test || fail "test suite failed after version increment, manual intervention required"
+    fi
 
     #
     # tag repository
@@ -1146,10 +1156,15 @@ function do-release() {
     # If we release to LOCAL_MAVEN, we install
     #
 
+    local maven_testing_configuration=""
+    ! ${run_tests_option} &&  maven_testing_configuration="-Dmaven.test.skip=true"
+
     if is-local-maven-release; then
-        mvn clean install || fail "failed to pass tests, must restore the version in pom.xml to ${current_version} manually"
+        mvn ${maven_testing_configuration} clean install || \
+            fail "failed to pass tests, must restore the version in pom.xml to ${current_version} manually"
     else
-        mvn clean package || fail "failed to pass tests, must restore the version in pom.xml to ${current_version} manually"
+        mvn ${maven_testing_configuration} clean package || \
+            fail "failed to pass tests, must restore the version in pom.xml to ${current_version} manually"
         local release_zip_file_path
         release_zip_file_path=$(build-release-zip-file) || exit 1
         install-release ${release_zip_file_path}
