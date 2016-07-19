@@ -3,7 +3,7 @@
 reldir=$(dirname $0)
 home_dir=${reldir}/..
 verbose=false
-main_class=com.novaordis.gld.Main
+main_class=${main_class}
 memory=1024m
 
 function debug()
