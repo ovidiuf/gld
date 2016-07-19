@@ -30,7 +30,7 @@ public class Main
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    public static void main(String[] args) throws Exception
+    public static void deprecated_main(String[] args) throws Exception
     {
         Map<String, String> pairs = new HashMap<>();
         File f = new File(args[0]);
