@@ -19,9 +19,11 @@ package com.novaordis.gld;
 public interface Operation
 {
     /**
-     * We must strictly limit the implementation of this method to invocation whose duration we measure. Everything
+     * We must strictly limit the implementation of this method to invocations whose duration we measure. Everything
      * else, especially time consuming tasks that are irrelevant to what we measure, must be performed outside this
      * method.
+     *
+     * @exception IllegalArgumentException if we get an invalid or inappropriate service instance.
      */
     void perform(Service s) throws Exception;
 

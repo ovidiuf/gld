@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,89 +14,51 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.load;
+package com.novaordis.gld.strategy.load.cache.http.operations;
 
-import com.novaordis.gld.Configuration;
-import com.novaordis.gld.KeyStore;
 import com.novaordis.gld.LoadStrategy;
+import com.novaordis.gld.Service;
+import com.novaordis.gld.service.cache.infinispan.InfinispanService;
 
-import java.util.List;
+/**
+ * The GLD operation that simulates a HTTP session invalidation.
+ *
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 7/21/16
+ */
+public class Invalidate extends HttpSessionOperation {
 
-public abstract class LoadStrategyBase implements LoadStrategy
-{
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Configuration configuration;
-    private KeyStore keyStore;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // LoadStrategy implementation -------------------------------------------------------------------------------------
-
-    /**
-     * @see com.novaordis.gld.LoadStrategy#configure(Configuration, List, int)
-     */
-    @Override
-    public void configure(Configuration configuration, List<String> arguments, int from) throws Exception
-    {
-        if (configuration == null)
-        {
-            throw new IllegalArgumentException("null configuration");
-        }
-
-        this.configuration = configuration;
-
-        if (arguments == null)
-        {
-            // null arguments list means there are no more arguments
-            return;
-        }
-
-        if (!arguments.isEmpty() && (from < 0 || from >= arguments.size()))
-        {
-            throw new ArrayIndexOutOfBoundsException("invalid array index: " + from);
-        }
-
+    public Invalidate(String sessionId) {
+        super(sessionId);
     }
 
+    // Operation implementation ----------------------------------------------------------------------------------------
+
     @Override
-    public String getName()
-    {
-        String s = getClass().getSimpleName();
-
-        if (s.endsWith("LoadStrategy"))
-        {
-            s = s.substring(0, s.length() - "LoadStrategy".length());
-        }
-
-        return s;
+    public LoadStrategy getLoadStrategy() {
+        throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
     }
 
+    // HttpSessionOperation overrides ----------------------------------------------------------------------------------
+
     @Override
-    public KeyStore getKeyStore()
-    {
-        return keyStore;
+    public void performInternal(InfinispanService is) throws Exception {
+        throw new RuntimeException("NYE");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public Configuration getConfiguration()
-    {
-        return configuration;
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    protected void setKeyStore(KeyStore keyStore)
-    {
-        this.keyStore = keyStore;
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

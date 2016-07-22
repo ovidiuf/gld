@@ -911,7 +911,7 @@ public class ConfigurationImpl implements Configuration
             }
             else
             {
-                throw new UserErrorException("unknown content type: " + contentType);
+                throw new UserErrorException("unknown content type: " + contentType + ", use --service");
             }
         }
 

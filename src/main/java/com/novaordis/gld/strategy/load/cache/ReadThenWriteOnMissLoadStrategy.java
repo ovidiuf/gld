@@ -29,6 +29,7 @@ import com.novaordis.gld.strategy.load.LoadStrategyBase;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * A load strategy that generates the following sequence: it first attempts a read. If it's a hit, it keeps reading.
@@ -144,6 +145,11 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase
         }
 
         return result;
+    }
+
+    @Override
+    public Set<Class<? extends Operation>> getOperationTypes() {
+        throw new RuntimeException("getOperationTypes() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

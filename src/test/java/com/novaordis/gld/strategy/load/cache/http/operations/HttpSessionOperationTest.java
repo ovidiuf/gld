@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,19 +14,25 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.load.cache;
+package com.novaordis.gld.strategy.load.cache.http.operations;
 
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.strategy.load.LoadStrategyBase;
+import com.novaordis.gld.MockService;
+import com.novaordis.gld.Service;
+import org.apache.log4j.Logger;
+import org.junit.Test;
 
-import java.util.Set;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
- * Use for testing only.
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 7/21/16
  */
-public class FailureToInstantiateLoadStrategy extends LoadStrategyBase
-{
+public abstract class HttpSessionOperationTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(HttpSessionOperationTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -34,31 +40,36 @@ public class FailureToInstantiateLoadStrategy extends LoadStrategyBase
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    /**
-     * The only constructor requires an argument, so the no-argument instantiation attempt will fail.
-     */
-    public FailureToInstantiateLoadStrategy(String s)
-    {
-    }
-
-    // LoadStrategy implementation -------------------------------------------------------------------------------------
-
-    @Override
-    public Operation next(Operation lastOperation, String lastWrittenKey)
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Set<Class<? extends Operation>> getOperationTypes() {
-        throw new RuntimeException("getOperationTypes() NOT YET IMPLEMENTED");
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void sessionId() throws Exception {
+
+        HttpSessionOperation o = getOperationToTest("blah");
+        assertEquals("blah", o.getSessionId());
+    }
+
+    @Test
+    public void perform_NotAnInfinispanService() throws Exception {
+
+        HttpSessionOperation o = getOperationToTest("blah");
+
+        Service s = new MockService();
+
+        try {
+            o.perform(s);
+            fail("should throw Exception");
+        }
+        catch(IllegalArgumentException e) {
+            log.info(e.getMessage());
+        }
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected abstract HttpSessionOperation getOperationToTest(String sessionId) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

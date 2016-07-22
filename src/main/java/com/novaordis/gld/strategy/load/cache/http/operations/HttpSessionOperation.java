@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,51 +14,60 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.load.cache;
+package com.novaordis.gld.strategy.load.cache.http.operations;
 
 import com.novaordis.gld.Operation;
-import com.novaordis.gld.strategy.load.LoadStrategyBase;
-
-import java.util.Set;
+import com.novaordis.gld.Service;
+import com.novaordis.gld.service.cache.infinispan.InfinispanService;
 
 /**
- * Use for testing only.
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 7/21/16
  */
-public class FailureToInstantiateLoadStrategy extends LoadStrategyBase
-{
+public abstract class HttpSessionOperation implements Operation {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String sessionId;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    /**
-     * The only constructor requires an argument, so the no-argument instantiation attempt will fail.
-     */
-    public FailureToInstantiateLoadStrategy(String s)
-    {
+    protected HttpSessionOperation(String sessionId) {
+        this.sessionId = sessionId;
     }
 
-    // LoadStrategy implementation -------------------------------------------------------------------------------------
+    // Operation implementation ----------------------------------------------------------------------------------------
 
     @Override
-    public Operation next(Operation lastOperation, String lastWrittenKey)
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
+    public void perform(Service s) throws Exception {
 
-    @Override
-    public Set<Class<? extends Operation>> getOperationTypes() {
-        throw new RuntimeException("getOperationTypes() NOT YET IMPLEMENTED");
+        if (!(s instanceof InfinispanService)) {
+            throw new IllegalArgumentException("invalid service type " + s + ", we expect an InfinispanService");
+        }
+
+        performInternal((InfinispanService)s);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    @Override
+    public String toString() {
+        return sessionId;
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected abstract void performInternal(InfinispanService is) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

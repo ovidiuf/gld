@@ -44,7 +44,7 @@ public class InfinispanService implements CacheService
 
     private List<Node> nodes;
     private RemoteCacheManager remoteCacheManager;
-    private RemoteCache<String, String> cache;
+    private RemoteCache<String, Object> cache;
 
     private String cacheName;
 
@@ -135,7 +135,8 @@ public class InfinispanService implements CacheService
         }
         else
         {
-            this.cache = remoteCacheManager.getCache(cacheName);
+            RemoteCache<String, Object> underlyingCache = remoteCacheManager.getCache(cacheName);
+            setCache(underlyingCache);
         }
     }
 
@@ -165,7 +166,7 @@ public class InfinispanService implements CacheService
     public String get(String key) throws Exception
     {
         insureStarted();
-        return cache.get(key);
+        return (String)cache.get(key);
     }
 
     @Override
@@ -179,7 +180,7 @@ public class InfinispanService implements CacheService
     public String delete(String key) throws Exception
     {
         insureStarted();
-        return cache.remove(key);
+        return (String)cache.remove(key);
     }
 
     @Override
@@ -222,6 +223,10 @@ public class InfinispanService implements CacheService
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected void setCache(RemoteCache<String, Object> cache) {
+        this.cache = cache;
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

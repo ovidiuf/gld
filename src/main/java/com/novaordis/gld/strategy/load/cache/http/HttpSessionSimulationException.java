@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.load.cache;
-
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.strategy.load.LoadStrategyBase;
-
-import java.util.Set;
+package com.novaordis.gld.strategy.load.cache.http;
 
 /**
- * Use for testing only.
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 7/21/16
  */
-public class FailureToInstantiateLoadStrategy extends LoadStrategyBase
-{
+public class HttpSessionSimulationException extends Exception {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
@@ -34,24 +30,8 @@ public class FailureToInstantiateLoadStrategy extends LoadStrategyBase
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    /**
-     * The only constructor requires an argument, so the no-argument instantiation attempt will fail.
-     */
-    public FailureToInstantiateLoadStrategy(String s)
-    {
-    }
-
-    // LoadStrategy implementation -------------------------------------------------------------------------------------
-
-    @Override
-    public Operation next(Operation lastOperation, String lastWrittenKey)
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Set<Class<? extends Operation>> getOperationTypes() {
-        throw new RuntimeException("getOperationTypes() NOT YET IMPLEMENTED");
+    public HttpSessionSimulationException(String message) {
+        super(message);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

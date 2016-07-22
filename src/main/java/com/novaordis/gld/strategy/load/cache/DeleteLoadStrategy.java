@@ -124,6 +124,11 @@ public class DeleteLoadStrategy extends LoadStrategyBase
         return new Delete(key);
     }
 
+    @Override
+    public Set<Class<? extends Operation>> getOperationTypes() {
+        throw new RuntimeException("getOperationTypes() NOT YET IMPLEMENTED");
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     public int getKeyCount()
