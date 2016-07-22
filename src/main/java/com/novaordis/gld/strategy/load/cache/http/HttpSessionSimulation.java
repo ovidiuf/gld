@@ -43,6 +43,8 @@ public class HttpSessionSimulation {
 
     public static final int DEFAULT_SESSION_ID_LENGTH = 18;
 
+    public static final int DEFAULT_WRITE_COUNT = 10;
+
     private static final char[] SESSION_ID_ALPHABET =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-_".toCharArray();
 
@@ -69,6 +71,9 @@ public class HttpSessionSimulation {
             throw new IllegalStateException("instance already associated with the current thread");
         }
 
+        //
+        // just create the instance and associate it with the thread, it will be configured by the caller
+        //
         HttpSessionSimulation instance = new HttpSessionSimulation();
         threadLocal.set(instance);
         return instance;
@@ -142,24 +147,34 @@ public class HttpSessionSimulation {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
-     * Package protected for testing. The default way to get HttpSessionSimulation is through thread local utilities.
+     * The default way to create HttpSessionSimulation is through thread local utilities.
      *
      * @see HttpSessionSimulation#getCurrentInstance()
      * @see HttpSessionSimulation#initializeInstance()
      */
-    HttpSessionSimulation() {
+    public HttpSessionSimulation() {
+
+        this(null);
+    }
+
+    public HttpSessionSimulation(String sessionId) {
 
         random = new Random();
+        this.sessionId = sessionId;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public String getSessionId() {
+        return sessionId;
+    }
 
     public HttpSessionOperation next() {
 
         if (sessionId == null) {
 
             this.sessionId = generateSessionId(random);
-            return new HttpSessionCreate(sessionId);
+            return new HttpSessionCreate(this);
         }
 
         //
@@ -169,10 +184,10 @@ public class HttpSessionSimulation {
         if (remainingWrites > 0) {
 
             remainingWrites --;
-            return new HttpSessionWrite(sessionId);
+            return new HttpSessionWrite(this);
         }
 
-        return new HttpSessionInvalidate(sessionId);
+        return new HttpSessionInvalidate(this);
     }
 
     /**

@@ -20,6 +20,7 @@ import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.Service;
 import com.novaordis.gld.service.cache.infinispan.InfinispanService;
+import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
 import org.infinispan.client.hotrod.RemoteCache;
 
 /**
@@ -34,12 +35,12 @@ public abstract class HttpSessionOperation implements Operation {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String sessionId;
+    private HttpSessionSimulation httpSession;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    protected HttpSessionOperation(String sessionId) {
-        this.sessionId = sessionId;
+    protected HttpSessionOperation(HttpSessionSimulation httpSession) {
+        this.httpSession = httpSession;
     }
 
     // Operation implementation ----------------------------------------------------------------------------------------
@@ -67,12 +68,21 @@ public abstract class HttpSessionOperation implements Operation {
     // Public ----------------------------------------------------------------------------------------------------------
 
     public String getSessionId() {
-        return sessionId;
+
+        if (httpSession == null) {
+            return null;
+        }
+
+        return httpSession.getSessionId();
+    }
+
+    public HttpSessionSimulation getHttpSession() {
+        return httpSession;
     }
 
     @Override
     public String toString() {
-        return sessionId;
+        return getSessionId();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

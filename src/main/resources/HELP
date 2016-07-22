@@ -14,10 +14,10 @@ Usage:
 Global Options:
 
     --service <service-type> Defines the service provider type. You can use either one of the
-      pre-defined values ("infinispan", "activemq", etc.) or a fully qualified class name of a class
-      available in the class path and that implements com.novaordis.gld.Service. The default  load
-      strategy for caches is "WriteThenRead" and for JMS load is "Send".  More details about  load
-      strategies can be found below under the "Load Strategies" section.
+      pre-defined values  ("infinispan",  "activemq", etc.)  or a fully qualified  class name of a
+      class available in the class path and that implements com.novaordis.gld.Service. The default
+      load strategy for caches is "WriteThenRead" and for JMS load is "Send".   More details about
+      load strategies can be found below under the "Load Strategies" section.
 
     --nodes <node1:port1,node2:port2,...>    The list of  host:port values for the backend service
       nodes to send requests into. There is no default, the node list must be explicitly specified.
@@ -109,7 +109,9 @@ Commands:
         --load-strategy <strategy-name> - the name of the load strategy.  The load driver searches
             its classpath for a class  with the same name,  which must implement  the LoadStrategy
             interface.   For a list of available strategies,  see "Load Strategies" section below.
-            If not specified the default strategy is "WriteThenRead".
+            If not specified the default strategy is  "WriteThenRead".  Different  load strategies
+            may have specific configuration options,  which are described in the "Load Strategies"
+            section.
 
         --threads <thread-count>  -  the number of threads to send concurrent operations.  Default
             value 1.
@@ -208,9 +210,19 @@ Load Strategies
 
         Delete
 
-            This strategy can be used to read a number of keys from the cache and then distribute them
-            to concurrent threads to be deleted. It is the underlying strategy used by the "delete"
-            command, but it can also be used with the "load" command (and --load-strategy Delete qualifier).
+            This strategy can be used to read a number of keys  from the cache and then distribute
+            them to concurrent threads  to be deleted.  It is the underlying strategy  used by the
+            "delete" command, but it can also be used with the "load" command (and --load-strategy
+            Delete qualifier).
+
+        HttpSession
+
+            This  load strategy  simulates  the interaction  between  a HTTP session manager and a
+            cache. Specific configuration options:
+
+            --write-count <integer> - the number of attribute writes to execute after the creation
+              of the session and before the session is invalidated. The default value is 10.
+
 
      JMS
 

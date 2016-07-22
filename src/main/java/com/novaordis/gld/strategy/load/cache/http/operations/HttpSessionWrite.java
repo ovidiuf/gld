@@ -17,6 +17,7 @@
 package com.novaordis.gld.strategy.load.cache.http.operations;
 
 import com.novaordis.gld.strategy.load.cache.http.DistributedSessionMetadataSimulation;
+import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
 import org.infinispan.client.hotrod.RemoteCache;
 
 import java.util.HashMap;
@@ -38,8 +39,8 @@ public class HttpSessionWrite extends HttpSessionOperation {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public HttpSessionWrite(String sessionId) {
-        super(sessionId);
+    public HttpSessionWrite(HttpSessionSimulation httpSession) {
+        super(httpSession);
     }
 
     // HttpSessionOperation overrides ----------------------------------------------------------------------------------

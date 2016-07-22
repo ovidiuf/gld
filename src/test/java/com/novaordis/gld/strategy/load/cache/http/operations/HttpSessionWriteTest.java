@@ -17,6 +17,7 @@
 package com.novaordis.gld.strategy.load.cache.http.operations;
 
 import com.novaordis.gld.service.cache.infinispan.MockRemoteCache;
+import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
@@ -46,7 +47,7 @@ public class HttpSessionWriteTest extends HttpSessionOperationTest {
 
         String sessionId = "n723hf";
 
-        HttpSessionWrite w = getOperationToTest(sessionId);
+        HttpSessionWrite w = getOperationToTest(new HttpSessionSimulation(sessionId));
 
         MockRemoteCache mrc = new MockRemoteCache();
 
@@ -71,9 +72,9 @@ public class HttpSessionWriteTest extends HttpSessionOperationTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected HttpSessionWrite getOperationToTest(String sessionId) throws Exception {
+    protected HttpSessionWrite getOperationToTest(HttpSessionSimulation s) throws Exception {
 
-        return new HttpSessionWrite(sessionId);
+        return new HttpSessionWrite(s);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

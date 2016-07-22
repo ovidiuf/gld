@@ -16,6 +16,7 @@
 
 package com.novaordis.gld.strategy.load.cache.http.operations;
 
+import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
 import org.infinispan.client.hotrod.RemoteCache;
 
 /**
@@ -34,8 +35,8 @@ public class HttpSessionInvalidate extends HttpSessionOperation {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public HttpSessionInvalidate(String sessionId) {
-        super(sessionId);
+    public HttpSessionInvalidate(HttpSessionSimulation httpSession) {
+        super(httpSession);
     }
 
     // HttpSessionOperation overrides ----------------------------------------------------------------------------------

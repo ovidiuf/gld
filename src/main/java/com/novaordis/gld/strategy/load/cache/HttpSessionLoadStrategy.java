@@ -23,6 +23,7 @@ import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionCreate;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionOperation;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionInvalidate;
+import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionWrite;
 
 import java.util.HashSet;
 import java.util.List;
@@ -42,7 +43,14 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private int writeCount;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public HttpSessionLoadStrategy() {
+
+        this.writeCount = HttpSessionSimulation.DEFAULT_WRITE_COUNT;
+    }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
 
@@ -53,6 +61,17 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
     public void configure(Configuration conf, List<String> arguments, int from) throws Exception
     {
         super.configure(conf, arguments, from);
+
+        for(int i = from; i < arguments.size(); i ++) {
+
+            String crt = arguments.get(i);
+
+            if ("--write-count".equals(crt)) {
+
+                arguments.remove(i);
+                writeCount = Integer.parseInt(arguments.remove(i));
+            }
+        }
 
 //        int keySize = conf.getKeySize();
 //        int valueSize = conf.getValueSize();
@@ -87,6 +106,12 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
         if (s == null) {
 
             s = HttpSessionSimulation.initializeInstance();
+
+            //
+            // configure it
+            //
+
+            s.setWriteCount(getWriteCount());
         }
 
         HttpSessionOperation o = s.next();
@@ -104,11 +129,17 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
 
         Set<Class<? extends Operation>> operations = new HashSet<>();
         operations.add(HttpSessionCreate.class);
+        operations.add(HttpSessionWrite.class);
         operations.add(HttpSessionInvalidate.class);
         return operations;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public int getWriteCount() {
+
+        return writeCount;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

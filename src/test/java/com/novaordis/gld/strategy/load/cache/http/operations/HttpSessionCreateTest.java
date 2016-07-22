@@ -17,6 +17,7 @@
 package com.novaordis.gld.strategy.load.cache.http.operations;
 
 import com.novaordis.gld.service.cache.infinispan.MockRemoteCache;
+import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
 import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulationException;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -46,7 +47,7 @@ public class HttpSessionCreateTest extends HttpSessionOperationTest {
     @Test
     public void create_SessionIdAlreadyExists() throws Exception {
 
-        HttpSessionCreate c = getOperationToTest("blah");
+        HttpSessionCreate c = getOperationToTest(new HttpSessionSimulation("blah"));
 
         MockRemoteCache mrc = new MockRemoteCache();
 
@@ -70,7 +71,7 @@ public class HttpSessionCreateTest extends HttpSessionOperationTest {
 
         String sessionId = "m3gys5";
 
-        HttpSessionCreate c = getOperationToTest(sessionId);
+        HttpSessionCreate c = getOperationToTest(new HttpSessionSimulation(sessionId));
 
         MockRemoteCache mrc = new MockRemoteCache();
 
@@ -93,9 +94,9 @@ public class HttpSessionCreateTest extends HttpSessionOperationTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected HttpSessionCreate getOperationToTest(String sessionId) throws Exception {
+    protected HttpSessionCreate getOperationToTest(HttpSessionSimulation s) throws Exception {
 
-        return new HttpSessionCreate(sessionId);
+        return new HttpSessionCreate(s);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

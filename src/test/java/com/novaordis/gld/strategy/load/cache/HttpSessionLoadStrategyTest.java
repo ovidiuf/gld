@@ -17,11 +17,17 @@
 package com.novaordis.gld.strategy.load.cache;
 
 import com.novaordis.gld.Operation;
+import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionCreate;
 import org.junit.After;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -64,6 +70,42 @@ public class HttpSessionLoadStrategyTest {
         assertNotNull(s2);
 
         assertTrue(o instanceof HttpSessionCreate);
+    }
+
+    // configuration ---------------------------------------------------------------------------------------------------
+
+    @Test
+    public void configuration_writeCount_Default() throws Exception {
+
+        HttpSessionLoadStrategy ls = new HttpSessionLoadStrategy();
+
+        assertEquals(HttpSessionSimulation.DEFAULT_WRITE_COUNT, ls.getWriteCount());
+
+        HttpSessionCreate c = (HttpSessionCreate)ls.next(null, null);
+
+        HttpSessionSimulation s = c.getHttpSession();
+
+        assertEquals(HttpSessionSimulation.DEFAULT_WRITE_COUNT, s.getWriteCount());
+    }
+
+    @Test
+    public void configuration_writeCount() throws Exception {
+
+        HttpSessionLoadStrategy ls = new HttpSessionLoadStrategy();
+
+        MockConfiguration mc = new MockConfiguration();
+
+        List<String> arguments = new ArrayList<>(Arrays.asList("--write-count", "7"));
+
+        ls.configure(mc, arguments, 0);
+
+        assertEquals(7, ls.getWriteCount());
+
+        HttpSessionCreate c = (HttpSessionCreate)ls.next(null, null);
+
+        HttpSessionSimulation s = c.getHttpSession();
+
+        assertEquals(7, s.getWriteCount());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

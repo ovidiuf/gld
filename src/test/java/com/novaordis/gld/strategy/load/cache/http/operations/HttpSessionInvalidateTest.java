@@ -17,6 +17,7 @@
 package com.novaordis.gld.strategy.load.cache.http.operations;
 
 import com.novaordis.gld.service.cache.infinispan.MockRemoteCache;
+import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
@@ -43,7 +44,7 @@ public class HttpSessionInvalidateTest extends HttpSessionOperationTest {
 
         String sessionId = "5f3tw3";
 
-        HttpSessionInvalidate c = getOperationToTest(sessionId);
+        HttpSessionInvalidate c = getOperationToTest(new HttpSessionSimulation(sessionId));
 
         MockRemoteCache mrc = new MockRemoteCache();
 
@@ -73,9 +74,9 @@ public class HttpSessionInvalidateTest extends HttpSessionOperationTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected HttpSessionInvalidate getOperationToTest(String sessionId) throws Exception {
+    protected HttpSessionInvalidate getOperationToTest(HttpSessionSimulation s) throws Exception {
 
-        return new HttpSessionInvalidate(sessionId);
+        return new HttpSessionInvalidate(s);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

@@ -18,6 +18,7 @@ package com.novaordis.gld.strategy.load.cache.http.operations;
 
 import com.novaordis.gld.MockService;
 import com.novaordis.gld.Service;
+import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
@@ -43,16 +44,25 @@ public abstract class HttpSessionOperationTest {
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
+    public void httpSession() throws Exception {
+
+        HttpSessionSimulation s = new HttpSessionSimulation("blah");
+        HttpSessionOperation o = getOperationToTest(s);
+        assertEquals(s, o.getHttpSession());
+    }
+
+
+    @Test
     public void sessionId() throws Exception {
 
-        HttpSessionOperation o = getOperationToTest("blah");
+        HttpSessionOperation o = getOperationToTest(new HttpSessionSimulation("blah"));
         assertEquals("blah", o.getSessionId());
     }
 
     @Test
     public void perform_NotAnInfinispanService() throws Exception {
 
-        HttpSessionOperation o = getOperationToTest("blah");
+        HttpSessionOperation o = getOperationToTest(new HttpSessionSimulation("blah"));
 
         Service s = new MockService();
 
@@ -69,7 +79,7 @@ public abstract class HttpSessionOperationTest {
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected abstract HttpSessionOperation getOperationToTest(String sessionId) throws Exception;
+    protected abstract HttpSessionOperation getOperationToTest(HttpSessionSimulation session) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 
