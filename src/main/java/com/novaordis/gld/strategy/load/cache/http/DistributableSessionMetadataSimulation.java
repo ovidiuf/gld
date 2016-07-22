@@ -22,7 +22,7 @@ import java.io.Serializable;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 7/21/16
  */
-public class DistributedSessionMetadataSimulation implements Serializable {
+public class DistributableSessionMetadataSimulation implements Serializable {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -31,6 +31,12 @@ public class DistributedSessionMetadataSimulation implements Serializable {
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
+
+    private String id;
+    private long creationTime;
+    private int maxInactiveInterval;
+    private boolean isNew;
+    private boolean isValid;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 

@@ -16,7 +16,7 @@
 
 package com.novaordis.gld.strategy.load.cache.http.operations;
 
-import com.novaordis.gld.strategy.load.cache.http.DistributedSessionMetadataSimulation;
+import com.novaordis.gld.strategy.load.cache.http.DistributableSessionMetadataSimulation;
 import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
 import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulationException;
 import org.infinispan.client.hotrod.RemoteCache;
@@ -69,7 +69,7 @@ public class HttpSessionCreate extends HttpSessionOperation {
         Map<Object, Object> sessionValue = new HashMap<>();
         sessionValue.put((byte)0, 0); // Integer
         sessionValue.put((byte)1, 0L); // Long
-        sessionValue.put((byte)3, new DistributedSessionMetadataSimulation());
+        sessionValue.put((byte)3, new DistributableSessionMetadataSimulation());
 
         cache.put(ourSessionId, sessionValue);
     }
