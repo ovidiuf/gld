@@ -16,13 +16,17 @@
 
 package com.novaordis.gld.strategy.load.cache.http;
 
+import java.io.Serializable;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 7/21/16
  */
-public class DistributedSessionMetadataSimulation {
+public class DistributedSessionMetadataSimulation implements Serializable {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    public static final long serialVersionUID = 1813523762652L;
 
     // Static ----------------------------------------------------------------------------------------------------------
 
