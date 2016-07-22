@@ -16,17 +16,17 @@
 
 package com.novaordis.gld.strategy.load.cache.http.operations;
 
-import com.novaordis.gld.LoadStrategy;
-import com.novaordis.gld.Service;
-import com.novaordis.gld.service.cache.infinispan.InfinispanService;
+import com.novaordis.gld.service.cache.infinispan.MockRemoteCache;
+import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
- * The GLD operation that simulates a HTTP session invalidation.
- *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 7/21/16
  */
-public class Invalidate extends HttpSessionOperation {
+public class HttpSessionInvalidateTest extends HttpSessionOperationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -36,29 +36,47 @@ public class Invalidate extends HttpSessionOperation {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Invalidate(String sessionId) {
-        super(sessionId);
-    }
-
-    // Operation implementation ----------------------------------------------------------------------------------------
-
-    @Override
-    public LoadStrategy getLoadStrategy() {
-        throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
-    }
-
-    // HttpSessionOperation overrides ----------------------------------------------------------------------------------
-
-    @Override
-    public void performInternal(InfinispanService is) throws Exception {
-        throw new RuntimeException("NYE");
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void invalidate() throws Exception {
+
+        String sessionId = "5f3tw3";
+
+        HttpSessionInvalidate c = getOperationToTest(sessionId);
+
+        MockRemoteCache mrc = new MockRemoteCache();
+
+        //
+        // "populate" the cache in advance
+        //
+
+        mrc.put(sessionId, "something");
+
+        Object o = mrc.get(sessionId);
+        assertNotNull(o);
+
+        //noinspection unchecked
+        c.performInternal(mrc);
+
+        //
+        // the "remote cache" must not contain the session representation anymore
+        //
+
+        Object o2 = mrc.get(sessionId);
+        assertNull(o2);
+    }
+
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected HttpSessionInvalidate getOperationToTest(String sessionId) throws Exception {
+
+        return new HttpSessionInvalidate(sessionId);
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

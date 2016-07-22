@@ -217,7 +217,8 @@ public class MockRemoteCache implements RemoteCache {
 
     @Override
     public Object remove(Object o) {
-        throw new RuntimeException("remove() NOT YET IMPLEMENTED");
+
+        return map.remove(o);
     }
 
     @Override

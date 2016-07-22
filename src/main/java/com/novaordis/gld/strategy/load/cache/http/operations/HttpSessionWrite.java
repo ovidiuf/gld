@@ -16,11 +16,19 @@
 
 package com.novaordis.gld.strategy.load.cache.http.operations;
 
+import com.novaordis.gld.strategy.load.cache.http.DistributedSessionMetadataSimulation;
+import org.infinispan.client.hotrod.RemoteCache;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
+ * The GLD operation that simulates a HTTP session write.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 7/21/16
  */
-public class InvalidateTest extends HttpSessionOperationTest {
+public class HttpSessionWrite extends HttpSessionOperation {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -30,17 +38,38 @@ public class InvalidateTest extends HttpSessionOperationTest {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public HttpSessionWrite(String sessionId) {
+        super(sessionId);
+    }
+
+    // HttpSessionOperation overrides ----------------------------------------------------------------------------------
+
+    /**
+     * This method simulates a HTTP session write.
+     */
+    @Override
+    public void performInternal(RemoteCache<String, Object> cache) throws Exception {
+
+        String ourSessionId = getSessionId();
+
+        //
+        // we don't do a read, we simply write
+        //
+
+        Map<Object, Object> sessionValue = new HashMap<>();
+        sessionValue.put((byte)0, 0); // Integer
+        sessionValue.put((byte)1, 0L); // Long
+        sessionValue.put((byte)3, new DistributedSessionMetadataSimulation());
+        sessionValue.put("TEST-KEY", "TEST-VALUE");
+
+        cache.put(ourSessionId, sessionValue);
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected Invalidate getOperationToTest(String sessionId) throws Exception {
-
-        return new Invalidate(sessionId);
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

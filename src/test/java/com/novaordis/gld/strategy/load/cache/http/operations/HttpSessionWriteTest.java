@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.load.cache;
+package com.novaordis.gld.strategy.load.cache.http.operations;
 
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
-import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionCreate;
-import org.junit.After;
+import com.novaordis.gld.service.cache.infinispan.MockRemoteCache;
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 7/21/16
  */
-public class HttpSessionLoadStrategyTest {
+public class HttpSessionWriteTest extends HttpSessionOperationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(HttpSessionWriteTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -42,33 +41,40 @@ public class HttpSessionLoadStrategyTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @After
-    public void cleanup() {
-
-        HttpSessionSimulation.destroyInstance();
-    }
-
-    // next() ----------------------------------------------------------------------------------------------------------
-
     @Test
-    public void next_firstInvocation() throws Exception {
+    public void write() throws Exception {
 
-        HttpSessionLoadStrategy ls = new HttpSessionLoadStrategy();
+        String sessionId = "n723hf";
 
-        HttpSessionSimulation s = HttpSessionSimulation.getCurrentInstance();
-        assertNull(s);
+        HttpSessionWrite w = getOperationToTest(sessionId);
 
-        Operation o = ls.next(null, null);
+        MockRemoteCache mrc = new MockRemoteCache();
 
-        HttpSessionSimulation s2 = HttpSessionSimulation.getCurrentInstance();
-        assertNotNull(s2);
+        Object o = mrc.get(sessionId);
+        assertNull(o);
 
-        assertTrue(o instanceof HttpSessionCreate);
+        //noinspection unchecked
+        w.performInternal(mrc);
+
+        //
+        // the "remote cache" must contain the session representation
+        //
+
+        Object o2 = mrc.get(sessionId);
+        assertNotNull(o2);
+
+        log.debug(".");
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected HttpSessionWrite getOperationToTest(String sessionId) throws Exception {
+
+        return new HttpSessionWrite(sessionId);
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

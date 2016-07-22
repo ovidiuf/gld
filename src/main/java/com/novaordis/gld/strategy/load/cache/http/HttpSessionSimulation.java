@@ -16,8 +16,10 @@
 
 package com.novaordis.gld.strategy.load.cache.http;
 
-import com.novaordis.gld.strategy.load.cache.http.operations.Create;
+import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionCreate;
+import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionInvalidate;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionOperation;
+import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionWrite;
 
 import java.util.Random;
 
@@ -43,9 +45,6 @@ public class HttpSessionSimulation {
 
     private static final char[] SESSION_ID_ALPHABET =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-_".toCharArray();
-
-    private static final byte CREATE = 0;
-    private static final byte WRITE_ATTRIBUTE = 1;
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -133,6 +132,13 @@ public class HttpSessionSimulation {
     private Random random;
     private String sessionId;
 
+    //
+    // the number of writes this session should simulate during its life time. Can be zero.
+    //
+    private int initialWriteCount;
+
+    private int remainingWrites;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
@@ -150,19 +156,53 @@ public class HttpSessionSimulation {
 
     public HttpSessionOperation next() {
 
-        HttpSessionOperation o;
-
         if (sessionId == null) {
 
             this.sessionId = generateSessionId(random);
-            o = new Create(sessionId);
-        }
-        else {
-
-            throw new RuntimeException("next() ... NOT YET IMPLEMENTED");
+            return new HttpSessionCreate(sessionId);
         }
 
-        return o;
+        //
+        // once the session is created, is simulates a configurable number of "writes"
+        //
+
+        if (remainingWrites > 0) {
+
+            remainingWrites --;
+            return new HttpSessionWrite(sessionId);
+        }
+
+        return new HttpSessionInvalidate(sessionId);
+    }
+
+    /**
+     * Sets the initial write count this session simulation is supposed to perform. Once the first next() invocation
+     * is performed, changing the initial write count throws an IllegalStateException
+     *
+     * @exception IllegalStateException if the method is invoked after the first next() invocation occured.
+     */
+    public void setWriteCount(int i) {
+
+        if (i < 0) {
+            throw new IllegalArgumentException("invalid write count value " + i);
+        }
+
+        if (sessionId != null) {
+
+            //
+            // the first next() was invoked
+            //
+
+            throw new IllegalStateException("cannot set write count after next() was invoked on " + this);
+        }
+
+        this.initialWriteCount = i;
+        this.remainingWrites = initialWriteCount;
+    }
+
+    public int getWriteCount() {
+
+        return initialWriteCount;
     }
 
     @Override

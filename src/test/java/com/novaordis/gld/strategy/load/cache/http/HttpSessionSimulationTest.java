@@ -16,8 +16,10 @@
 
 package com.novaordis.gld.strategy.load.cache.http;
 
-import com.novaordis.gld.strategy.load.cache.http.operations.Create;
+import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionCreate;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionOperation;
+import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionWrite;
+import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionInvalidate;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Test;
@@ -110,7 +112,7 @@ public class HttpSessionSimulationTest {
         assertEquals(((HttpSessionSimulation.DEFAULT_SESSION_ID_LENGTH + 2) / 3) * 4, s.length());
     }
 
-    // instance lifecycle ----------------------------------------------------------------------------------------------
+    // create ----------------------------------------------------------------------------------------------------------
 
     @Test
     public void firstOperationIsCreate() throws Exception {
@@ -119,7 +121,69 @@ public class HttpSessionSimulationTest {
 
         HttpSessionOperation o = s.next();
 
-        assertTrue(o instanceof Create);
+        assertTrue(o instanceof HttpSessionCreate);
+    }
+
+    // initial write count ---------------------------------------------------------------------------------------------
+
+    @Test
+    public void initialWriteCount_AttemptToSetAfterTheFirstNext() throws Exception {
+
+        HttpSessionSimulation s = new HttpSessionSimulation();
+
+        s.setWriteCount(1);
+
+        assertTrue(s.next() instanceof HttpSessionCreate);
+
+        try {
+            s.setWriteCount(2);
+            fail("should throw Exception");
+        }
+        catch(IllegalStateException e) {
+            log.info(e.getMessage());
+        }
+    }
+
+    @Test
+    public void initialWriteCount_NoWrites() throws Exception {
+
+        HttpSessionSimulation s = new HttpSessionSimulation();
+        assertEquals(0, s.getWriteCount());
+
+        s.setWriteCount(0);
+        assertEquals(0, s.getWriteCount());
+
+        assertTrue(s.next() instanceof HttpSessionCreate);
+        assertEquals(0, s.getWriteCount());
+
+        assertTrue(s.next() instanceof HttpSessionInvalidate);
+        assertEquals(0, s.getWriteCount());
+
+    }
+
+    @Test
+    public void initialWriteCount_SomeWrites() throws Exception {
+
+        HttpSessionSimulation s = new HttpSessionSimulation();
+        assertEquals(0, s.getWriteCount());
+
+        s.setWriteCount(3);
+        assertEquals(3, s.getWriteCount());
+
+        assertTrue(s.next() instanceof HttpSessionCreate);
+        assertEquals(3, s.getWriteCount());
+
+        assertTrue(s.next() instanceof HttpSessionWrite);
+        assertEquals(3, s.getWriteCount());
+
+        assertTrue(s.next() instanceof HttpSessionWrite);
+        assertEquals(3, s.getWriteCount());
+
+        assertTrue(s.next() instanceof HttpSessionWrite);
+        assertEquals(3, s.getWriteCount());
+
+        assertTrue(s.next() instanceof HttpSessionInvalidate);
+        assertEquals(3, s.getWriteCount());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

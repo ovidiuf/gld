@@ -16,17 +16,20 @@
 
 package com.novaordis.gld.strategy.load.cache.http.operations;
 
-import com.novaordis.gld.LoadStrategy;
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.Service;
-import com.novaordis.gld.service.cache.infinispan.InfinispanService;
+import com.novaordis.gld.strategy.load.cache.http.DistributedSessionMetadataSimulation;
+import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulationException;
 import org.infinispan.client.hotrod.RemoteCache;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
+ * The GLD operation that simulates a HTTP session creation.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 7/21/16
  */
-public abstract class HttpSessionOperation implements Operation {
+public class HttpSessionCreate extends HttpSessionOperation {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,52 +37,47 @@ public abstract class HttpSessionOperation implements Operation {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String sessionId;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    protected HttpSessionOperation(String sessionId) {
-        this.sessionId = sessionId;
+    public HttpSessionCreate(String sessionId) {
+        super(sessionId);
     }
 
-    // Operation implementation ----------------------------------------------------------------------------------------
+    // HttpSessionOperation overrides ----------------------------------------------------------------------------------
 
+    /**
+     * This method simulates HTTP session creation.
+     */
     @Override
-    public LoadStrategy getLoadStrategy() {
-        throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
-    }
+    public void performInternal(RemoteCache<String, Object> cache) throws Exception {
 
-    @Override
-    public void perform(Service s) throws Exception {
+        //
+        // make a read for our session ID - if content with the given session ID exists, throw an exception, because
+        // this is supposed to be a new session
+        //
 
-        if (!(s instanceof InfinispanService)) {
-            throw new IllegalArgumentException("invalid service type " + s + ", we expect an InfinispanService");
+        String ourSessionId = getSessionId();
+
+        Object value = cache.get(ourSessionId);
+
+        if (value != null) {
+            throw new HttpSessionSimulationException(
+                    "session with ID \"" + ourSessionId + "\" already found in cache: " + value);
         }
 
-        InfinispanService is = (InfinispanService)s;
+        Map<Object, Object> sessionValue = new HashMap<>();
+        sessionValue.put((byte)0, 0); // Integer
+        sessionValue.put((byte)1, 0L); // Long
+        sessionValue.put((byte)3, new DistributedSessionMetadataSimulation());
 
-        //noinspection unchecked
-        RemoteCache<String, Object> cache = (RemoteCache<String, Object>)is.getCache();
-
-        performInternal(cache);
+        cache.put(ourSessionId, sessionValue);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    @Override
-    public String toString() {
-        return sessionId;
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    protected abstract void performInternal(RemoteCache<String, Object> cache) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -16,7 +16,6 @@
 
 package com.novaordis.gld.strategy.load.cache.http.operations;
 
-import com.novaordis.gld.service.cache.infinispan.MockInfinispanService;
 import com.novaordis.gld.service.cache.infinispan.MockRemoteCache;
 import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulationException;
 import org.apache.log4j.Logger;
@@ -30,11 +29,11 @@ import static org.junit.Assert.assertTrue;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 7/21/16
  */
-public class CreateTest extends HttpSessionOperationTest {
+public class HttpSessionCreateTest extends HttpSessionOperationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(CreateTest.class);
+    private static final Logger log = Logger.getLogger(HttpSessionCreateTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -47,17 +46,16 @@ public class CreateTest extends HttpSessionOperationTest {
     @Test
     public void create_SessionIdAlreadyExists() throws Exception {
 
-        Create c = getOperationToTest("blah");
+        HttpSessionCreate c = getOperationToTest("blah");
 
-        MockInfinispanService mis = new MockInfinispanService();
         MockRemoteCache mrc = new MockRemoteCache();
-        mis.setMockCache(mrc);
 
         mrc.put(c.getSessionId(), new Object());
 
         try {
 
-            c.performInternal(mis);
+            //noinspection unchecked
+            c.performInternal(mrc);
         }
         catch(HttpSessionSimulationException e) {
 
@@ -72,16 +70,15 @@ public class CreateTest extends HttpSessionOperationTest {
 
         String sessionId = "m3gys5";
 
-        Create c = getOperationToTest(sessionId);
+        HttpSessionCreate c = getOperationToTest(sessionId);
 
-        MockInfinispanService mis = new MockInfinispanService();
         MockRemoteCache mrc = new MockRemoteCache();
-        mis.setMockCache(mrc);
 
         Object o = mrc.get(sessionId);
         assertNull(o);
 
-        c.performInternal(mis);
+        //noinspection unchecked
+        c.performInternal(mrc);
 
         //
         // the "remote cache" must contain the session representation
@@ -96,9 +93,9 @@ public class CreateTest extends HttpSessionOperationTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected Create getOperationToTest(String sessionId) throws Exception {
+    protected HttpSessionCreate getOperationToTest(String sessionId) throws Exception {
 
-        return new Create(sessionId);
+        return new HttpSessionCreate(sessionId);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

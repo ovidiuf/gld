@@ -16,23 +16,15 @@
 
 package com.novaordis.gld.strategy.load.cache.http.operations;
 
-import com.novaordis.gld.LoadStrategy;
-import com.novaordis.gld.Service;
-import com.novaordis.gld.service.cache.infinispan.InfinispanService;
-import com.novaordis.gld.strategy.load.cache.http.DistributedSessionMetadataSimulation;
-import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulationException;
 import org.infinispan.client.hotrod.RemoteCache;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * The GLD operation that simulates a HTTP session creation.
+ * The GLD operation that simulates a HTTP session invalidation.
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 7/21/16
  */
-public class Create extends HttpSessionOperation {
+public class HttpSessionInvalidate extends HttpSessionOperation {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -42,48 +34,17 @@ public class Create extends HttpSessionOperation {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Create(String sessionId) {
+    public HttpSessionInvalidate(String sessionId) {
         super(sessionId);
-    }
-
-    // Operation implementation ----------------------------------------------------------------------------------------
-
-    @Override
-    public LoadStrategy getLoadStrategy() {
-        throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
     }
 
     // HttpSessionOperation overrides ----------------------------------------------------------------------------------
 
-    /**
-     * This method simulates HTTP session creation.
-     */
     @Override
-    public void performInternal(InfinispanService is) throws Exception {
-
-        //
-        // make a read for our session ID - if content with the given session ID exists, throw an exception, because
-        // this is supposed to be a new session
-        //
+    public void performInternal(RemoteCache<String, Object> cache) throws Exception {
 
         String ourSessionId = getSessionId();
-
-        //noinspection unchecked
-        RemoteCache<String, Object> cache = (RemoteCache<String, Object>)is.getCache();
-
-        Object value = cache.get(ourSessionId);
-
-        if (value != null) {
-            throw new HttpSessionSimulationException(
-                    "session with ID \"" + ourSessionId + "\" already found in cache: " + value);
-        }
-
-        Map<Object, Object> sessionValue = new HashMap<>();
-        sessionValue.put((byte)0, 0); // Integer
-        sessionValue.put((byte)1, 0L); // Long
-        sessionValue.put((byte)3, new DistributedSessionMetadataSimulation());
-
-        cache.put(ourSessionId, sessionValue);
+        cache.remove(ourSessionId);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

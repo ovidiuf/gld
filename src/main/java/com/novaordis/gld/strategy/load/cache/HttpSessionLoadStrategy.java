@@ -20,9 +20,9 @@ import com.novaordis.gld.Configuration;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.strategy.load.LoadStrategyBase;
 import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
-import com.novaordis.gld.strategy.load.cache.http.operations.Create;
+import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionCreate;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionOperation;
-import com.novaordis.gld.strategy.load.cache.http.operations.Invalidate;
+import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionInvalidate;
 
 import java.util.HashSet;
 import java.util.List;
@@ -91,7 +91,7 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
 
         HttpSessionOperation o = s.next();
 
-        if (o instanceof Invalidate) {
+        if (o instanceof HttpSessionInvalidate) {
 
             HttpSessionSimulation.destroyInstance();
         }
@@ -103,8 +103,8 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
     public Set<Class<? extends Operation>> getOperationTypes() {
 
         Set<Class<? extends Operation>> operations = new HashSet<>();
-        operations.add(Create.class);
-        operations.add(Invalidate.class);
+        operations.add(HttpSessionCreate.class);
+        operations.add(HttpSessionInvalidate.class);
         return operations;
     }
 
