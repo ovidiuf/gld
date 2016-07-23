@@ -27,4 +27,9 @@ public interface MultiThreadedRunner
 
     void stop() throws Exception;
 
+    /**
+     * @see ExitGuard
+     */
+    ExitGuard getExitGuard();
+
 }

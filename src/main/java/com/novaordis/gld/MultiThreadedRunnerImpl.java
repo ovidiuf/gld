@@ -18,12 +18,16 @@ package com.novaordis.gld;
 
 import com.novaordis.gld.sampler.Sampler;
 import com.novaordis.gld.util.CommandLineConsole;
+import io.novaordis.utilities.time.Duration;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MultiThreadedRunnerImpl implements MultiThreadedRunner
 {
@@ -51,14 +55,20 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
 
     private ExitGuard exitGuard;
 
+    //
+    // not null if this run is time-limited
+    //
+    private Duration duration;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MultiThreadedRunnerImpl(Configuration conf)
-    {
+    public MultiThreadedRunnerImpl(Configuration conf) {
+
         this.running = false;
         this.conf = conf;
         this.threadCount = conf.getThreads();
         this.singleThreadedRunners = new ArrayList<>(threadCount);
+        this.duration = conf.getDuration();
         this.exitGuard = new ExitGuard();
     }
 
@@ -77,19 +87,37 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
      * @see com.novaordis.gld.MultiThreadedRunner#run()
      */
     @Override
-    public void run() throws Exception
-    {
+    public void run() throws Exception {
+
         running = true;
 
-        try
-        {
+        try {
+
             initializeDependencies();
 
-            for (int i = 0; i < threadCount; i++)
-            {
+            //
+            // if this run has a limited duration, start a high priority timer that will stop the run after the time
+            // has passed. If the run is not time-limited, "durationExpired" will never become "true".
+            //
+            final AtomicBoolean durationExpired = new AtomicBoolean(false);
+
+            if (duration != null) {
+
+                Timer durationTimer = new Timer("Multi-threaded runner " + duration + " stop thread");
+                durationTimer.schedule(new DurationTimerTask(duration, durationExpired), duration.getMilliseconds());
+                log.debug("duration timer task scheduled, it will fire after " + duration);
+            }
+
+            //
+            // start the threads
+            //
+
+            for (int i = 0; i < threadCount; i++) {
+
                 String name = "CLD Runner " + i;
 
-                SingleThreadedRunner r = new SingleThreadedRunner(name, conf, loadStrategy, sampler, barrier);
+                SingleThreadedRunner r = new SingleThreadedRunner(
+                        name, conf, loadStrategy, sampler, barrier, durationExpired);
 
                 singleThreadedRunners.add(r);
 
@@ -102,16 +130,16 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
 
             log.debug(singleThreadedRunners.size() + " SingleThreadedRunner(s) have finished");
 
-            if (commandLineConsole != null)
-            {
-                if (conf.waitForConsoleQuit())
-                {
+            if (commandLineConsole != null) {
+
+                if (conf.waitForConsoleQuit()) {
+
                     log.debug("waiting for console to issue quit ...");
                     commandLineConsole.waitForExplicitQuit();
                     log.debug("console issued quit");
                 }
-                else
-                {
+                else {
+
                     commandLineConsole.stop(); // no more input needed from the console so dispose of it
                 }
             }
@@ -119,22 +147,19 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
             exitGuard.waitUntilExitIsAllowed();
 
         }
-        finally
-        {
-            if (service != null)
-            {
+        finally {
+
+            if (service != null) {
                 service.stop();
             }
 
             KeyStore keyStore = loadStrategy.getKeyStore();
 
-            if (keyStore != null)
-            {
+            if (keyStore != null) {
                 keyStore.stop();
             }
 
-            if (sampler != null)
-            {
+            if (sampler != null) {
                 sampler.stop();
             }
 
@@ -151,12 +176,13 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
         }
     }
 
-    // Public ----------------------------------------------------------------------------------------------------------
-
+    @Override
     public ExitGuard getExitGuard()
     {
         return exitGuard;
     }
+
+    // Public ----------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString()
@@ -170,36 +196,45 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
 
     // Private ---------------------------------------------------------------------------------------------------------
 
-    private void initializeDependencies() throws Exception
-    {
+    private void initializeDependencies() throws Exception {
+
         this.service = conf.getService();
         this.sampler = conf.getSampler();
         this.loadStrategy = conf.getLoadStrategy();
 
-        if (service == null)
-        {
+        if (service == null) {
             throw new IllegalStateException("null service");
         }
 
-        if (!service.isStarted())
-        {
+        if (!service.isStarted()) {
             service.start();
         }
 
-        if (sampler != null)
-        {
+        if (sampler != null) {
+
             // initialize the sampler operations
             Set<Class<? extends Operation>> operationTypes = loadStrategy.getOperationTypes();
-            for(Class<? extends Operation> ot: operationTypes)
-            {
+
+            for(Class<? extends Operation> ot: operationTypes) {
                 sampler.registerOperation(ot);
             }
 
             sampler.start();
         }
 
-        if (!conf.inBackground())
-        {
+        if (conf.inBackground()) {
+
+            //
+            // unlatch the exit guard, exit when the threads are done
+            //
+
+            exitGuard.allowExit();
+        }
+        else {
+
+            //
+            // not in background, we need the console
+            //
             commandLineConsole = new CommandLineConsole(conf, this);
             commandLineConsole.start();
         }
@@ -210,4 +245,25 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 
+    /**
+     * A class that stops the multi-threaded runner after the specified duration.
+     */
+    private class DurationTimerTask extends TimerTask {
+
+        private AtomicBoolean durationExpired;
+        private Duration duration;
+
+        private DurationTimerTask(Duration duration, AtomicBoolean durationExpired) {
+
+            this.duration = duration;
+            this.durationExpired = durationExpired;
+        }
+
+        @Override
+        public void run() {
+
+            log.debug("shutting down the runner after " + duration);
+            durationExpired.set(true);
+        }
+    }
 }

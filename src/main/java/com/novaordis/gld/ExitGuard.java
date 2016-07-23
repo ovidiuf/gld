@@ -25,8 +25,8 @@ import java.util.concurrent.CountDownLatch;
  * allowing the application to exit, or it puts it on wait, pending the arrival of an exit condition (Ctrl-C, SIGTERM,
  * etc.)
  */
-public class ExitGuard
-{
+public class ExitGuard {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(ExitGuard.class);
@@ -39,33 +39,31 @@ public class ExitGuard
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public ExitGuard()
-    {
+    public ExitGuard() {
+
         this.latch = new CountDownLatch(1);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public void waitUntilExitIsAllowed()
-    {
-        try
-        {
+    public void waitUntilExitIsAllowed() {
+
+        try {
+
             log.debug("preventing exit until allowed");
             latch.await();
             log.debug("exit allowed");
         }
-        catch(InterruptedException e)
-        {
+        catch(InterruptedException e) {
             throw new IllegalStateException("interrupted while awaiting to exit", e);
         }
     }
 
-    public void allowExit()
-    {
+    public void allowExit() {
+
         log.debug(this + " configured to allow exit");
         latch.countDown();
     }
-
 
     // Package protected -----------------------------------------------------------------------------------------------
 

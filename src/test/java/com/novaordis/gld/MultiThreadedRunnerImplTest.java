@@ -41,8 +41,8 @@ public class MultiThreadedRunnerImplTest extends MultiThreadedRunnerTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void lifecycle_ExitGuardPreConfiguredToAllowExit() throws Exception
-    {
+    public void lifecycle_ExitGuardPreConfiguredToAllowExit() throws Exception  {
+
         MockConfiguration mockConfiguration = new MockConfiguration();
 
         int threads = 3;
@@ -84,8 +84,7 @@ public class MultiThreadedRunnerImplTest extends MultiThreadedRunnerTest
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected MultiThreadedRunnerImpl getMultiThreadedRunnerToTest(Configuration c)
-    {
+    protected MultiThreadedRunnerImpl getMultiThreadedRunnerToTest(Configuration c)  {
         return new MultiThreadedRunnerImpl(c);
     }
 

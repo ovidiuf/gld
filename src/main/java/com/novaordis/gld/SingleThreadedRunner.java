@@ -21,9 +21,10 @@ import com.novaordis.gld.sampler.Sampler;
 import org.apache.log4j.Logger;
 
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class SingleThreadedRunner implements Runnable
-{
+public class SingleThreadedRunner implements Runnable {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(SingleThreadedRunner.class);
@@ -45,27 +46,35 @@ public class SingleThreadedRunner implements Runnable
     // actually starting the thread, for testing
     volatile boolean running;
 
+    private AtomicBoolean durationExpired;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
      * @param sampler may be null.
+     *
+     * @param durationExpired an AtomicBoolean that will externally set to "true" if the overall time allocated to the
+     *                        run expired. If the run is not time-limited, the boolean will never become "true".
+     *                        Cannot be null.
      */
     public SingleThreadedRunner(
-        String name, Configuration config, LoadStrategy loadStrategy, Sampler sampler, CyclicBarrier barrier)
-    {
-        if (config == null)
-        {
+        String name, Configuration config, LoadStrategy loadStrategy,
+        Sampler sampler, CyclicBarrier barrier, AtomicBoolean durationExpired) {
+
+        if (config == null) {
             throw new IllegalArgumentException("null configuration");
         }
 
-        if (barrier == null)
-        {
+        if (barrier == null) {
             throw new IllegalArgumentException("null barrier");
         }
 
-        if (sampler == null)
-        {
+        if (sampler == null)  {
             throw new IllegalArgumentException("null sampler");
+        }
+
+        if (durationExpired == null)  {
+            throw new IllegalArgumentException("null duration boolean");
         }
 
         this.name = name;
@@ -75,9 +84,9 @@ public class SingleThreadedRunner implements Runnable
         this.service = config.getService();
         this.keyStore = loadStrategy.getKeyStore();
         this.allSingleThreadedRunnersBarrier = barrier;
+        this.durationExpired = durationExpired;
 
-        if (service == null)
-        {
+        if (service == null) {
             throw new IllegalArgumentException("a service cannot be obtained from configuration " + config);
         }
 
@@ -86,35 +95,34 @@ public class SingleThreadedRunner implements Runnable
 
     // Runnable implementation -------------------------------------------------------------------------------------
 
-    public void run()
-    {
-        try
-        {
-            loopUntilStoppedOrOutOfOperations();
+    public void run() {
+
+        try {
+
+            loopUntilStoppedOrOutOfOperationsOrDurationExpired();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
+
             log.error(this + " failed", e);
         }
-        finally
-        {
-            try
-            {
+        finally {
+
+            try {
+
                 allSingleThreadedRunnersBarrier.await();
             }
-            catch(Exception e)
-            {
+            catch(Exception e) {
+
                 e.printStackTrace();
             }
 
-            if (keyStore != null)
-            {
-                try
-                {
+            if (keyStore != null)  {
+
+                try {
+
                     keyStore.stop();
                 }
-                catch(Exception e)
-                {
+                catch(Exception e) {
                     e.printStackTrace();
 
                 }
@@ -129,8 +137,8 @@ public class SingleThreadedRunner implements Runnable
         return name;
     }
 
-    public void start()
-    {
+    public void start() {
+
         running = true;
         thread.start();
     }
@@ -152,21 +160,25 @@ public class SingleThreadedRunner implements Runnable
 
     // Private ---------------------------------------------------------------------------------------------------------
 
-    private void loopUntilStoppedOrOutOfOperations() throws Exception
-    {
+    private void loopUntilStoppedOrOutOfOperationsOrDurationExpired() throws Exception {
+
         long operationCounter = 0L;
         String lastWrittenKey = null;
         Operation lastOperation = null;
 
-        while (running)
-        {
+        while (running && !durationExpired.get()) {
+
             Operation op = loadStrategy.next(lastOperation, lastWrittenKey);
 
-            if (op == null)
-            {
+            if (op == null) {
+
+                //
                 // the strategy ran out of keys, it's time to finish
+                //
+
                 log.debug(Thread.currentThread().getName() + " ran out of operations, " + operationCounter +
                     " operations processed by this thread, exiting");
+
                 return;
             }
 
@@ -178,40 +190,40 @@ public class SingleThreadedRunner implements Runnable
             long t0 = System.nanoTime();
             long t0Ms = System.currentTimeMillis();
 
-            try
-            {
+            try  {
+
                 op.perform(service);
 
                 t1 = System.nanoTime();
 
-                if (op instanceof Write && keyStore != null && !keyStore.isReadOnly())
-                {
+                if (op instanceof Write && keyStore != null && !keyStore.isReadOnly()) {
                     // the operation was successful, which mean the key was written successfully; currently we store
                     // the key locally only if the operation was successful
                     lastWrittenKey = ((Write)op).getKey();
                     keyStore.store(lastWrittenKey);
                 }
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
+
                 t1 = System.nanoTime();
                 ex = e;
 
                 log.info("operation failed: " + e.getMessage(), e);
             }
-            finally
-            {
+            finally {
+
+                //
                 // sampler is never null, the constructor insures that
+                //
                 sampler.record(t0Ms, t0, t1, op, ex);
 
-                if (sleepMs > 0)
-                {
-                    try
-                    {
+                if (sleepMs > 0) {
+
+                    try {
+
                         Thread.sleep(sleepMs);
                     }
-                    catch (InterruptedException e)
-                    {
+                    catch (InterruptedException e) {
                         log.warn("interrupted while sleeping");
                     }
                 }

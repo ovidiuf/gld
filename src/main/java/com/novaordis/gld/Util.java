@@ -465,36 +465,31 @@ public class Util
     }
 
     /**
-     * @return null if the option is not found in list.
+     * @return null if the option is not found in list. If the option is found, both the option and the value
+     * are removed from the list.
      */
-    public static String extractString(String optionName, List<String> arguments, int from)
-        throws UserErrorException
-    {
-        if (arguments == null)
-        {
+    public static String extractString(String optionName, List<String> arguments, int from) throws UserErrorException {
+
+        if (arguments == null) {
             return null;
         }
 
-        if (optionName == null)
-        {
+        if (optionName == null) {
             throw new IllegalArgumentException("null option name");
         }
 
-        if (arguments.isEmpty())
-        {
+        if (arguments.isEmpty()) {
             return null;
         }
 
         String result = null;
 
-        for(int i = from; i < arguments.size(); i ++)
-        {
+        for(int i = from; i < arguments.size(); i ++) {
             String crt = arguments.get(i);
 
-            if (optionName.equals(crt))
-            {
-                if (i == arguments.size() - 1)
-                {
+            if (optionName.equals(crt)) {
+
+                if (i == arguments.size() - 1) {
                     throw new UserErrorException("a string should follow '" + optionName + "'");
                 }
 
@@ -504,8 +499,7 @@ public class Util
             }
         }
 
-        if (result != null && result.startsWith("--"))
-        {
+        if (result != null && result.startsWith("--")) {
             throw new UserErrorException("a string, and not another option should follow '" + optionName + "'");
         }
 

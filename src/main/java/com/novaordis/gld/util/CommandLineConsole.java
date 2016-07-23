@@ -103,30 +103,39 @@ public class CommandLineConsole implements Runnable
                     return;
                 }
 
-                if (line == null)
-                {
+                if (line == null) {
+
                     log.error("console returned null");
                     return;
                 }
 
-                if ("q".equals(line.toLowerCase()))
-                {
+                if ("q".equals(line.toLowerCase())) {
+
                     //
                     // 'q' (quit)
                     //
 
-                    try
-                    {
+                    //
+                    // unlatch the exit guard
+                    //
+
+                    // TODO uncommenting this breaks CommandLineConsoleTest.stopTheMultiThreadRunnerOnQ()
+                    //
+                    // multiThreadedRunner.getExitGuard().allowExit();
+                    //
+
+                    try {
+
                         quitQueue.put(new Object());
                     }
-                    catch(InterruptedException e)
-                    {
+                    catch(InterruptedException e) {
+
                         throw new IllegalStateException(
                             "interrupted while attempting to place message on the quit queue", e);
                     }
 
-                    try
-                    {
+                    try {
+
                         multiThreadedRunner.stop();
                     }
                     catch (Exception e)
@@ -135,26 +144,26 @@ public class CommandLineConsole implements Runnable
                     }
                     return;
                 }
-                else if ("td".equals(line.toLowerCase()))
-                {
+                else if ("td".equals(line.toLowerCase())) {
+
                     //
                     // 'td' - thread dump
                     //
                     Util.nativeThreadDump();
                     return;
                 }
-                else if ("bg".equals(line.toLowerCase()))
-                {
+                else if ("bg".equals(line.toLowerCase())) {
+
                     //
                     // 'bg' - background; stops the console but leaves the runner running
                     //
 
-                    try
-                    {
+                    try {
+
                         inBufferedReader.close();
                     }
-                    catch (Exception e)
-                    {
+                    catch (Exception e) {
+
                         log.warn("failed to close the input stream", e);
                     }
                     return;
@@ -164,14 +173,13 @@ public class CommandLineConsole implements Runnable
                 line = line.trim();
 
                 Sampler sampler;
-                if (!line.isEmpty() && ((sampler = configuration.getSampler()) != null))
-                {
+                if (!line.isEmpty() && ((sampler = configuration.getSampler()) != null)) {
+
                     sampler.annotate(line);
                 }
             }
         }
-        finally
-        {
+        finally {
             running = false;
         }
     }

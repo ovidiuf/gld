@@ -19,6 +19,8 @@ package com.novaordis.gld;
 import org.apache.log4j.Logger;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class MockService implements Service
 {
@@ -30,11 +32,18 @@ public class MockService implements Service
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private boolean verbose;
     private boolean started;
-
     private boolean wasStarted;
 
+    private Map<Thread, Integer> perThreadInvocationCount;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public MockService() {
+
+        perThreadInvocationCount = new ConcurrentHashMap<>();
+    }
 
     // Service implementation ------------------------------------------------------------------------------------------
 
@@ -63,30 +72,43 @@ public class MockService implements Service
     }
 
     @Override
-    public void start() throws Exception
-    {
+    public void start() throws Exception {
         started = true;
         wasStarted = true;
         log.info(this + " started");
     }
 
     @Override
-    public void stop() throws Exception
-    {
+    public void stop() throws Exception {
         started = false;
         log.info(this + " stopped");
     }
 
     @Override
-    public boolean isStarted()
-    {
+    public boolean isStarted() {
         return started;
     }
 
     @Override
-    public void perform(Operation o) throws Exception
-    {
-        throw new RuntimeException("perform() NOT YET IMPLEMENTED");
+    public void perform(Operation o) throws Exception {
+
+        //
+        // may be executing concurrently on multiple threads
+        //
+        if (verbose) { log.info(this + " performing " + o); }
+
+        Thread currentThread = Thread.currentThread();
+
+        Integer invocationCountPerThread = perThreadInvocationCount.get(currentThread);
+        if (invocationCountPerThread == null) {
+
+            invocationCountPerThread = 1;
+            perThreadInvocationCount.put(currentThread, invocationCountPerThread);
+        }
+        else {
+
+            perThreadInvocationCount.put(currentThread, invocationCountPerThread + 1);
+        }
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -97,6 +119,24 @@ public class MockService implements Service
     public boolean wasStarted()
     {
         return wasStarted;
+    }
+
+    public Map<Thread, Integer> getPerThreadInvocationCountMap() {
+        return perThreadInvocationCount;
+    }
+
+    /**
+     * We need to explicitly set the instance as verbose in order to get log.info(), otherwise the high concurrency
+     * tests are too noisy.
+     */
+    public void setVerbose(boolean b) {
+        this.verbose = b;
+    }
+
+    @Override
+    public String toString() {
+
+        return "MockService[" + Integer.toHexString(System.identityHashCode(this)) + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

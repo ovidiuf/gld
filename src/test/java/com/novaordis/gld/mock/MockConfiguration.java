@@ -23,6 +23,7 @@ import com.novaordis.gld.Node;
 import com.novaordis.gld.Service;
 import com.novaordis.gld.StorageStrategy;
 import com.novaordis.gld.sampler.Sampler;
+import io.novaordis.utilities.time.Duration;
 
 import java.util.List;
 import java.util.Properties;
@@ -49,6 +50,8 @@ public class MockConfiguration implements Configuration
     private int threads;
     private Sampler sampler;
     private long sleepMs;
+    private boolean background;
+    private Duration duration;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -62,6 +65,7 @@ public class MockConfiguration implements Configuration
         this.exceptionFile = null;
         this.threads = 1;
         this.sleepMs = -1L;
+        this.background = false;
     }
 
     // Configuration implementation ------------------------------------------------------------------------------------
@@ -213,7 +217,7 @@ public class MockConfiguration implements Configuration
     @Override
     public boolean inBackground()
     {
-        return false;
+        return background;
     }
 
     @Override
@@ -232,6 +236,12 @@ public class MockConfiguration implements Configuration
     public void setWaitForConsoleQuit(boolean b)
     {
         this.waitForConsoleQuit = b;
+    }
+
+    @Override
+    public Duration getDuration() {
+
+        return duration;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -269,6 +279,14 @@ public class MockConfiguration implements Configuration
     public void setSleepMs(long sleepMs)
     {
         this.sleepMs = sleepMs;
+    }
+
+    public void setBackground(boolean b) {
+        this.background = b;
+    }
+
+    public void setDuration(Duration d) {
+        this.duration = d;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

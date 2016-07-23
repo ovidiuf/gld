@@ -16,6 +16,7 @@
 
 package com.novaordis.gld.mock;
 
+import com.novaordis.gld.ExitGuard;
 import com.novaordis.gld.MultiThreadedRunner;
 
 import java.util.concurrent.ArrayBlockingQueue;
@@ -67,6 +68,11 @@ public class MockMultiThreadRunner implements MultiThreadedRunner
         {
             throw new IllegalStateException("failed to put in rendezvous", e);
         }
+    }
+
+    @Override
+    public ExitGuard getExitGuard() {
+        throw new RuntimeException("getExitGuard() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

@@ -39,8 +39,10 @@ import org.junit.Test;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -78,7 +80,7 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
 
         MockConfiguration mc = new MockConfiguration();
 
-        ls.configure(mc, Arrays.asList("blah"), 0);
+        ls.configure(mc, Collections.singletonList("blah"), 0);
 
         log.debug(".");
     }
@@ -493,7 +495,7 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
 
         assertTrue(ks instanceof WriteOnlyFileKeyStore);
 
-        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, wtr, ms, barrier);
+        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, wtr, ms, barrier, new AtomicBoolean(false));
         SingleThreadedRunnerTest.setRunning(st);
 
         st.run();

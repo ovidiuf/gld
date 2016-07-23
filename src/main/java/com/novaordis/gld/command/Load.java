@@ -47,14 +47,17 @@ public class Load extends CommandBase
 
     private LoadStrategy loadStrategy;
     private StorageStrategy storageStrategy;
+
+    // by default - null, which means unlimited
     private Long maxOperations;
+    private Duration duration;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public Load(Configuration c, List<String> arguments, int from) throws UserErrorException
     {
         super(c);
-        maxOperations = null; // unlimited
+
         processContextRelevantArguments(arguments, from);
     }
 
@@ -146,8 +149,12 @@ public class Load extends CommandBase
         return maxOperations;
     }
 
+    /**
+     * May return null if no duration was set when building this command.
+     */
     public Duration getDuration() {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+
+        return duration;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -159,15 +166,37 @@ public class Load extends CommandBase
     /**
      * Parse context-relevant command line arguments and removes them from the list.
      */
-    private void processContextRelevantArguments(List<String> arguments, int from) throws UserErrorException
-    {
+    private void processContextRelevantArguments(List<String> arguments, int from) throws UserErrorException  {
+
         String contentTypeAsString = Util.extractString("--type", arguments, from);
-        if (contentTypeAsString != null)
-        {
+
+        if (contentTypeAsString != null) {
             throw new UserErrorException("do not use --type, use --service");
         }
 
         maxOperations = Util.extractLong("--max-operations", arguments, from);
+
+        String ds = Util.extractString("--duration", arguments, from);
+
+        if (ds != null) {
+
+            try {
+
+                duration = new Duration(ds);
+
+                //
+                // TODO duration should actually be a global option, as the main multi thread runner needs it; this
+                //      is awkward to have to pass it back to the configuration, refactor this
+                //
+
+                getConfiguration().setDuration(duration);
+
+            }
+            catch(Exception e) {
+
+                throw new UserErrorException("invalid duration value \"" + ds + "\"", e);
+            }
+        }
     }
 
     /**

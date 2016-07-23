@@ -34,6 +34,7 @@ import com.novaordis.gld.service.jms.activemq.ActiveMQService;
 import com.novaordis.gld.service.cache.infinispan.InfinispanService;
 import com.novaordis.gld.statistics.SamplerConfigurator;
 import com.novaordis.gld.strategy.load.LoadStrategyFactory;
+import io.novaordis.utilities.time.Duration;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -42,8 +43,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-public class ConfigurationImpl implements Configuration
-{
+public class ConfigurationImpl implements Configuration {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     public static final int DEFAULT_THREAD_COUNT= 1;
@@ -84,6 +85,7 @@ public class ConfigurationImpl implements Configuration
     private String serviceString;
     private boolean waitForConsoleQuit;
     private boolean background;
+    private Duration duration;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -308,6 +310,18 @@ public class ConfigurationImpl implements Configuration
     public void setWaitForConsoleQuit(boolean b)
     {
         this.waitForConsoleQuit = b;
+    }
+
+    @Override
+    public Duration getDuration() {
+
+        return duration;
+    }
+
+    @Override
+    public void setDuration(Duration d) {
+
+        this.duration = d;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

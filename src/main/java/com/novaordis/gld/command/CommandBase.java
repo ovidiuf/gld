@@ -77,8 +77,8 @@ abstract class CommandBase implements Command
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public Configuration getConfiguration()
-    {
+    public Configuration getConfiguration() {
+
         return conf;
     }
 

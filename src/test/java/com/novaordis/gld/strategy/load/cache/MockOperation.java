@@ -21,8 +21,8 @@ import com.novaordis.gld.Operation;
 import com.novaordis.gld.Service;
 import org.apache.log4j.Logger;
 
-public class MockOperation implements Operation
-{
+public class MockOperation implements Operation {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(MockOperation.class);
@@ -31,6 +31,8 @@ public class MockOperation implements Operation
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private boolean verbose;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Operation implementation ----------------------------------------------------------------------------------------
@@ -38,7 +40,8 @@ public class MockOperation implements Operation
     @Override
     public void perform(Service cs) throws Exception
     {
-        log.info("mock \"performing\" " + this);
+        if (verbose) { log.info(this + " mock perform(" + cs + ")"); }
+        cs.perform(this);
     }
 
     @Override
@@ -48,6 +51,14 @@ public class MockOperation implements Operation
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    /**
+     * We need to explicitly set the instance as verbose in order to get log.info(), otherwise the high concurrency
+     * tests are too noisy.
+     */
+    public void setVerbose(boolean b) {
+        this.verbose = b;
+    }
 
     public String toString()
     {

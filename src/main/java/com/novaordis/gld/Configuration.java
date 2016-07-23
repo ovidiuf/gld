@@ -17,6 +17,7 @@
 package com.novaordis.gld;
 
 import com.novaordis.gld.sampler.Sampler;
+import io.novaordis.utilities.time.Duration;
 
 import java.util.List;
 import java.util.Properties;
@@ -130,5 +131,19 @@ public interface Configuration
     boolean waitForConsoleQuit();
 
     void setWaitForConsoleQuit(boolean b);
+
+    /**
+     * @return the duration if the command is time limited, or null otherwise.
+     */
+    Duration getDuration();
+
+    /**
+     * This method is awkward, we must refactor and remove it, for the time being "duration" is a Load configuration
+     * parameter and we need a way to pass it back to configuration, so we can pass it to the multi-thread runner.
+     *
+     * TODO: make duration a global parameter and get rid of this method.
+     */
+    @Deprecated
+    void setDuration(Duration d);
 
 }

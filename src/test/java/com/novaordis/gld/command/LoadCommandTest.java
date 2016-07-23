@@ -26,6 +26,7 @@ import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.strategy.load.cache.MockLoadStrategy;
 import com.novaordis.gld.strategy.storage.MockStorageStrategy;
 import io.novaordis.utilities.time.Duration;
+import io.novaordis.utilities.time.DurationFormatException;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
@@ -41,8 +42,8 @@ import static org.junit.Assert.fail;
 import static org.junit.Assert.assertTrue;
 
 
-public class LoadCommandTest extends CommandTest
-{
+public class LoadCommandTest extends CommandTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(LoadCommandTest.class);
@@ -58,8 +59,8 @@ public class LoadCommandTest extends CommandTest
     // initialize()/load strategy --------------------------------------------------------------------------------------
 
     @Test
-    public void noStrategySpecified_UseDefault() throws Exception
-    {
+    public void noStrategySpecified_UseDefault() throws Exception {
+
         MockConfiguration mc = new MockConfiguration();
         mc.setService(new MockCacheService());
 
@@ -342,10 +343,10 @@ public class LoadCommandTest extends CommandTest
     // content type ----------------------------------------------------------------------------------------------------
 
     @Test
-    public void type_default_KeyValue() throws Exception
-    {
+    public void type_default_KeyValue() throws Exception {
+
         MockConfiguration mc = new MockConfiguration();
-        List<String> args = new ArrayList<>(Arrays.asList("load"));
+        List<String> args = new ArrayList<>(Collections.singletonList("load"));
         Load load = new Load(mc, args, 0);
         // we don't know yet the content type, we don't have a service defined
         assertNull(load.getContentType());
@@ -518,7 +519,7 @@ public class LoadCommandTest extends CommandTest
     // --duration ------------------------------------------------------------------------------------------------------
 
     @Test
-    public void duration() throws Exception {
+    public void duration_ViaConfiguration() throws Exception {
 
         ConfigurationImpl c = new ConfigurationImpl(new String[] {
 
@@ -536,6 +537,90 @@ public class LoadCommandTest extends CommandTest
         assertNotNull(d);
 
         assertEquals(10L * 60 * 1000, d.getMilliseconds());
+
+        //
+        // make sure duration is also available in configuration
+        //
+
+        Duration d2 = c.getDuration();
+        assertEquals(10L * 60 * 1000, d2.getMilliseconds());
+    }
+
+    @Test
+    public void duration_ViaConfiguration_InvalidValue() throws Exception {
+
+        try {
+            new ConfigurationImpl(new String[]{
+
+                    "load",
+                    "--nodes",
+                    "embedded",
+                    "--duration",
+                    "not-a-duration"
+            });
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(e.getCause() instanceof DurationFormatException);
+        }
+    }
+
+    @Test
+    public void duration_ViaConstructor() throws Exception {
+
+        MockConfiguration mc = new MockConfiguration();
+        mc.setService(new MockCacheService());
+
+        List<String> arguments = new ArrayList<>(Arrays.asList(
+                "something",
+                "--duration",
+                "7s",
+                "something-else"));
+
+        Load load = new Load(mc, arguments, 1);
+
+        Duration d = load.getDuration();
+
+        assertNotNull(d);
+
+        assertEquals(7L * 1000, d.getMilliseconds());
+
+        assertEquals(2, arguments.size());
+        assertEquals("something", arguments.get(0));
+        assertEquals("something-else", arguments.get(1));
+
+        //
+        // make sure duration is also available in configuration
+        //
+
+        Duration d2 = mc.getDuration();
+        assertEquals(7L * 1000, d2.getMilliseconds());
+    }
+
+    @Test
+    public void duration_ViaConstructor_InvalidValue() throws Exception {
+
+        MockConfiguration mc = new MockConfiguration();
+        mc.setService(new MockCacheService());
+
+        List<String> arguments = new ArrayList<>(Arrays.asList(
+                "something",
+                "--duration",
+                "7s",
+                "something-else"));
+
+        try {
+
+            new Load(mc, arguments, 1);
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(e.getCause() instanceof DurationFormatException);
+        }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -543,8 +628,7 @@ public class LoadCommandTest extends CommandTest
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected Load getCommandToTest(Configuration c)
-    {
+    protected Load getCommandToTest(Configuration c) {
         return new Load(c, Collections.<String>emptyList(), 0);
     }
 

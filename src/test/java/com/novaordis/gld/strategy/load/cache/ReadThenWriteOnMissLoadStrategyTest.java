@@ -41,6 +41,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -309,7 +310,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
 
         MockSampler ms = new MockSampler();
         CyclicBarrier barrier = new CyclicBarrier(1);
-        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, rtwom, ms, barrier);
+        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, rtwom, ms, barrier, new AtomicBoolean(false));
         SingleThreadedRunnerTest.setRunning(st);
 
         st.run();
@@ -343,7 +344,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
 
         MockSampler ms = new MockSampler();
         CyclicBarrier barrier = new CyclicBarrier(1);
-        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, rtwom, ms, barrier);
+        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, rtwom, ms, barrier, new AtomicBoolean(false));
         SingleThreadedRunnerTest.setRunning(st);
 
         st.run();

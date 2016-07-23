@@ -59,8 +59,7 @@ public class MockSampler implements Sampler
     // Sampler implementation ------------------------------------------------------------------------------------------
 
     @Override
-    public void setSamplingIntervalMs(long ms)
-    {
+    public void setSamplingIntervalMs(long ms) {
         throw new RuntimeException("setSamplingIntervalMs() NOT YET IMPLEMENTED");
     }
 
@@ -71,27 +70,23 @@ public class MockSampler implements Sampler
     }
 
     @Override
-    public void setSamplingTaskRunIntervalMs(long ms)
-    {
+    public void setSamplingTaskRunIntervalMs(long ms) {
         throw new RuntimeException("setSamplingTaskRunIntervalMs() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public long getSamplingTaskRunIntervalMs()
-    {
+    public long getSamplingTaskRunIntervalMs() {
         throw new RuntimeException("getSamplingTaskRunIntervalMs() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public Counter registerOperation(Class<? extends Operation> operationType)
-    {
+    public Counter registerOperation(Class<? extends Operation> operationType) {
         operations.add(operationType);
         return null;
     }
 
     @Override
-    public boolean registerConsumer(SamplingConsumer consumer)
-    {
+    public boolean registerConsumer(SamplingConsumer consumer) {
         throw new RuntimeException("registerConsumer() NOT YET IMPLEMENTED");
     }
 
@@ -102,14 +97,12 @@ public class MockSampler implements Sampler
     }
 
     @Override
-    public boolean registerMetric(Class<? extends Metric> metricType)
-    {
+    public boolean registerMetric(Class<? extends Metric> metricType) {
         throw new RuntimeException("registerMetric() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void start()
-    {
+    public void start() {
         started = true;
         wasStarted = true;
         log.info(this + " started");
@@ -122,15 +115,13 @@ public class MockSampler implements Sampler
     }
 
     @Override
-    public void stop()
-    {
+    public void stop() {
         started = false;
         log.info(this + " stopped");
     }
 
     @Override
-    public void record(long t0Ms, long t0Nano, long t1Nano, Operation op, Throwable... t)
-    {
+    public synchronized void record(long t0Ms, long t0Nano, long t1Nano, Operation op, Throwable... t) {
         recorded.add(new OperationThrowablePair(op, t.length == 0 ? null : t[0]));
     }
 

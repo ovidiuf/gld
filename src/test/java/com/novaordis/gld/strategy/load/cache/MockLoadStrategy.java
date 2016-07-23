@@ -42,6 +42,7 @@ public class MockLoadStrategy extends LoadStrategyBase
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private boolean verbose;
     private String mockArgument;
     private String mockLoadArgument;
 
@@ -101,7 +102,13 @@ public class MockLoadStrategy extends LoadStrategyBase
             }
         }
 
-        return new MockOperation();
+        MockOperation mo = new MockOperation();
+
+        if (verbose) {
+            mo.setVerbose(true);
+        }
+
+        return mo;
     }
 
     @Override
@@ -146,6 +153,14 @@ public class MockLoadStrategy extends LoadStrategyBase
         }
 
         return i;
+    }
+
+    /**
+     * We need to explicitly set the instance as verbose in order to get log.info(), otherwise the high concurrency
+     * tests are too noisy. If this load strategy is verbose, then the MockOperations it builds will be verbose.
+     */
+    public void setVerbose(boolean b) {
+        this.verbose = b;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
