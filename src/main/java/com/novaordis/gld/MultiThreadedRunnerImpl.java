@@ -29,8 +29,8 @@ import java.util.TimerTask;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class MultiThreadedRunnerImpl implements MultiThreadedRunner
-{
+public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
+    
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(MultiThreadedRunnerImpl.class);
@@ -39,36 +39,27 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Configuration conf;
+    private int threadCount;
+    private Configuration configuration;
 
     private Service service;
-    private LoadStrategy loadStrategy;
-    private List<SingleThreadedRunner> singleThreadedRunners;
-    private CyclicBarrier barrier;
-
-    private CommandLineConsole commandLineConsole;
-
     private Sampler sampler;
-
-    private int threadCount;
-    private volatile boolean running;
-
     private ExitGuard exitGuard;
+    private CyclicBarrier barrier;
+    private LoadStrategy loadStrategy;
+    private CommandLineConsole commandLineConsole;
+    private List<SingleThreadedRunner> singleThreadedRunners;
 
-    //
-    // not null if this run is time-limited
-    //
-    private Duration duration;
+    private volatile boolean running;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MultiThreadedRunnerImpl(Configuration conf) {
+    public MultiThreadedRunnerImpl(Configuration configuration) {
 
         this.running = false;
-        this.conf = conf;
-        this.threadCount = conf.getThreads();
+        this.configuration = configuration;
+        this.threadCount = configuration.getThreads();
         this.singleThreadedRunners = new ArrayList<>(threadCount);
-        this.duration = conf.getDuration();
         this.exitGuard = new ExitGuard();
     }
 
@@ -95,17 +86,19 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
 
             initializeDependencies();
 
+
             //
             // if this run has a limited duration, start a high priority timer that will stop the run after the time
             // has passed. If the run is not time-limited, "durationExpired" will never become "true".
             //
+
             final AtomicBoolean durationExpired = new AtomicBoolean(false);
+            if (configuration.getDuration() != null) {
 
-            if (duration != null) {
-
-                Timer durationTimer = new Timer("Multi-threaded runner " + duration + " stop thread");
-                durationTimer.schedule(new DurationTimerTask(duration, durationExpired), duration.getMilliseconds());
-                log.debug("duration timer task scheduled, it will fire after " + duration);
+                Duration d = configuration.getDuration();
+                Timer durationTimer = new Timer("Multi-threaded runner " + d + " stop thread");
+                durationTimer.schedule(new DurationTimerTask(d, durationExpired), d.getMilliseconds());
+                log.debug("duration timer task scheduled, it will fire after " + d);
             }
 
             //
@@ -116,8 +109,8 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
 
                 String name = "CLD Runner " + i;
 
-                SingleThreadedRunner r = new SingleThreadedRunner(
-                        name, conf, loadStrategy, sampler, barrier, durationExpired);
+                SingleThreadedRunner r =
+                        new SingleThreadedRunner(name, configuration, loadStrategy, sampler, barrier, durationExpired);
 
                 singleThreadedRunners.add(r);
 
@@ -132,7 +125,7 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
 
             if (commandLineConsole != null) {
 
-                if (conf.waitForConsoleQuit()) {
+                if (configuration.waitForConsoleQuit()) {
 
                     log.debug("waiting for console to issue quit ...");
                     commandLineConsole.waitForExplicitQuit();
@@ -185,8 +178,8 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Override
-    public String toString()
-    {
+    public String toString() {
+
         return "MultiThreadedRunner[" + Integer.toHexString(System.identityHashCode(this)) + "](" + threadCount + ")";
     }
 
@@ -198,9 +191,9 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
 
     private void initializeDependencies() throws Exception {
 
-        this.service = conf.getService();
-        this.sampler = conf.getSampler();
-        this.loadStrategy = conf.getLoadStrategy();
+        this.service = configuration.getService();
+        this.sampler = configuration.getSampler();
+        this.loadStrategy = configuration.getLoadStrategy();
 
         if (service == null) {
             throw new IllegalStateException("null service");
@@ -222,7 +215,7 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
             sampler.start();
         }
 
-        if (conf.inBackground()) {
+        if (configuration.inBackground()) {
 
             //
             // unlatch the exit guard, exit when the threads are done
@@ -235,7 +228,7 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner
             //
             // not in background, we need the console
             //
-            commandLineConsole = new CommandLineConsole(conf, this);
+            commandLineConsole = new CommandLineConsole(configuration, this);
             commandLineConsole.start();
         }
 
