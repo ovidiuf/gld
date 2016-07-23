@@ -22,7 +22,7 @@ import com.novaordis.gld.mock.MockCacheService;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.operations.cache.Delete;
 import com.novaordis.gld.strategy.load.LoadStrategyTest;
-import com.novaordis.utilities.testing.Tests;
+import io.novaordis.utilities.testing.Tests;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Test;

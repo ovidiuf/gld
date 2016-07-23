@@ -22,7 +22,7 @@ import com.novaordis.gld.Node;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.operations.jms.Send;
-import com.novaordis.utilities.Files;
+import io.novaordis.utilities.Files;
 import org.apache.log4j.Logger;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.jms.core.JmsTemplate;

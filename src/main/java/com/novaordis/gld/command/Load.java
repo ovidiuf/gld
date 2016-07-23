@@ -30,6 +30,7 @@ import com.novaordis.gld.strategy.load.NoopLoadStrategy;
 import com.novaordis.gld.strategy.load.cache.WriteThenReadLoadStrategy;
 import com.novaordis.gld.strategy.load.jms.SendLoadStrategy;
 import com.novaordis.gld.strategy.storage.StorageStrategyFactory;
+import io.novaordis.utilities.time.Duration;
 
 import java.util.List;
 
@@ -143,6 +144,10 @@ public class Load extends CommandBase
     public Long getMaxOperations()
     {
         return maxOperations;
+    }
+
+    public Duration getDuration() {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

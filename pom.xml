@@ -145,9 +145,9 @@
             <version>2.2</version>
         </dependency>
         <dependency>
-            <groupId>com.novaordis.utilities</groupId>
+            <groupId>io.novaordis.utilities</groupId>
             <artifactId>novaordis-utilities</artifactId>
-            <version>1.0</version>
+            <version>4.1.1-SNAPSHOT-1</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

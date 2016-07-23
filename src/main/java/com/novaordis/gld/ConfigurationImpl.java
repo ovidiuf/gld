@@ -806,7 +806,7 @@ public class ConfigurationImpl implements Configuration
         if (nodesString == null)
         {
             throw new UserErrorException(
-                "no target redis nodes specified, set --nodes host1:port1,host2:port2,... on the command line or \"nodes=host1:port1,host2:port2,...\" in the configuration file");
+                "no target nodes specified, set --nodes host1:port1,host2:port2,... on the command line or \"nodes=host1:port1,host2:port2,...\" in the configuration file");
         }
 
         result = Node.toNodeList(nodesString);

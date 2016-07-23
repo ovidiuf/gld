@@ -25,6 +25,7 @@ import com.novaordis.gld.mock.MockCacheService;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.strategy.load.cache.MockLoadStrategy;
 import com.novaordis.gld.strategy.storage.MockStorageStrategy;
+import io.novaordis.utilities.time.Duration;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
@@ -33,6 +34,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -437,10 +439,10 @@ public class LoadCommandTest extends CommandTest
     // --max-operations ------------------------------------------------------------------------------------------------
 
     @Test
-    public void missingMaxOperations() throws Exception
-    {
-        try
-        {
+    public void missingMaxOperations() throws Exception {
+
+        try {
+
             new ConfigurationImpl(new String[]
                 {
                     "load",
@@ -452,17 +454,16 @@ public class LoadCommandTest extends CommandTest
             fail("should fail with UserErrorException, missing --max-operations value");
 
         }
-        catch(UserErrorException e)
-        {
+        catch(UserErrorException e) {
             log.info(e.getMessage());
         }
     }
 
     @Test
-    public void maxOperations() throws Exception
-    {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
+    public void maxOperations() throws Exception {
+
+        ConfigurationImpl c = new ConfigurationImpl(new String[] {
+
                 "load",
                 "--nodes",
                 "embedded",
@@ -475,10 +476,9 @@ public class LoadCommandTest extends CommandTest
     }
 
     @Test
-    public void maxOperations_default() throws Exception
-    {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
+    public void maxOperations_default() throws Exception {
+
+        ConfigurationImpl c = new ConfigurationImpl(new String[] {
                 "load",
                 "--nodes",
                 "embedded",
@@ -490,12 +490,11 @@ public class LoadCommandTest extends CommandTest
     }
 
     @Test
-    public void maxOperations_InvalidValue() throws Exception
-    {
-        try
-        {
-            new ConfigurationImpl(new String[]
-                {
+    public void maxOperations_InvalidValue() throws Exception {
+
+        try {
+
+            new ConfigurationImpl(new String[] {
                     "load",
                     "--nodes",
                     "embedded",
@@ -506,14 +505,37 @@ public class LoadCommandTest extends CommandTest
             fail("should fail with UserErrorException, wrong --max-operations value");
 
         }
-        catch(UserErrorException e)
-        {
+        catch(UserErrorException e) {
+
             log.info(e.getMessage());
 
             Throwable cause = e.getCause();
 
             assertTrue(cause instanceof NumberFormatException);
         }
+    }
+
+    // --duration ------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void duration() throws Exception {
+
+        ConfigurationImpl c = new ConfigurationImpl(new String[] {
+
+                "load",
+                "--nodes",
+                "embedded",
+                "--duration",
+                "10m"
+        });
+
+        Load load = (Load)c.getCommand();
+
+        Duration d = load.getDuration();
+
+        assertNotNull(d);
+
+        assertEquals(10L * 60 * 1000, d.getMilliseconds());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

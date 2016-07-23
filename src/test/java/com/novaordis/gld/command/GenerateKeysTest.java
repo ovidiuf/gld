@@ -19,8 +19,8 @@ package com.novaordis.gld.command;
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.mock.MockConfiguration;
-import com.novaordis.utilities.Files;
-import com.novaordis.utilities.testing.Tests;
+import io.novaordis.utilities.Files;
+import io.novaordis.utilities.testing.Tests;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Test;
@@ -32,6 +32,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 import static org.junit.Assert.assertTrue;
+
 public class GenerateKeysTest extends CommandTest
 {
     // Constants -------------------------------------------------------------------------------------------------------

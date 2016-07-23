@@ -16,7 +16,7 @@
 
 package com.novaordis.gld.keystore;
 
-import com.novaordis.utilities.testing.Tests;
+import io.novaordis.utilities.testing.Tests;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Test;

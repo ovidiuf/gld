@@ -21,7 +21,7 @@ import com.novaordis.gld.KeyStore;
 import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.command.Content;
-import com.novaordis.utilities.Files;
+import io.novaordis.utilities.Files;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;

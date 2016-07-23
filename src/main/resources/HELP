@@ -119,7 +119,13 @@ Commands:
         --max-operations  -  the total number of operations  (cache reads or writes,  JMS messages
           sent or received)  to send into the target service.  If not specifies,  the  default  is
           "unlimited",  meaning  the driver  will continuously send  operations  until  explicitly
-          stopped.
+          stopped.  The exact meaning of an "operation"  depends on the service  and load strategy
+          being used.
+
+        --duration <time-interval-specification> - the duration of the load run.  The duration can
+          be specified in seconds (10s), minutes (10m) or hours (10h).
+
+          TODO: when both --max-operations and --duration is used.
 
         --sleep <ms>   -    the number of milliseconds to sleep  after each operation is completed
             (successfully or not).  The default value is 0,  which means the load driver will send
