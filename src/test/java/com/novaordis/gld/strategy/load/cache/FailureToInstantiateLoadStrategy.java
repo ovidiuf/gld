@@ -37,14 +37,13 @@ public class FailureToInstantiateLoadStrategy extends LoadStrategyBase
     /**
      * The only constructor requires an argument, so the no-argument instantiation attempt will fail.
      */
-    public FailureToInstantiateLoadStrategy(String s)
-    {
+    public FailureToInstantiateLoadStrategy(String s) {
     }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
 
     @Override
-    public Operation next(Operation lastOperation, String lastWrittenKey)
+    public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown)
     {
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }

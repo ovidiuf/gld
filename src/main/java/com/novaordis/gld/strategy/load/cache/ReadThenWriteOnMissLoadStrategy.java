@@ -103,9 +103,9 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase
     }
 
     /**
-     * @see com.novaordis.gld.LoadStrategy#next(Operation, String)
+     * @see com.novaordis.gld.LoadStrategy#next(Operation, String, boolean)
      */
-    public Operation next(Operation lastOperation, String lastWrittenKey)
+    public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown)
     {
         if (!configured)
         {

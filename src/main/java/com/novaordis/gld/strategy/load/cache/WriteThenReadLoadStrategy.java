@@ -147,15 +147,14 @@ public class WriteThenReadLoadStrategy extends LoadStrategyBase
     }
 
     @Override
-    public Operation next(Operation lastOperation, String lastWrittenKey) throws Exception
-    {
-        if (indexInSeries == -1)
-        {
+    public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown)
+            throws Exception  {
+
+        if (indexInSeries == -1) {
             throw new IllegalStateException(this + " not properly configured");
         }
 
-        if (remainingOperations != null && remainingOperations.getAndDecrement() <= 0)
-        {
+        if (remainingOperations != null && remainingOperations.getAndDecrement() <= 0) {
             // out of operations
             remainingOperations.set(0);
             return null;
@@ -165,12 +164,10 @@ public class WriteThenReadLoadStrategy extends LoadStrategyBase
 
         byte keyType;
 
-        if (indexInSeries == 0)
-        {
+        if (indexInSeries == 0) {
             keyType = read ? READ : WRITE;
         }
-        else
-        {
+        else {
             keyType = read ?  WRITE : READ;
         }
 
@@ -178,53 +175,47 @@ public class WriteThenReadLoadStrategy extends LoadStrategyBase
         Operation o;
         KeyStore keyStore = getKeyStore();
 
-        if (keyType == READ)
-        {
-            if (keyStore != null && keyStore instanceof ReadOnlyFileKeyStore)
-            {
+        if (keyType == READ) {
+
+            if (keyStore != null && keyStore instanceof ReadOnlyFileKeyStore) {
                 key = keyStore.get();
             }
-            else if (lastWrittenKey != null)
-            {
+            else if (lastWrittenKey != null) {
                 // last successfully written key - the method should be prepared for the situation the key is null.
                 // Use this unless we have been passed a ReadOnly key keystore. A ReadOnly key keystore takes precedence.
 
                 key = lastWrittenKey;
             }
-            else
-            {
+            else {
                 key = Util.getRandomKey(ThreadLocalRandom.current(), keySize);
             }
 
             o = new Read(key);
         }
         else //noinspection ConstantConditions
-            if (keyType == WRITE)
-        {
+            if (keyType == WRITE) {
             String value;
 
             // TODO needs refactoring
-            if (keyStore instanceof ExperimentalKeyStore)
-            {
+            if (keyStore instanceof ExperimentalKeyStore) {
                 key = keyStore.get();
 
-                if (key == null)
-                {
+                if (key == null) {
                     return null;
                 }
 
                 value = ((ExperimentalKeyStore)keyStore).getValue(key);
             }
-            else
-            {
+            else {
+
                 key = Util.getRandomKey(ThreadLocalRandom.current(), keySize);
                 value = Util.getRandomValue(ThreadLocalRandom.current(), valueSize, useDifferentValues);
             }
 
             o = new Write(key, value);
         }
-        else
-        {
+        else {
+
             throw new IllegalArgumentException("unknown key type " +keyType);
         }
 

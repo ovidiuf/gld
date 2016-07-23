@@ -54,13 +54,14 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
 
-    /**
-     * @see com.novaordis.gld.LoadStrategy#configure(Configuration, List, int)
-     */
     @Override
     public void configure(Configuration conf, List<String> arguments, int from) throws Exception
     {
         super.configure(conf, arguments, from);
+
+        if (arguments == null) {
+            return;
+        }
 
         for(int i = from; i < arguments.size(); i ++) {
 
@@ -97,13 +98,21 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
     }
 
     /**
-     * @see com.novaordis.gld.LoadStrategy#next(Operation, String)
+     * @see com.novaordis.gld.LoadStrategy#next(Operation, String, boolean)
      */
-    public Operation next(Operation lastOperation, String lastWrittenKey) {
+    public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown) {
 
         HttpSessionSimulation s = HttpSessionSimulation.getCurrentInstance();
 
         if (s == null) {
+
+            if (runtimeShuttingDown) {
+
+                //
+                // we're shutting down anyway, no point in sending anything
+                //
+                return null;
+            }
 
             s = HttpSessionSimulation.initializeInstance();
 
@@ -114,14 +123,29 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
             s.setWriteCount(getWriteCount());
         }
 
-        HttpSessionOperation o = s.next();
 
-        if (o instanceof HttpSessionInvalidate) {
+        HttpSessionOperation nextOperation;
+
+
+        if (runtimeShuttingDown) {
+
+            //
+            // we're shutting down, cleanup, invalidate the session in the cache
+            //
+
+            nextOperation = new HttpSessionInvalidate(s);
+        }
+        else {
+
+            nextOperation = s.next();
+        }
+
+        if (nextOperation instanceof HttpSessionInvalidate) {
 
             HttpSessionSimulation.destroyInstance();
         }
 
-        return o;
+        return nextOperation;
     }
 
     @Override

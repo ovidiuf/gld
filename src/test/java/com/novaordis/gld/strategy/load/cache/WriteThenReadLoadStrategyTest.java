@@ -49,8 +49,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
-{
+public class WriteThenReadLoadStrategyTest extends LoadStrategyTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(WriteThenReadLoadStrategyTest.class);
@@ -62,8 +62,8 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
     // Constructors ----------------------------------------------------------------------------------------------------
 
     @After
-    public void scratchCleanup() throws Exception
-    {
+    public void scratchCleanup() throws Exception {
+
         Tests.cleanup();
     }
 
@@ -74,8 +74,8 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
     // configure -------------------------------------------------------------------------------------------------------
 
     @Test
-    public void configure() throws Exception
-    {
+    public void configure() throws Exception {
+
         WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
@@ -88,8 +88,8 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
     // next ------------------------------------------------------------------------------------------------------------
 
     @Test
-    public void onlyWrites() throws Exception
-    {
+    public void onlyWrites() throws Exception {
+
         WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
@@ -106,28 +106,27 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
 
         assertTrue(arguments.isEmpty());
 
-        Operation o = ls.next(null, null);
+        Operation o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
     }
 
     @Test
-    public void readToWrite_0_SameResultsWhenWePassLastOperation() throws Exception
-    {
+    public void readToWrite_0_SameResultsWhenWePassLastOperation() throws Exception  {
         WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
@@ -144,33 +143,32 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
 
         assertTrue(arguments.isEmpty());
 
-        Operation o = ls.next(null, null);
+        Operation o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
         Operation last = o;
 
-        o = ls.next(last, null);
+        o = ls.next(last, null, false);
         assertTrue(o instanceof Write);
         last = o;
 
-        o = ls.next(last, null);
+        o = ls.next(last, null, false);
         assertTrue(o instanceof Write);
         last = o;
 
-        o = ls.next(last, null);
+        o = ls.next(last, null, false);
         assertTrue(o instanceof Write);
         last = o;
 
-        o = ls.next(last, null);
+        o = ls.next(last, null, false);
         assertTrue(o instanceof Write);
         last = o;
 
-        o = ls.next(last, null);
+        o = ls.next(last, null, false);
         assertTrue(o instanceof Write);
     }
 
     @Test
-    public void readToWrite_1() throws Exception
-    {
+    public void readToWrite_1() throws Exception {
         WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
@@ -187,28 +185,28 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
 
         assertTrue(arguments.isEmpty());
 
-        Operation o = ls.next(null, null);
+        Operation o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
     }
 
     @Test
-    public void readToWrite_2() throws Exception
-    {
+    public void readToWrite_2() throws Exception {
+
         WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
@@ -225,31 +223,31 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
 
         assertTrue(arguments.isEmpty());
 
-        Operation o = ls.next(null, null);
+        Operation o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
     }
 
     @Test
-    public void readToWrite_3() throws Exception
-    {
+    public void readToWrite_3() throws Exception {
+
         WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
@@ -266,37 +264,37 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
 
         assertTrue(arguments.isEmpty());
 
-        Operation o = ls.next(null, null);
+        Operation o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
     }
 
     @Test
-    public void writeToRead_0() throws Exception
-    {
+    public void writeToRead_0() throws Exception {
+
         WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
@@ -313,28 +311,28 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
 
         assertTrue(arguments.isEmpty());
 
-        Operation o = ls.next(null, null);
+        Operation o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
     }
 
     @Test
-    public void writeToRead_1() throws Exception
-    {
+    public void writeToRead_1() throws Exception {
+
         WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
@@ -351,28 +349,28 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
 
         assertTrue(arguments.isEmpty());
 
-        Operation o = ls.next(null, null);
+        Operation o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
     }
 
     @Test
-    public void writeToRead_2() throws Exception
-    {
+    public void writeToRead_2() throws Exception {
+
         WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
@@ -389,31 +387,31 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
 
         assertTrue(arguments.isEmpty());
 
-        Operation o = ls.next(null, null);
+        Operation o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
     }
 
     @Test
-    public void writeToRead_3() throws Exception
-    {
+    public void writeToRead_3() throws Exception {
+
         WriteThenReadLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
@@ -430,31 +428,31 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
 
         assertTrue(arguments.isEmpty());
 
-        Operation o = ls.next(null, null);
+        Operation o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Write);
 
-        o = ls.next(null, null);
+        o = ls.next(null, null, false);
         assertTrue(o instanceof Read);
     }
 
@@ -463,8 +461,8 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
     //
 
     @Test
-    public void integration_WriteThenRead_SingleThreadedRunner() throws Exception
-    {
+    public void integration_WriteThenRead_SingleThreadedRunner() throws Exception {
+
         File storeFile = new File(Tests.getScratchDir(), "test-keys.txt");
 
         MockCacheService mcs = new MockCacheService();
@@ -544,8 +542,8 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest
      */
     @Override
     protected WriteThenReadLoadStrategy getLoadStrategyToTest(Configuration config, List<String> arguments, int from)
-        throws Exception
-    {
+        throws Exception {
+
         return new WriteThenReadLoadStrategy();
     }
 

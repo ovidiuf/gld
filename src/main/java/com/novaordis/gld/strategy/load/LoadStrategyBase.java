@@ -22,8 +22,8 @@ import com.novaordis.gld.LoadStrategy;
 
 import java.util.List;
 
-public abstract class LoadStrategyBase implements LoadStrategy
-{
+public abstract class LoadStrategyBase implements LoadStrategy {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
@@ -37,39 +37,34 @@ public abstract class LoadStrategyBase implements LoadStrategy
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
 
-    /**
-     * @see com.novaordis.gld.LoadStrategy#configure(Configuration, List, int)
-     */
     @Override
-    public void configure(Configuration configuration, List<String> arguments, int from) throws Exception
-    {
-        if (configuration == null)
-        {
+    public void configure(Configuration configuration, List<String> arguments, int from) throws Exception {
+
+        if (configuration == null) {
+
             throw new IllegalArgumentException("null configuration");
         }
 
         this.configuration = configuration;
 
-        if (arguments == null)
-        {
+        if (arguments == null) {
+
             // null arguments list means there are no more arguments
             return;
         }
 
-        if (!arguments.isEmpty() && (from < 0 || from >= arguments.size()))
-        {
+        if (!arguments.isEmpty() && (from < 0 || from >= arguments.size())) {
+
             throw new ArrayIndexOutOfBoundsException("invalid array index: " + from);
         }
-
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
+
         String s = getClass().getSimpleName();
 
-        if (s.endsWith("LoadStrategy"))
-        {
+        if (s.endsWith("LoadStrategy")) {
             s = s.substring(0, s.length() - "LoadStrategy".length());
         }
 

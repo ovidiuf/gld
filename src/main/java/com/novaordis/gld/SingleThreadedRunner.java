@@ -93,7 +93,7 @@ public class SingleThreadedRunner implements Runnable {
         thread = new Thread(this, name + " Thread");
     }
 
-    // Runnable implementation -------------------------------------------------------------------------------------
+    // Runnable implementation -----------------------------------------------------------------------------------------
 
     public void run() {
 
@@ -139,13 +139,17 @@ public class SingleThreadedRunner implements Runnable {
 
     public void start() {
 
+        log.debug(this + " starting ...");
+
         running = true;
         thread.start();
     }
 
-    public void stop()
-    {
+    public void stop() {
+
         running = false;
+
+        log.debug(this + " stopped");
     }
 
     @Override
@@ -166,9 +170,18 @@ public class SingleThreadedRunner implements Runnable {
         String lastWrittenKey = null;
         Operation lastOperation = null;
 
-        while (running && !durationExpired.get()) {
+        while (running) {
 
-            Operation op = loadStrategy.next(lastOperation, lastWrittenKey);
+            if (durationExpired.get()) {
+
+                //
+                // the run duration expired, this loop is done, but before exiting give the load strategy a chance
+                // to fabricate a "cleanup" operation, if it wants to
+                //
+                running = false;
+            }
+
+            Operation op = loadStrategy.next(lastOperation, lastWrittenKey, durationExpired.get());
 
             if (op == null) {
 

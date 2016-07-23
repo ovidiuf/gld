@@ -194,7 +194,7 @@ public class ActiveMQServiceTest extends ServiceTest
 
         assertEquals(EndpointPolicy.REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION, loadStrategy.getEndpointPolicy());
 
-        Send send = (Send)loadStrategy.next(null, null);
+        Send send = (Send)loadStrategy.next(null, null, false);
 
         // make sure no sessions were created at this point
         EmbeddedConnection c = (EmbeddedConnection)service.getConnection();
@@ -240,7 +240,7 @@ public class ActiveMQServiceTest extends ServiceTest
         EmbeddedConnection c = (EmbeddedConnection)service.getConnection();
         assertTrue(c.getCreatedSessions().isEmpty());
 
-        Send send = (Send)loadStrategy.next(null, null);
+        Send send = (Send)loadStrategy.next(null, null, false);
 
         send.perform(service);
 
@@ -258,7 +258,7 @@ public class ActiveMQServiceTest extends ServiceTest
         // perform another operation, make sure we reuse the same session, but a different producer, that
         // is closed after the operation
 
-        Send send2 = (Send)loadStrategy.next(null, null);
+        Send send2 = (Send)loadStrategy.next(null, null, false);
 
         send2.perform(service);
 

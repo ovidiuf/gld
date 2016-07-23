@@ -61,12 +61,13 @@ public class MockLoadStrategy extends LoadStrategyBase
     /**
      * @param operationCount the number of operations to generate.
      */
-    public MockLoadStrategy(int operationCount)
-    {
-        if (operationCount >= 0)
-        {
+    public MockLoadStrategy(int operationCount) {
+
+        if (operationCount >= 0) {
             remainingOperations = new AtomicInteger(operationCount);
         }
+
+        log.debug(this + " constructed");
     }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
@@ -92,7 +93,7 @@ public class MockLoadStrategy extends LoadStrategyBase
     }
 
     @Override
-    public Operation next(Operation lastOperation, String lastWrittenKey)
+    public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown)
     {
         if (remainingOperations != null)
         {

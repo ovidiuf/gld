@@ -49,8 +49,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
-{
+public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(ReadThenWriteOnMissLoadStrategyTest.class);
@@ -61,17 +61,17 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    // Overrides -------------------------------------------------------------------------------------------------------
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     @After
-    public void scratchCleanup() throws Exception
-    {
+    public void scratchCleanup() throws Exception {
         Tests.cleanup();
     }
 
     @Test
-    public void hit_noKeyStore() throws Exception
-    {
+    public void hit_noKeyStore() throws Exception {
         ReadThenWriteOnMissLoadStrategy rtwom = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
@@ -82,7 +82,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
         rtwom.configure(mc, Collections.<String>emptyList(), 0);
 
         // first operation is always a read
-        Operation o = rtwom.next(null, null);
+        Operation o = rtwom.next(null, null, false);
 
         Read r = (Read)o;
 
@@ -94,7 +94,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
         // make it a "hit"
         r.setValue("something");
 
-        o = rtwom.next(r, null);
+        o = rtwom.next(r, null, false);
 
         // the next operation is another read, for a different random key
 
@@ -108,8 +108,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
     }
 
     @Test
-    public void miss_noKeyStore() throws Exception
-    {
+    public void miss_noKeyStore() throws Exception {
         ReadThenWriteOnMissLoadStrategy rtwom = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
@@ -120,7 +119,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
         rtwom.configure(mc, Collections.<String>emptyList(), 0);
 
         // first operation is always a read
-        Operation o = rtwom.next(null, null);
+        Operation o = rtwom.next(null, null, false);
 
         Read r = (Read)o;
 
@@ -131,7 +130,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
         // insure it's a miss
         assertNull(r.getValue());
 
-        o = rtwom.next(r, null);
+        o = rtwom.next(r, null, false);
 
         // the next operation is a write for the key we missed
 
@@ -145,8 +144,8 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
     }
 
     @Test
-    public void readAfterWrite_noKeyStore() throws Exception
-    {
+    public void readAfterWrite_noKeyStore() throws Exception {
+
         ReadThenWriteOnMissLoadStrategy rtwom = getLoadStrategyToTest(null, null, -1);
 
         MockConfiguration mc = new MockConfiguration();
@@ -158,7 +157,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
 
         Write w = new Write("TEST-KEY", "TEST-VALUE");
 
-        Operation o = rtwom.next(w, null);
+        Operation o = rtwom.next(w, null, false);
 
         // the next operation after a write is another read
 
@@ -170,8 +169,8 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
     }
 
     @Test
-    public void hit_validKeyStore() throws Exception
-    {
+    public void hit_validKeyStore() throws Exception {
+
         File keyStoreFile = new File(Tests.getScratchDir(), "keys.txt");
         Files.write(keyStoreFile, "KEY0\nKEY1\nKEY2\n");
 
@@ -186,7 +185,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
         rtwom.configure(mc, Collections.<String>emptyList(), 0);
 
         // first operation is always a read
-        Operation o = rtwom.next(null, null);
+        Operation o = rtwom.next(null, null, false);
 
         Read r = (Read)o;
 
@@ -198,7 +197,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
         // make it a "hit"
         r.setValue("something");
 
-        o = rtwom.next(r, null);
+        o = rtwom.next(r, null, false);
 
         // the next operation is another read, for the next key
 
@@ -211,8 +210,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
     }
 
     @Test
-    public void miss_validKeyStore() throws Exception
-    {
+    public void miss_validKeyStore() throws Exception {
         File keyStoreFile = new File(Tests.getScratchDir(), "keys.txt");
         Files.write(keyStoreFile, "KEY0\nKEY1\nKEY2\n");
 
@@ -227,7 +225,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
         rtwom.configure(mc, Collections.<String>emptyList(), 0);
 
         // first operation is always a read
-        Operation o = rtwom.next(null, null);
+        Operation o = rtwom.next(null, null, false);
 
         Read r = (Read)o;
 
@@ -238,7 +236,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
         // insure it's a miss
         assertNull(r.getValue());
 
-        o = rtwom.next(r, null);
+        o = rtwom.next(r, null, false);
 
         // the next operation is a write for the key we missed
 
@@ -252,8 +250,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
     }
 
     @Test
-    public void readAfterWrite_validKeyStore() throws Exception
-    {
+    public void readAfterWrite_validKeyStore() throws Exception {
         File keyStoreFile = new File(Tests.getScratchDir(), "keys.txt");
         Files.write(keyStoreFile, "KEY0\nKEY1\nKEY2\n");
 
@@ -269,7 +266,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
 
         Write w = new Write("TEST-KEY", "TEST-VALUE");
 
-        Operation o = rtwom.next(w, null);
+        Operation o = rtwom.next(w, null, false);
 
         // the next operation after a write is another read
 
@@ -285,8 +282,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
     //
 
     @Test
-    public void integration_ReadThenWriteOnMiss_SingleThreadedRunner_ReadThenOutOfOps() throws Exception
-    {
+    public void integration_ReadThenWriteOnMiss_SingleThreadedRunner_ReadThenOutOfOps() throws Exception {
         MockCacheService mcs = new MockCacheService()
         {
             @Override
@@ -328,8 +324,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
     }
 
     @Test
-    public void integration_ReadThenWriteOnMiss_SingleThreadedRunner_ReadThenWrite() throws Exception
-    {
+    public void integration_ReadThenWriteOnMiss_SingleThreadedRunner_ReadThenWrite() throws Exception {
         MockCacheService mcs = new MockCacheService();
         MockConfiguration mc = new MockConfiguration();
         mc.setKeySize(1);
@@ -382,8 +377,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest
      */
     @Override
     protected ReadThenWriteOnMissLoadStrategy getLoadStrategyToTest(
-        Configuration config, List<String> arguments, int from) throws Exception
-    {
+        Configuration config, List<String> arguments, int from) throws Exception {
         return new ReadThenWriteOnMissLoadStrategy();
     }
 

@@ -36,8 +36,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class SendLoadStrategyTest extends JmsLoadStrategyTest
-{
+public class SendLoadStrategyTest extends JmsLoadStrategyTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
@@ -50,29 +50,28 @@ public class SendLoadStrategyTest extends JmsLoadStrategyTest
 
     // Overrides -------------------------------------------------------------------------------------------------------
 
-    // Public ----------------------------------------------------------------------------------------------------------
-
     @Override
     @Test
-    public void nullArguments() throws Exception
-    {
+    public void nullArguments() throws Exception {
+
         LoadStrategy s = getLoadStrategyToTest(null, null, -1);
         Configuration c = new MockConfiguration();
 
-        try
-        {
+        try {
+
             s.configure(c, null, -1);
             fail("should complain a about missing destination");
         }
-        catch(UserErrorException e)
-        {
+        catch(UserErrorException e) {
             log.info(e.getMessage());
         }
     }
 
+    // Public ----------------------------------------------------------------------------------------------------------
+
     @Test
-    public void next() throws Exception
-    {
+    public void next() throws Exception {
+
         SendLoadStrategy sls = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = new ArrayList<>(Arrays.asList("--queue", "test"));
@@ -88,19 +87,19 @@ public class SendLoadStrategyTest extends JmsLoadStrategyTest
         Queue queue = (Queue)sls.getDestination();
         assertEquals("test", queue.getName());
 
-        Send send = (Send)sls.next(null, null);
+        Send send = (Send)sls.next(null, null, false);
         assertEquals(queue, send.getDestination());
 
-        Send send2 = (Send) sls.next(null, null);
+        Send send2 = (Send) sls.next(null, null, false);
         assertEquals(queue, send2.getDestination());
 
-        Send send3 = (Send) sls.next(null, null);
+        Send send3 = (Send) sls.next(null, null, false);
         assertNull(send3);
     }
 
     @Test
-    public void operationTypes() throws Exception
-    {
+    public void operationTypes() throws Exception {
+
         SendLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         Set<Class<? extends Operation>> operationTypes = ls.getOperationTypes();
@@ -110,8 +109,7 @@ public class SendLoadStrategyTest extends JmsLoadStrategyTest
     }
 
     @Test
-    public void messageSize() throws Exception
-    {
+    public void messageSize() throws Exception {
         int messageSize = 1275;
 
         List<String> args = new ArrayList<>(Arrays.asList("--queue", "test"));
@@ -133,12 +131,11 @@ public class SendLoadStrategyTest extends JmsLoadStrategyTest
      */
     @Override
     protected SendLoadStrategy getLoadStrategyToTest(Configuration config, List<String> arguments, int from)
-        throws Exception
-    {
+        throws Exception {
+
         SendLoadStrategy ls = new SendLoadStrategy();
 
-        if (config != null)
-        {
+        if (config != null) {
             ls.configure(config, arguments, from);
         }
 

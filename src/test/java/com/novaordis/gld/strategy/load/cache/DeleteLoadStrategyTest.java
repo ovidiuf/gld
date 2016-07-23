@@ -38,8 +38,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class DeleteLoadStrategyTest extends LoadStrategyTest
-{
+public class DeleteLoadStrategyTest extends LoadStrategyTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(DeleteLoadStrategyTest.class);
@@ -51,8 +51,7 @@ public class DeleteLoadStrategyTest extends LoadStrategyTest
     // Constructors ----------------------------------------------------------------------------------------------------
 
     @After
-    public void scratchCleanup() throws Exception
-    {
+    public void scratchCleanup() throws Exception {
         Tests.cleanup();
     }
 
@@ -60,17 +59,16 @@ public class DeleteLoadStrategyTest extends LoadStrategyTest
 
     @Override
     @Test
-    public void nullArguments() throws Exception
-    {
+    public void nullArguments() throws Exception {
+
         DeleteLoadStrategy s = getLoadStrategyToTest(null, null, -1);
 
-        try
-        {
+        try  {
+
             s.configure(new MockConfiguration(), null, -1);
             fail("should fail with IllegalStateException on account of null cache service");
         }
-        catch(IllegalStateException e)
-        {
+        catch(IllegalStateException e) {
             log.info(e.getMessage());
         }
     }
@@ -80,8 +78,8 @@ public class DeleteLoadStrategyTest extends LoadStrategyTest
     // configure -------------------------------------------------------------------------------------------------------
 
     @Test
-    public void lifeCycle_DEFAULT_KEY_COUNT() throws Exception
-    {
+    public void lifeCycle_DEFAULT_KEY_COUNT() throws Exception {
+
         MockCacheService mockCacheService = new MockCacheService();
         mockCacheService.start();
 
@@ -107,7 +105,7 @@ public class DeleteLoadStrategyTest extends LoadStrategyTest
         SetKeyStore sks = (SetKeyStore)dk.getKeyStore();
         assertEquals(DeleteLoadStrategy.DEFAULT_KEY_COUNT, sks.size());
 
-        Delete d = (Delete)dk.next(null, null);
+        Delete d = (Delete)dk.next(null, null, false);
 
         String key = d.getKey();
 
@@ -115,14 +113,14 @@ public class DeleteLoadStrategyTest extends LoadStrategyTest
 
         // no more operations
 
-        assertNull(dk.next(null, null));
+        assertNull(dk.next(null, null, false));
 
         log.debug(".");
     }
 
     @Test
-    public void lifeCycle_configuredKeyCount_SmallerThanTheTotalNumberOfKeys() throws Exception
-    {
+    public void lifeCycle_configuredKeyCount_SmallerThanTheTotalNumberOfKeys() throws Exception {
+
         MockCacheService mockCacheService = new MockCacheService();
         mockCacheService.start();
 
@@ -155,13 +153,13 @@ public class DeleteLoadStrategyTest extends LoadStrategyTest
 
         // we expect 2 delete operations
 
-        Delete d = (Delete)dk.next(null, null);
+        Delete d = (Delete)dk.next(null, null, false);
 
         String key = d.getKey();
 
         assertTrue(expected.remove(key));
 
-        Delete d2 = (Delete)dk.next(null, null);
+        Delete d2 = (Delete)dk.next(null, null, false);
 
         String key2 = d2.getKey();
 
@@ -169,12 +167,12 @@ public class DeleteLoadStrategyTest extends LoadStrategyTest
 
         // no more operations
 
-        assertNull(dk.next(null, null));
+        assertNull(dk.next(null, null, false));
     }
 
     @Test
-    public void lifeCycle_configuredKeyCount_LargerThanTheTotalNumberOfKeys() throws Exception
-    {
+    public void lifeCycle_configuredKeyCount_LargerThanTheTotalNumberOfKeys() throws Exception {
+
         MockCacheService mockCacheService = new MockCacheService();
         mockCacheService.start();
 
@@ -207,19 +205,19 @@ public class DeleteLoadStrategyTest extends LoadStrategyTest
 
         // we expect 3 delete operations
 
-        Delete d = (Delete)dk.next(null, null);
+        Delete d = (Delete)dk.next(null, null, false);
 
         String key = d.getKey();
 
         assertTrue(expected.remove(key));
 
-        Delete d2 = (Delete)dk.next(null, null);
+        Delete d2 = (Delete)dk.next(null, null, false);
 
         String key2 = d2.getKey();
 
         assertTrue(expected.remove(key2));
 
-        Delete d3 = (Delete)dk.next(null, null);
+        Delete d3 = (Delete)dk.next(null, null, false);
 
         String key3 = d3.getKey();
 
@@ -227,7 +225,7 @@ public class DeleteLoadStrategyTest extends LoadStrategyTest
 
         // no more operations
 
-        assertNull(dk.next(null, null));
+        assertNull(dk.next(null, null, false));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -239,8 +237,8 @@ public class DeleteLoadStrategyTest extends LoadStrategyTest
      */
     @Override
     protected DeleteLoadStrategy getLoadStrategyToTest(Configuration config, List<String> arguments, int from)
-        throws Exception
-    {
+        throws Exception {
+
         return new DeleteLoadStrategy();
     }
 

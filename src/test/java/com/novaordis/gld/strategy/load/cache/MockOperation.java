@@ -60,8 +60,8 @@ public class MockOperation implements Operation {
         this.verbose = b;
     }
 
-    public String toString()
-    {
+    @Override
+    public String toString() {
         return "MockOperation[" + Integer.toHexString(System.identityHashCode(this)) + "]";
     }
 

@@ -224,7 +224,9 @@ Load Strategies
         HttpSession
 
             This  load strategy  simulates  the interaction  between  a HTTP session manager and a
-            cache. Specific configuration options:
+            cache.   The  strategy knows  when the run is winding down  so  the last  HTTP session
+            operation is an HTTP session invalidation.   In consequence, the HTTP session cache is
+            cleaned on exit. Specific configuration options:
 
             --write-count <integer> - the number of attribute writes to execute after the creation
               of the session and before the session is invalidated. The default value is 10.

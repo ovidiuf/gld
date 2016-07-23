@@ -63,12 +63,11 @@ public abstract class JmsLoadStrategy extends LoadStrategyBase
     }
 
     @Override
-    public Operation next(Operation last, String lastWrittenKey) throws Exception
-    {
+    public Operation next(Operation last, String lastWrittenKey, boolean runtimeShuttingDown) throws Exception {
+
         checkConfigured();
 
-        if (!decrementAndCheckIfRemaining())
-        {
+        if (!decrementAndCheckIfRemaining()) {
              return null;
         }
 

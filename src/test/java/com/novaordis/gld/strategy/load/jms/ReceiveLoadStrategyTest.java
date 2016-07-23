@@ -37,8 +37,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest
-{
+public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(ReceiveLoadStrategyTest.class);
@@ -53,18 +53,17 @@ public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest
 
     @Override
     @Test
-    public void nullArguments() throws Exception
-    {
+    public void nullArguments() throws Exception {
+
         LoadStrategy s = getLoadStrategyToTest(null, null, -1);
         Configuration c = new MockConfiguration();
 
-        try
-        {
+        try {
+
             s.configure(c, null, -1);
             fail("should complain a about missing destination");
         }
-        catch(UserErrorException e)
-        {
+        catch(UserErrorException e) {
             log.info(e.getMessage());
         }
     }
@@ -72,8 +71,8 @@ public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void timeout() throws Exception
-    {
+    public void timeout() throws Exception {
+
         ReceiveLoadStrategy rld = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = new ArrayList<>(Arrays.asList("--queue", "test", "--timeout", "7"));
@@ -87,8 +86,8 @@ public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest
     }
 
     @Test
-    public void noTimeout() throws Exception
-    {
+    public void noTimeout() throws Exception {
+
         ReceiveLoadStrategy rld = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = new ArrayList<>(Arrays.asList("--queue", "test"));
@@ -102,8 +101,8 @@ public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest
     }
 
     @Test
-    public void next() throws Exception
-    {
+    public void next() throws Exception {
+
         ReceiveLoadStrategy rld = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = new ArrayList<>(Arrays.asList("--queue", "test", "--timeout", "7"));
@@ -120,20 +119,19 @@ public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest
         Queue queue = (Queue)rld.getDestination();
         assertEquals("test", queue.getName());
 
-        Receive receive = (Receive)rld.next(null, null);
+        Receive receive = (Receive)rld.next(null, null, false);
         assertEquals(queue, receive.getDestination());
         assertEquals(new Long(7), receive.getTimeoutMs());
 
-        Receive receive2 = (Receive)rld.next(null, null);
+        Receive receive2 = (Receive)rld.next(null, null, false);
         assertEquals(queue, receive2.getDestination());
 
-        Receive receive3 = (Receive)rld.next(null, null);
+        Receive receive3 = (Receive)rld.next(null, null, false);
         assertNull(receive3);
     }
 
     @Test
-    public void operationTypes() throws Exception
-    {
+    public void operationTypes() throws Exception {
         ReceiveLoadStrategy ls = getLoadStrategyToTest(null, null, -1);
 
         Set<Class<? extends Operation>> operationTypes = ls.getOperationTypes();
@@ -151,8 +149,7 @@ public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest
      */
     @Override
     protected ReceiveLoadStrategy getLoadStrategyToTest(Configuration config, List<String> arguments, int from)
-        throws Exception
-    {
+        throws Exception {
         return new ReceiveLoadStrategy();
     }
 

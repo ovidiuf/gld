@@ -21,14 +21,12 @@ import com.novaordis.gld.Operation;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.Util;
 import com.novaordis.gld.operations.jms.Receive;
-import com.novaordis.gld.operations.jms.Send;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ReceiveLoadStrategy extends JmsLoadStrategy
-{
+public class ReceiveLoadStrategy extends JmsLoadStrategy {
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Set<Class<? extends Operation>> OPERATION_TYPES;

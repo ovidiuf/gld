@@ -22,11 +22,15 @@ import com.novaordis.gld.mock.MockKeyStore;
 import com.novaordis.gld.mock.MockSampler;
 import com.novaordis.gld.sampler.Sampler;
 import com.novaordis.gld.sampler.SamplerImpl;
+import com.novaordis.gld.strategy.load.cache.MockCleanupOperation;
 import com.novaordis.gld.strategy.load.cache.MockLoadStrategy;
 import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -36,8 +40,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class SingleThreadedRunnerTest
-{
+public class SingleThreadedRunnerTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(SingleThreadedRunnerTest.class);
@@ -47,8 +51,7 @@ public class SingleThreadedRunnerTest
     /**
      * Use this to enable run() for individual invocations.
      */
-    public static void setRunning(SingleThreadedRunner st)
-    {
+    public static void setRunning(SingleThreadedRunner st) {
         st.running = true;
     }
 
@@ -178,8 +181,8 @@ public class SingleThreadedRunnerTest
     }
 
     @Test
-    public void insureThatKeyStoreIsClosedOnExit() throws Exception
-    {
+    public void insureThatKeyStoreIsClosedOnExit() throws Exception {
+
         MockConfiguration mc = new MockConfiguration();
         mc.setService(new MockCacheService());
 
@@ -211,8 +214,8 @@ public class SingleThreadedRunnerTest
     }
 
     @Test
-    public void insureSleepWorks() throws Exception
-    {
+    public void insureSleepWorks() throws Exception {
+
         long sleepMs = 250L;
 
         MockConfiguration mc = new MockConfiguration();
@@ -226,6 +229,7 @@ public class SingleThreadedRunnerTest
 
         SingleThreadedRunner st = new SingleThreadedRunner(
                 "TEST", mc, mockLoadStrategy, mockSampler, barrier, new AtomicBoolean(false));
+
         setRunning(st);
 
         long t0 = System.currentTimeMillis();
@@ -235,6 +239,134 @@ public class SingleThreadedRunnerTest
         long t1 = System.currentTimeMillis();
 
         assertTrue(t1 - t0 >= sleepMs);
+    }
+
+    @Test
+    public void run_RuntimeIsShuttingDown() throws Exception {
+
+        //
+        // we install a mock load strategy that "shuts the runtime down" after the first operation
+        //
+
+        final AtomicBoolean durationExpired = new AtomicBoolean(false);
+
+        LoadStrategy ls = new LoadStrategy() {
+
+            @Override
+            public String getName() {
+                throw new RuntimeException("getName() NOT YET IMPLEMENTED");
+            }
+
+            @Override
+            public void configure(Configuration configuration, List<String> arguments, int from) throws Exception {
+                throw new RuntimeException("configure() NOT YET IMPLEMENTED");
+            }
+
+            @Override
+            public Operation next(Operation last, String lastWrittenKey, boolean runtimeShuttingDown) throws Exception {
+
+                if (runtimeShuttingDown) {
+
+                    //
+                    // returns a "cleanup" mock operation
+                    //
+                    return new MockCleanupOperation();
+                }
+                else {
+
+                    //
+                    // we trigger shutdown after the first invocation
+                    //
+                    durationExpired.set(true);
+                    return new MockOperation();
+                }
+            }
+
+            @Override
+            public Set<Class<? extends Operation>> getOperationTypes() {
+                throw new RuntimeException("getOperationTypes() NOT YET IMPLEMENTED");
+            }
+
+            @Override
+            public KeyStore getKeyStore() {
+
+                return null;
+            }
+        };
+
+        final List<Operation> operations = new ArrayList<>();
+
+        Service s = new Service() {
+
+            @Override
+            public void setConfiguration(Configuration c) {
+                throw new RuntimeException("setConfiguration() NOT YET IMPLEMENTED");
+            }
+
+            @Override
+            public void setTarget(List<Node> nodes) {
+                throw new RuntimeException("setTarget() NOT YET IMPLEMENTED");
+            }
+
+            @Override
+            public void configure(List<String> commandLineArguments) throws UserErrorException {
+                throw new RuntimeException("configure() NOT YET IMPLEMENTED");
+            }
+
+            @Override
+            public ContentType getContentType() {
+                throw new RuntimeException("getContentType() NOT YET IMPLEMENTED");
+            }
+
+            @Override
+            public void start() throws Exception {
+                throw new RuntimeException("start() NOT YET IMPLEMENTED");
+            }
+
+            @Override
+            public void stop() throws Exception {
+                throw new RuntimeException("stop() NOT YET IMPLEMENTED");
+            }
+
+            @Override
+            public boolean isStarted() {
+                throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
+            }
+
+            @Override
+            public void perform(Operation o) throws Exception {
+
+                operations.add(o);
+            }
+        };
+
+        MockSampler ms = new MockSampler();
+        MockConfiguration mc = new MockConfiguration();
+        mc.setService(s);
+        CyclicBarrier cb = new CyclicBarrier(1);
+
+        SingleThreadedRunner r = new SingleThreadedRunner("TEST", mc, ls, ms, cb, durationExpired);
+
+        //
+        // we simulate the running runner without actually have to start the internal thread
+        //
+        setRunning(r);
+
+        r.run();
+
+        //
+        // the service accumulates exactly two operations, of which the first is a MockOperation and the second
+        // is a MockCleanupOperation
+        //
+
+        assertEquals(2, operations.size());
+
+        Operation o = operations.get(0);
+        assertTrue(o instanceof MockOperation);
+        assertFalse(o instanceof MockCleanupOperation);
+
+        Operation o2 = operations.get(1);
+        assertTrue(o2 instanceof MockCleanupOperation);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

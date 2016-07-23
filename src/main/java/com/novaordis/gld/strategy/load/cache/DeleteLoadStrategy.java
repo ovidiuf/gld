@@ -101,11 +101,8 @@ public class DeleteLoadStrategy extends LoadStrategyBase
         setKeyStore(ks);
     }
 
-    /**
-     * @see com.novaordis.gld.LoadStrategy#next(Operation, String)
-     */
     @Override
-    public Operation next(Operation lastOperation, String lastWrittenKey)
+    public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown)
     {
         KeyStore keyStore = getKeyStore();
 

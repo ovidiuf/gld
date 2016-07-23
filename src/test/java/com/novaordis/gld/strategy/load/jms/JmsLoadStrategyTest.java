@@ -34,8 +34,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public abstract class JmsLoadStrategyTest extends LoadStrategyTest
-{
+public abstract class JmsLoadStrategyTest extends LoadStrategyTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(JmsLoadStrategyTest.class);
@@ -49,8 +49,8 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void defaultReuseSessionIsTrue() throws Exception
-    {
+    public void defaultReuseSessionIsTrue() throws Exception {
+
         JmsLoadStrategy jms = getLoadStrategyToTest(null, null, -1);
         assertEquals(EndpointPolicy.REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION, jms.getEndpointPolicy());
         log.debug(jms);
@@ -59,26 +59,25 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
     // destination -----------------------------------------------------------------------------------------------------
 
     @Test
-    public void noDestination() throws Exception
-    {
+    public void noDestination() throws Exception {
         JmsLoadStrategy jms = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = new ArrayList<>(Arrays.asList("--something", "else"));
 
-        try
-        {
+        try {
+
             jms.configure(new MockConfiguration(), args, 0);
             fail("should fail with UserErrorException, no destination");
         }
-        catch(UserErrorException e)
-        {
+        catch(UserErrorException e) {
+
             log.info(e.getMessage());
         }
     }
 
     @Test
-    public void queue() throws Exception
-    {
+    public void queue() throws Exception {
+
         JmsLoadStrategy jms = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = new ArrayList<>(Arrays.asList("--queue", "blah"));
@@ -93,8 +92,8 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
     }
 
     @Test
-    public void topic() throws Exception
-    {
+    public void topic() throws Exception {
+
         JmsLoadStrategy jms = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = new ArrayList<>(Arrays.asList("--topic", "blah"));
@@ -109,19 +108,19 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
     }
 
     @Test
-    public void bothQueueAndTopic() throws Exception
-    {
+    public void bothQueueAndTopic() throws Exception {
+
         JmsLoadStrategy jms = getLoadStrategyToTest(null, null, -1);
 
         List<String> args = new ArrayList<>(Arrays.asList("--topic", "blah", "--queue", "blah2"));
 
-        try
-        {
+        try {
+
             jms.configure(new MockConfiguration(), args, 0);
             fail("should fail with UserErrorException, both queue and topic");
         }
-        catch(UserErrorException e)
-        {
+        catch(UserErrorException e) {
+
             log.info(e.getMessage());
         }
     }
@@ -129,15 +128,15 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
     // max-operation ---------------------------------------------------------------------------------------------------
 
     @Test
-    public void noMaxOperations() throws Exception
-    {
+    public void noMaxOperations() throws Exception {
+
         JmsLoadStrategy jms = getLoadStrategyToTest(null, null, -1);
         assertEquals(Long.MAX_VALUE, jms.getRemainingOperations());
     }
 
     @Test
-    public void maxOperations() throws Exception
-    {
+    public void maxOperations() throws Exception {
+
         MockConfiguration mc = new MockConfiguration();
 
         // load will register itself with configuration
@@ -152,15 +151,15 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
     // endpoint-policy -------------------------------------------------------------------------------------------------
 
     @Test
-    public void defaultEndpointPolicy() throws Exception
-    {
+    public void defaultEndpointPolicy() throws Exception {
+
         JmsLoadStrategy jms = getLoadStrategyToTest(null, null, -1);
         assertEquals(EndpointPolicy.REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION, jms.getEndpointPolicy());
     }
 
     @Test
-    public void setEndpointPolicy() throws Exception
-    {
+    public void setEndpointPolicy() throws Exception {
+
         MockConfiguration mc = new MockConfiguration();
         new Load(mc, Collections.<String>emptyList(), 0);
 
@@ -175,8 +174,8 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
     }
 
     @Test
-    public void invalidEndpointPolicy() throws Exception
-    {
+    public void invalidEndpointPolicy() throws Exception {
+
         MockConfiguration mc = new MockConfiguration();
 
         JmsLoadStrategy jms = getLoadStrategyToTest(null, null, -1);
@@ -184,13 +183,13 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest
         List<String> args = new ArrayList<>(Arrays.asList(
             "--queue", "test", "--endpoint-policy", "THERE-IS-NO-SUCH-ENDPOINT-POLICY"));
 
-        try
-        {
+        try {
+
             jms.configure(mc, args, 0);
             fail("should have failed with UserErrorException");
         }
-        catch(UserErrorException e)
-        {
+        catch(UserErrorException e) {
+
             log.info(e.getMessage());
 
             Throwable cause = e.getCause();
