@@ -23,7 +23,7 @@
     <groupId>com.novaordis.gld</groupId>
     <artifactId>gld</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.3-SNAPSHOT-4</version>
+    <version>1.0.3</version>
 
     <repositories>
         <repository>
@@ -147,7 +147,7 @@
         <dependency>
             <groupId>io.novaordis.utilities</groupId>
             <artifactId>novaordis-utilities</artifactId>
-            <version>4.1.1-SNAPSHOT-6</version>
+            <version>4.1.1</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
