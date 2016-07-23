@@ -36,7 +36,8 @@ public class InfinispanService extends CacheServiceBase {
 
     public static final int DEFAULT_SO_TIMEOUT_MS = 20000;
     public static final int DEFAULT_MAX_RETRIES = 3;
-    public static final boolean DEFAULT_TCP_KEEPALIVE = true;
+
+    // public static final boolean DEFAULT_TCP_KEEPALIVE = true;
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -78,7 +79,8 @@ public class InfinispanService extends CacheServiceBase {
 
             int socketTimeout = DEFAULT_SO_TIMEOUT_MS;
             int maxRetries = DEFAULT_MAX_RETRIES;
-            boolean tcpKeepAlive = DEFAULT_TCP_KEEPALIVE;
+
+            // boolean tcpKeepAlive = DEFAULT_TCP_KEEPALIVE;
 
             ConfigurationBuilder clientBuilder = new ConfigurationBuilder();
 
