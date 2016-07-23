@@ -75,7 +75,6 @@ public class ConfigurationImpl implements Configuration {
     private String password;
     private long keyExpirationSecs;
     private Properties configurationFileContent;
-    private String cacheName;
     private String keyStoreFile;
     private String username;
     private LoadStrategy loadStrategy;
@@ -89,8 +88,7 @@ public class ConfigurationImpl implements Configuration {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public ConfigurationImpl(String[] args) throws Exception
-    {
+    public ConfigurationImpl(String[] args) throws Exception {
         parseCommandLine(args);
     }
 
@@ -229,15 +227,6 @@ public class ConfigurationImpl implements Configuration {
     }
 
     /**
-     * @see Configuration#getCacheName()
-     */
-    @Override
-    public String getCacheName()
-    {
-        return cacheName;
-    }
-
-    /**
      * @see Configuration#getKeyStoreFile()
      */
     @Override
@@ -331,7 +320,6 @@ public class ConfigurationImpl implements Configuration {
     {
         return
             "Configuration: " +
-                "cacheName=" + cacheName + ", " +
                 "threads=" + threads + ", " +
                 "maxTotal="  + maxTotal + ", " +
                 "maxWaitMillis="  + maxWaitMillis + ", " +
@@ -353,10 +341,9 @@ public class ConfigurationImpl implements Configuration {
     // Private ---------------------------------------------------------------------------------------------------------
 
     @SuppressWarnings("ConstantConditions")
-    private void parseCommandLine(String[] args) throws Exception
-    {
-        if (args.length == 0)
-        {
+    private void parseCommandLine(String[] args) throws Exception  {
+
+        if (args.length == 0) {
             command = new Help(this);
             command.initialize();
             return;
@@ -384,272 +371,198 @@ public class ConfigurationImpl implements Configuration {
 
         String statisticsString = Util.extractString("--statistics", arguments, 0);
 
-        for(int i = 0; i < arguments.size(); i ++)
-        {
+        for(int i = 0; i < arguments.size(); i ++) {
+
             String crt = arguments.get(i);
 
-            if (nodesSb != null)
-            {
-                if (crt.startsWith("--"))
-                {
+            if (nodesSb != null) {
+
+                if (crt.startsWith("--")) {
                     nodesString = nodesSb.toString();
                     nodesSb = null;
                 }
-                else
-                {
+                else {
                     nodesSb.append(crt);
                     continue;
                 }
             }
 
-            if ("--help".equals(crt) || "help".equals(crt))
-            {
+            if ("--help".equals(crt) || "help".equals(crt)) {
                 command = new Help(this);
                 return;
             }
-            else if ("version".equals(crt))
-            {
+            else if ("version".equals(crt)) {
                 command = new Version(this);
                 command.initialize();
                 return;
             }
-            else if (command == null && "test".equals(crt))
-            {
+            else if (command == null && "test".equals(crt)) {
                 command = new Test(this);
                 return;
             }
-            else if ("load".equals(crt))
-            {
+            else if ("load".equals(crt)) {
                 command = new Load(this, arguments, i + 1);
             }
-            else if ("content".equals(crt))
-            {
+            else if ("content".equals(crt)) {
                 command = new Content(this);
             }
-            else if ("connect".equals(crt))
-            {
+            else if ("connect".equals(crt)) {
                 command = new Connect(this);
             }
-            else if ("generate-keys".equals(crt))
-            {
+            else if ("generate-keys".equals(crt)) {
                 command = new GenerateKeys(this);
             }
-            else if ("delete".equals(crt))
-            {
+            else if ("delete".equals(crt)) {
                 command = new Delete(this);
             }
-            else if ("start".equals(crt))
-            {
+            else if ("start".equals(crt)) {
                 command = new Start(this);
             }
-            else if ("stop".equals(crt))
-            {
+            else if ("stop".equals(crt)) {
                 command = new Stop(this);
             }
-            else if ("status".equals(crt))
-            {
+            else if ("status".equals(crt)) {
                 command = new Status(this);
             }
-            else if ("--conf".equals(crt))
-            {
+            else if ("--conf".equals(crt)) {
                 // load configuration from the specified file but overlay the command line values, if provided.
                 // command line takes precedence.
                 String confFileName = null;
 
-                if (i < arguments.size() - 1)
-                {
+                if (i < arguments.size() - 1) {
+
                     confFileName = arguments.get(++i);
 
-                    if (confFileName.startsWith("--"))
-                    {
+                    if (confFileName.startsWith("--")) {
                         throw new UserErrorException("a file name (and not another option) must follow --conf");
                     }
                 }
 
-                if (confFileName == null)
-                {
+                if (confFileName == null) {
                     throw new UserErrorException("a file name must follow --conf");
                 }
 
                 BufferedReader br = null;
 
-                try
-                {
+                try {
                     br = new BufferedReader(new FileReader(confFileName));
                     configurationFileContent = new Properties();
                     configurationFileContent.load(br);
                 }
-                finally
-                {
-                    if (br != null)
-                    {
+                finally {
+                    if (br != null) {
                         br.close();
                     }
                 }
             }
-            else if ("--nodes".equals(crt))
-            {
+            else if ("--nodes".equals(crt)) {
                 // this is special, as the list of nodes may come in different commandLineArguments, comma-separated, etc.
-                if (nodesSb != null)
-                {
+                if (nodesSb != null){
                     throw new UserErrorException("--nodes specified twice on command line");
                 }
 
                 nodesSb = new StringBuilder();
             }
-            else if ("--threads".equals(crt))
-            {
-                if (i < arguments.size() - 1)
-                {
+            else if ("--threads".equals(crt)) {
+                if (i < arguments.size() - 1) {
                     threads = Integer.parseInt(arguments.get(++i));
                 }
             }
-            else if ("--max-total".equals(crt))
-            {
-                if (i < arguments.size() - 1)
-                {
+            else if ("--max-total".equals(crt)) {
+                if (i < arguments.size() - 1) {
                     maxTotal = Integer.parseInt(arguments.get(++i));
                 }
             }
-            else if ("--max-wait-millis".equals(crt))
-            {
-                if (i < arguments.size() - 1)
-                {
+            else if ("--max-wait-millis".equals(crt)) {
+                if (i < arguments.size() - 1) {
                     maxWaitMillis = Long.parseLong(arguments.get(++i));
                 }
             }
-            else if ("--sleep".equals(crt))
-            {
-                if (i < arguments.size() - 1)
-                {
+            else if ("--sleep".equals(crt)) {
+                if (i < arguments.size() - 1) {
                     sleep = Long.parseLong(arguments.get(++i));
                 }
             }
-            else if ("--key-size".equals(crt))
-            {
-                if (i < arguments.size() - 1)
-                {
+            else if ("--key-size".equals(crt)) {
+                if (i < arguments.size() - 1) {
                     keySize = Integer.parseInt(arguments.get(++i));
                 }
             }
-            else if ("--value-size".equals(crt) || "--payload-size".equals(crt))
-            {
-                if (i < arguments.size() - 1)
-                {
+            else if ("--value-size".equals(crt) || "--payload-size".equals(crt)) {
+                if (i < arguments.size() - 1) {
                     valueSize = Integer.parseInt(arguments.get(++i));
                 }
             }
-            else if ("--use-different-values".equals(crt))
-            {
+            else if ("--use-different-values".equals(crt)) {
                 useDifferentValues = true;
             }
-            else if ("--output".equals(crt) && !(command instanceof Content))
-            {
-                if (i < arguments.size() - 1)
-                {
+            else if ("--output".equals(crt) && !(command instanceof Content)) {
+                if (i < arguments.size() - 1) {
                     outputFileName = arguments.get(++i);
-
-                    if (outputFileName.startsWith("--"))
-                    {
+                    if (outputFileName.startsWith("--")) {
                         i--;
                     }
                 }
             }
-            else if ("--expiration".equals(crt))
-            {
-                if (i < arguments.size() - 1)
-                {
+            else if ("--expiration".equals(crt)) {
+                if (i < arguments.size() - 1) {
                     keyExpirationSecs = Long.parseLong(arguments.get(++i));
                 }
             }
-            else if ("--exception-file".equals(crt))
-            {
-                if (i < arguments.size() - 1)
-                {
+            else if ("--exception-file".equals(crt)) {
+                if (i < arguments.size() - 1) {
                     String arg = arguments.get(++i);
-
-                    if (arg.startsWith("--"))
-                    {
+                    if (arg.startsWith("--")) {
                         throw new UserErrorException("a file name (and not another option) must follow --exception-file");
                     }
-
                     setExceptionFile(arg);
                 }
             }
-            else if ("--cache".equals(crt))
-            {
-                if (i < arguments.size() - 1)
-                {
-                    cacheName = arguments.get(++i);
-
-                    if (cacheName.startsWith("--"))
-                    {
-                        throw new UserErrorException("a cache name (and not another option) must follow --cache");
-                    }
-                }
-            }
-            else if ("--keystore-file".equals(crt) || "--key-store-file".equals(crt))
-            {
-                if (i < arguments.size() - 1)
-                {
+            else if ("--keystore-file".equals(crt) || "--key-store-file".equals(crt)) {
+                if (i < arguments.size() - 1) {
                     keyStoreFile = arguments.get(++i);
-
-                    if (keyStoreFile.startsWith("--"))
-                    {
+                    if (keyStoreFile.startsWith("--")) {
                         throw new UserErrorException("a file name (and not another option) must follow --keystore-file");
                     }
                 }
             }
-            else if ("--username".equals(crt))
-            {
-                if (i == arguments.size() - 1)
-                {
+            else if ("--username".equals(crt)) {
+                if (i == arguments.size() - 1) {
                     throw new UserErrorException("a user name should follow --username");
                 }
-                if (i < arguments.size() - 1)
-                {
+                if (i < arguments.size() - 1) {
                     username = arguments.get(++i);
                 }
             }
-            else if ("--password".equals(crt))
-            {
-                if (i == arguments.size() - 1)
-                {
+            else if ("--password".equals(crt)) {
+                if (i == arguments.size() - 1) {
                     throw new UserErrorException("a password name should follow --password");
                 }
-                if (i < arguments.size() - 1)
-                {
+                if (i < arguments.size() - 1) {
                     password = arguments.get(++i);
                 }
             }
-            else if ("--service".equals(crt))
-            {
-                if (i == arguments.size() - 1)
-                {
+            else if ("--service".equals(crt)) {
+                if (i == arguments.size() - 1) {
                     throw new UserErrorException("a service name should follow --service");
                 }
-                if (i < arguments.size() - 1)
-                {
+                if (i < arguments.size() - 1) {
                     serviceString = arguments.get(++i);
                 }
             }
-            else if ("--background".equals(crt))
-            {
+            else if ("--background".equals(crt)) {
                 background = true;
             }
-            else if (command != null)
-            {
+            else if (command != null) {
                 // give it one more chance, pass it to the command, maybe it's a command argument?
                 command.addArgument(crt);
             }
-            else
-            {
+            else {
                 throw new UserErrorException("unknown command '" + crt + "'");
             }
         }
 
-        if (nodesSb != null)
-        {
+        if (nodesSb != null) {
             nodesString = nodesSb.toString();
         }
 
@@ -657,117 +570,122 @@ public class ConfigurationImpl implements Configuration {
         // overlay configuration file properties only if they weren't specified on the command line
         //
 
-        if (keyExpirationSecs == -1L && configurationFileContent != null && configurationFileContent.get("expiration") != null)
-        {
+        if (keyExpirationSecs == -1L &&
+                configurationFileContent != null &&
+                configurationFileContent.get("expiration") != null) {
             keyExpirationSecs = Long.parseLong((String)configurationFileContent.get("expiration"));
         }
 
-        if (password == null && configurationFileContent != null && configurationFileContent.get("password") != null)
-        {
+        if (password == null &&
+                configurationFileContent != null &&
+                configurationFileContent.get("password") != null) {
             password = ((String)configurationFileContent.get("password"));
         }
 
-        if (threads == -1 && configurationFileContent != null && configurationFileContent.get("threads") != null)
-        {
+        if (threads == -1 &&
+                configurationFileContent != null &&
+                configurationFileContent.get("threads") != null) {
             threads = Integer.parseInt((String)configurationFileContent.get("threads"));
         }
 
-        if (threads == -1)
-        {
+        if (threads == -1) {
             threads = DEFAULT_THREAD_COUNT;
         }
 
-        if (maxTotal == -1 && configurationFileContent != null && configurationFileContent.get("max-total") != null)
-        {
+        if (maxTotal == -1 &&
+                configurationFileContent != null &&
+                configurationFileContent.get("max-total") != null) {
             maxTotal = Integer.parseInt((String)configurationFileContent.get("max-total"));
         }
 
-        if (maxTotal == -1)
-        {
+        if (maxTotal == -1) {
             maxTotal = DEFAULT_MAX_TOTAL;
         }
 
-        if (maxWaitMillis == -1 && configurationFileContent != null && configurationFileContent.get("max-wait-millis") != null)
-        {
+        if (maxWaitMillis == -1 &&
+                configurationFileContent != null &&
+                configurationFileContent.get("max-wait-millis") != null) {
             maxWaitMillis = Long.parseLong((String)configurationFileContent.get("max-wait-millis"));
         }
 
-        if (maxWaitMillis == -1)
-        {
+        if (maxWaitMillis == -1) {
             maxWaitMillis = DEFAULT_MAX_WAIT_MILLIS;
         }
 
-        if (sleep == -1 && configurationFileContent != null && configurationFileContent.get("sleep") != null)
-        {
+        if (sleep == -1 &&
+                configurationFileContent != null &&
+                configurationFileContent.get("sleep") != null) {
             sleep = Long.parseLong((String)configurationFileContent.get("sleep"));
         }
 
-        if (sleep == -1)
-        {
+        if (sleep == -1) {
             sleep = DEFAULT_SLEEP;
         }
 
-        if (keySize == -1 && configurationFileContent != null && configurationFileContent.get("key-size") != null)
-        {
+        if (keySize == -1 &&
+                configurationFileContent != null &&
+                configurationFileContent.get("key-size") != null) {
             keySize = Integer.parseInt((String)configurationFileContent.get("key-size"));
         }
 
-        if (keySize == -1)
-        {
+        if (keySize == -1) {
             keySize = DEFAULT_KEY_SIZE;
         }
 
-        if (valueSize == -1 && configurationFileContent != null && configurationFileContent.get("value-size") != null)
-        {
+        if (valueSize == -1 &&
+                configurationFileContent != null &&
+                configurationFileContent.get("value-size") != null) {
             valueSize = Integer.parseInt((String)configurationFileContent.get("value-size"));
         }
 
-        if (valueSize == -1)
-        {
+        if (valueSize == -1) {
             valueSize = DEFAULT_VALUE_SIZE;
         }
 
-        if (!useDifferentValues && configurationFileContent != null && configurationFileContent.get("use-different-values") != null)
-        {
+        if (!useDifferentValues &&
+                configurationFileContent != null &&
+                configurationFileContent.get("use-different-values") != null) {
             useDifferentValues = Boolean.parseBoolean((String)configurationFileContent.get("use-different-values"));
         }
 
         // --outputFileName can only be set on command line
 
-        if (configurationFileContent != null && configurationFileContent.get("output") != null)
-        {
+        if (configurationFileContent != null && configurationFileContent.get("output") != null) {
             outputFileName = configurationFileContent.getProperty("output");
         }
 
         String arg;
         if (configurationFileContent != null &&
-            ((arg = (String)configurationFileContent.get("exception-file")) != null))
-        {
+            ((arg = (String)configurationFileContent.get("exception-file")) != null)) {
             setExceptionFile(arg);
         }
 
         // we should get either "nodes" (which means the service is Sharded Jedis-based) or "proxy", which means
         // the service is proxy-based
 
-        if (proxyString == null && configurationFileContent != null && configurationFileContent.get("proxies") != null)
-        {
+        if (proxyString == null &&
+                configurationFileContent != null &&
+                configurationFileContent.get("proxies") != null) {
             proxyString = (String)configurationFileContent.get("proxies");
         }
 
-        if (loadStrategy == null && configurationFileContent != null && configurationFileContent.get("load-strategy") != null)
-        {
+        if (loadStrategy == null &&
+                configurationFileContent != null &&
+                configurationFileContent.get("load-strategy") != null) {
             String strategyName = (String)configurationFileContent.get("load-strategy");
             ContentType contentType = command != null && command instanceof Load ? ((Load)command).getContentType() : null;
             loadStrategy = LoadStrategyFactory.fromString(this, strategyName, contentType, null, -1);
         }
 
-        if (username == null && configurationFileContent != null && configurationFileContent.get("username") != null)
-        {
+        if (username == null &&
+                configurationFileContent != null &&
+                configurationFileContent.get("username") != null) {
             username = (String)configurationFileContent.get("username");
         }
 
-        if (password == null && configurationFileContent != null && configurationFileContent.get("password") != null)
-        {
+        if (password == null &&
+                configurationFileContent != null &&
+                configurationFileContent.get("password") != null) {
             password = (String)configurationFileContent.get("password");
         }
 
@@ -775,13 +693,11 @@ public class ConfigurationImpl implements Configuration {
         // by now we should have a command, if we don't, we're broken
         //
 
-        if (command == null)
-        {
+        if (command == null) {
             throw new UserErrorException("no command specified");
         }
 
-        if (command.isRemote())
-        {
+        if (command.isRemote()) {
             nodes = buildNodeList(proxyString, nodesString);
         }
 
@@ -795,12 +711,11 @@ public class ConfigurationImpl implements Configuration {
     /**
      * @throws Exception if problems are encountered while building the node list.
      */
-    private List<Node> buildNodeList(String proxyString, String nodesString) throws Exception
-    {
+    private List<Node> buildNodeList(String proxyString, String nodesString) throws Exception {
+
         List<Node> result;
 
-        if (proxyString != null)
-        {
+        if (proxyString != null) {
             // we-re proxy-based
 
             //List<Node> proxies = Node.toNodeList(proxyString);
@@ -811,22 +726,20 @@ public class ConfigurationImpl implements Configuration {
 
         // we connect directly to nodes, process nodes
 
-        if (nodesString == null && configurationFileContent != null)
-        {
+        if (nodesString == null && configurationFileContent != null) {
             // fallback to the configuration file if exists
             nodesString = (String) configurationFileContent.get("nodes");
         }
 
-        if (nodesString == null)
-        {
+        if (nodesString == null) {
+
             throw new UserErrorException(
                 "no target nodes specified, set --nodes host1:port1,host2:port2,... on the command line or \"nodes=host1:port1,host2:port2,...\" in the configuration file");
         }
 
         result = Node.toNodeList(nodesString);
 
-        if (result.isEmpty())
-        {
+        if (result.isEmpty()){
             throw new IllegalStateException("empty nodes list after non-null string: " + nodesString);
         }
 
@@ -844,33 +757,28 @@ public class ConfigurationImpl implements Configuration {
      * @throws Exception
      */
     private Service buildService(String serviceFullyQualifiedClassName, Configuration configuration,
-                                 List<Node> nodes, List<String> commandLineArguments) throws Exception
-    {
+                                 List<Node> nodes, List<String> commandLineArguments) throws Exception {
         Service result;
 
-        if (serviceString != null)
-        {
+        if (serviceString != null) {
+
             Service service;
 
             // shortcuts
-            if ("embedded-generic".equalsIgnoreCase(serviceString))
-            {
+            if ("embedded-generic".equalsIgnoreCase(serviceString)) {
                 service = new EmbeddedGenericService();
             }
-            else if ("embedded-cache".equalsIgnoreCase(serviceString))
-            {
+            else if ("embedded-cache".equalsIgnoreCase(serviceString)) {
                 service = new EmbeddedCacheService();
             }
-            else if ("activemq".equalsIgnoreCase(serviceString))
-            {
+            else if ("activemq".equalsIgnoreCase(serviceString)) {
                 service = new ActiveMQService();
             }
-            else if ("infinispan".equalsIgnoreCase(serviceString))
-            {
+            else if ("infinispan".equalsIgnoreCase(serviceString)) {
                 service = new InfinispanService();
             }
-            else
-            {
+            else {
+
                 // try to locate the class and instantiate it
                 Class c = getClass().getClassLoader().loadClass(serviceFullyQualifiedClassName);
                 //noinspection UnnecessaryLocalVariable
@@ -894,37 +802,30 @@ public class ConfigurationImpl implements Configuration {
 
         ContentType contentType;
 
-        if (command instanceof Load)
-        {
+        if (command instanceof Load) {
             Load loadCommand = (Load)command;
             contentType = loadCommand.getContentType();
         }
-        else
-        {
+        else {
             contentType = ContentType.valueOf(configurationFileContent.getProperty("content-type"));
         }
 
-        if (nodes.get(0) instanceof EmbeddedNode && !ContentType.JMS.equals(contentType))
-        {
+        if (nodes.get(0) instanceof EmbeddedNode && !ContentType.JMS.equals(contentType)) {
             EmbeddedNode en = (EmbeddedNode)nodes.get(0);
             result = new EmbeddedCacheService(en.getCapacity());
         }
-        else
-        {
-            if (ContentType.TEST.equals(contentType))
-            {
+        else {
+
+            if (ContentType.TEST.equals(contentType)) {
                 result = new EmbeddedGenericService();
             }
-            else if (ContentType.KEYVALUE.equals(contentType))
-            {
-                result = new InfinispanService(getNodes(), getCacheName());
+            else if (ContentType.KEYVALUE.equals(contentType)) {
+                throw new DeprecatedException("a cache service initialization must be done via --service");
             }
-            else if (ContentType.JMS.equals(contentType))
-            {
+            else if (ContentType.JMS.equals(contentType)) {
                 result = new ActiveMQService(this, nodes);
             }
-            else
-            {
+            else {
                 throw new UserErrorException("unknown content type: " + contentType + ", use --service");
             }
         }
@@ -932,8 +833,7 @@ public class ConfigurationImpl implements Configuration {
         return result;
     }
 
-    private void setExceptionFile(String s)
-    {
+    private void setExceptionFile(String s) {
         throw new UserErrorException(
             "currently we don't support dumping specific exception information into a file (" + s +
                 "), but this feature can be revived if needed. See com.novaordis.gld.statistics.ThrowableHandler");

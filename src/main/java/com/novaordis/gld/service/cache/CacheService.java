@@ -14,12 +14,19 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld;
+package com.novaordis.gld.service.cache;
+
+import com.novaordis.gld.Service;
 
 import java.util.Set;
 
-public interface CacheService extends Service
-{
+public interface CacheService extends Service {
+
+    /**
+     * @return the cache name or null if we are using the default cache.
+     */
+    String getName();
+
     void set(String key, String value) throws Exception;
 
     String get(String key) throws Exception;
@@ -29,4 +36,5 @@ public interface CacheService extends Service
     String delete(String key) throws Exception;
 
     Object getCache();
+
 }

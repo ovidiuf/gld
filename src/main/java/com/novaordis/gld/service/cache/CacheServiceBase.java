@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,81 +14,50 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.operations.cache;
+package com.novaordis.gld.service.cache;
 
-import com.novaordis.gld.service.cache.CacheService;
-import com.novaordis.gld.LoadStrategy;
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.Service;
+import com.novaordis.gld.UserErrorException;
+import com.novaordis.gld.Util;
 
-public class Delete implements Operation
-{
+import java.util.List;
+
+/**
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 7/23/16
+ */
+public abstract class CacheServiceBase implements CacheService {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String key;
-
-    private boolean successful;
-
-    private boolean performed;
+    private String name;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Delete(String key)
-    {
-        this.key = key;
-    }
+    // CacheService implementation -------------------------------------------------------------------------------------
 
-    // Operation implementation ----------------------------------------------------------------------------------------
-
-    /**
-     * @see com.novaordis.gld.Operation#perform(com.novaordis.gld.Service)
-     */
     @Override
-    public void perform(Service cs) throws Exception
-    {
-        performed = true;
+    public void configure(List<String> commandLineArguments) throws UserErrorException {
 
-        String deleted = ((CacheService)cs).delete(key);
-
-        if (deleted != null)
-        {
-            this.successful = true;
-        }
+        this.name = Util.extractString("--cache", commandLineArguments, 0);
     }
 
     @Override
-    public LoadStrategy getLoadStrategy()
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+    public String getName() {
+        return name;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
     /**
-     * A successful delete means we actually deleted something from the cache. An unsuccessful delete means
-     * the key wasn't there to be deleted.
+     * @param name - null is acceptable, it means "default cache"
      */
-    public boolean isSuccessful()
+    public void setName(String name)
     {
-        return successful;
-    }
-
-    /**
-     * May return null if the instance was not initialized.
-     */
-    public String getKey()
-    {
-        return key;
-    }
-
-    @Override
-    public String toString()
-    {
-        return key + (performed ? " (" + (successful ? "successfully deleted" : "not found in cache") + ")" : "");
+        this.name = name;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

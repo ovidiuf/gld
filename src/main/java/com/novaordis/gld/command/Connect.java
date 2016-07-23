@@ -16,7 +16,7 @@
 
 package com.novaordis.gld.command;
 
-import com.novaordis.gld.CacheService;
+import com.novaordis.gld.service.cache.CacheService;
 import com.novaordis.gld.Configuration;
 import org.infinispan.client.hotrod.RemoteCache;
 

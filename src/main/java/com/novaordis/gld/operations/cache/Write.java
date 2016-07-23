@@ -18,7 +18,7 @@ package com.novaordis.gld.operations.cache;
 
 import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.Operation;
-import com.novaordis.gld.CacheService;
+import com.novaordis.gld.service.cache.CacheService;
 import com.novaordis.gld.Service;
 
 public class Write implements Operation

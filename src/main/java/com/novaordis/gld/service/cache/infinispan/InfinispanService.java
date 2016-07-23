@@ -16,12 +16,12 @@
 
 package com.novaordis.gld.service.cache.infinispan;
 
-import com.novaordis.gld.CacheService;
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.ContentType;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.UserErrorException;
+import com.novaordis.gld.service.cache.CacheServiceBase;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
@@ -30,8 +30,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public class InfinispanService implements CacheService
-{
+public class InfinispanService extends CacheServiceBase {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     public static final int DEFAULT_SO_TIMEOUT_MS = 20000;
@@ -46,103 +46,99 @@ public class InfinispanService implements CacheService
     private RemoteCacheManager remoteCacheManager;
     private RemoteCache<String, Object> cache;
 
-    private String cacheName;
-
-    private Configuration configuration;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
      * @see InfinispanService#setTarget(List)
-     * @see InfinispanService#setCacheName(String)
      */
-    public InfinispanService()
-    {
-    }
-
-    public InfinispanService(List<Node> nodes, String cacheName)
-    {
-        setTarget(nodes);
-        setCacheName(cacheName);
+    public InfinispanService() {
     }
 
     // Service implementation ------------------------------------------------------------------------------------------
 
     @Override
-    public ContentType getContentType()
-    {
+    public ContentType getContentType() {
         return ContentType.KEYVALUE;
     }
 
     @Override
-    public void setConfiguration(Configuration c)
-    {
-        this.configuration = c;
+    public void setConfiguration(Configuration c) {
+
+        //
+        // noop
+        //
     }
 
     @Override
-    public void setTarget(List<Node> nodes)
-    {
+    public void setTarget(List<Node> nodes) {
+
         this.nodes = nodes;
 
-        int socketTimeout = DEFAULT_SO_TIMEOUT_MS;
-        int maxRetries = DEFAULT_MAX_RETRIES;
-        boolean tcpKeepAlive = DEFAULT_TCP_KEEPALIVE;
+        if (nodes != null) {
 
-        ConfigurationBuilder clientBuilder = new ConfigurationBuilder();
+            int socketTimeout = DEFAULT_SO_TIMEOUT_MS;
+            int maxRetries = DEFAULT_MAX_RETRIES;
+            boolean tcpKeepAlive = DEFAULT_TCP_KEEPALIVE;
 
-        // Add all the nodes to the configuration builder
-        for (Node node : nodes)
-        {
-            clientBuilder.addServer().
-                host(node.getHost()).
-                port(node.getPort());
+            ConfigurationBuilder clientBuilder = new ConfigurationBuilder();
+
+            // Add all the nodes to the configuration builder
+            for (Node node : nodes) {
+
+                clientBuilder.addServer().
+                        host(node.getHost()).
+                        port(node.getPort());
+            }
+
+            clientBuilder.
+                    socketTimeout(socketTimeout).
+                    maxRetries(maxRetries);
+
+            // only in Infinispan 6.3.x
+            // .tcpKeepAlive(tcpKeepAlive);
+
+            RemoteCacheManager rcm = new RemoteCacheManager(clientBuilder.build());
+            setRemoteCacheManager(rcm);
         }
-
-        clientBuilder.
-            socketTimeout(socketTimeout).
-            maxRetries(maxRetries);
-
-        // only in Infinispan 6.3.x
-        // .tcpKeepAlive(tcpKeepAlive);
-
-        remoteCacheManager = new RemoteCacheManager(clientBuilder.build());
-    }
-
-    /**
-     * @see com.novaordis.gld.Service#configure(List)
-     */
-    @Override
-    public void configure(List<String> commandLineArguments) throws UserErrorException
-    {
-        // noop
     }
 
     @Override
-    public void perform(Operation o) throws Exception
-    {
+    public void perform(Operation o) throws Exception {
+
         insureStarted();
-
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void start() throws Exception
-    {
-        if (cacheName == null)
-        {
+    public void start() throws Exception {
+
+        String name = getName();
+
+        if (name == null) {
+
             this.cache = remoteCacheManager.getCache();
         }
-        else
-        {
-            RemoteCache<String, Object> underlyingCache = remoteCacheManager.getCache(cacheName);
-            setCache(underlyingCache);
+        else {
+
+            RemoteCache<String, Object> cache = remoteCacheManager.getCache(name);
+
+            if (cache == null) {
+
+                //
+                // no cache with such a name
+                //
+
+                throw new UserErrorException(
+                        "cache with name '" + name + "' not found amongst the configured caches on " + nodes);
+            }
+
+            setCache(cache);
         }
     }
 
     @Override
-    public void stop() throws Exception
-    {
+    public void stop() throws Exception {
+
         remoteCacheManager.stop();
         cache = null;
     }
@@ -191,36 +187,39 @@ public class InfinispanService implements CacheService
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    /**
-     * @param cacheName - null is acceptable, it means "default cache"
-     */
-    public void setCacheName(String cacheName)
-    {
-        this.cacheName = cacheName;
-    }
-
     @Override
-    public String toString()
-    {
+    public String toString() {
+
         StringBuilder sb = new StringBuilder("InfinispanService[");
 
-        for(Iterator<Node> i = nodes.iterator(); i.hasNext(); )
-        {
-            sb.append(i.next());
-
-            if (i.hasNext())
-            {
-                sb.append(',');
+        if (nodes == null) {
+            sb.append("null");
+        }
+        else {
+            for (Iterator<Node> i = nodes.iterator(); i.hasNext(); ) {
+                sb.append(i.next());
+                if (i.hasNext()) {
+                    sb.append(',');
+                }
             }
+            sb.deleteCharAt(sb.length() - 1);
+            String name = getName();
+            sb.append("/").append(name == null ? "DEFAULT" : name);
         }
 
-        sb.deleteCharAt(sb.length() - 1);
-        sb.append("/").append(cacheName).append("]");
-
+        sb.append("]");
         return sb.toString();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
+
+    /**
+     * Needed for testing.
+     */
+    void setRemoteCacheManager(RemoteCacheManager rcm) {
+
+        this.remoteCacheManager = rcm;
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

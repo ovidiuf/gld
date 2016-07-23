@@ -16,7 +16,7 @@
 
 package com.novaordis.gld.command;
 
-import com.novaordis.gld.CacheService;
+import com.novaordis.gld.service.cache.CacheService;
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.MultiThreadedRunnerImpl;

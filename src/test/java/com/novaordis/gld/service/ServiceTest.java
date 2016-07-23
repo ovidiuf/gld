@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -47,9 +48,9 @@ public abstract class ServiceTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void lifeCycle() throws Exception
-    {
-        Service s = getServiceToTest(new MockConfiguration(), Arrays.asList(getTestNode()));
+    public void lifeCycle() throws Exception {
+
+        Service s = getServiceToTest(new MockConfiguration(), Collections.singletonList(getTestNode()));
 
         assertFalse(s.isStarted());
 
@@ -59,13 +60,12 @@ public abstract class ServiceTest
 
         // starting an already started service instance should throw IllegalStateException
 
-        try
-        {
+        try {
+
             s.start();
             fail("should fail with IllegalStateException");
         }
-        catch(IllegalStateException e)
-        {
+        catch(IllegalStateException e) {
             log.info(e.getMessage());
         }
 
@@ -83,27 +83,26 @@ public abstract class ServiceTest
     }
 
     @Test
-    public void cannotPerformIfNotStarted() throws Exception
-    {
-        Service s = getServiceToTest(new MockConfiguration(), Arrays.asList(getTestNode()));
+    public void cannotPerformIfNotStarted() throws Exception {
+
+        Service s = getServiceToTest(new MockConfiguration(), Collections.singletonList(getTestNode()));
 
         assertFalse(s.isStarted());
 
-        try
-        {
+        try {
+
             s.perform(new MockOperation());
             fail("should fail with IllegalStateException because the service is not started");
         }
-        catch(IllegalStateException e)
-        {
+        catch(IllegalStateException e) {
             log.info(e.getMessage());
         }
     }
 
     @Test
-    public void configureIgnoresArgumentsThatDoNotBelongToService() throws Exception
-    {
-        Service s = getServiceToTest(new MockConfiguration(), Arrays.asList(getTestNode()));
+    public void configureIgnoresArgumentsThatDoNotBelongToService() throws Exception {
+
+        Service s = getServiceToTest(new MockConfiguration(), Collections.singletonList(getTestNode()));
 
         List<String> arguments = Arrays.asList(
             "--this-argument-surely-is-not-interesting-to-the-service",

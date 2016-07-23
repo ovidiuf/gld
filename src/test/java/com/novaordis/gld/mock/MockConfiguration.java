@@ -197,12 +197,6 @@ public class MockConfiguration implements Configuration
     }
 
     @Override
-    public String getCacheName()
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
     public String getKeyStoreFile()
     {
         return keyStoreFile;

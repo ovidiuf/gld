@@ -17,7 +17,7 @@
 package com.novaordis.gld.command;
 
 import com.novaordis.gld.Configuration;
-import com.novaordis.gld.CacheService;
+import com.novaordis.gld.service.cache.CacheService;
 import com.novaordis.gld.StorageStrategy;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.strategy.storage.StdoutStorageStrategy;

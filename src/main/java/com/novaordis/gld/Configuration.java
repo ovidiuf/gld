@@ -113,11 +113,6 @@ public interface Configuration
     String getExceptionFile();
 
     /**
-     * The name of the cache to use. If null, the default cache will be used.
-     */
-    String getCacheName();
-
-    /**
      * The name of the file to read keys from.
      */
     String getKeyStoreFile();

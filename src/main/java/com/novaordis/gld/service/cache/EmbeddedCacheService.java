@@ -16,12 +16,10 @@
 
 package com.novaordis.gld.service.cache;
 
-import com.novaordis.gld.CacheService;
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.ContentType;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.Operation;
-import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.Util;
 import org.apache.log4j.Logger;
 
@@ -31,7 +29,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class EmbeddedCacheService implements CacheService
+public class EmbeddedCacheService extends CacheServiceBase
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -88,15 +86,6 @@ public class EmbeddedCacheService implements CacheService
     public void setTarget(List<Node> nodes)
     {
         log.info("setting target to " + nodes + " is a noop");
-    }
-
-    /**
-     * @see com.novaordis.gld.Service#configure(List)
-     */
-    @Override
-    public void configure(List<String> commandLineArguments) throws UserErrorException
-    {
-        // noop
     }
 
     @Override

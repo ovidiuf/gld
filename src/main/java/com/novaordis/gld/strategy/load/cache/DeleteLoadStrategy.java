@@ -16,7 +16,7 @@
 
 package com.novaordis.gld.strategy.load.cache;
 
-import com.novaordis.gld.CacheService;
+import com.novaordis.gld.service.cache.CacheService;
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.KeyStore;
 import com.novaordis.gld.Operation;

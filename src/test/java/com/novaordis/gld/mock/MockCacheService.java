@@ -16,7 +16,7 @@
 
 package com.novaordis.gld.mock;
 
-import com.novaordis.gld.CacheService;
+import com.novaordis.gld.service.cache.CacheService;
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.ContentType;
 import com.novaordis.gld.Node;
@@ -34,8 +34,8 @@ import java.util.Set;
  * A mock cache service that helps us simulate locally interactions that otherwise would have required a remote
  * cache. We can interact with the backing map even if the service is stopped.
  */
-public class MockCacheService implements CacheService
-{
+public class MockCacheService implements CacheService {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(MockCacheService.class);
@@ -114,6 +114,11 @@ public class MockCacheService implements CacheService
     }
 
     // CacheService implementation -------------------------------------------------------------------------------------
+
+    @Override
+    public String getName() {
+        throw new RuntimeException("getName() NOT YET IMPLEMENTED");
+    }
 
     @Override
     public void set(String key, String value) throws Exception

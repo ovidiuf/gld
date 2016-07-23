@@ -139,9 +139,6 @@ Commands:
         --output <filename>  -  the file  to write  collected statistics into.   If not explicitly
             specified, gld will send statistics at stdout. TODO: make this a global option.
 
-        --cache <cache-name> - the name of the cache. If not specified, the default cache will
-              be used.
-
         --max-total <count> - the Apache pool "MaxTotal" parameter. Default value 100.
 
         --max-wait-millis <timeout> - the Apache pool "MaxWaitMillis" parameter. Default value
@@ -200,6 +197,16 @@ Commands:
                 --nodes node1.example.com:10001 \
                 --threads 10 --output ./delete-stats.csv
 
+Services
+
+    Cache Service
+
+    Cache Service Options:
+
+        --cache <cache-name>   the name of the cache.  If not specified, the default cache will be
+          used.
+
+    Implementations: "infinispan", "redis"
 
 Load Strategies
 

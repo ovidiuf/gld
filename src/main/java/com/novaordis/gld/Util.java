@@ -398,45 +398,42 @@ public class Util
     // command line processing utilities -------------------------------------------------------------------------------
 
     /**
+     * @param optionName - the name of the option (including --)
+     *
      * @param isBoolean if true, the method return the option itself if present, or null if not present. Otherwise
      *                  it returns the following string.
      *
      * @return null if the option is not found in list.
      */
     public static String extractOption(String optionName, boolean isBoolean, List<String> arguments, int from)
-        throws UserErrorException
-    {
-        if (arguments == null)
-        {
+        throws UserErrorException {
+
+        if (arguments == null) {
             throw new IllegalArgumentException("null argument list");
         }
 
-        if (optionName == null)
-        {
+        if (optionName == null) {
             throw new IllegalArgumentException("null option name");
         }
 
-        if (arguments.isEmpty())
-        {
+        if (arguments.isEmpty()) {
             return null;
         }
 
         String result = null;
 
-        for(int i = from; i < arguments.size(); i ++)
-        {
+        for(int i = from; i < arguments.size(); i ++) {
+
             String crt = arguments.get(i);
 
-            if (optionName.equals(crt))
-            {
-                if (isBoolean)
-                {
+            if (optionName.equals(crt)) {
+
+                if (isBoolean) {
                     result = arguments.remove(i);
                     break;
                 }
 
-                if (i == arguments.size() - 1)
-                {
+                if (i == arguments.size() - 1) {
                     throw new UserErrorException("a string should follow '" + optionName + "'");
                 }
 
@@ -446,8 +443,7 @@ public class Util
             }
         }
 
-        if (!isBoolean && result != null && result.startsWith("--"))
-        {
+        if (!isBoolean && result != null && result.startsWith("--")) {
             throw new UserErrorException("a string, and not another option should follow '" + optionName + "'");
         }
 
@@ -455,6 +451,8 @@ public class Util
     }
 
     /**
+     * @param optionName - the name of the option (including --)
+     *
      * @return true or false if the option is found (or not) in the list.
      */
     public static boolean extractBoolean(String optionName, List<String> arguments, int from)
@@ -465,6 +463,8 @@ public class Util
     }
 
     /**
+     * @param optionName - the name of the option (including --)
+     *
      * @return null if the option is not found in list. If the option is found, both the option and the value
      * are removed from the list.
      */
@@ -507,11 +507,11 @@ public class Util
     }
 
     /**
+     * @param optionName - the name of the option (including --)
+     *
      * @return null if the option is not found in list.
      */
-    public static Long extractLong(String optionName, List<String> arguments, int from)
-        throws UserErrorException
-    {
+    public static Long extractLong(String optionName, List<String> arguments, int from) throws UserErrorException {
         String s = extractOption(optionName, false, arguments, from);
 
         if (s == null)
@@ -530,11 +530,13 @@ public class Util
     }
 
     /**
+     * @param optionName - the name of the option (including --)
+     *
      * @return null if the option is not found in list.
      */
     public static Integer extractInteger(String optionName, List<String> arguments, int from)
-        throws UserErrorException
-    {
+            throws UserErrorException {
+
         String s = extractOption(optionName, false, arguments, from);
 
         if (s == null)
