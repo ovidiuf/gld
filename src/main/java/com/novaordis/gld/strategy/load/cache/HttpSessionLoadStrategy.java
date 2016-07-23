@@ -18,10 +18,11 @@ package com.novaordis.gld.strategy.load.cache;
 
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.Operation;
+import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.strategy.load.LoadStrategyBase;
+import com.novaordis.gld.strategy.load.cache.http.HttpSessionPerThread;
 import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionCreate;
-import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionOperation;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionInvalidate;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionWrite;
 
@@ -39,10 +40,18 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    static final String DEFAULT_MODE_LITERAL = "default";
+    static final String SESSION_PER_THREAD_MODE_LITERAL = "session-per-thread";
+
+    // See HELP.txt --http-session-mode
+    static final byte DEFAULT_MODE = 0;
+    static final byte SESSION_PER_THREAD_MODE = 1;
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private byte mode;
     private int writeCount;
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -50,13 +59,14 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
     public HttpSessionLoadStrategy() {
 
         this.writeCount = HttpSessionSimulation.DEFAULT_WRITE_COUNT;
+        setMode(DEFAULT_MODE);
     }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
 
     @Override
-    public void configure(Configuration conf, List<String> arguments, int from) throws Exception
-    {
+    public void configure(Configuration conf, List<String> arguments, int from) throws Exception {
+
         super.configure(conf, arguments, from);
 
         if (arguments == null) {
@@ -72,80 +82,36 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
                 arguments.remove(i);
                 writeCount = Integer.parseInt(arguments.remove(i));
             }
-        }
+            else if ("--http-session-mode".equals(crt)) {
 
-//        int keySize = conf.getKeySize();
-//        int valueSize = conf.getValueSize();
-//        boolean useDifferentValues = conf.isUseDifferentValues();
-//        Load load = (Load)getConfiguration().getCommand();
-//        Long maxOperations = null;
-//        if (load != null)
-//        {
-//            maxOperations = load.getMaxOperations();
-//        }
-//        String keyStoreFile = conf.getKeyStoreFile();
-//        KeyStore keyStore;
-//        if (keyStoreFile == null)
-//        {
-//            keyStore = new RandomKeyGenerator(keySize, maxOperations);
-//        }
-//        else
-//        {
-//            keyStore = new ReadOnlyFileKeyStore(keyStoreFile);
-//            keyStore.start();
-//        }
-//        setKeyStore(keyStore);
+                arguments.remove(i);
+                crt = arguments.remove(i);
+
+                if (DEFAULT_MODE_LITERAL.equals(crt)) {
+                    setMode(DEFAULT_MODE);
+                }
+                else if (SESSION_PER_THREAD_MODE_LITERAL.equals(crt)) {
+                    setMode(SESSION_PER_THREAD_MODE);
+                }
+                else {
+                    throw new UserErrorException(
+                            "unknown --http-session-mode value \"" + crt + "\", use one of the following: " +
+                                    "\"" + DEFAULT_MODE_LITERAL + "\", \"" + SESSION_PER_THREAD_MODE_LITERAL + "\"");
+                }
+            }
+        }
     }
 
-    /**
-     * @see com.novaordis.gld.LoadStrategy#next(Operation, String, boolean)
-     */
     public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown) {
 
-        HttpSessionSimulation s = HttpSessionSimulation.getCurrentInstance();
-
-        if (s == null) {
-
-            if (runtimeShuttingDown) {
-
-                //
-                // we're shutting down anyway, no point in sending anything
-                //
-                return null;
-            }
-
-            s = HttpSessionSimulation.initializeInstance();
-
-            //
-            // configure it
-            //
-
-            s.setWriteCount(getWriteCount());
+        if (mode == SESSION_PER_THREAD_MODE) {
+            return HttpSessionPerThread.next(this, runtimeShuttingDown);
+        }
+        else if (mode == DEFAULT_MODE) {
+            throw new RuntimeException("NOT YET IMPLEMENTED");
         }
 
-
-        HttpSessionOperation nextOperation;
-
-
-        if (runtimeShuttingDown) {
-
-            //
-            // we're shutting down, cleanup, invalidate the session in the cache
-            //
-
-            nextOperation = new HttpSessionInvalidate(s);
-        }
-        else {
-
-            nextOperation = s.next();
-        }
-
-        if (nextOperation instanceof HttpSessionInvalidate) {
-
-            HttpSessionSimulation.destroyInstance();
-        }
-
-        return nextOperation;
+        throw new IllegalStateException("unknown HttpSessionLoadStrategy mode " + mode);
     }
 
     @Override
@@ -165,7 +131,19 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
         return writeCount;
     }
 
+    public void setWriteCount(int i) {
+        this.writeCount = i;
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
+
+    byte getMode() {
+        return mode;
+    }
+
+    void setMode(byte m) {
+        this.mode = m;
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

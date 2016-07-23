@@ -18,6 +18,7 @@ package com.novaordis.gld.service.cache.infinispan;
 
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.ContentType;
+import com.novaordis.gld.EmbeddedNode;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.Operation;
 import com.novaordis.gld.UserErrorException;
@@ -37,7 +38,7 @@ public class InfinispanService extends CacheServiceBase {
     public static final int DEFAULT_SO_TIMEOUT_MS = 20000;
     public static final int DEFAULT_MAX_RETRIES = 3;
 
-    // public static final boolean DEFAULT_TCP_KEEPALIVE = true;
+    public static final boolean DEFAULT_TCP_KEEPALIVE = true;
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -75,30 +76,51 @@ public class InfinispanService extends CacheServiceBase {
 
         this.nodes = nodes;
 
-        if (nodes != null) {
+        if (nodes != null && !nodes.isEmpty()) {
 
-            int socketTimeout = DEFAULT_SO_TIMEOUT_MS;
-            int maxRetries = DEFAULT_MAX_RETRIES;
-
-            // boolean tcpKeepAlive = DEFAULT_TCP_KEEPALIVE;
-
-            ConfigurationBuilder clientBuilder = new ConfigurationBuilder();
+            ConfigurationBuilder clientBuilder = null;
 
             // Add all the nodes to the configuration builder
             for (Node node : nodes) {
+
+                if (node instanceof EmbeddedNode) {
+
+                    //
+                    // support for "embedded" mode
+                    //
+
+                    setRemoteCacheManager(new EmbeddedRemoteCacheManager());
+
+                    if (nodes.size() > 1) {
+                        throw new IllegalArgumentException(
+                                "when using embedded nodes, just one node is sufficient to configure the instance");
+                    }
+
+                    return;
+                }
+
+                if (clientBuilder == null) {
+                    clientBuilder = new ConfigurationBuilder();
+                }
 
                 clientBuilder.addServer().
                         host(node.getHost()).
                         port(node.getPort());
             }
 
-            clientBuilder.
-                    socketTimeout(socketTimeout).
-                    maxRetries(maxRetries);
+            //noinspection unused
+            boolean tcpKeepAlive = DEFAULT_TCP_KEEPALIVE;
+            int socketTimeout = DEFAULT_SO_TIMEOUT_MS;
+            int maxRetries = DEFAULT_MAX_RETRIES;
 
-            // only in Infinispan 6.3.x
-            // .tcpKeepAlive(tcpKeepAlive);
-
+            //
+            // clientBuilder will never be null here, but make the compiler happy
+            //
+            if (clientBuilder == null) {
+                throw new IllegalStateException("null clientBuilder");
+            }
+            clientBuilder.socketTimeout(socketTimeout).maxRetries(maxRetries);
+            // only in Infinispan 6.3.x .tcpKeepAlive(tcpKeepAlive);
             RemoteCacheManager rcm = new RemoteCacheManager(clientBuilder.build());
             setRemoteCacheManager(rcm);
         }

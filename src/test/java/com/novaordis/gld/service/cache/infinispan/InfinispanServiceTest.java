@@ -23,14 +23,17 @@ import com.novaordis.gld.Service;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.service.cache.CacheServiceTest;
+import com.novaordis.gld.service.cache.EmbeddedCache;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -112,6 +115,24 @@ public class InfinispanServiceTest extends CacheServiceTest
         }
 
         assertNull(is.getCache());
+    }
+
+    // setTarget() -----------------------------------------------------------------------------------------------------
+
+    @Test
+    public void setTarget_EmbeddedNode() throws Exception {
+
+        List<Node> nodes = new ArrayList<>(Collections.singletonList((Node) new EmbeddedNode()));
+
+        InfinispanService s = new InfinispanService();
+
+        s.setTarget(nodes);
+
+        s.start();
+
+        Object o = s.getCache();
+        assertNotNull(o);
+        assertTrue(o instanceof EmbeddedCache);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -34,6 +34,7 @@ public interface LoadStrategy {
      *                  fine, will be ignored/
      *
      * @exception IllegalArgumentException on null configuration.
+     * @exception UserErrorException recommended on invalid configuration values.
      *
      */
     void configure(Configuration configuration, List<String> arguments, int from) throws Exception;

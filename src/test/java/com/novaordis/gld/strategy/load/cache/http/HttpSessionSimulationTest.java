@@ -21,14 +21,12 @@ import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionOperatio
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionWrite;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionInvalidate;
 import org.apache.log4j.Logger;
-import org.junit.After;
 import org.junit.Test;
 
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -49,52 +47,6 @@ public class HttpSessionSimulationTest {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    @After
-    public void cleanup() {
-
-        HttpSessionSimulation.destroyInstance();
-    }
-
-    // threadLocal lifecycle -------------------------------------------------------------------------------------------
-
-    @Test
-    public void threadLocalLifecycle() throws Exception {
-
-        HttpSessionSimulation s = HttpSessionSimulation.getCurrentInstance();
-        assertNull(s);
-
-        HttpSessionSimulation s2 = HttpSessionSimulation.initializeInstance();
-        assertNotNull(s2);
-
-        HttpSessionSimulation s3 = HttpSessionSimulation.getCurrentInstance();
-        assertEquals(s2, s3);
-
-        HttpSessionSimulation s4 = HttpSessionSimulation.destroyInstance();
-        assertEquals(s3, s4);
-
-        HttpSessionSimulation s5 = HttpSessionSimulation.getCurrentInstance();
-        assertNull(s5);
-    }
-
-    @Test
-    public void initializeInstance_AlreadyInitialized() throws Exception {
-
-        HttpSessionSimulation s = HttpSessionSimulation.initializeInstance();
-        assertNotNull(s);
-
-        try {
-
-            HttpSessionSimulation.initializeInstance();
-            fail("should have thrown exception");
-        }
-        catch(IllegalStateException e) {
-
-            log.info(e.getMessage());
-        }
-
-        HttpSessionSimulation.destroyInstance();
-    }
 
     // generateSessionId() ---------------------------------------------------------------------------------------------
 
@@ -117,7 +69,7 @@ public class HttpSessionSimulationTest {
     @Test
     public void firstOperationIsCreate() throws Exception {
 
-        HttpSessionSimulation s = new HttpSessionSimulation();
+        HttpSessionSimulation s = getHttpSessionSimulationToTest();
 
         HttpSessionOperation o = s.next();
 
@@ -129,7 +81,7 @@ public class HttpSessionSimulationTest {
     @Test
     public void initialWriteCount_AttemptToSetAfterTheFirstNext() throws Exception {
 
-        HttpSessionSimulation s = new HttpSessionSimulation();
+        HttpSessionSimulation s = getHttpSessionSimulationToTest();
 
         s.setWriteCount(1);
 
@@ -147,7 +99,7 @@ public class HttpSessionSimulationTest {
     @Test
     public void initialWriteCount_NoWrites() throws Exception {
 
-        HttpSessionSimulation s = new HttpSessionSimulation();
+        HttpSessionSimulation s = getHttpSessionSimulationToTest();
         assertEquals(0, s.getWriteCount());
 
         s.setWriteCount(0);
@@ -164,7 +116,7 @@ public class HttpSessionSimulationTest {
     @Test
     public void initialWriteCount_SomeWrites() throws Exception {
 
-        HttpSessionSimulation s = new HttpSessionSimulation();
+        HttpSessionSimulation s = getHttpSessionSimulationToTest();
         assertEquals(0, s.getWriteCount());
 
         s.setWriteCount(3);
@@ -189,6 +141,11 @@ public class HttpSessionSimulationTest {
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected HttpSessionSimulation getHttpSessionSimulationToTest() {
+
+        return new HttpSessionSimulation();
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

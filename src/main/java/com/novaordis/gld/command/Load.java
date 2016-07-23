@@ -64,31 +64,27 @@ public class Load extends CommandBase
     // Command implementation ------------------------------------------------------------------------------------------
 
     @Override
-    public void initialize() throws Exception
-    {
+    public void initialize() throws Exception {
+
         processContextRelevantArguments2_ToRefactor(getArguments(), 0);
 
         Service service = getConfiguration().getService();
 
-        if (service == null)
-        {
-            throw new IllegalStateException("null cache service");
+        if (service == null) {
+            throw new IllegalStateException("null service");
         }
 
-        if (!service.isStarted())
-        {
+        if (!service.isStarted()) {
             service.start();
         }
 
-        if (storageStrategy != null)
-        {
+        if (storageStrategy != null) {
             storageStrategy.start();
         }
 
         KeyStore keyStore = loadStrategy.getKeyStore();
 
-        if (keyStore != null)
-        {
+        if (keyStore != null) {
             keyStore.start();
         }
     }
@@ -202,50 +198,43 @@ public class Load extends CommandBase
     /**
      * Parse context-relevant command line arguments and removes them from the list.
      */
-    private void processContextRelevantArguments2_ToRefactor(List<String> arguments, int from) throws Exception
-    {
+    private void processContextRelevantArguments2_ToRefactor(List<String> arguments, int from) throws Exception {
+
         Configuration configuration = getConfiguration();
 
-        for(int i = from; i < arguments.size(); i ++)
-        {
+        for(int i = from; i < arguments.size(); i ++) {
+
             String crt = arguments.get(i);
 
             // "--strategy" is deprecated, use "--load-strategy" instead
-            if ("--load-strategy".equals(crt) || "--strategy".equals(crt))
-            {
+            if ("--load-strategy".equals(crt) || "--strategy".equals(crt)) {
                 loadStrategy = LoadStrategyFactory.fromArguments(configuration, arguments, i --);
             }
-            else if ("--storage-strategy".equals(crt))
-            {
+            else if ("--storage-strategy".equals(crt)) {
                 storageStrategy = StorageStrategyFactory.fromArguments(configuration, arguments, i --);
                 configuration.setStorageStrategy(storageStrategy);
             }
         }
 
-        if (loadStrategy == null)
-        {
+        if (loadStrategy == null) {
             // try to get it from configuration file, if one is available
             loadStrategy = configuration.getLoadStrategy();
         }
 
+        if (loadStrategy == null) {
 
-        if (loadStrategy == null)
-        {
-            if (ContentType.KEYVALUE.equals(getContentType()))
-            {
+            if (ContentType.KEYVALUE.equals(getContentType())) {
                 loadStrategy = DEFAULT_CACHE_LOAD_STRATEGY;
             }
-            else if (ContentType.JMS.equals(getContentType()))
-            {
+            else if (ContentType.JMS.equals(getContentType())) {
                 loadStrategy = DEFAULT_JMS_LOAD_STRATEGY;
             }
-            else if (ContentType.TEST.equals(getContentType()))
-            {
+            else if (ContentType.TEST.equals(getContentType())) {
                 loadStrategy = new NoopLoadStrategy();
             }
-            else
-            {
-                throw new IllegalStateException("we don't know the content type, we can't initialize the load strategy");
+            else {
+                throw new IllegalStateException(
+                        "we don't know the content type, we can't initialize the load strategy");
             }
 
             // give the default strategy a chance to pick up configuration from command line

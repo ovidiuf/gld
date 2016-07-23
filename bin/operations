@@ -1251,8 +1251,7 @@ function do-release() {
     info "RELEASE SUMMARY:"
     info ""
     info ${msg}
-    info "If you want to create an official GitHub release, use tag \"${tag}\""
-    info "and binary $(basename ${release_binary_artifact})."
+    info "If you want to create an official GitHub release, use tag \"${tag}\" and binary $(basename ${release_binary_artifact})."
     info "The local version has been incremented to ${next_local_version}."
     info ""
 }

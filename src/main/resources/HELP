@@ -11,7 +11,7 @@ Usage:
 
     gld <command> --conf <configuration-file>
 
-Global Options:
+Global Options ___________________________________________________________________________________
 
     --service <service-type> Defines the service provider type. You can use either one of the
       pre-defined values  ("infinispan",  "activemq", etc.)  or a fully qualified  class name of a
@@ -24,8 +24,8 @@ Global Options:
 
       If "embedded" is used, gld will mock the service (a cache or a JMS provider) internally. You
       can request the embedded service to initialize itself - for example the embedded cache could
-      be pre-populated with random content by specifying "embedded[keyCount]". Only use it for gld
-      testing.
+      be  pre-populated  with random content by specifying  "embedded[keyCount]".   The "embedded"
+      services are intended for gld testing only.
 
     --statistics <csv|none>.  By default, the load driver produces CSV statistics.  Statistics can
       be turned off by specifying 'none'.
@@ -47,8 +47,7 @@ Global Options:
         when it  reaches  the load limit or it is being told externally to stop.   The command for
         stopping gld processes is "gld stop" (see below).
 
-
-Commands:
+Commands _________________________________________________________________________________________
 
     help
 
@@ -186,9 +185,9 @@ Commands:
 
       Options:
 
-            --key-count <key-count> - the number of keys to delete. The keys will be chosen randomly from
-              the entire key set maintained by the cache at the moment the command is run. If not specified,
-              the default value is 1.
+            --key-count <key-count> the number of keys to delete. The keys will be chosen randomly
+              from the entire key set maintained by the cache at the moment the command is run. If
+              not specified, the default value is 1.
 
 
        Typical Usage Example:
@@ -197,51 +196,68 @@ Commands:
                 --nodes node1.example.com:10001 \
                 --threads 10 --output ./delete-stats.csv
 
-Services
+Services _________________________________________________________________________________________
 
-    Cache Service
+  Cache Service
 
-    Cache Service Options:
+  Cache Service Options:
 
-        --cache <cache-name>   the name of the cache.  If not specified, the default cache will be
-          used.
+    --cache <cache-name>  the name of the cache. If not specified, the default cache will be used.
 
-    Implementations: "infinispan", "redis"
+  Implementations:
 
-Load Strategies
+    --service infinispan
+    --service redis
 
-    Cache
+Load Strategies __________________________________________________________________________________
 
-        WriteThenRead
+  Cache
 
-            This strategy can be used to populate the cache with random key-value pairs.
+    WriteThenRead
 
-        ReadThenWriteOnMiss
+      This strategy can be used to populate the cache with random key-value pairs.
 
-            Attempts to read keys specified in a local store, and if it encounters a miss, writes
-            a random value (whose size can be specified) for that key, back into the cluster.
+    ReadThenWriteOnMiss
 
-        Delete
+      Attempts to read  keys specified in  a local store,   and if it encounters a miss,  writes a
+      random value (whose size can be specified) for that key, back into the cluster.
 
-            This strategy can be used to read a number of keys  from the cache and then distribute
-            them to concurrent threads  to be deleted.  It is the underlying strategy  used by the
-            "delete" command, but it can also be used with the "load" command (and --load-strategy
-            Delete qualifier).
+    Delete
 
-        HttpSession
+      This strategy can be used to read a number of keys from the cache and distribute them to
+      concurrent threads  to be deleted.  It is the underlying strategy  used by the "delete"
+      command, but it can also be used with the "load" command (and --load-strategy Delete
+      qualifier).
 
-            This  load strategy  simulates  the interaction  between  a HTTP session manager and a
-            cache.   The  strategy knows  when the run is winding down  so  the last  HTTP session
-            operation is an HTTP session invalidation.   In consequence, the HTTP session cache is
-            cleaned on exit. Specific configuration options:
+    HttpSession
 
-            --write-count <integer> - the number of attribute writes to execute after the creation
-              of the session and before the session is invalidated. The default value is 10.
+      This load strategy  simulates the interaction between a HTTP session manager and  a back end
+      cache.  There are two modes available, currently.  In the default mode, the user selects the
+      number of sessions to be simulated  and  the number of threads  that will simulate  the HTTP
+      activity (you can think of these threads as typical HTTP/AJP connector threads) and the load
+      driver uses the available threads to gradually "establish" the sessions  and then "read" and
+      "write" for the entire test duration.   Once the allocated time has passed,  the driver will
+      use  its threads  to simulate the invalidation of  all the sessions created during the test,
+      leaving an empty cache.  This mode simulates the typical interaction between an application
+      server and the back end cache.
 
+      In the "session-per-thread" mode,  there is an one-to-one association  between a load driver
+      thread and a HTTP session simulation instance.  A thread creates,  interacts with,  and then
+      invalidates a session, and then starts over for the duration of the test.  In this mode, the
+      number of HTTP sessions maintained by the back end cache cannot exceed the number of  driver
+      threads. Once the allocated time has passed, the driver will invalidate  the active sessions,
+      leaving an empty cache.
 
-     JMS
+      Options:
 
-        Common to all JMS load strategies:
+        --http-session-mode <default|session-per-thread> - see above.  If not specified,  the mode
+          is "default"
+
+        --write-count <integer> -  the number of attribute writes to execute after the creation of
+          the session and before the session is invalidated. The default value is 10.
+  JMS
+
+    Common to all JMS load strategies:
 
             --queue|--topic <destination-name>
 

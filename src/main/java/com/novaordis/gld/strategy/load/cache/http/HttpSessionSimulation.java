@@ -50,45 +50,6 @@ public class HttpSessionSimulation {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    private static final ThreadLocal<HttpSessionSimulation> threadLocal = new ThreadLocal<>();
-
-    /**
-     * @return the HttpSessionSimulation instance associated with this thread or null if there isn't any.
-     */
-    public static HttpSessionSimulation getCurrentInstance() {
-
-        return threadLocal.get();
-    }
-
-    /**
-     * Create a new instance and associate it with the thread.
-     *
-     * @exception IllegalStateException if the instance is already initialized.
-     */
-    public static HttpSessionSimulation initializeInstance() {
-
-        if (threadLocal.get() != null) {
-            throw new IllegalStateException("instance already associated with the current thread");
-        }
-
-        //
-        // just create the instance and associate it with the thread, it will be configured by the caller
-        //
-        HttpSessionSimulation instance = new HttpSessionSimulation();
-        threadLocal.set(instance);
-        return instance;
-    }
-
-    /**
-     * Noop if no instance is associated with the thread.
-     */
-    public static HttpSessionSimulation destroyInstance() {
-
-        HttpSessionSimulation i = threadLocal.get();
-        threadLocal.remove();
-        return i;
-    }
-
     public static String generateSessionId(Random random) {
 
         byte[] bytes = new byte[DEFAULT_SESSION_ID_LENGTH];
@@ -141,17 +102,10 @@ public class HttpSessionSimulation {
     // the number of writes this session should simulate during its life time. Can be zero.
     //
     private int initialWriteCount;
-
     private int remainingWrites;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    /**
-     * The default way to create HttpSessionSimulation is through thread local utilities.
-     *
-     * @see HttpSessionSimulation#getCurrentInstance()
-     * @see HttpSessionSimulation#initializeInstance()
-     */
     public HttpSessionSimulation() {
 
         this(null);

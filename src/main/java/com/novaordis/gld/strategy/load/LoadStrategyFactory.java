@@ -26,8 +26,8 @@ import com.novaordis.gld.command.Load;
 
 import java.util.List;
 
-public class LoadStrategyFactory
-{
+public class LoadStrategyFactory {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
@@ -47,26 +47,23 @@ public class LoadStrategyFactory
      * @return a configured LoadStrategy instance.
      */
     public static LoadStrategy fromArguments(Configuration configuration, List<String> arguments, int from)
-        throws Exception
-    {
-        if (!arguments.get(from).equals("--load-strategy") && !arguments.get(from).equals("--strategy"))
-        {
+        throws Exception {
+
+        if (!arguments.get(from).equals("--load-strategy") && !arguments.get(from).equals("--strategy")) {
             throw new IllegalArgumentException("expecting '--load-strategy' on position " + from + " in " + arguments);
         }
 
-
         arguments.remove(from);
 
-        if (from >= arguments.size())
-        {
+        if (from >= arguments.size()) {
+
             throw new UserErrorException("a load strategy name should follow --load-strategy",
                 new NullPointerException("null storage strategy"));
         }
 
         Command command = configuration.getCommand();
 
-        if (!(command instanceof Load))
-        {
+        if (!(command instanceof Load)) {
             throw new RuntimeException(
                 "NOT YET IMPLEMENTED (2): we temporarily disabled support for ContentType for all commands, except Load. Need to refactor this.");
         }
@@ -79,9 +76,10 @@ public class LoadStrategyFactory
     /**
      * @param arguments - null is fine, will be ignored.
      */
-    public static LoadStrategy fromString(Configuration configuration, String strategyName, ContentType contentType,
-                                          List<String> arguments, int from) throws Exception
-    {
+    public static LoadStrategy fromString(
+            Configuration configuration, String strategyName, ContentType contentType, List<String> arguments, int from)
+            throws Exception {
+
         String subPackage = ContentType.JMS.equals(contentType) ? "jms" : "cache";
 
         LoadStrategy result;
@@ -91,18 +89,15 @@ public class LoadStrategyFactory
         // user friendliness - if the first letter of the strategy name is not capitalized,
         // capitalize it for her. This will allow the user to specify --load-strategy read
 
-        if (Character.isLowerCase(strategyName.charAt(0)))
-        {
+        if (Character.isLowerCase(strategyName.charAt(0))) {
             strategyName = Character.toUpperCase(strategyName.charAt(0)) + strategyName.substring(1);
         }
 
-        try
-        {
+        try {
             result = Util.getInstance(LoadStrategy.class,
                 "com.novaordis.gld.strategy.load." + subPackage, strategyName, "LoadStrategy");
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             // turn all load strategy loading exceptions into UserErrorExceptions and bubble them up
             String msg = "invalid load strategy \"" + originalStrategyName + "\": " + e.getMessage();
             Throwable cause = e.getCause();
@@ -119,8 +114,7 @@ public class LoadStrategyFactory
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    private LoadStrategyFactory()
-    {
+    private LoadStrategyFactory() {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

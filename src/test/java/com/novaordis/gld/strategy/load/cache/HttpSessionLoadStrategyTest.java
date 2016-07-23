@@ -19,11 +19,14 @@ package com.novaordis.gld.strategy.load.cache;
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.Operation;
+import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.strategy.load.LoadStrategyTest;
+import com.novaordis.gld.strategy.load.cache.http.HttpSessionPerThread;
 import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionCreate;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionInvalidate;
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Test;
 
@@ -35,6 +38,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -43,6 +47,8 @@ import static org.junit.Assert.assertTrue;
 public class HttpSessionLoadStrategyTest extends LoadStrategyTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(HttpSessionLoadStrategyTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -66,58 +72,67 @@ public class HttpSessionLoadStrategyTest extends LoadStrategyTest {
     @After
     public void cleanup() {
 
-        HttpSessionSimulation.destroyInstance();
+        HttpSessionPerThread.destroyInstance();
     }
 
-    // next() ----------------------------------------------------------------------------------------------------------
+    // mode ------------------------------------------------------------------------------------------------------------
 
     @Test
-    public void next_firstInvocation() throws Exception {
+    public void mode_default() throws Exception {
 
-        HttpSessionLoadStrategy ls = new HttpSessionLoadStrategy();
-
-        HttpSessionSimulation s = HttpSessionSimulation.getCurrentInstance();
-        assertNull(s);
-
-        Operation o = ls.next(null, null, false);
-
-        HttpSessionSimulation s2 = HttpSessionSimulation.getCurrentInstance();
-        assertNotNull(s2);
-
-        assertTrue(o instanceof HttpSessionCreate);
+        HttpSessionLoadStrategy s = new HttpSessionLoadStrategy();
+        MockConfiguration mc = new MockConfiguration();
+        List<String> args = new ArrayList<>(Arrays.asList("something", "somethingelse"));
+        s.configure(mc, args, 0);
+        assertEquals(HttpSessionLoadStrategy.DEFAULT_MODE, s.getMode());
+        assertEquals(2, args.size());
     }
 
     @Test
-    public void next_RuntimeShuttingDown_SessionAssociatedWithThread() throws Exception {
+    public void mode_explicitDefault() throws Exception {
 
-        HttpSessionLoadStrategy hsls = new HttpSessionLoadStrategy();
-
-        HttpSessionSimulation s = HttpSessionSimulation.initializeInstance();
-        assertNotNull(s);
-
-        String sessionId = s.getSessionId();
-
-        //
-        // should generate an "invalidate" operation
-        //
-        HttpSessionInvalidate i = (HttpSessionInvalidate)hsls.next(null, null, true);
-
-        assertEquals(sessionId, i.getSessionId());
-
-        assertNull(HttpSessionSimulation.getCurrentInstance());
+        HttpSessionLoadStrategy s = new HttpSessionLoadStrategy();
+        MockConfiguration mc = new MockConfiguration();
+        List<String> args = new ArrayList<>(Arrays.asList(
+                "something", "--http-session-mode", "default", "somethingelse"));
+        s.configure(mc, args, 0);
+        assertEquals(HttpSessionLoadStrategy.DEFAULT_MODE, s.getMode());
+        assertEquals(2, args.size());
+        assertEquals("something", args.get(0));
+        assertEquals("somethingelse", args.get(1));
     }
 
     @Test
-    public void next_RuntimeShuttingDown_SessionNotAssociatedWithThread() throws Exception {
+    public void mode_sessionPerThread() throws Exception {
 
-        HttpSessionLoadStrategy hsls = new HttpSessionLoadStrategy();
+        HttpSessionLoadStrategy s = new HttpSessionLoadStrategy();
+        MockConfiguration mc = new MockConfiguration();
+        List<String> args = new ArrayList<>(Arrays.asList(
+                "something", "--http-session-mode", "session-per-thread", "somethingelse"));
+        s.configure(mc, args, 0);
+        assertEquals(HttpSessionLoadStrategy.SESSION_PER_THREAD_MODE, s.getMode());
+        assertEquals(2, args.size());
+        assertEquals("something", args.get(0));
+        assertEquals("somethingelse", args.get(1));
+    }
 
-        assertNull(HttpSessionSimulation.getCurrentInstance());
+    @Test
+    public void mode_invalid() throws Exception {
 
-        //
-        // no session associated with the thread, no session id, don't send anything
-        //
-        assertNull(hsls.next(null, null, true));
+        HttpSessionLoadStrategy s = new HttpSessionLoadStrategy();
+
+        MockConfiguration mc = new MockConfiguration();
+
+        try {
+            s.configure(mc, new ArrayList<>(Arrays.asList(
+                    "something", "--http-session-mode", "surely-there-is-no-such-mode", "somethingelse")), 0);
+
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            log.info(e.getMessage());
+        }
     }
 
     // configuration ---------------------------------------------------------------------------------------------------
@@ -126,6 +141,7 @@ public class HttpSessionLoadStrategyTest extends LoadStrategyTest {
     public void configuration_writeCount_Default() throws Exception {
 
         HttpSessionLoadStrategy ls = new HttpSessionLoadStrategy();
+        ls.setMode(HttpSessionLoadStrategy.SESSION_PER_THREAD_MODE);
 
         assertEquals(HttpSessionSimulation.DEFAULT_WRITE_COUNT, ls.getWriteCount());
 
@@ -140,6 +156,7 @@ public class HttpSessionLoadStrategyTest extends LoadStrategyTest {
     public void configuration_writeCount() throws Exception {
 
         HttpSessionLoadStrategy ls = new HttpSessionLoadStrategy();
+        ls.setMode(HttpSessionLoadStrategy.SESSION_PER_THREAD_MODE);
 
         MockConfiguration mc = new MockConfiguration();
 
@@ -154,6 +171,56 @@ public class HttpSessionLoadStrategyTest extends LoadStrategyTest {
         HttpSessionSimulation s = c.getHttpSession();
 
         assertEquals(7, s.getWriteCount());
+    }
+
+    // next() session-per-thread mode ----------------------------------------------------------------------------------
+
+    @Test
+    public void next_sessionPerThreadMode_firstInvocation() throws Exception {
+
+        HttpSessionLoadStrategy ls = new HttpSessionLoadStrategy();
+        ls.setMode(HttpSessionLoadStrategy.SESSION_PER_THREAD_MODE);
+        assertNull(HttpSessionPerThread.getCurrentInstance());
+
+        Operation o = ls.next(null, null, false);
+        assertTrue(o instanceof HttpSessionCreate);
+
+        assertNotNull(HttpSessionPerThread.getCurrentInstance());
+    }
+
+    @Test
+    public void next_sessionPerThreadMode_RuntimeShuttingDown_SessionAssociatedWithThread() throws Exception {
+
+        HttpSessionLoadStrategy ls = new HttpSessionLoadStrategy();
+        ls.setMode(HttpSessionLoadStrategy.SESSION_PER_THREAD_MODE);
+
+        HttpSessionPerThread s = HttpSessionPerThread.initializeInstance();
+        assertNotNull(s);
+
+        String sessionId = s.getSessionId();
+
+        //
+        // should generate an "invalidate" operation
+        //
+        HttpSessionInvalidate i = (HttpSessionInvalidate) ls.next(null, null, true);
+
+        assertEquals(sessionId, i.getSessionId());
+
+        assertNull(HttpSessionPerThread.getCurrentInstance());
+    }
+
+    @Test
+    public void next_sessionPerThreadMode_RuntimeShuttingDown_SessionNotAssociatedWithThread() throws Exception {
+
+        HttpSessionLoadStrategy ls = new HttpSessionLoadStrategy();
+        ls.setMode(HttpSessionLoadStrategy.SESSION_PER_THREAD_MODE);
+
+        assertNull(HttpSessionPerThread.getCurrentInstance());
+
+        //
+        // no session associated with the thread, no session id, don't send anything
+        //
+        assertNull(ls.next(null, null, true));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
