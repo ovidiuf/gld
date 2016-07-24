@@ -120,7 +120,7 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
             // we need to install the default logic, and we need session count, otherwise we can fill the cache
             //
             if (sessionCount == null) {
-                throw new UserErrorException("--session count required");
+                throw new UserErrorException("--session count required in HTTP session load strategy default mode");
             }
 
             //
