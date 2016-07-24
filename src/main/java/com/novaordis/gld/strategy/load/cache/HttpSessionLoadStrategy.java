@@ -54,12 +54,14 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
     private byte mode;
     private int writeCount;
 
+    private DefaultHttpSessionLoadStrategyLogic defaultLogic;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public HttpSessionLoadStrategy() {
 
         this.writeCount = HttpSessionSimulation.DEFAULT_WRITE_COUNT;
-        setMode(DEFAULT_MODE);
+        this.mode = DEFAULT_MODE;
     }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
@@ -73,25 +75,22 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
             return;
         }
 
+        Integer sessionCount = null;
+
         for(int i = from; i < arguments.size(); i ++) {
 
             String crt = arguments.get(i);
 
-            if ("--write-count".equals(crt)) {
+            if ("--http-session-mode".equals(crt)) {
 
                 arguments.remove(i);
-                writeCount = Integer.parseInt(arguments.remove(i));
-            }
-            else if ("--http-session-mode".equals(crt)) {
-
-                arguments.remove(i);
-                crt = arguments.remove(i);
+                crt = arguments.remove(i--);
 
                 if (DEFAULT_MODE_LITERAL.equals(crt)) {
-                    setMode(DEFAULT_MODE);
+                    this.mode = DEFAULT_MODE;
                 }
                 else if (SESSION_PER_THREAD_MODE_LITERAL.equals(crt)) {
-                    setMode(SESSION_PER_THREAD_MODE);
+                    this.mode = SESSION_PER_THREAD_MODE;
                 }
                 else {
                     throw new UserErrorException(
@@ -99,19 +98,49 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
                                     "\"" + DEFAULT_MODE_LITERAL + "\", \"" + SESSION_PER_THREAD_MODE_LITERAL + "\"");
                 }
             }
+            else if ("--write-count".equals(crt)) {
+
+                arguments.remove(i);
+                writeCount = Integer.parseInt(arguments.remove(i--));
+            }
+            else if ("--sessions".equals(crt)) {
+
+                arguments.remove(i);
+                sessionCount = Integer.parseInt(arguments.remove(i--));
+            }
+        }
+
+        //
+        // state consistency check and finish initializing the state
+        //
+
+        if (mode == DEFAULT_MODE) {
+
+            //
+            // we need session count, otherwise we can fill the cache
+            //
+            if (sessionCount == null) {
+                throw new UserErrorException("--session count required");
+            }
+
+            //
+            // finish initializing the state
+            //
+
+            defaultLogic = new DefaultHttpSessionLoadStrategyLogic(sessionCount, writeCount);
         }
     }
 
     public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown) {
 
-        if (mode == SESSION_PER_THREAD_MODE) {
-            return HttpSessionPerThread.next(this, runtimeShuttingDown);
-        }
-        else if (mode == DEFAULT_MODE) {
-            throw new RuntimeException("NOT YET IMPLEMENTED");
+        if (defaultLogic != null) {
+            return defaultLogic.next(runtimeShuttingDown);
         }
 
-        throw new IllegalStateException("unknown HttpSessionLoadStrategy mode " + mode);
+        //
+        // fall back to session-per-thread
+        //
+        return HttpSessionPerThread.next(this, runtimeShuttingDown);
     }
 
     @Override
@@ -135,6 +164,18 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
         this.writeCount = i;
     }
 
+    /**
+     * @return null if not specified
+     */
+    public Integer getSessionCount() {
+
+        if (defaultLogic == null) {
+            return null;
+        }
+
+        return defaultLogic.getConfiguredSessionCount();
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     byte getMode() {
@@ -142,6 +183,7 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
     }
 
     void setMode(byte m) {
+
         this.mode = m;
     }
 

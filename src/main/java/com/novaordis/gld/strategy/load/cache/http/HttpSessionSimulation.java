@@ -22,6 +22,7 @@ import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionOperatio
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionWrite;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A HttpSession simulation.
@@ -95,7 +96,6 @@ public class HttpSessionSimulation {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Random random;
     private String sessionId;
 
     //
@@ -113,7 +113,6 @@ public class HttpSessionSimulation {
 
     public HttpSessionSimulation(String sessionId) {
 
-        random = new Random();
         this.sessionId = sessionId;
     }
 
@@ -123,10 +122,14 @@ public class HttpSessionSimulation {
         return sessionId;
     }
 
-    public HttpSessionOperation next() {
+    /**
+     * Will be accessed concurrently.
+     */
+    public synchronized HttpSessionOperation next() {
 
         if (sessionId == null) {
 
+            Random random = ThreadLocalRandom.current();
             this.sessionId = generateSessionId(random);
             return new HttpSessionCreate(this);
         }
@@ -169,9 +172,14 @@ public class HttpSessionSimulation {
         this.remainingWrites = initialWriteCount;
     }
 
-    public int getWriteCount() {
+    public int getConfiguredWriteCount() {
 
         return initialWriteCount;
+    }
+
+    public int getRemainingWrites() {
+
+        return remainingWrites;
     }
 
     @Override

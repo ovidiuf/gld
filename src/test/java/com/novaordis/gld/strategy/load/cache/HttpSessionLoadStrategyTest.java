@@ -80,12 +80,37 @@ public class HttpSessionLoadStrategyTest extends LoadStrategyTest {
     @Test
     public void mode_default() throws Exception {
 
+        HttpSessionLoadStrategy strategy = new HttpSessionLoadStrategy();
+        MockConfiguration mc = new MockConfiguration();
+
+        // the default mode must have a valid --session count otherwise it will fail
+        List<String> args = new ArrayList<>(Arrays.asList("something", "--sessions", "1", "somethingelse"));
+
+        strategy.configure(mc, args, 0);
+        assertEquals(HttpSessionLoadStrategy.DEFAULT_MODE, strategy.getMode());
+        assertEquals(2, args.size());
+
+        assertEquals(1, strategy.getSessionCount().intValue());
+    }
+
+    @Test
+    public void mode_default_NoSessionCount() throws Exception {
+
         HttpSessionLoadStrategy s = new HttpSessionLoadStrategy();
         MockConfiguration mc = new MockConfiguration();
-        List<String> args = new ArrayList<>(Arrays.asList("something", "somethingelse"));
-        s.configure(mc, args, 0);
-        assertEquals(HttpSessionLoadStrategy.DEFAULT_MODE, s.getMode());
-        assertEquals(2, args.size());
+
+        List<String> args = new ArrayList<>();
+
+        try {
+            s.configure(mc, args, 0);
+            fail("should throw exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.contains("--session count required"));
+        }
     }
 
     @Test
@@ -93,13 +118,43 @@ public class HttpSessionLoadStrategyTest extends LoadStrategyTest {
 
         HttpSessionLoadStrategy s = new HttpSessionLoadStrategy();
         MockConfiguration mc = new MockConfiguration();
+
+        // the default mode must have a valid --session count otherwise it will fail
+
         List<String> args = new ArrayList<>(Arrays.asList(
-                "something", "--http-session-mode", "default", "somethingelse"));
+                "something", "--http-session-mode", "default", "--sessions", "7", "somethingelse"));
+
         s.configure(mc, args, 0);
+
         assertEquals(HttpSessionLoadStrategy.DEFAULT_MODE, s.getMode());
         assertEquals(2, args.size());
         assertEquals("something", args.get(0));
         assertEquals("somethingelse", args.get(1));
+
+        assertEquals(7, s.getSessionCount().intValue());
+    }
+
+    @Test
+    public void mode_explicitDefault_NoSessionCount() throws Exception {
+
+        HttpSessionLoadStrategy s = new HttpSessionLoadStrategy();
+        MockConfiguration mc = new MockConfiguration();
+
+        // the default mode must have a valid --session count otherwise it will fail
+
+        List<String> args = new ArrayList<>(Arrays.asList(
+                "something", "--http-session-mode", "default", "somethingelse"));
+
+        try {
+            s.configure(mc, args, 0);
+            fail("should throw exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.contains("--session count required"));
+        }
     }
 
     @Test
@@ -114,6 +169,8 @@ public class HttpSessionLoadStrategyTest extends LoadStrategyTest {
         assertEquals(2, args.size());
         assertEquals("something", args.get(0));
         assertEquals("somethingelse", args.get(1));
+
+        assertNull(s.getSessionCount());
     }
 
     @Test
@@ -149,7 +206,7 @@ public class HttpSessionLoadStrategyTest extends LoadStrategyTest {
 
         HttpSessionSimulation s = c.getHttpSession();
 
-        assertEquals(HttpSessionSimulation.DEFAULT_WRITE_COUNT, s.getWriteCount());
+        assertEquals(HttpSessionSimulation.DEFAULT_WRITE_COUNT, s.getConfiguredWriteCount());
     }
 
     @Test
@@ -170,7 +227,20 @@ public class HttpSessionLoadStrategyTest extends LoadStrategyTest {
 
         HttpSessionSimulation s = c.getHttpSession();
 
-        assertEquals(7, s.getWriteCount());
+        assertEquals(7, s.getConfiguredWriteCount());
+    }
+
+    @Test
+    public void configuration_SessionCount() throws Exception {
+
+        HttpSessionLoadStrategy ls = new HttpSessionLoadStrategy();
+        MockConfiguration mc = new MockConfiguration();
+
+        List<String> arguments = new ArrayList<>(Arrays.asList("--sessions", "8"));
+
+        ls.configure(mc, arguments, 0);
+
+        assertEquals(8, ls.getSessionCount().intValue());
     }
 
     // next() session-per-thread mode ----------------------------------------------------------------------------------
@@ -222,6 +292,12 @@ public class HttpSessionLoadStrategyTest extends LoadStrategyTest {
         //
         assertNull(ls.next(null, null, true));
     }
+
+    // next() default mode ---------------------------------------------------------------------------------------------
+
+    //
+    // @see DefaultHttpSessionLoadStrategyLogicTest
+    //
 
     // Package protected -----------------------------------------------------------------------------------------------
 

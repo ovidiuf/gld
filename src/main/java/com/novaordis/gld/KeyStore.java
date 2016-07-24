@@ -17,11 +17,12 @@
 package com.novaordis.gld;
 
 /**
- * A key store, a place to store keys that were sent into the cache cluster, in case we want to retrieve them later,
- * or to get key from.
+ * A key store - a repository to store keys that were sent into the service, in case we want to retrieve them later.
+ *
+ * Implementations must be thread-safe.
  */
-public interface KeyStore
-{
+public interface KeyStore {
+
     void start() throws Exception;
     void stop() throws Exception;
     boolean isStarted();
@@ -29,16 +30,15 @@ public interface KeyStore
     boolean isReadOnly();
 
     /**
-     * Implementation are advised to do keystore asynchronously, if at all possible, in order to interfere with
-     * the writing thread as little as possible.
+     * Implementations are encouraged to store asynchronously, if at all possible, in order to interfere with the
+     * writing thread as little as possible.
      *
      * @exception java.lang.IllegalStateException if we're a read-only key store.
      */
     void store(String key) throws Exception;
 
     /**
-     * @return the next key from the store, or null if there are no keys
+     * @return the next key from the store, or null if there are no keys.
      */
     String get();
-
 }

@@ -100,16 +100,16 @@ public class HttpSessionSimulationTest {
     public void initialWriteCount_NoWrites() throws Exception {
 
         HttpSessionSimulation s = getHttpSessionSimulationToTest();
-        assertEquals(0, s.getWriteCount());
+        assertEquals(0, s.getConfiguredWriteCount());
 
         s.setWriteCount(0);
-        assertEquals(0, s.getWriteCount());
+        assertEquals(0, s.getConfiguredWriteCount());
 
         assertTrue(s.next() instanceof HttpSessionCreate);
-        assertEquals(0, s.getWriteCount());
+        assertEquals(0, s.getConfiguredWriteCount());
 
         assertTrue(s.next() instanceof HttpSessionInvalidate);
-        assertEquals(0, s.getWriteCount());
+        assertEquals(0, s.getConfiguredWriteCount());
 
     }
 
@@ -117,25 +117,25 @@ public class HttpSessionSimulationTest {
     public void initialWriteCount_SomeWrites() throws Exception {
 
         HttpSessionSimulation s = getHttpSessionSimulationToTest();
-        assertEquals(0, s.getWriteCount());
+        assertEquals(0, s.getConfiguredWriteCount());
 
         s.setWriteCount(3);
-        assertEquals(3, s.getWriteCount());
+        assertEquals(3, s.getConfiguredWriteCount());
 
         assertTrue(s.next() instanceof HttpSessionCreate);
-        assertEquals(3, s.getWriteCount());
+        assertEquals(3, s.getConfiguredWriteCount());
 
         assertTrue(s.next() instanceof HttpSessionWrite);
-        assertEquals(3, s.getWriteCount());
+        assertEquals(3, s.getConfiguredWriteCount());
 
         assertTrue(s.next() instanceof HttpSessionWrite);
-        assertEquals(3, s.getWriteCount());
+        assertEquals(3, s.getConfiguredWriteCount());
 
         assertTrue(s.next() instanceof HttpSessionWrite);
-        assertEquals(3, s.getWriteCount());
+        assertEquals(3, s.getConfiguredWriteCount());
 
         assertTrue(s.next() instanceof HttpSessionInvalidate);
-        assertEquals(3, s.getWriteCount());
+        assertEquals(3, s.getConfiguredWriteCount());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

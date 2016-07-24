@@ -93,8 +93,18 @@ public class MockLoadStrategy extends LoadStrategyBase
     }
 
     @Override
-    public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown)
-    {
+    public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown)  {
+
+        //
+        // if the runtime is shutting down, comply and return null; tests rely on this behavior
+        //
+        if (runtimeShuttingDown) {
+
+            log.info(this + " has been notified that the runtime is shutting down, stopping building operations ...");
+            return null;
+        }
+
+
         if (remainingOperations != null)
         {
             if (remainingOperations.getAndDecrement() <= 0)

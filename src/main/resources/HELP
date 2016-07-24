@@ -250,11 +250,15 @@ Load Strategies ________________________________________________________________
 
       Options:
 
-        --http-session-mode <default|session-per-thread> - see above.  If not specified,  the mode
-          is "default"
+        --http-session-mode <default|session-per-thread>  see above. If not specified, the mode is
+          "default".
 
         --write-count <integer> -  the number of attribute writes to execute after the creation of
           the session and before the session is invalidated. The default value is 10.
+
+        --sessions <integer>  the number of sessions to simulate. This is a required configuration
+          parameter in default mode,  and will be ignored,  if specified,  in 'session-per-thread'
+          mode,  as in that case,  the number of session is given by the number of driver threads.
   JMS
 
     Common to all JMS load strategies:

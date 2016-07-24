@@ -164,6 +164,11 @@ public class SingleThreadedRunner implements Runnable {
 
     // Private ---------------------------------------------------------------------------------------------------------
 
+    private boolean runnerIsShuttingDown() {
+
+        return durationExpired.get();
+    }
+
     private void loopUntilStoppedOrOutOfOperationsOrDurationExpired() throws Exception {
 
         long operationCounter = 0L;
@@ -172,16 +177,13 @@ public class SingleThreadedRunner implements Runnable {
 
         while (running) {
 
-            if (durationExpired.get()) {
+            //
+            // if the runner is shutting down, let the strategy know but keep spinning, as we may need
+            // multiple operations to clean up the state. Let the strategy return null when it decides it issued
+            // enough cleanup operations
+            //
 
-                //
-                // the run duration expired, this loop is done, but before exiting give the load strategy a chance
-                // to fabricate a "cleanup" operation, if it wants to
-                //
-                running = false;
-            }
-
-            Operation op = loadStrategy.next(lastOperation, lastWrittenKey, durationExpired.get());
+            Operation op = loadStrategy.next(lastOperation, lastWrittenKey, runnerIsShuttingDown());
 
             if (op == null) {
 

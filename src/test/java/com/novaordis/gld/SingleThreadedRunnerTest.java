@@ -252,6 +252,8 @@ public class SingleThreadedRunnerTest {
 
         LoadStrategy ls = new LoadStrategy() {
 
+            private boolean cleanupOperationIssued = false;
+
             @Override
             public String getName() {
                 throw new RuntimeException("getName() NOT YET IMPLEMENTED");
@@ -267,9 +269,14 @@ public class SingleThreadedRunnerTest {
 
                 if (runtimeShuttingDown) {
 
+                    if (cleanupOperationIssued) {
+                        return null;
+                    }
+
                     //
-                    // returns a "cleanup" mock operation
+                    // returns a "cleanup" mock operation and then null
                     //
+                    cleanupOperationIssued = true;
                     return new MockCleanupOperation();
                 }
                 else {

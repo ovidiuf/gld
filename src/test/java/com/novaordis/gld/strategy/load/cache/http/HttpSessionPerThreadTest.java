@@ -108,7 +108,7 @@ public class HttpSessionPerThreadTest extends HttpSessionSimulationTest {
         HttpSessionOperation o = HttpSessionPerThread.next(strategy, false);
 
         assertNotNull(o);
-        assertEquals(77, o.getHttpSession().getWriteCount());
+        assertEquals(77, o.getHttpSession().getConfiguredWriteCount());
 
         HttpSessionPerThread s2 = HttpSessionPerThread.getCurrentInstance();
         assertNotNull(s2);
