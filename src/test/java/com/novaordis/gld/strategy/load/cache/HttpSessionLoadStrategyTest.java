@@ -75,6 +75,8 @@ public class HttpSessionLoadStrategyTest extends LoadStrategyTest {
         HttpSessionPerThread.destroyInstance();
     }
 
+    // Overrides -------------------------------------------------------------------------------------------------------
+
     // mode ------------------------------------------------------------------------------------------------------------
 
     @Test

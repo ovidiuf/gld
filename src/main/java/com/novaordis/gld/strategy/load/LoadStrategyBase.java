@@ -53,10 +53,20 @@ public abstract class LoadStrategyBase implements LoadStrategy {
             return;
         }
 
-        if (!arguments.isEmpty() && (from < 0 || from >= arguments.size())) {
+        if (arguments.isEmpty()) {
+            return;
+        }
 
+        if (from < 0){
+            //
+            // this is an invalid situation
+            //
             throw new ArrayIndexOutOfBoundsException("invalid array index: " + from);
         }
+
+        //
+        // ignore from that goes beyond the array limit
+        //
     }
 
     @Override

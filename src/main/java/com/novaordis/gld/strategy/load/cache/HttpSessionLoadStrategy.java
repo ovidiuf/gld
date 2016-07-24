@@ -117,7 +117,7 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
         if (mode == DEFAULT_MODE) {
 
             //
-            // we need session count, otherwise we can fill the cache
+            // we need to install the default logic, and we need session count, otherwise we can fill the cache
             //
             if (sessionCount == null) {
                 throw new UserErrorException("--session count required");
@@ -185,6 +185,10 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
     void setMode(byte m) {
 
         this.mode = m;
+    }
+
+    void setDefaultLogic(DefaultHttpSessionLoadStrategyLogic defaultLogic) {
+        this.defaultLogic = defaultLogic;
     }
 
     // Protected -------------------------------------------------------------------------------------------------------

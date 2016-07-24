@@ -73,23 +73,6 @@ public abstract class LoadStrategyTest {
     }
 
     @Test
-    public void fromOutOfBounds_SuperiorLimit() throws Exception {
-
-        LoadStrategy s = getLoadStrategyToTest(null, null, -1);
-
-        List<String> args = Arrays.asList("blah", "blah", "blah");
-
-        try {
-
-            s.configure(new MockConfiguration(), args, 3);
-            fail("should fail with ArrayIndexOutOfBoundsException because from is higher than acceptable");
-        }
-        catch(ArrayIndexOutOfBoundsException e) {
-            log.info(e.getMessage());
-        }
-    }
-
-    @Test
     public void nullConfiguration() throws Exception {
 
         LoadStrategy s = getLoadStrategyToTest(null, null, -1);
