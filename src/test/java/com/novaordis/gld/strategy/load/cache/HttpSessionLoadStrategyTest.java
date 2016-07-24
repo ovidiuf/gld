@@ -111,7 +111,7 @@ public class HttpSessionLoadStrategyTest extends LoadStrategyTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertTrue(msg.contains("--session count required"));
+            assertTrue(msg.contains("--sessions count required"));
         }
     }
 
@@ -155,7 +155,7 @@ public class HttpSessionLoadStrategyTest extends LoadStrategyTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertTrue(msg.contains("--session count required"));
+            assertTrue(msg.contains("--sessions count required"));
         }
     }
 
