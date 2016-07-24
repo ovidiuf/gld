@@ -32,8 +32,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public abstract class MultiThreadedRunnerTest
-{
+public abstract class MultiThreadedRunnerTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(MultiThreadedRunnerTest.class);
