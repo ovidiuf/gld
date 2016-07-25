@@ -62,6 +62,7 @@ public class HttpSessionWrite extends HttpSessionOperation {
         sessionValue.put((byte)1, 0L); // Long
         sessionValue.put((byte)3, new DistributableSessionMetadataSimulation());
         sessionValue.put("TEST-KEY", "TEST-VALUE");
+        sessionValue.put("INITIAL-FOOTPRINT", new byte[getHttpSession().getInitialSessionSize()]);
 
         cache.put(ourSessionId, sessionValue);
     }

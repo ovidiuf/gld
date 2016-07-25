@@ -21,6 +21,9 @@ import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -65,6 +68,36 @@ public class HttpSessionWriteTest extends HttpSessionOperationTest {
         assertNotNull(o2);
 
         log.debug(".");
+    }
+
+    @Test
+    public void write_initialSessionSize() throws Exception {
+
+        String sessionId = "n723h6";
+
+        HttpSessionWrite w = getOperationToTest(new HttpSessionSimulation(sessionId));
+        MockRemoteCache mrc = new MockRemoteCache();
+
+        Object o = mrc.get(sessionId);
+        assertNull(o);
+
+        //noinspection unchecked
+        w.performInternal(mrc);
+
+        //
+        // the "remote cache" must contain the session representation
+        //
+
+        Object o2 = mrc.get(sessionId);
+        assertNotNull(o2);
+
+        //
+        // initial session
+        //
+
+        Map m = (Map)o2;
+        byte[] initialFootprint = (byte[])m.get("INITIAL-FOOTPRINT");
+        assertEquals(HttpSessionSimulation.DEFAULT_SESSION_SIZE_BYTES, initialFootprint.length);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

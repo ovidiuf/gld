@@ -259,6 +259,10 @@ Load Strategies ________________________________________________________________
         --sessions <integer>  the number of sessions to simulate. This is a required configuration
           parameter in default mode,  and will be ignored,  if specified,  in 'session-per-thread'
           mode,  as in that case,  the number of session is given by the number of driver threads.
+
+        --initial-session-size <bytes>  the initial size,  in bytes,  of the sessions that will be
+          simulated during the run.
+
   JMS
 
     Common to all JMS load strategies:

@@ -70,6 +70,7 @@ public class HttpSessionCreate extends HttpSessionOperation {
         sessionValue.put((byte)0, 0); // Integer
         sessionValue.put((byte)1, 0L); // Long
         sessionValue.put((byte)3, new DistributableSessionMetadataSimulation());
+        sessionValue.put("INITIAL-FOOTPRINT", new byte[getHttpSession().getInitialSessionSize()]);
 
         cache.put(ourSessionId, sessionValue);
     }

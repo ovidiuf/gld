@@ -62,7 +62,7 @@ public class DefaultHttpSessionLoadStrategyLogicConcurrencyTest {
         final int totalInvocationCount = 500000;
 
         final DefaultHttpSessionLoadStrategyLogic logic =
-                new DefaultHttpSessionLoadStrategyLogic(sessions, writesPerSession);
+                new DefaultHttpSessionLoadStrategyLogic(sessions, writesPerSession, null);
 
         final AtomicLong invocationCount = new AtomicLong(0);
         final CountDownLatch latch = new CountDownLatch(threadCount);

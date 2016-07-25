@@ -22,6 +22,9 @@ import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulationException
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -87,6 +90,37 @@ public class HttpSessionCreateTest extends HttpSessionOperationTest {
 
         Object o2 = mrc.get(sessionId);
         assertNotNull(o2);
+    }
+
+    @Test
+    public void create_initialSessionSize() throws Exception {
+
+        String sessionId = "m3gys6";
+
+        HttpSessionCreate c = getOperationToTest(new HttpSessionSimulation(sessionId));
+
+        MockRemoteCache mrc = new MockRemoteCache();
+
+        Object o = mrc.get(sessionId);
+        assertNull(o);
+
+        //noinspection unchecked
+        c.performInternal(mrc);
+
+        //
+        // the "remote cache" must contain the session representation
+        //
+
+        Object o2 = mrc.get(sessionId);
+        assertNotNull(o2);
+
+        //
+        // initial session
+        //
+
+        Map m = (Map)o2;
+        byte[] initialFootprint = (byte[])m.get("INITIAL-FOOTPRINT");
+        assertEquals(HttpSessionSimulation.DEFAULT_SESSION_SIZE_BYTES, initialFootprint.length);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

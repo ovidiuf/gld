@@ -138,6 +138,27 @@ public class HttpSessionSimulationTest {
         assertEquals(3, s.getConfiguredWriteCount());
     }
 
+    // initial size ----------------------------------------------------------------------------------------------------
+
+    @Test
+    public void initialSize() throws Exception {
+
+        HttpSessionSimulation s = getHttpSessionSimulationToTest();
+
+        assertEquals(HttpSessionSimulation.DEFAULT_SESSION_SIZE_BYTES, s.getInitialSessionSize());
+
+        s.setInitialSessionSize(7);
+        assertEquals(7, s.getInitialSessionSize());
+
+        // insure noop
+        s.setInitialSessionSize(null);
+        assertEquals(7, s.getInitialSessionSize());
+
+        // zero
+        s.setInitialSessionSize(0);
+        assertEquals(0, s.getInitialSessionSize());
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

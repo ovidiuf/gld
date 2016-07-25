@@ -47,12 +47,17 @@ public class DefaultHttpSessionLoadStrategyLogic {
 
     private int last;
 
+    // in bytes - null means don't chage
+    private Integer initialSessionSize;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
+     * @param initialSessionSize in bytes. If null, use the HttpSessionSimulation built-in default.
+     *
      * @exception IllegalArgumentException on invalid session count.
      */
-    public DefaultHttpSessionLoadStrategyLogic(int sessionCount, int writesPerSession) {
+    public DefaultHttpSessionLoadStrategyLogic(int sessionCount, int writesPerSession, Integer initialSessionSize) {
 
         if (sessionCount <= 0) {
             throw new IllegalArgumentException("invalid session count " + sessionCount);
@@ -62,8 +67,12 @@ public class DefaultHttpSessionLoadStrategyLogic {
             throw new IllegalArgumentException("invalid writes per session count " + writesPerSession);
         }
 
+        // null initialSessionSize is legal, we'll use the HttpSessionSimulation built-in default
+
         this.writesPerSession = writesPerSession;
+        this.initialSessionSize = initialSessionSize;
         sessions = new HttpSessionSimulation[sessionCount];
+
         last = 0;
     }
 
@@ -85,6 +94,13 @@ public class DefaultHttpSessionLoadStrategyLogic {
     public int getWritesPerSession() {
 
         return writesPerSession;
+    }
+
+    /**
+     * @return null means use HttpSessionSimulation's default.
+     */
+    public Integer getInitialSessionSize() {
+        return initialSessionSize;
     }
 
     public HttpSessionOperation next(boolean runtimeShuttingDown) {
@@ -130,6 +146,7 @@ public class DefaultHttpSessionLoadStrategyLogic {
 
                     session = new HttpSessionSimulation();
                     session.setWriteCount(writesPerSession);
+                    session.setInitialSessionSize(initialSessionSize);
                     i = last++;
                     sessions[i] = session;
                 }

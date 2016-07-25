@@ -46,6 +46,9 @@ public class HttpSessionSimulation {
 
     public static final int DEFAULT_WRITE_COUNT = 10;
 
+    // 10K
+    public static final int DEFAULT_SESSION_SIZE_BYTES = 10 * 1024;
+
     private static final char[] SESSION_ID_ALPHABET =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-_".toCharArray();
 
@@ -104,6 +107,8 @@ public class HttpSessionSimulation {
     private int initialWriteCount;
     private int remainingWrites;
 
+    private int initialSessionSize;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public HttpSessionSimulation() {
@@ -114,6 +119,7 @@ public class HttpSessionSimulation {
     public HttpSessionSimulation(String sessionId) {
 
         this.sessionId = sessionId;
+        this.initialSessionSize = DEFAULT_SESSION_SIZE_BYTES;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -180,6 +186,25 @@ public class HttpSessionSimulation {
     public int getRemainingWrites() {
 
         return remainingWrites;
+    }
+
+    /**
+     * @param s - if null, this means noop (don't change). If you want to set it to zero, use Integer(0).
+     */
+    public void setInitialSessionSize(Integer s) {
+
+        if (s == null) {
+            //
+            // noop
+            //
+            return;
+        }
+
+        this.initialSessionSize = s;
+    }
+
+    public int getInitialSessionSize() {
+        return this.initialSessionSize;
     }
 
     @Override

@@ -61,7 +61,7 @@ public class DefaultHttpSessionLoadStrategyLogicTest {
     public void constructor_InvalidSessionCount() throws Exception {
 
         try {
-            new DefaultHttpSessionLoadStrategyLogic(-1, 10);
+            new DefaultHttpSessionLoadStrategyLogic(-1, 10, 1024);
             fail("should throw exception");
         }
         catch(IllegalArgumentException e) {
@@ -73,7 +73,7 @@ public class DefaultHttpSessionLoadStrategyLogicTest {
     public void constructor_InvalidSessionCount2() throws Exception {
 
         try {
-            new DefaultHttpSessionLoadStrategyLogic(0, 10);
+            new DefaultHttpSessionLoadStrategyLogic(0, 10, 1024);
             fail("should throw exception");
         }
         catch(IllegalArgumentException e) {
@@ -85,7 +85,7 @@ public class DefaultHttpSessionLoadStrategyLogicTest {
     public void constructor_InvalidWritesPerSession() throws Exception {
 
         try {
-            new DefaultHttpSessionLoadStrategyLogic(10, -1);
+            new DefaultHttpSessionLoadStrategyLogic(10, -1, 1024);
             fail("should throw exception");
         }
         catch(IllegalArgumentException e) {
@@ -97,7 +97,7 @@ public class DefaultHttpSessionLoadStrategyLogicTest {
     public void constructor_InvalidWritesPerSession2() throws Exception {
 
         try {
-            new DefaultHttpSessionLoadStrategyLogic(10, 0);
+            new DefaultHttpSessionLoadStrategyLogic(10, 0, 1024);
             fail("should throw exception");
         }
         catch(IllegalArgumentException e) {
@@ -108,9 +108,10 @@ public class DefaultHttpSessionLoadStrategyLogicTest {
     @Test
     public void constructor() throws Exception {
 
-        DefaultHttpSessionLoadStrategyLogic logic = new DefaultHttpSessionLoadStrategyLogic(10, 11);
+        DefaultHttpSessionLoadStrategyLogic logic = new DefaultHttpSessionLoadStrategyLogic(10, 11, 1025);
         assertEquals(10, logic.getConfiguredSessionCount());
         assertEquals(11, logic.getWritesPerSession());
+        assertEquals(1025, logic.getInitialSessionSize().intValue());
     }
 
     // next() ----------------------------------------------------------------------------------------------------------
@@ -120,12 +121,15 @@ public class DefaultHttpSessionLoadStrategyLogicTest {
 
         int sessions = 1;
         int writesPerSession = 1;
+        int initialSessionSize = 1027;
 
-        DefaultHttpSessionLoadStrategyLogic logic = new DefaultHttpSessionLoadStrategyLogic(sessions, writesPerSession);
+        DefaultHttpSessionLoadStrategyLogic logic =
+                new DefaultHttpSessionLoadStrategyLogic(sessions, writesPerSession, initialSessionSize);
 
         HttpSessionCreate o = (HttpSessionCreate)logic.next(false);
         HttpSessionSimulation s = o.getHttpSession();
         assertEquals(1, s.getRemainingWrites());
+        assertEquals(1027, s.getInitialSessionSize());
 
         //
         // next invocation is a write
@@ -133,6 +137,8 @@ public class DefaultHttpSessionLoadStrategyLogicTest {
 
         HttpSessionWrite w = (HttpSessionWrite)logic.next(false);
         HttpSessionSimulation s2 = w.getHttpSession();
+        assertEquals(1027, s2.getInitialSessionSize());
+
         assertEquals(0, s2.getRemainingWrites());
         assertEquals(s, s2);
 
@@ -197,9 +203,10 @@ public class DefaultHttpSessionLoadStrategyLogicTest {
 
         int sessions = 3;
         int writesPerSession = 1;
+        int initialSessionSize = 1029;
 
         DefaultHttpSessionLoadStrategyLogic logic =
-                new DefaultHttpSessionLoadStrategyLogic(sessions, writesPerSession);
+                new DefaultHttpSessionLoadStrategyLogic(sessions, writesPerSession, initialSessionSize);
 
         //
         // the first three operations are always "create"
@@ -208,6 +215,7 @@ public class DefaultHttpSessionLoadStrategyLogicTest {
         HttpSessionCreate o = (HttpSessionCreate)logic.next(false);
         HttpSessionSimulation s = o.getHttpSession();
         assertEquals(1, s.getRemainingWrites());
+        assertEquals(1029, s.getInitialSessionSize());
 
         HttpSessionCreate o2 = (HttpSessionCreate)logic.next(false);
         HttpSessionSimulation s2 = o2.getHttpSession();
@@ -224,7 +232,6 @@ public class DefaultHttpSessionLoadStrategyLogicTest {
         HttpSessionWrite w = (HttpSessionWrite)logic.next(false);
         HttpSessionSimulation s4 = w.getHttpSession();
         assertEquals(0, s4.getRemainingWrites());
-
     }
 
     // next() Runtime Shutting Down ------------------------------------------------------------------------------------
@@ -234,9 +241,10 @@ public class DefaultHttpSessionLoadStrategyLogicTest {
 
         int sessions = 3;
         int writesPerSession = 10;
+        int initialSessionSize = 1024;
 
         DefaultHttpSessionLoadStrategyLogic logic =
-                new DefaultHttpSessionLoadStrategyLogic(sessions, writesPerSession);
+                new DefaultHttpSessionLoadStrategyLogic(sessions, writesPerSession, initialSessionSize);
 
         assertEquals(0, logic.getActiveSessionCount());
 
@@ -302,6 +310,7 @@ public class DefaultHttpSessionLoadStrategyLogicTest {
 
         o = logic.next(true);
         assertNull(o);
+
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

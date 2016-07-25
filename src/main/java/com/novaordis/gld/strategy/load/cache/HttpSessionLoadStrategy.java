@@ -76,6 +76,7 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
         }
 
         Integer sessionCount = null;
+        Integer initialSessionSize = null;
 
         for(int i = from; i < arguments.size(); i ++) {
 
@@ -108,6 +109,11 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
                 arguments.remove(i);
                 sessionCount = Integer.parseInt(arguments.remove(i--));
             }
+            else if ("--initial-session-size".equals(crt)) {
+
+                arguments.remove(i);
+                initialSessionSize = Integer.parseInt(arguments.remove(i--));
+            }
         }
 
         //
@@ -127,7 +133,7 @@ public class HttpSessionLoadStrategy extends LoadStrategyBase {
             // finish initializing the state
             //
 
-            defaultLogic = new DefaultHttpSessionLoadStrategyLogic(sessionCount, writeCount);
+            defaultLogic = new DefaultHttpSessionLoadStrategyLogic(sessionCount, writeCount, initialSessionSize);
         }
     }
 
