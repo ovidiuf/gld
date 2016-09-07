@@ -13,6 +13,8 @@ Usage:
 
 Global Options ___________________________________________________________________________________
 
+    --verbose | -v - configure the runtime to generate verbose output.
+
     --service <service-type> Defines the service provider type. You can use either one of the
       pre-defined values  ("infinispan",  "activemq", etc.)  or a fully qualified  class name of a
       class available in the class path and that implements com.novaordis.gld.Service. The default
@@ -46,6 +48,13 @@ Global Options _________________________________________________________________
         and the gld process simply generates the load, writes statistics in a local file and exits
         when it  reaches  the load limit or it is being told externally to stop.   The command for
         stopping gld processes is "gld stop" (see below).
+
+    --console-output <file> -  this is an optional configuration option that is relevant only when
+        --background (see above) is used.  It redirects stdout and stderr content  produced by the
+        background gld process into the specified file. If not used, the stdout and stderr content
+        produced by the background process  are redirected into a  new file named gld.log, created
+        in the current directory.
+
 
 Commands _________________________________________________________________________________________
 
@@ -209,9 +218,7 @@ Services _______________________________________________________________________
     --service infinispan
     --service redis
 
-Load Strategies __________________________________________________________________________________
-
-  Cache
+  Cache Load Strategies
 
     WriteThenRead
 
@@ -308,3 +315,8 @@ Load Strategies ________________________________________________________________
                  --queue TEST --endpoint-policy REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION \
                  --max-operations 1
 
+  Embedded
+
+    Used for testing:
+
+            gld load --service embedded-generic --nodes embedded

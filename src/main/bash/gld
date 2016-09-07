@@ -6,25 +6,25 @@ verbose=false
 main_class=${main_class}
 memory=1024m
 
-function debug()
-{
+function debug() {
     ${verbose} && echo "$@" 1>&2;
     return 0
 }
 
-function debug-arguments
-{
+function debug-arguments {
     ${verbose} && echo "${FUNCNAME[1]}($@)" 1>&2;
     return 0
 }
 
-function fail
-{
+function fail {
     echo "[error]: $@" 1>&2 && exit 1
 }
 
-function get_java_home()
-{
+function warn {
+    echo "[warn]: $@" 1>&2
+}
+
+function get_java_home() {
     # local java_home="/usr/java/jdk64-1.7.0_45"
     local java_home=""
 
@@ -42,8 +42,7 @@ function get_java_home()
     echo ${java_home}
 }
 
-function get_classpath()
-{
+function get_classpath() {
     debug "${FUNCNAME[0]}: home_dir=${home_dir}"
     local first=true
     for i in ${home_dir}/lib/*.jar; do
@@ -53,8 +52,7 @@ function get_classpath()
 }
 
 # may return empty string or more than one PID (in a space separated list)
-function get-gld-pids()
-{
+function get-gld-pids() {
     pids=$(ps -ef | grep java | grep com.novaordis.gld.Main | awk '{print $2}')
     echo ${pids}
 }
@@ -62,8 +60,7 @@ function get-gld-pids()
 #
 # gets the pids as positional arguments. If the list is empty, attempt to detect and stop all processes
 #
-function stop()
-{
+function stop() {
     local pids
     local force=false
 
@@ -98,8 +95,7 @@ function stop()
     done
 }
 
-function status()
-{
+function status() {
     local pids
     pids=$(get-gld-pids) || fail "failed to get gld pids"
     [ -z "${pids}" ] && { echo "no gld processes running on $(uname -n)"; exit 0; }
@@ -110,12 +106,13 @@ debug_args=""
 output_settings=""
 background=false
 do_kill=false
+console_output=""
 
 while [ "$1" != "" ]; do
     if [ "$1" = "--debug" ]; then
         debug_args="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5011"
         verbose=true
-    elif [ "$1" = "--verbose" ]; then
+    elif [ "$1" = "--verbose" -o "$1" = "-v" ]; then
         verbose=true
     elif [ "$1" = "--background" ]; then
         background=true
@@ -125,6 +122,9 @@ while [ "$1" != "" ]; do
         stop $@ && exit 0 || exit 1
     elif [ "$1" = "status" ]; then
         status && exit 0
+    elif [ "$1" = "--console-output" ]; then
+        shift;
+        console_output=$1
     else
         args="${args} $1"
     fi
@@ -145,6 +145,7 @@ if ${do_kill}; then
 fi
 
 java_bin="java"
+
 [ "${java_home}" != "" ] && java_bin="${java_home}/bin/java"
 
 command="${java_bin} -Xms${memory} -Xmx${memory} -cp ${classpath} ${debug_args} ${output_settings} ${main_class} ${args}"
@@ -152,9 +153,15 @@ command="${java_bin} -Xms${memory} -Xmx${memory} -cp ${classpath} ${debug_args} 
 ${verbose} && echo "${command}" 1>&2;
 
 if ${background}; then
-    nohup ${command} 1>./gld.log 2>&1 < /dev/null &
+    [ -z ${console_output} ] && console_output="./gld.log"
+else
+    [ -n "${console_output}" ] && warn "gld is not running in background, console-output setting will be ignored"
+fi
+
+if ${background}; then
+    nohup ${command} 1>${console_output} 2>&1 < /dev/null &
     pid=$!
-    echo "gld launched in background (pid ${pid}), use gld stop|status to interact with it"
+    echo "gld launched in background (pid ${pid}, console output ${console_output}), use gld stop|status to control it"
     sleep 1
 else
     ${command}
