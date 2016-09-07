@@ -4,7 +4,7 @@ reldir=$(dirname $0)
 home_dir=${reldir}/..
 verbose=false
 main_class=${main_class}
-memory=1024m
+memory=1024
 
 function debug() {
     ${verbose} && echo "$@" 1>&2;
@@ -125,6 +125,10 @@ while [ "$1" != "" ]; do
     elif [ "$1" = "--console-output" ]; then
         shift;
         console_output=$1
+    elif [ "$1" = "--memory" ]; then
+        shift;
+        memory=$1
+        expr ${memory} + 1 >/dev/null 2>&1 || fail "${memory} not a valid memory value, it must be a MB integer value"
     else
         args="${args} $1"
     fi
@@ -148,7 +152,7 @@ java_bin="java"
 
 [ "${java_home}" != "" ] && java_bin="${java_home}/bin/java"
 
-command="${java_bin} -Xms${memory} -Xmx${memory} -cp ${classpath} ${debug_args} ${output_settings} ${main_class} ${args}"
+command="${java_bin} -Xms${memory}m -Xmx${memory}m -cp ${classpath} ${debug_args} ${output_settings} ${main_class} ${args}"
 
 ${verbose} && echo "${command}" 1>&2;
 

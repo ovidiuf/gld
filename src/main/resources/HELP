@@ -50,11 +50,13 @@ Global Options _________________________________________________________________
         stopping gld processes is "gld stop" (see below).
 
     --console-output <file> -  this is an optional configuration option that is relevant only when
-        --background (see above) is used.  It redirects stdout and stderr content  produced by the
-        background gld process into the specified file. If not used, the stdout and stderr content
-        produced by the background process  are redirected into a  new file named gld.log, created
-        in the current directory.
+        --background (see above) is used. When used, the stdout and stderr content produced by the
+        background gld process are redirected into the specified file. If not used, the stdout and
+        stderr content produced by the background process are redirected into a file named gld.log
+        created in the current directory.
 
+     --memory <integer> - the amount of memory, in MB, to be allocated to the driver's java VM. If
+        not specified, the default hardcoded value in the startup script is 1024.
 
 Commands _________________________________________________________________________________________
 
