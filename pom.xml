@@ -26,9 +26,15 @@
     <version>1.0.4-SNAPSHOT-4</version>
 
     <repositories>
+        <!--
         <repository>
             <id>jboss-datagrid-6.5.1-maven-repository</id>
             <url>file:///Users/ovidiu/runtime/jboss-datagrid-6.5.1-maven-repository</url>
+        </repository>
+        -->
+        <repository>
+            <id>jboss-datagrid-7.0.0-maven-repository</id>
+            <url>file:///Users/ovidiu/runtime/jboss-datagrid-7.0.0-maven-repository/maven-repository</url>
         </repository>
     </repositories>
 
@@ -39,7 +45,24 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>MM/dd/yy</maven.build.timestamp.format>
         <release_date>${maven.build.timestamp}</release_date>
+
+        <!--
+            JDG Dependencies
+        -->
+
+        <!--
+            JDG 6.5.1
+        -->
+        <!--
+        <jdg.infinspan.client.hotrod.version>6.3.1.Final-redhat-1</jdg.infinspan.client.hotrod.version>
+        -->
+
+        <!--
+            JDG 7.0
+        -->
+        <jdg.infinspan.client.hotrod.version>8.3.0.Final-redhat-1</jdg.infinspan.client.hotrod.version>
     </properties>
+
 
     <build>
         <resources>
@@ -157,14 +180,27 @@
         </dependency>
 
         <!--
-            JBoss Data Grid
+            JDG
         -->
 
-        <!-- JBoss Data Grid 6.3.2 dependency -->
         <dependency>
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-client-hotrod</artifactId>
-            <version>6.3.1.Final-redhat-1</version>
+            <version>${jdg.infinspan.client.hotrod.version}</version>
+        </dependency>
+
+        <!--
+            Needed by JDG 7
+        -->
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-commons</artifactId>
+            <version>${jdg.infinspan.client.hotrod.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-query-dsl</artifactId>
+            <version>${jdg.infinspan.client.hotrod.version}</version>
         </dependency>
 
         <!--

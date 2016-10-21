@@ -16,18 +16,21 @@
 
 package com.novaordis.gld.service.cache.infinispan;
 
+import org.infinispan.client.hotrod.CacheTopologyInfo;
 import org.infinispan.client.hotrod.Flag;
 import org.infinispan.client.hotrod.MetadataValue;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.ServerStatistics;
 import org.infinispan.client.hotrod.VersionedValue;
-import org.infinispan.commons.util.concurrent.NotifyingFuture;
+import org.infinispan.commons.util.CloseableIterator;
+import org.infinispan.query.dsl.Query;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -54,12 +57,50 @@ public class MockRemoteCache implements RemoteCache {
     // RemoteCache implementation --------------------------------------------------------------------------------------
 
     @Override
+    public Object get(Object key) {
+
+        return map.get(key);
+    }
+
+    @Override
+    public String getName() {
+        throw new RuntimeException("getName() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public String getVersion() {
+        throw new RuntimeException("getVersion() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Object put(Object o, Object o2) {
+
+        return map.put((String)o, o2);
+    }
+
+    @Override
+    public Object put(Object o, Object o2, long l, TimeUnit timeUnit) {
+        throw new RuntimeException("put() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Object putIfAbsent(Object o, Object o2, long l, TimeUnit timeUnit) {
+        throw new RuntimeException("putIfAbsent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Object remove(Object o) {
+
+        return map.remove(o);
+    }
+
+    @Override
     public boolean removeWithVersion(Object o, long l) {
         throw new RuntimeException("removeWithVersion() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture<Boolean> removeWithVersionAsync(Object o, long l) {
+    public CompletableFuture<Boolean> removeWithVersionAsync(Object o, long l) {
         throw new RuntimeException("removeWithVersionAsync() NOT YET IMPLEMENTED");
     }
 
@@ -84,18 +125,23 @@ public class MockRemoteCache implements RemoteCache {
     }
 
     @Override
-    public NotifyingFuture<Boolean> replaceWithVersionAsync(Object o, Object o2, long l) {
+    public CompletableFuture<Boolean> replaceWithVersionAsync(Object o, Object o2, long l) {
         throw new RuntimeException("replaceWithVersionAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture<Boolean> replaceWithVersionAsync(Object o, Object o2, long l, int i) {
+    public CompletableFuture<Boolean> replaceWithVersionAsync(Object o, Object o2, long l, int i) {
         throw new RuntimeException("replaceWithVersionAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture<Boolean> replaceWithVersionAsync(Object o, Object o2, long l, int i, int i1) {
+    public CompletableFuture<Boolean> replaceWithVersionAsync(Object o, Object o2, long l, int i, int i1) {
         throw new RuntimeException("replaceWithVersionAsync() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public CloseableIterator<Entry<Object, Object>> retrieveEntries(String s, int i) {
+        throw new RuntimeException("retrieveEntries() NOT YET IMPLEMENTED");
     }
 
     @Override
@@ -129,12 +175,6 @@ public class MockRemoteCache implements RemoteCache {
     }
 
     @Override
-    public Object get(Object key) {
-
-        return map.get(key);
-    }
-
-    @Override
     public Set keySet() {
         throw new RuntimeException("keySet() NOT YET IMPLEMENTED");
     }
@@ -147,32 +187,6 @@ public class MockRemoteCache implements RemoteCache {
     @Override
     public Set<Entry> entrySet() {
         throw new RuntimeException("entrySet() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public String getName() {
-        throw new RuntimeException("getName() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public String getVersion() {
-        throw new RuntimeException("getVersion() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Object put(Object o, Object o2) {
-
-        return map.put((String)o, o2);
-    }
-
-    @Override
-    public Object put(Object o, Object o2, long l, TimeUnit timeUnit) {
-        throw new RuntimeException("put() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Object putIfAbsent(Object o, Object o2, long l, TimeUnit timeUnit) {
-        throw new RuntimeException("putIfAbsent() NOT YET IMPLEMENTED");
     }
 
     @Override
@@ -216,103 +230,97 @@ public class MockRemoteCache implements RemoteCache {
     }
 
     @Override
-    public Object remove(Object o) {
-
-        return map.remove(o);
-    }
-
-    @Override
-    public NotifyingFuture putAsync(Object o, Object o2) {
+    public CompletableFuture putAsync(Object o, Object o2) {
         throw new RuntimeException("putAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture putAsync(Object o, Object o2, long l, TimeUnit timeUnit) {
+    public CompletableFuture putAsync(Object o, Object o2, long l, TimeUnit timeUnit) {
         throw new RuntimeException("putAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture putAsync(Object o, Object o2, long l, TimeUnit timeUnit, long l1, TimeUnit timeUnit1) {
+    public CompletableFuture putAsync(Object o, Object o2, long l, TimeUnit timeUnit, long l1, TimeUnit timeUnit1) {
         throw new RuntimeException("putAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture<Void> putAllAsync(Map map) {
+    public CompletableFuture<Void> putAllAsync(Map map) {
         throw new RuntimeException("putAllAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture<Void> putAllAsync(Map map, long l, TimeUnit timeUnit) {
+    public CompletableFuture<Void> putAllAsync(Map map, long l, TimeUnit timeUnit) {
         throw new RuntimeException("putAllAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture<Void> putAllAsync(Map map, long l, TimeUnit timeUnit, long l1, TimeUnit timeUnit1) {
+    public CompletableFuture<Void> putAllAsync(Map map, long l, TimeUnit timeUnit, long l1, TimeUnit timeUnit1) {
         throw new RuntimeException("putAllAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture<Void> clearAsync() {
+    public CompletableFuture<Void> clearAsync() {
         throw new RuntimeException("clearAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture putIfAbsentAsync(Object o, Object o2) {
+    public CompletableFuture putIfAbsentAsync(Object o, Object o2) {
         throw new RuntimeException("putIfAbsentAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture putIfAbsentAsync(Object o, Object o2, long l, TimeUnit timeUnit) {
+    public CompletableFuture putIfAbsentAsync(Object o, Object o2, long l, TimeUnit timeUnit) {
         throw new RuntimeException("putIfAbsentAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture putIfAbsentAsync(Object o, Object o2, long l, TimeUnit timeUnit, long l1, TimeUnit timeUnit1) {
+    public CompletableFuture putIfAbsentAsync(Object o, Object o2, long l, TimeUnit timeUnit, long l1, TimeUnit timeUnit1) {
         throw new RuntimeException("putIfAbsentAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture removeAsync(Object o) {
+    public CompletableFuture removeAsync(Object o) {
         throw new RuntimeException("removeAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture<Boolean> removeAsync(Object o, Object o1) {
+    public CompletableFuture<Boolean> removeAsync(Object o, Object o1) {
         throw new RuntimeException("removeAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture replaceAsync(Object o, Object o2) {
+    public CompletableFuture replaceAsync(Object o, Object o2) {
         throw new RuntimeException("replaceAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture replaceAsync(Object o, Object o2, long l, TimeUnit timeUnit) {
+    public CompletableFuture replaceAsync(Object o, Object o2, long l, TimeUnit timeUnit) {
         throw new RuntimeException("replaceAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture replaceAsync(Object o, Object o2, long l, TimeUnit timeUnit, long l1, TimeUnit timeUnit1) {
+    public CompletableFuture replaceAsync(Object o, Object o2, long l, TimeUnit timeUnit, long l1, TimeUnit timeUnit1) {
         throw new RuntimeException("replaceAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture<Boolean> replaceAsync(Object o, Object o2, Object v1) {
+    public CompletableFuture<Boolean> replaceAsync(Object o, Object o2, Object v1) {
         throw new RuntimeException("replaceAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture<Boolean> replaceAsync(Object o, Object o2, Object v1, long l, TimeUnit timeUnit) {
+    public CompletableFuture<Boolean> replaceAsync(Object o, Object o2, Object v1, long l, TimeUnit timeUnit) {
         throw new RuntimeException("replaceAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture<Boolean> replaceAsync(Object o, Object o2, Object v1, long l, TimeUnit timeUnit, long l1, TimeUnit timeUnit1) {
+    public CompletableFuture<Boolean> replaceAsync(Object o, Object o2, Object v1, long l, TimeUnit timeUnit, long l1, TimeUnit timeUnit1) {
         throw new RuntimeException("replaceAsync() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public NotifyingFuture getAsync(Object o) {
+    public CompletableFuture getAsync(Object o) {
         throw new RuntimeException("getAsync() NOT YET IMPLEMENTED");
     }
 
@@ -382,6 +390,36 @@ public class MockRemoteCache implements RemoteCache {
     }
 
     @Override
+    public CacheTopologyInfo getCacheTopologyInfo() {
+        throw new RuntimeException("getCacheTopologyInfo() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Object execute(String s, Map map) {
+        throw new RuntimeException("execute() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public CloseableIterator<Entry<Object, MetadataValue<Object>>> retrieveEntriesWithMetadata(Set set, int i) {
+        throw new RuntimeException("retrieveEntriesWithMetadata() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public CloseableIterator<Entry<Object, Object>> retrieveEntriesByQuery(Query query, Set set, int i) {
+        throw new RuntimeException("retrieveEntriesByQuery() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public CloseableIterator<Entry<Object, Object>> retrieveEntries(String s, Object[] objects, Set set, int i) {
+        throw new RuntimeException("retrieveEntries() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public CloseableIterator<Entry<Object, Object>> retrieveEntries(String s, Set set, int i) {
+        throw new RuntimeException("retrieveEntries() NOT YET IMPLEMENTED");
+    }
+
+    @Override
     public Object putIfAbsent(Object key, Object value) {
         throw new RuntimeException("putIfAbsent() NOT YET IMPLEMENTED");
     }
@@ -410,6 +448,7 @@ public class MockRemoteCache implements RemoteCache {
     public void stop() {
         throw new RuntimeException("stop() NOT YET IMPLEMENTED");
     }
+
 
     // Public ----------------------------------------------------------------------------------------------------------
 
