@@ -20,7 +20,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Generic Load Driver Runtime Core</name>
+    <name>Generic Load Driver API</name>
 
     <parent>
         <groupId>io.novaordis.gld</groupId>
@@ -29,16 +29,8 @@
     </parent>
 
     <groupId>com.novaordis.gld</groupId>
-    <artifactId>gld-runtime</artifactId>
+    <artifactId>gld-api</artifactId>
     <packaging>jar</packaging>
-
-    <dependencies>
-        <dependency>
-            <groupId>io.novaordis.gld</groupId>
-            <artifactId>gld-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
 
 </project>
 
