@@ -28,7 +28,7 @@
         <version>1.0.0-SNAPSHOT-1</version>
     </parent>
 
-    <groupId>com.novaordis.gld</groupId>
+    <groupId>io.novaordis.gld</groupId>
     <artifactId>gld-api</artifactId>
     <packaging>jar</packaging>
 

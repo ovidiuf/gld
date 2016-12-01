@@ -38,8 +38,8 @@
 
     <modules>
         <module>gld-api</module>
-        <module>gld-runtime</module>
-    </module>
+        <module>gld-load-driver</module>
+    </modules>
 
     <build>
         <plugins>

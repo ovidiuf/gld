@@ -28,8 +28,8 @@
         <version>1.0.0-SNAPSHOT-1</version>
     </parent>
 
-    <groupId>com.novaordis.gld</groupId>
-    <artifactId>gld-runtime</artifactId>
+    <groupId>io.novaordis.gld</groupId>
+    <artifactId>gld-load-driver</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
