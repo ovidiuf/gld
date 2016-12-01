@@ -5,6 +5,7 @@
     <ignored path="gld.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/target/" />
+    <ignored path=".idea/dataSources.local.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -208,12 +209,12 @@
       <created>1480556160329</created>
       <option name="number" value="Default" />
       <updated>1480556160329</updated>
-      <workItem from="1480556161587" duration="36000" />
+      <workItem from="1480556161587" duration="185000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="36000" />
+    <option name="totallyTimeSpent" value="185000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="168" y="77" width="1512" height="922" extended-state="0" />
