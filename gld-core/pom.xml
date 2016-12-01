@@ -26,16 +26,20 @@
     <version>1.0.4-SNAPSHOT-4</version>
 
     <repositories>
+        <repository>
+            <id>jboss-eap-7.0.0.GA-maven</id>
+            <url>file:///Users/ovidiu/runtime/jboss-eap-7.0.0.GA-maven-repository/maven-repository</url>
+        </repository>
+        <repository>
+            <id>jboss-datagrid-7.0-maven</id>
+            <url>file:///Users/ovidiu/runtime/jboss-datagrid-7.0.0-maven-repository/maven-repository</url>
+        </repository>
         <!--
         <repository>
             <id>jboss-datagrid-6.5.1-maven-repository</id>
             <url>file:///Users/ovidiu/runtime/jboss-datagrid-6.5.1-maven-repository</url>
         </repository>
         -->
-        <repository>
-            <id>jboss-datagrid-7.0.0-maven-repository</id>
-            <url>file:///Users/ovidiu/runtime/jboss-datagrid-7.0.0-maven-repository/maven-repository</url>
-        </repository>
     </repositories>
 
     <properties>
