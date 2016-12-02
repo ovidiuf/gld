@@ -197,66 +197,66 @@ public class CollocatedBrokerServiceTest extends ServiceTest
         }
     }
 
-    @Override
-    @Test
-    public void lifeCycle() throws Exception
-    {
-        CollocatedBrokerService s = getServiceToTest(new MockConfiguration(), Arrays.asList(getTestNode()));
-
-        assertFalse(s.isStarted());
-
-        s.setConfiguration(new MockConfiguration());
-
-        File scratchDir = Tests.getScratchDir();
-        assertTrue(scratchDir.isDirectory());
-
-        File brokerDir = new File(scratchDir, "gld.broker");
-        assertTrue(Files.mkdir(brokerDir));
-        assertTrue(brokerDir.isDirectory());
-
-        File testFile = new File(brokerDir, "to-be-deleted");
-        assertTrue(Files.write(testFile, "to be deleted"));
-        assertTrue(testFile.isFile());
-
-        s.configure(new ArrayList<>(Arrays.asList(
-            "--memoryUsage", "10mb",
-            "--directory", brokerDir.getAbsolutePath(),
-            "--delete-directory-at-boot")));
-        s.setTarget(Arrays.asList((Node)new EmbeddedNode()));
-
-        s.start();
-
-        assertTrue(s.isStarted());
-
-        // verify that the previous directory is deleted and a new one is created
-        File d2 = new File(brokerDir.getAbsolutePath());
-        assertTrue(d2.isDirectory());
-        assertFalse(new File(d2, "to-be-deleted").isFile()); // this insures the directory was deleted
-
-        // starting an already started service instance should throw IllegalStateException
-
-        try
-        {
-            s.start();
-            fail("should fail with IllegalStateException");
-        }
-        catch(IllegalStateException e)
-        {
-            log.info(e.getMessage());
-        }
-
-        assertTrue(s.isStarted());
-
-        s.stop();
-
-        assertFalse(s.isStarted());
-
-        // stopping an already started stopped instance should be a noop
-
-        s.stop();
-
-        assertFalse(s.isStarted());
-    }
+//    @Override
+//    @Test
+//    public void lifeCycle() throws Exception
+//    {
+//        CollocatedBrokerService s = getServiceToTest(new MockConfiguration(), Arrays.asList(getTestNode()));
+//
+//        assertFalse(s.isStarted());
+//
+//        s.setConfiguration(new MockConfiguration());
+//
+//        File scratchDir = Tests.getScratchDir();
+//        assertTrue(scratchDir.isDirectory());
+//
+//        File brokerDir = new File(scratchDir, "gld.broker");
+//        assertTrue(Files.mkdir(brokerDir));
+//        assertTrue(brokerDir.isDirectory());
+//
+//        File testFile = new File(brokerDir, "to-be-deleted");
+//        assertTrue(Files.write(testFile, "to be deleted"));
+//        assertTrue(testFile.isFile());
+//
+//        s.configure(new ArrayList<>(Arrays.asList(
+//            "--memoryUsage", "10mb",
+//            "--directory", brokerDir.getAbsolutePath(),
+//            "--delete-directory-at-boot")));
+//        s.setTarget(Arrays.asList((Node)new EmbeddedNode()));
+//
+//        s.start();
+//
+//        assertTrue(s.isStarted());
+//
+//        // verify that the previous directory is deleted and a new one is created
+//        File d2 = new File(brokerDir.getAbsolutePath());
+//        assertTrue(d2.isDirectory());
+//        assertFalse(new File(d2, "to-be-deleted").isFile()); // this insures the directory was deleted
+//
+//        // starting an already started service instance should throw IllegalStateException
+//
+//        try
+//        {
+//            s.start();
+//            fail("should fail with IllegalStateException");
+//        }
+//        catch(IllegalStateException e)
+//        {
+//            log.info(e.getMessage());
+//        }
+//
+//        assertTrue(s.isStarted());
+//
+//        s.stop();
+//
+//        assertFalse(s.isStarted());
+//
+//        // stopping an already started stopped instance should be a noop
+//
+//        s.stop();
+//
+//        assertFalse(s.isStarted());
+//    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

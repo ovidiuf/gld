@@ -20,28 +20,23 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Generic Load Driver Binary Distribution</name>
+    <name>Generic Load Driver JDG Extension</name>
 
-    <groupId>io.novaordis.gld</groupId>
-    <artifactId>release</artifactId>
+    <groupId>io.novaordis.gld.extensions</groupId>
+    <artifactId>gld-jdg</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT-1</version>
+
+    <modules>
+        <module>jdg-common</module>
+        <module>jdg-7.0</module>
+    </modules>
 
     <dependencies>
         <dependency>
             <groupId>io.novaordis.gld</groupId>
             <artifactId>gld-api</artifactId>
             <version>1.0.0-SNAPSHOT-1</version>
-        </dependency>
-        <dependency>
-            <groupId>io.novaordis.gld</groupId>
-            <artifactId>gld-load-driver</artifactId>
-            <version>1.0.0-SNAPSHOT-1</version>
-        </dependency>
-        <dependency>
-            <groupId>io.novaordis.gld.extensions</groupId>
-            <artifactId>jdg</artifactId>
-            <version>7.0</version>
         </dependency>
     </dependencies>
 

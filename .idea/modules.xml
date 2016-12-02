@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/core/gld-api/gld-api.iml" filepath="$PROJECT_DIR$/core/gld-api/gld-api.iml" group="gld-core and modules" />
+      <module fileurl="file://$PROJECT_DIR$/core/gld-core.iml" filepath="$PROJECT_DIR$/core/gld-core.iml" group="gld-core and modules" />
+      <module fileurl="file://$PROJECT_DIR$/extensions/cache/jdg/gld-jdg.iml" filepath="$PROJECT_DIR$/extensions/cache/jdg/gld-jdg.iml" group="gld-jdg and modules" />
+      <module fileurl="file://$PROJECT_DIR$/extensions/cache/jdg/jdg-7.0/gld-jdg-7.0.iml" filepath="$PROJECT_DIR$/extensions/cache/jdg/jdg-7.0/gld-jdg-7.0.iml" group="gld-jdg and modules" />
+      <module fileurl="file://$PROJECT_DIR$/extensions/cache/jdg/jdg-common/gld-jdg-common.iml" filepath="$PROJECT_DIR$/extensions/cache/jdg/jdg-common/gld-jdg-common.iml" group="gld-jdg and modules" />
+      <module fileurl="file://$PROJECT_DIR$/core/gld-load-driver/gld-load-driver.iml" filepath="$PROJECT_DIR$/core/gld-load-driver/gld-load-driver.iml" group="gld-core and modules" />
+      <module fileurl="file://$PROJECT_DIR$/extensions/http/http.iml" filepath="$PROJECT_DIR$/extensions/http/http.iml" />
+      <module fileurl="file://$PROJECT_DIR$/release/release.iml" filepath="$PROJECT_DIR$/release/release.iml" />
+    </modules>
+  </component>
+</project>

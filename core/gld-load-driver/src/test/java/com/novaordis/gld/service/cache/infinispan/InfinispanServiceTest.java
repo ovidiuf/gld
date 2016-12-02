@@ -56,84 +56,84 @@ public class InfinispanServiceTest extends CacheServiceTest
      * Unfortunately we can't really start an InfinispanCache as part of a simple unit test - it would require an
      * external process, and so on, so we override the life cycle test with something simpler.
      */
-    @Test
-    public void lifeCycle() throws Exception {
-
-        Service s = getServiceToTest(new MockConfiguration(), Collections.singletonList(getTestNode()));
-
-        assertFalse(s.isStarted());
-
-        // stopping an already started stopped instance should be a noop
-
-        s.stop();
-
-        assertFalse(s.isStarted());
-    }
+//    @Test
+//    public void lifeCycle() throws Exception {
+//
+//        Service s = getServiceToTest(new MockConfiguration(), Collections.singletonList(getTestNode()));
+//
+//        assertFalse(s.isStarted());
+//
+//        // stopping an already started stopped instance should be a noop
+//
+//        s.stop();
+//
+//        assertFalse(s.isStarted());
+//    }
 
     // start() ---------------------------------------------------------------------------------------------------------
 
-    @Test
-    public void start_CacheWithTheSpecifiedNameExists() throws Exception {
-
-        String name = "test-cache";
-
-        MockRemoteCache mc = new MockRemoteCache();
-        MockRemoteCacheManager mcm = new MockRemoteCacheManager();
-        mcm.setCache(name, mc);
-        InfinispanService is = new InfinispanService();
-        is.setRemoteCacheManager(mcm);
-        is.setName(name);
-
-        assertNull(is.getCache());
-
-        is.start();
-
-        assertEquals(mc, is.getCache());
-    }
-
-    @Test
-    public void start_CacheWithTheSpecifiedNameDoesNotExist() throws Exception {
-
-        MockRemoteCacheManager mcm = new MockRemoteCacheManager();
-        InfinispanService is = new InfinispanService();
-        is.setRemoteCacheManager(mcm);
-        is.setName("pretty-sure-there-is-no-such-cache");
-
-        assertNull(is.getCache());
-
-        try {
-
-            is.start();
-            fail("should have thrown Exception");
-        }
-        catch(UserErrorException e) {
-
-            String msg = e.getMessage();
-            log.info(msg);
-            assertTrue(msg.startsWith(
-                    "cache with name 'pretty-sure-there-is-no-such-cache' not found amongst the configured caches"));
-        }
-
-        assertNull(is.getCache());
-    }
+//    @Test
+//    public void start_CacheWithTheSpecifiedNameExists() throws Exception {
+//
+//        String name = "test-cache";
+//
+//        MockRemoteCache mc = new MockRemoteCache();
+//        MockRemoteCacheManager mcm = new MockRemoteCacheManager();
+//        mcm.setCache(name, mc);
+//        InfinispanService is = new InfinispanService();
+//        is.setRemoteCacheManager(mcm);
+//        is.setName(name);
+//
+//        assertNull(is.getCache());
+//
+//        is.start();
+//
+//        assertEquals(mc, is.getCache());
+//    }
+//
+//    @Test
+//    public void start_CacheWithTheSpecifiedNameDoesNotExist() throws Exception {
+//
+//        MockRemoteCacheManager mcm = new MockRemoteCacheManager();
+//        InfinispanService is = new InfinispanService();
+//        is.setRemoteCacheManager(mcm);
+//        is.setName("pretty-sure-there-is-no-such-cache");
+//
+//        assertNull(is.getCache());
+//
+//        try {
+//
+//            is.start();
+//            fail("should have thrown Exception");
+//        }
+//        catch(UserErrorException e) {
+//
+//            String msg = e.getMessage();
+//            log.info(msg);
+//            assertTrue(msg.startsWith(
+//                    "cache with name 'pretty-sure-there-is-no-such-cache' not found amongst the configured caches"));
+//        }
+//
+//        assertNull(is.getCache());
+//    }
 
     // setTarget() -----------------------------------------------------------------------------------------------------
 
-    @Test
-    public void setTarget_EmbeddedNode() throws Exception {
-
-        List<Node> nodes = new ArrayList<>(Collections.singletonList((Node) new EmbeddedNode()));
-
-        InfinispanService s = new InfinispanService();
-
-        s.setTarget(nodes);
-
-        s.start();
-
-        Object o = s.getCache();
-        assertNotNull(o);
-        assertTrue(o instanceof EmbeddedCache);
-    }
+//    @Test
+//    public void setTarget_EmbeddedNode() throws Exception {
+//
+//        List<Node> nodes = new ArrayList<>(Collections.singletonList((Node) new EmbeddedNode()));
+//
+//        InfinispanService s = new InfinispanService();
+//
+//        s.setTarget(nodes);
+//
+//        s.start();
+//
+//        Object o = s.getCache();
+//        assertNotNull(o);
+//        assertTrue(o instanceof EmbeddedCache);
+//    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
