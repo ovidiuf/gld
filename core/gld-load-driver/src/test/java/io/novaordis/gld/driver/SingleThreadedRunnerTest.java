@@ -16,18 +16,20 @@
 
 package io.novaordis.gld.driver;
 
-import com.novaordis.gld.mock.MockCacheService;
-import com.novaordis.gld.mock.MockConfiguration;
-import com.novaordis.gld.mock.MockKeyStore;
-import com.novaordis.gld.mock.MockSampler;
+import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.api.LoadStrategy;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.gld.api.todiscard.ContentType;
+import io.novaordis.gld.api.todiscard.Node;
 import io.novaordis.gld.driver.sampler.Sampler;
 import io.novaordis.gld.driver.sampler.SamplerImpl;
-import com.novaordis.gld.strategy.load.cache.MockCleanupOperation;
-import com.novaordis.gld.strategy.load.cache.MockLoadStrategy;
-import com.novaordis.gld.strategy.load.cache.MockOperation;
+import io.novaordis.utilities.UserErrorException;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +39,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -45,7 +46,7 @@ public class SingleThreadedRunnerTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(SingleThreadedRunnerTest.class);
+    private static final Logger log = LoggerFactory.getLogger(SingleThreadedRunnerTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -69,7 +70,7 @@ public class SingleThreadedRunnerTest {
 
             new SingleThreadedRunner(
                     "TEST", null, new MockLoadStrategy(), new SamplerImpl(), new CyclicBarrier(1),
-                    new AtomicBoolean(false));
+                    new AtomicBoolean(false), -1L);
 
             fail("should fail with IllegalArgumentException, null config");
         }
@@ -81,13 +82,11 @@ public class SingleThreadedRunnerTest {
     @Test
     public void nullSampler() throws Exception {
 
-        MockConfiguration mc = new MockConfiguration();
-        mc.setService(new MockCacheService());
-
         try  {
 
             new SingleThreadedRunner(
-                    "TEST", mc, new MockLoadStrategy(), null, new CyclicBarrier(1), new AtomicBoolean(false));
+                    "TEST", new MockService(), new MockLoadStrategy(), null, new CyclicBarrier(1),
+                    new AtomicBoolean(false), -1L);
 
             fail("should fail with IllegalArgumentException, null sampler");
         }
@@ -100,13 +99,11 @@ public class SingleThreadedRunnerTest {
     @Test
     public void nullBarrier() throws Exception {
 
-        MockConfiguration mc = new MockConfiguration();
-        mc.setService(new MockCacheService());
-
         try {
 
             new SingleThreadedRunner(
-                "TEST", mc, new MockLoadStrategy(), new SamplerImpl(), null, new AtomicBoolean(false));
+                "TEST", new MockService(), new MockLoadStrategy(), new SamplerImpl(), null,
+                    new AtomicBoolean(false), -1L);
 
             fail("should fail with IllegalArgumentException, null barrier");
         }
@@ -119,13 +116,11 @@ public class SingleThreadedRunnerTest {
     @Test
     public void nullService() throws Exception {
 
-        MockConfiguration mc = new MockConfiguration();
-        assertNull(mc.getService());
-
         try {
 
             new SingleThreadedRunner(
-                "TEST", mc, new MockLoadStrategy(), new SamplerImpl(), new CyclicBarrier(1), new AtomicBoolean(false));
+                "TEST", new MockService(), new MockLoadStrategy(), new SamplerImpl(), new CyclicBarrier(1),
+                    new AtomicBoolean(false), -1L);
 
             fail("should fail with IllegalArgumentException, null service");
         }
@@ -138,13 +133,11 @@ public class SingleThreadedRunnerTest {
     @Test
     public void nullDurationExpiredBoolean() throws Exception {
 
-        MockConfiguration mc = new MockConfiguration();
-        mc.setService(new MockCacheService());
-
         try {
 
             new SingleThreadedRunner(
-                    "TEST", mc, new MockLoadStrategy(), new SamplerImpl(), new CyclicBarrier(1), null);
+                    "TEST", new MockService(), new MockLoadStrategy(), new SamplerImpl(),
+                    new CyclicBarrier(1), null, -1L);
 
             fail("should fail with IllegalArgumentException, null duration expired");
         }
@@ -157,9 +150,6 @@ public class SingleThreadedRunnerTest {
     @Test
     public void constructorAndRun() throws Exception {
 
-        MockConfiguration mc = new MockConfiguration();
-        mc.setService(new MockCacheService());
-
         LoadStrategy mls = new MockLoadStrategy(1);
 
         Sampler s = new SamplerImpl(0L, 1000L);
@@ -167,7 +157,8 @@ public class SingleThreadedRunnerTest {
 
         CyclicBarrier cb = new CyclicBarrier(1);
 
-        SingleThreadedRunner st = new SingleThreadedRunner("TEST", mc, mls, s, cb, new AtomicBoolean(false));
+        SingleThreadedRunner st = new SingleThreadedRunner(
+                "TEST", new MockService(), mls, s, cb, new AtomicBoolean(false), -1L);
 
         assertEquals("TEST", st.getName());
 
@@ -184,9 +175,6 @@ public class SingleThreadedRunnerTest {
     @Test
     public void insureThatKeyStoreIsClosedOnExit() throws Exception {
 
-        MockConfiguration mc = new MockConfiguration();
-        mc.setService(new MockCacheService());
-
         MockKeyStore mks = new MockKeyStore();
         MockLoadStrategy mockLoadStrategy = new MockLoadStrategy(1);
         mockLoadStrategy.setKeyStore(mks);
@@ -196,8 +184,10 @@ public class SingleThreadedRunnerTest {
 
         CyclicBarrier cb = new CyclicBarrier(1);
 
+        MockService ms = new MockService();
+
         SingleThreadedRunner st =
-                new SingleThreadedRunner("TEST", mc, mockLoadStrategy, s, cb, new AtomicBoolean(false));
+                new SingleThreadedRunner("TEST", ms, mockLoadStrategy, s, cb, new AtomicBoolean(false), -1L);
 
         KeyStore ks = mockLoadStrategy.getKeyStore();
         ks.start();
@@ -219,9 +209,7 @@ public class SingleThreadedRunnerTest {
 
         long sleepMs = 250L;
 
-        MockConfiguration mc = new MockConfiguration();
-        mc.setSleepMs(sleepMs);
-        mc.setService(new MockService());
+        MockService ms = new MockService();
 
         MockSampler mockSampler = new MockSampler();
         MockLoadStrategy mockLoadStrategy = new MockLoadStrategy(1);
@@ -229,7 +217,7 @@ public class SingleThreadedRunnerTest {
         CyclicBarrier barrier = new CyclicBarrier(1);
 
         SingleThreadedRunner st = new SingleThreadedRunner(
-                "TEST", mc, mockLoadStrategy, mockSampler, barrier, new AtomicBoolean(false));
+                "TEST", ms, mockLoadStrategy, mockSampler, barrier, new AtomicBoolean(false), sleepMs);
 
         setRunning(st);
 
@@ -349,11 +337,9 @@ public class SingleThreadedRunnerTest {
         };
 
         MockSampler ms = new MockSampler();
-        MockConfiguration mc = new MockConfiguration();
-        mc.setService(s);
         CyclicBarrier cb = new CyclicBarrier(1);
 
-        SingleThreadedRunner r = new SingleThreadedRunner("TEST", mc, ls, ms, cb, durationExpired);
+        SingleThreadedRunner r = new SingleThreadedRunner("TEST", s, ls, ms, cb, durationExpired, -1L);
 
         //
         // we simulate the running runner without actually have to start the internal thread

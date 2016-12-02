@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.statistics;
+package io.novaordis.gld.driver.statistics;
 
 import com.novaordis.ac.Collector;
-import com.novaordis.gld.LoadStrategy;
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
-import com.novaordis.gld.RedisFailure;
 import io.novaordis.gld.api.Service;
-import com.novaordis.gld.Statistics;
-import com.novaordis.gld.external.SystemStatistics;
-import com.novaordis.gld.operations.cache.Read;
+import io.novaordis.gld.api.todiscard.Read;
+import io.novaordis.gld.driver.RedisFailure;
+import io.novaordis.gld.driver.todeplete.SystemStatistics;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
@@ -34,8 +33,8 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 @Deprecated
-public class CollectorBasedCsvStatistics implements Statistics
-{
+public class CollectorBasedCsvStatistics implements DeprecatedStatistics {
+
     public static final Format TIMESTAMP_FORMAT_SEC = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     public static final Format DURATION_MS_FORMAT = new DecimalFormat("#.0");
     public static final Format LOAD_FORMAT = new DecimalFormat("#.00");
@@ -47,13 +46,13 @@ public class CollectorBasedCsvStatistics implements Statistics
 
     /**
      * An array with failure counters, indexed by failure type.
-     * @see com.novaordis.gld.RedisFailure
+     * @see io.novaordis.gld.driver.RedisFailure
      */
     private long[] failureCounters;
 
     /**
      * An array with failure counters, indexed by failure type.
-     * @see com.novaordis.gld.RedisFailure
+     * @see io.novaordis.gld.driver.RedisFailure
      */
     private long[] totalFailureCounters;
 
@@ -132,22 +131,22 @@ public class CollectorBasedCsvStatistics implements Statistics
     }
 
     /**
-     * @see Statistics#record(long, long, long, Operation, Throwable)
+     * @see DeprecatedStatistics#record(long, long, long, Operation, Throwable)
      */
     @Override
-    public void record(long t0Ms, long t0Nano, long t1Nano, Operation op, Throwable t)
-    {
+    public void record(long t0Ms, long t0Nano, long t1Nano, Operation op, Throwable t) {
+
         DeprecatedSamplingInterval si = null;
 
-        synchronized (this)
-        {
-            if (closed)
-            {
+        synchronized (this) {
+
+            if (closed) {
+
                 throw new IllegalStateException(this + " closed");
             }
 
-            if (firstSample)
-            {
+            if (firstSample) {
+
                 firstSample = false;
                 startTimestamp = t0Ms;
                 //csvStatsCollector.handOver(new Headers());
@@ -156,27 +155,25 @@ public class CollectorBasedCsvStatistics implements Statistics
             operationsLeft--;
             endTimestamp = t0Ms;
 
-            if (operationsLeft == 0L)
-            {
+            if (operationsLeft == 0L) {
                 this.done = true;
             }
 
-            if (samplingIntervalStartMs < 0L)
-            {
+            if (samplingIntervalStartMs < 0L) {
+
                 samplingIntervalStartMs = t0Ms;
             }
 
             boolean read = op instanceof Read;
 
-            if (op instanceof InternalClosingOperation)
-            {
+            if (op instanceof InternalClosingOperation) {
                 closed = true;
             }
 
             // records that fall right on the edge are accounted for <b>this</b> sampling interval
 
-            if (closed || (t0Ms - samplingIntervalStartMs > samplingIntervalMs))
-            {
+            if (closed || (t0Ms - samplingIntervalStartMs > samplingIntervalMs)) {
+
                 // compute statistics for the sampling interval(s) that just have finished and start another sampling
                 // interval. Also read relevant metrics for the current sampling interval. As much as I wanted to
                 // do this on the collector's tread to impact the behavior we're measuring as little as possible,
@@ -211,8 +208,8 @@ public class CollectorBasedCsvStatistics implements Statistics
                 int skipped = (int)((t0Ms - samplingIntervalStartMs) / samplingIntervalMs) - 1;
 
                 // enter empty samples and we interpolate the system metrics
-                for(int i = 1; i <= skipped; i ++)
-                {
+                for(int i = 1; i <= skipped; i ++) {
+
                     si = new DeprecatedSamplingInterval(samplingIntervalStartMs + i * samplingIntervalMs,
                         0, 0, 0, 0, 0, RedisFailure.EMPTY_PRIMITIVE_COUNTERS, systemLoadAverage,
                         systemCpuLoad, processCpuLoad, -1.0, usedHeap, committedHeap);
@@ -238,27 +235,25 @@ public class CollectorBasedCsvStatistics implements Statistics
 
             // contribute to the current sampling interval
 
-            if (t == null)
-            {
-                if (read)
-                {
+            if (t == null) {
+
+                if (read) {
+
                     validReadsCountInSample++;
 
-                    if (((Read)op).getValue() != null)
-                    {
+                    if (((Read)op).getValue() != null) {
                         readHitsInSample ++;
                     }
 
                     cumulatedValidReadsTimeInSampleNano += (t1Nano - t0Nano);
                 }
-                else
-                {
+                else {
                     validWritesCountInSample++;
                     cumulatedValidWritesTimeInSampleNano += (t1Nano - t0Nano);
                 }
             }
-            else
-            {
+            else {
+
                 int index = RedisFailure.toFailureIndex(t);
                 failureCounters[index] ++;
                 totalFailureCounters[index] ++;
@@ -271,15 +266,15 @@ public class CollectorBasedCsvStatistics implements Statistics
         // if we're closing, make sure we wait until the last SampleInterval instance was picked up
         // by the collector's handler and processes
 
-        if (closed && si != null)
-        {
+        if (closed && si != null) {
+
             //log.debug("waiting for the last sample to be processed ...");
             si.waitUntilProcessed();
         }
     }
 
     /**
-     * @see com.novaordis.gld.Statistics#close()
+     * @see DeprecatedStatistics#close()
      */
     @Override
     public void close()
@@ -391,11 +386,15 @@ public class CollectorBasedCsvStatistics implements Statistics
 
     // Private ---------------------------------------------------------------------------------------------------------
 
-    private class InternalClosingOperation implements Operation
-    {
+    private class InternalClosingOperation implements Operation {
+
         @Override
-        public void perform(Service s) throws Exception
-        {
+        public String getKey() {
+            throw new RuntimeException("getKey() NOT YET IMPLEMENTED");
+        }
+
+        @Override
+        public void perform(Service s) throws Exception {
             // noop
         }
 

@@ -16,10 +16,11 @@
 
 package io.novaordis.gld.driver.sampler;
 
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.strategy.load.cache.MockOperation;
-import org.apache.log4j.Logger;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.driver.MockOperation;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.ConnectException;
 import java.net.SocketException;
@@ -35,7 +36,7 @@ public class SamplerImplTest extends SamplerTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(SamplerImplTest.class);
+    private static final Logger log = LoggerFactory.getLogger(SamplerImplTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -46,8 +47,8 @@ public class SamplerImplTest extends SamplerTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void negativeSamplerTaskRunInterval() throws Exception
-    {
+    public void negativeSamplerTaskRunInterval() throws Exception {
+
         SamplerImpl si = new SamplerImpl(-1L, 1000L);
         si.registerOperation(MockOperation.class);
         si.start();
@@ -57,8 +58,8 @@ public class SamplerImplTest extends SamplerTest
     }
 
     @Test
-    public void zeroSamplerTaskRunInterval() throws Exception
-    {
+    public void zeroSamplerTaskRunInterval() throws Exception {
+
         SamplerImpl si = new SamplerImpl(0L, 1000L);
         si.registerOperation(MockOperation.class);
         si.start();
@@ -68,8 +69,8 @@ public class SamplerImplTest extends SamplerTest
     }
 
     @Test
-    public void exceptionInRunDoesNotPreventReleasingTheMutex() throws Exception
-    {
+    public void exceptionInRunDoesNotPreventReleasingTheMutex() throws Exception {
+
         // start the sampler with a very large sampling interval, so the stop timeout will be very large; hoewever,
         // keep the sampling thread run interval small
         long twoDays = 2L * 24 * 60 * 60 * 1000L;
@@ -106,8 +107,8 @@ public class SamplerImplTest extends SamplerTest
      * @see SamplerImplWorkBenchTest
      */
     @Test
-    public void simulatedStepByStepSamplingCollection() throws Exception
-    {
+    public void simulatedStepByStepSamplingCollection() throws Exception {
+
         long samplingInterval = 10 * 1000L; // 10 seconds to allow us time to experiment
 
         // the sampling task run interval is 0, meaning no timer task will be registered
@@ -242,8 +243,7 @@ public class SamplerImplTest extends SamplerTest
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected SamplerImpl getSamplerToTest() throws Exception
-    {
+    protected SamplerImpl getSamplerToTest() throws Exception {
         return new SamplerImpl();
     }
 

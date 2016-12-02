@@ -16,6 +16,10 @@
 
 package io.novaordis.gld.driver;
 
+import io.novaordis.gld.api.LoadStrategy;
+import io.novaordis.gld.api.Service;
+import io.novaordis.gld.driver.sampler.Sampler;
+import io.novaordis.utilities.time.Duration;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,9 +50,13 @@ public abstract class MultiThreadedRunnerTest {
     @Test
     public void stop() throws Exception {
 
-        MockConfiguration mc = new MockConfiguration();
+        MockService ms = new MockService();
+        MockLoadStrategy mst = new MockLoadStrategy();
+        MockSampler msp = new MockSampler();
+        final boolean background = true;
+        int threadCount = 1;
 
-        MultiThreadedRunner r = getMultiThreadedRunnerToTest(mc);
+        MultiThreadedRunner r = getMultiThreadedRunnerToTest(ms, mst, msp, background, threadCount);
 
         //
         // make sure I can stop without problems
@@ -66,19 +74,21 @@ public abstract class MultiThreadedRunnerTest {
     @Test
     public void timeLimitedRun_OneThread() throws Exception {
 
-        MockConfiguration mc = new MockConfiguration();
+        MockService ms = new MockService();
+        ms.setVerbose(false);
+        MockLoadStrategy mst = new MockLoadStrategy();
+        mst.setVerbose(false);
+        MockSampler msp = new MockSampler();
+        final boolean background = true;
+        int threadCount = 1;
 
-        MockService msrv = new MockService();
-        msrv.setVerbose(false);
+        MultiThreadedRunner r = getMultiThreadedRunnerToTest(ms, mst, msp, background, threadCount);
 
-        MockSampler msmp = new MockSampler();
-        MockLoadStrategy mstr = new MockLoadStrategy();
-        mstr.setVerbose(false);
+        assertFalse(r.isRunning());
 
-        mc.setService(msrv);
-        mc.setSampler(msmp);
-        mc.setLoadStrategy(mstr);
-        mc.setBackground(true);
+        //
+        // configure it
+        //
 
         //
         // the runner should run al least a second, then stop
@@ -86,11 +96,7 @@ public abstract class MultiThreadedRunnerTest {
 
         Duration duration = new Duration(500L);
 
-        mc.setDuration(duration);
-
-        MultiThreadedRunner r = getMultiThreadedRunnerToTest(mc);
-
-        assertFalse(r.isRunning());
+        r.setDuration(duration);
 
         //
         // un-latch the exit guard, we don't need that now
@@ -115,7 +121,7 @@ public abstract class MultiThreadedRunnerTest {
         // make sure there was actually activity
         //
 
-        Map<Thread, Integer> m = msrv.getPerThreadInvocationCountMap();
+        Map<Thread, Integer> m = ms.getPerThreadInvocationCountMap();
         assertEquals(1, m.size());
         Integer invocationCount = m.values().iterator().next();
         log.info("invocation count " + invocationCount);
@@ -125,16 +131,10 @@ public abstract class MultiThreadedRunnerTest {
     @Test
     public void timeLimitedRun_SeveralThreads() throws Exception {
 
-        MockConfiguration mc = new MockConfiguration();
-
-        MockService msrv = new MockService();
-        MockSampler msmp = new MockSampler();
-        MockLoadStrategy mstr = new MockLoadStrategy();
-
-        mc.setService(msrv);
-        mc.setSampler(msmp);
-        mc.setLoadStrategy(mstr);
-        mc.setBackground(true);
+        MockService ms = new MockService();
+        MockLoadStrategy mst = new MockLoadStrategy();
+        MockSampler msp = new MockSampler();
+        final boolean background = true;
 
         //
         // 10 threads
@@ -142,7 +142,8 @@ public abstract class MultiThreadedRunnerTest {
 
         int threadCount = 10;
 
-        mc.setThreads(threadCount);
+
+        MultiThreadedRunner r = getMultiThreadedRunnerToTest(ms, mst, msp, background, threadCount);
 
         //
         // the runner should run al least a second, then stop
@@ -150,9 +151,7 @@ public abstract class MultiThreadedRunnerTest {
 
         Duration duration = new Duration(500L);
 
-        mc.setDuration(duration);
-
-        MultiThreadedRunner r = getMultiThreadedRunnerToTest(mc);
+        r.setDuration(duration);
 
         assertFalse(r.isRunning());
 
@@ -179,7 +178,7 @@ public abstract class MultiThreadedRunnerTest {
         // make sure there was actually activity
         //
 
-        Map<Thread, Integer> m = msrv.getPerThreadInvocationCountMap();
+        Map<Thread, Integer> m = ms.getPerThreadInvocationCountMap();
         assertEquals(threadCount, m.size());
 
         for(Thread t: m.keySet()) {
@@ -193,23 +192,17 @@ public abstract class MultiThreadedRunnerTest {
     @Test
     public void exitGuardIsUnlatchedInBackground() throws Exception {
 
-        MockConfiguration mc = new MockConfiguration();
-
-        MockService msrv = new MockService();
-        MockSampler msmp = new MockSampler();
-        MockLoadStrategy mstr = new MockLoadStrategy(3);
-
-        mc.setService(msrv);
-        mc.setSampler(msmp);
-        mc.setLoadStrategy(mstr);
-
-        mc.setBackground(true);
+        MockService ms = new MockService();
+        MockLoadStrategy mst = new MockLoadStrategy(3);
+        MockSampler msp = new MockSampler();
+        final boolean background = true;
+        int threadCount = 1;
 
         //
         // the mock load strategy should build three operations and exit; the multi-threaded runner must not block
         //
 
-        final MultiThreadedRunner r = getMultiThreadedRunnerToTest(mc);
+        final MultiThreadedRunner r = getMultiThreadedRunnerToTest(ms, mst, msp, background, threadCount);
 
         final CountDownLatch latch = new CountDownLatch(1);
 
@@ -253,7 +246,9 @@ public abstract class MultiThreadedRunnerTest {
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected abstract MultiThreadedRunner getMultiThreadedRunnerToTest();
+    protected abstract MultiThreadedRunner getMultiThreadedRunnerToTest(
+            Service service, LoadStrategy loadStrategy, Sampler sampler, boolean background, int threadCount)
+            throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

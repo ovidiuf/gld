@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.statistics;
+package io.novaordis.gld.driver.statistics;
+
 
 import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.driver.AnotherTypeOfMockOperation;
+import io.novaordis.gld.driver.MockOperation;
 import io.novaordis.gld.driver.sampler.metrics.FreePhysicalMemorySize;
 import io.novaordis.gld.driver.sampler.metrics.MeasureUnit;
 import io.novaordis.gld.driver.sampler.metrics.Metric;
@@ -26,13 +29,12 @@ import io.novaordis.gld.driver.sampler.metrics.MockMetric;
 import io.novaordis.gld.driver.sampler.metrics.SystemCpuLoad;
 import io.novaordis.gld.driver.sampler.metrics.SystemLoadAverage;
 import io.novaordis.gld.driver.sampler.metrics.TotalPhysicalMemorySize;
-import com.novaordis.gld.strategy.load.cache.AnotherTypeOfMockOperation;
-import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,8 +43,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class CSVFormatTest extends FormatTest
-{
+public class CSVFormatTest extends FormatTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(CSVFormatTest.class);
@@ -56,15 +58,15 @@ public class CSVFormatTest extends FormatTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void timestampLabel() throws Exception
-    {
+    public void timestampLabel() throws Exception {
+
         CSVFormat format = getFormatToTest();
         assertEquals(CSVFormat.TIMESTAMP_HEADER_LABEL, format.getTimestampLabel());
     }
 
     @Test
-    public void formatTimestamp() throws Exception
-    {
+    public void formatTimestamp() throws Exception {
+
         CSVFormat format = getFormatToTest();
 
         long ts = 8452453454L;
@@ -75,8 +77,8 @@ public class CSVFormatTest extends FormatTest
     }
 
     @Test
-    public void orderOperationTypes_NoOperations() throws Exception
-    {
+    public void orderOperationTypes_NoOperations() throws Exception {
+
         CSVFormat format = getFormatToTest();
         Set<Class<? extends Operation>> operationTypes = new HashSet<>();
 
@@ -86,8 +88,8 @@ public class CSVFormatTest extends FormatTest
     }
 
     @Test
-    public void orderOperationTypes_OneOperations() throws Exception
-    {
+    public void orderOperationTypes_OneOperations() throws Exception {
+
         CSVFormat format = getFormatToTest();
         Set<Class<? extends Operation>> operationTypes = new HashSet<>();
         operationTypes.add(MockOperation.class);
@@ -99,8 +101,8 @@ public class CSVFormatTest extends FormatTest
     }
 
     @Test
-    public void orderOperationTypes_TwoOperations() throws Exception
-    {
+    public void orderOperationTypes_TwoOperations() throws Exception {
+
         CSVFormat format = getFormatToTest();
         Set<Class<? extends Operation>> operationTypes = new HashSet<>();
         operationTypes.add(MockOperation.class);
@@ -114,48 +116,44 @@ public class CSVFormatTest extends FormatTest
     }
 
     @Test
-    public void getSuccessRateHeader_NoOperation() throws Exception
-    {
+    public void getSuccessRateHeader_NoOperation() throws Exception {
+
         CSVFormat format = getFormatToTest();
 
-        try
-        {
+        try {
             format.getSuccessRateHeader(null);
             fail("should fail, null argument");
         }
-        catch(IllegalArgumentException e)
-        {
+        catch(IllegalArgumentException e) {
             log.info(e.getMessage());
         }
     }
 
     @Test
-    public void getSuccessRateHeader() throws Exception
-    {
+    public void getSuccessRateHeader() throws Exception {
         CSVFormat format = getFormatToTest();
         String result = format.getSuccessRateHeader(MockOperation.class);
         assertEquals("MockOperation Success Rate (ops/sec)", result);
     }
 
     @Test
-    public void getSuccessAverageDurationHeader_NoOperation() throws Exception
-    {
+    public void getSuccessAverageDurationHeader_NoOperation() throws Exception {
+
         CSVFormat format = getFormatToTest();
 
-        try
-        {
+        try {
+
             format.getSuccessAverageDurationHeader(null);
             fail("should fail, null argument");
         }
-        catch(IllegalArgumentException e)
-        {
+        catch(IllegalArgumentException e) {
             log.info(e.getMessage());
         }
     }
 
     @Test
-    public void getSuccessAverageDurationHeader() throws Exception
-    {
+    public void getSuccessAverageDurationHeader() throws Exception {
+
         CSVFormat format = getFormatToTest();
         format.setAverageOperationDurationTimeUnit(MeasureUnit.NANOSECOND);
         String result = format.getSuccessAverageDurationHeader(MockOperation.class);
@@ -163,24 +161,21 @@ public class CSVFormatTest extends FormatTest
     }
 
     @Test
-    public void getFailureRateHeader_NoOperation() throws Exception
-    {
+    public void getFailureRateHeader_NoOperation() throws Exception {
         CSVFormat format = getFormatToTest();
 
-        try
-        {
+        try {
             format.getFailureRateHeader(null);
             fail("should fail, null argument");
         }
-        catch(IllegalArgumentException e)
-        {
+        catch(IllegalArgumentException e) {
             log.info(e.getMessage());
         }
     }
 
     @Test
-    public void getFailureRateHeader() throws Exception
-    {
+    public void getFailureRateHeader() throws Exception {
+
         CSVFormat format = getFormatToTest();
         String result = format.getFailureRateHeader(MockOperation.class);
         assertEquals("MockOperation Failure Rate (ops/sec)", result);
@@ -189,8 +184,8 @@ public class CSVFormatTest extends FormatTest
     // metrics ---------------------------------------------------------------------------------------------------------
 
     @Test
-    public void orderMetrics() throws Exception
-    {
+    public void orderMetrics() throws Exception {
+
         CSVFormat format = getFormatToTest();
 
         Set<Metric> metrics = new HashSet<>();
@@ -215,8 +210,8 @@ public class CSVFormatTest extends FormatTest
     }
 
     @Test
-    public void getMetricHeader_NoMeasureUnit() throws Exception
-    {
+    public void getMetricHeader_NoMeasureUnit() throws Exception {
+
         Metric m = new MockMetric("This and Only This Should Appear In Result", null);
         CSVFormat format = getFormatToTest();
 
@@ -225,8 +220,8 @@ public class CSVFormatTest extends FormatTest
     }
 
     @Test
-    public void getMetricHeader_NoMeasureUnitAbbreviation() throws Exception
-    {
+    public void getMetricHeader_NoMeasureUnitAbbreviation() throws Exception {
+
         Metric m = new MockMetric("This and Only This Should Appear In Result", new MockMeasureUnit(null));
         CSVFormat format = getFormatToTest();
 
@@ -235,8 +230,8 @@ public class CSVFormatTest extends FormatTest
     }
 
     @Test
-    public void getMetricHeader() throws Exception
-    {
+    public void getMetricHeader() throws Exception {
+
         Metric m = new MockMetric("This is a Metric with Measure Unit", new MockMeasureUnit("white"));
         CSVFormat format = getFormatToTest();
 
@@ -259,8 +254,8 @@ public class CSVFormatTest extends FormatTest
     }
 
     @Test
-    public void getMetricHeader_MetricNameContainsCommas() throws Exception
-    {
+    public void getMetricHeader_MetricNameContainsCommas() throws Exception {
+
         MeasureUnit customTimeMeasureUnit = new MockMeasureUnit(MetricType.TIME, "supersec");
         Metric timeMetric = new MockMetric("This is a, Metric, whose Name contains commas,", customTimeMeasureUnit);
 
@@ -278,14 +273,13 @@ public class CSVFormatTest extends FormatTest
     }
 
     @Test
-    public void formatMetric_MEMORY() throws Exception
-    {
+    public void formatMetric_MEMORY() throws Exception {
+
         CSVFormat format = getFormatToTest();
 
         MockMetric m = new MockMetric("MOCK MEMORY", MeasureUnit.BYTE);
         m.setValue(8L * 1024 * 1024 * 1024);
         format.setMemoryUnit(MeasureUnit.GIGABYTE);
-
 
         String result = format.formatMetric(m);
         log.info(result);
@@ -295,8 +289,8 @@ public class CSVFormatTest extends FormatTest
     // notes -----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void notesLabel() throws Exception
-    {
+    public void notesLabel() throws Exception {
+
         CSVFormat format = getFormatToTest();
         assertEquals(CSVFormat.NOTES_HEADER_LABEL, format.getNotesHeader());
     }
@@ -304,24 +298,24 @@ public class CSVFormatTest extends FormatTest
     // formatRate() ----------------------------------------------------------------------------------------------------
 
     @Test
-    public void formatRate() throws Exception
-    {
+    public void formatRate() throws Exception {
+
         CSVFormat format = getFormatToTest();
         String result = format.formatRate(777.0, MeasureUnit.SECOND);
         assertEquals("777", result);
     }
 
     @Test
-    public void formatRate2() throws Exception
-    {
+    public void formatRate2() throws Exception {
+
         CSVFormat format = getFormatToTest();
         String result = format.formatRate(123.456, MeasureUnit.SECOND);
         assertEquals("123", result);
     }
 
     @Test
-    public void formatRate3() throws Exception
-    {
+    public void formatRate3() throws Exception {
+
         CSVFormat format = getFormatToTest();
         String result = format.formatRate(77.999, MeasureUnit.SECOND);
         assertEquals("78", result);
@@ -330,8 +324,8 @@ public class CSVFormatTest extends FormatTest
     // formatAverageDuration() -----------------------------------------------------------------------------------------
 
     @Test
-    public void formatAverageDuration_NANOSECOND_to_MILLISECOND() throws Exception
-    {
+    public void formatAverageDuration_NANOSECOND_to_MILLISECOND() throws Exception {
+
         CSVFormat format = getFormatToTest();
         format.setAverageOperationDurationTimeUnit(MeasureUnit.MILLISECOND);
 
@@ -340,8 +334,8 @@ public class CSVFormatTest extends FormatTest
     }
 
     @Test
-    public void formatAverageDuration_MILLISECOND_to_MILLISECOND() throws Exception
-    {
+    public void formatAverageDuration_MILLISECOND_to_MILLISECOND() throws Exception {
+
         CSVFormat format = getFormatToTest();
         format.setAverageOperationDurationTimeUnit(MeasureUnit.MILLISECOND);
 
@@ -352,31 +346,31 @@ public class CSVFormatTest extends FormatTest
     // formatNotes() ---------------------------------------------------------------------------------------------------
 
     @Test
-    public void formatNotes_NullList() throws Exception
-    {
+    public void formatNotes_NullList() throws Exception {
+
         CSVFormat format = getFormatToTest();
         assertEquals("", format.formatNotes(null));
     }
 
     @Test
-    public void formatNotes_EmptyList() throws Exception
-    {
+    public void formatNotes_EmptyList() throws Exception {
+
         CSVFormat format = getFormatToTest();
         assertEquals("", format.formatNotes(new ArrayList<String>()));
     }
 
     @Test
-    public void formatNotes_OneElement() throws Exception
-    {
+    public void formatNotes_OneElement() throws Exception {
+
         CSVFormat format = getFormatToTest();
 
-        String result = format.formatNotes(Arrays.asList("this is an annotation"));
+        String result = format.formatNotes(Collections.singletonList("this is an annotation"));
         assertEquals("this is an annotation", result);
     }
 
     @Test
-    public void formatNotes_MultipleElements() throws Exception
-    {
+    public void formatNotes_MultipleElements() throws Exception {
+
         CSVFormat format = getFormatToTest();
 
         String result = format.formatNotes(Arrays.asList("this is an annotation", "this is another annotation"));
@@ -384,12 +378,12 @@ public class CSVFormatTest extends FormatTest
     }
 
     @Test
-    public void formatNotes_NoteContainsComma() throws Exception
-    {
+    public void formatNotes_NoteContainsComma() throws Exception {
+
         CSVFormat format = getFormatToTest();
 
         String expected = "\"this, contains, several, commas\"";
-        String result = format.formatNotes(Arrays.asList("this, contains, several, commas"));
+        String result = format.formatNotes(Collections.singletonList("this, contains, several, commas"));
 
         log.info("expected: " + expected);
         log.info("produced: " + result);
@@ -404,8 +398,7 @@ public class CSVFormatTest extends FormatTest
      * @see FormatTest#getFormatToTest()
      */
     @Override
-    protected CSVFormat getFormatToTest() throws Exception
-    {
+    protected CSVFormat getFormatToTest() throws Exception {
         return new CSVFormat();
     }
 

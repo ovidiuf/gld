@@ -16,8 +16,8 @@
 
 package io.novaordis.gld.driver.sampler;
 
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.strategy.load.cache.MockOperation;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.driver.MockOperation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
@@ -44,40 +44,36 @@ public abstract class CounterTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void t1PrecedesT0() throws Exception
-    {
+    public void t1PrecedesT0() throws Exception {
+
         Counter c = getCounterToTest(MockOperation.class);
 
-        try
-        {
+        try {
             c.update(0L, 10L, 9L);
             fail("should fail because t1 precedes t0");
         }
-        catch(IllegalArgumentException e)
-        {
+        catch(IllegalArgumentException e) {
             log.info(e.getMessage());
         }
     }
 
     @Test
-    public void moreThanOneThrowable() throws Exception
-    {
+    public void moreThanOneThrowable() throws Exception {
+
         Counter c = getCounterToTest(MockOperation.class);
 
-        try
-        {
+        try {
             c.update(0L, 10L, 11L, new Exception(), new Exception());
             fail("should fail, more than one throwable given");
         }
-        catch(IllegalArgumentException e)
-        {
+        catch(IllegalArgumentException e) {
             log.info(e.getMessage());
         }
     }
 
     @Test
-    public void happyPath_Success() throws Exception
-    {
+    public void happyPath_Success() throws Exception {
+
         Counter c = getCounterToTest(MockOperation.class);
 
         c.update(0L, 10L, 11L);
@@ -129,8 +125,8 @@ public abstract class CounterTest
     }
 
     @Test
-    public void happyPath_Failures() throws Exception
-    {
+    public void happyPath_Failures() throws Exception {
+
         Counter c = getCounterToTest(MockOperation.class);
 
         c.update(0L, 10L, 11L, new SocketException());
@@ -182,8 +178,8 @@ public abstract class CounterTest
     }
 
     @Test
-    public void happyPath_Success_and_Failures() throws Exception
-    {
+    public void happyPath_Success_and_Failures() throws Exception {
+
         Counter c = getCounterToTest(MockOperation.class);
 
         c.update(0L, 10L, 11L);
@@ -243,8 +239,8 @@ public abstract class CounterTest
     }
 
     @Test
-    public void updateImmuneToTrailingNull() throws Exception
-    {
+    public void updateImmuneToTrailingNull() throws Exception {
+
         Counter c = getCounterToTest(MockOperation.class);
 
         // this should be fine
@@ -257,8 +253,8 @@ public abstract class CounterTest
     }
 
     @Test
-    public void updateImmuneToTrailingNullWhenWrappedInAnArray() throws Exception
-    {
+    public void updateImmuneToTrailingNullWhenWrappedInAnArray() throws Exception {
+
         Counter c = getCounterToTest(MockOperation.class);
 
         Exception e = null;

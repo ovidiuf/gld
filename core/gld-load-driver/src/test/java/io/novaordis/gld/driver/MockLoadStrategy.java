@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.load.cache;
+package io.novaordis.gld.driver;
 
-import com.novaordis.gld.Configuration;
-import com.novaordis.gld.KeyStore;
+import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.api.LoadStrategyBase;
 import io.novaordis.gld.api.Operation;
-import com.novaordis.gld.strategy.load.LoadStrategyBase;
+import io.novaordis.gld.api.todiscard.Configuration;
 import org.apache.log4j.Logger;
 
 import java.util.HashSet;
@@ -32,8 +32,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * com.novaordis.gld.mock because, among other things, we test reflection-based instantiation, and for that we need
  * to be in certain packages.
  */
-public class MockLoadStrategy extends LoadStrategyBase
-{
+public class MockLoadStrategy extends LoadStrategyBase {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(MockLoadStrategy.class);
@@ -53,8 +53,7 @@ public class MockLoadStrategy extends LoadStrategyBase
     /**
      * Will generate an unlimited number of operations.
      */
-    public MockLoadStrategy()
-    {
+    public MockLoadStrategy() {
         this(-1);
     }
 
@@ -73,19 +72,19 @@ public class MockLoadStrategy extends LoadStrategyBase
     // LoadStrategy implementation -------------------------------------------------------------------------------------
 
     @Override
-    public void configure(Configuration config, List<String> arguments, int from) throws Exception
-    {
+    public void configure(Configuration config, List<String> arguments, int from) throws Exception {
+
         super.configure(config, arguments, from);
 
-        for(int i = 0; i < arguments.size(); i ++)
-        {
-            if ("--mock-argument".equals(arguments.get(i)))
-            {
+        for(int i = 0; i < arguments.size(); i ++) {
+
+            if ("--mock-argument".equals(arguments.get(i))) {
+
                 arguments.remove(i);
                 mockArgument = arguments.remove(i --);
             }
-            else if ("--mock-load-argument".equals(arguments.get(i)))
-            {
+            else if ("--mock-load-argument".equals(arguments.get(i))) {
+
                 arguments.remove(i);
                 mockLoadArgument = arguments.remove(i --);
             }
@@ -93,7 +92,7 @@ public class MockLoadStrategy extends LoadStrategyBase
     }
 
     @Override
-    public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown)  {
+    public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown) {
 
         //
         // if the runtime is shutting down, comply and return null; tests rely on this behavior
@@ -105,10 +104,9 @@ public class MockLoadStrategy extends LoadStrategyBase
         }
 
 
-        if (remainingOperations != null)
-        {
-            if (remainingOperations.getAndDecrement() <= 0)
-            {
+        if (remainingOperations != null) {
+
+            if (remainingOperations.getAndDecrement() <= 0) {
                 return null;
             }
         }

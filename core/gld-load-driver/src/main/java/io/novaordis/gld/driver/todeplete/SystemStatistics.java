@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.external;
+package io.novaordis.gld.driver.todeplete;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;

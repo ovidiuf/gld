@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld;
+package io.novaordis.gld.driver.statistics;
 
 import io.novaordis.gld.api.Operation;
 
-public interface Statistics
-{
+public interface DeprecatedStatistics {
+
     boolean areWeDone();
 
     /**

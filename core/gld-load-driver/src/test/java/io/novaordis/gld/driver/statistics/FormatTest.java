@@ -14,81 +14,30 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.operations.cache;
+package io.novaordis.gld.driver.statistics;
 
-import com.novaordis.gld.LoadStrategy;
-import io.novaordis.gld.api.Operation;
-import com.novaordis.gld.service.cache.CacheService;
-import io.novaordis.gld.api.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class Write implements Operation
-{
+public abstract class FormatTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(FormatTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String key;
-    private String value;
-
-    private boolean successful;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Write(String key, String value)
-    {
-        this.key = key;
-        this.value = value;
-    }
-
-    // Operation implementation ----------------------------------------------------------------------------------------
-
-    /**
-     * @see Operation#perform(Service)
-     */
-    @Override
-    public void perform(Service s) throws Exception
-    {
-        ((CacheService)s).set(key, value);
-        this.successful = true;
-    }
-
-    @Override
-    public LoadStrategy getLoadStrategy()
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public boolean isSuccessful()
-    {
-        return successful;
-    }
-
-    public String getValue()
-    {
-        return value;
-    }
-
-    /**
-     * May return null if the instance was not initialized.
-     */
-    public String getKey()
-    {
-        return key;
-    }
-
-    @Override
-    public String toString()
-    {
-        return key + "=" + value;
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected abstract Format getFormatToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

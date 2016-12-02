@@ -16,16 +16,17 @@
 
 package io.novaordis.gld.driver.sampler;
 
-import com.novaordis.gld.Operation;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.driver.AnotherTypeOfMockOperation;
+import io.novaordis.gld.driver.MockOperation;
 import io.novaordis.gld.driver.sampler.metrics.FreePhysicalMemorySize;
 import io.novaordis.gld.driver.sampler.metrics.Metric;
 import io.novaordis.gld.driver.sampler.metrics.SystemCpuLoad;
 import io.novaordis.gld.driver.sampler.metrics.SystemLoadAverage;
 import io.novaordis.gld.driver.sampler.metrics.TotalPhysicalMemorySize;
-import com.novaordis.gld.strategy.load.cache.AnotherTypeOfMockOperation;
-import com.novaordis.gld.strategy.load.cache.MockOperation;
-import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -44,7 +45,7 @@ public class SamplingIntervalUtilTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(SamplingIntervalUtilTest.class);
+    private static final Logger log = LoggerFactory.getLogger(SamplingIntervalUtilTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -57,22 +58,20 @@ public class SamplingIntervalUtilTest
     // extrapolate() ----------------------------------------------------------------------------------------------------
 
     @Test
-    public void extrapolate_null() throws Exception
-    {
-        try
-        {
+    public void extrapolate_null() throws Exception {
+
+        try {
             SamplingIntervalUtil.extrapolate(null, 0);
             fail("should fail because we're passing a null sampling interval");
         }
-        catch(IllegalArgumentException e)
-        {
+        catch(IllegalArgumentException e) {
             log.info(e.getMessage());
         }
     }
 
     @Test
-    public void extrapolate_extraSamples_is_0() throws Exception
-    {
+    public void extrapolate_extraSamples_is_0() throws Exception {
+
         long durationMs = 5L;
         Set<Class<? extends Operation>> operationTypes = new HashSet<>();
         operationTypes.add(MockOperation.class);
@@ -121,34 +120,29 @@ public class SamplingIntervalUtilTest
 
         metrics = si2.getMetrics();
         assertEquals(4, metrics.size());
-        for(Metric m: metrics)
-        {
-            if (m instanceof FreePhysicalMemorySize)
-            {
+
+        for(Metric m: metrics) {
+            if (m instanceof FreePhysicalMemorySize) {
                 assertEquals(7L, m.getValue());
             }
-            else if (m instanceof TotalPhysicalMemorySize)
-            {
+            else if (m instanceof TotalPhysicalMemorySize) {
                 assertEquals(11L, m.getValue());
             }
-            else if (m instanceof SystemLoadAverage)
-            {
+            else if (m instanceof SystemLoadAverage) {
                 assertEquals(13.0, m.getValue());
             }
-            else if (m instanceof SystemCpuLoad)
-            {
+            else if (m instanceof SystemCpuLoad){
                 assertEquals(0.17, m.getValue());
             }
-            else
-            {
+            else {
                 fail("metric " + m + " should not be here");
             }
         }
     }
 
     @Test
-    public void extrapolate_extraSamples_is_1() throws Exception
-    {
+    public void extrapolate_extraSamples_is_1() throws Exception {
+
         long durationMs = 5L;
         Set<Class<? extends Operation>> operationTypes = new HashSet<>();
         operationTypes.add(MockOperation.class);
@@ -206,26 +200,22 @@ public class SamplingIntervalUtilTest
         // metrics should propagate the same values
         metrics = si2.getMetrics();
         assertEquals(4, metrics.size());
-        for(Metric m: metrics)
-        {
-            if (m instanceof FreePhysicalMemorySize)
-            {
+
+        for(Metric m: metrics) {
+
+            if (m instanceof FreePhysicalMemorySize) {
                 assertEquals(7L, m.getValue());
             }
-            else if (m instanceof TotalPhysicalMemorySize)
-            {
+            else if (m instanceof TotalPhysicalMemorySize) {
                 assertEquals(11L, m.getValue());
             }
-            else if (m instanceof SystemLoadAverage)
-            {
+            else if (m instanceof SystemLoadAverage) {
                 assertEquals(13.0, m.getValue());
             }
-            else if (m instanceof SystemCpuLoad)
-            {
+            else if (m instanceof SystemCpuLoad) {
                 assertEquals(0.17, m.getValue());
             }
-            else
-            {
+            else {
                 fail("metric " + m + " should not be here");
             }
         }
@@ -260,34 +250,28 @@ public class SamplingIntervalUtilTest
         // metrics should propagate the same values
         metrics = si3.getMetrics();
         assertEquals(4, metrics.size());
-        for(Metric m: metrics)
-        {
-            if (m instanceof FreePhysicalMemorySize)
-            {
+        for(Metric m: metrics) {
+            if (m instanceof FreePhysicalMemorySize) {
                 assertEquals(7L, m.getValue());
             }
-            else if (m instanceof TotalPhysicalMemorySize)
-            {
+            else if (m instanceof TotalPhysicalMemorySize) {
                 assertEquals(11L, m.getValue());
             }
-            else if (m instanceof SystemLoadAverage)
-            {
+            else if (m instanceof SystemLoadAverage) {
                 assertEquals(13.0, m.getValue());
             }
-            else if (m instanceof SystemCpuLoad)
-            {
+            else if (m instanceof SystemCpuLoad) {
                 assertEquals(0.17, m.getValue());
             }
-            else
-            {
+            else {
                 fail("metric " + m + " should not be here");
             }
         }
     }
 
     @Test
-    public void extrapolate_extraSamples_is_1_twoOperations() throws Exception
-    {
+    public void extrapolate_extraSamples_is_1_twoOperations() throws Exception {
+
         long durationMs = 200L;
         Set<Class<? extends Operation>> operationTypes = new HashSet<>();
         operationTypes.add(MockOperation.class);
@@ -384,22 +368,17 @@ public class SamplingIntervalUtilTest
         // metrics should propagate the same values
         metrics = si2.getMetrics();
         assertEquals(4, metrics.size());
-        for(Metric m: metrics)
-        {
-            if (m instanceof FreePhysicalMemorySize)
-            {
+        for(Metric m: metrics) {
+            if (m instanceof FreePhysicalMemorySize) {
                 assertEquals(7L, m.getValue());
             }
-            else if (m instanceof TotalPhysicalMemorySize)
-            {
+            else if (m instanceof TotalPhysicalMemorySize) {
                 assertEquals(11L, m.getValue());
             }
-            else if (m instanceof SystemLoadAverage)
-            {
+            else if (m instanceof SystemLoadAverage) {
                 assertEquals(13.0, m.getValue());
             }
-            else if (m instanceof SystemCpuLoad)
-            {
+            else if (m instanceof SystemCpuLoad) {
                 assertEquals(0.17, m.getValue());
             }
             else
@@ -465,34 +444,29 @@ public class SamplingIntervalUtilTest
         // metrics should propagate the same values
         metrics = si3.getMetrics();
         assertEquals(4, metrics.size());
-        for(Metric m: metrics)
-        {
-            if (m instanceof FreePhysicalMemorySize)
-            {
+
+        for(Metric m: metrics) {
+            if (m instanceof FreePhysicalMemorySize) {
                 assertEquals(7L, m.getValue());
             }
-            else if (m instanceof TotalPhysicalMemorySize)
-            {
+            else if (m instanceof TotalPhysicalMemorySize) {
                 assertEquals(11L, m.getValue());
             }
-            else if (m instanceof SystemLoadAverage)
-            {
+            else if (m instanceof SystemLoadAverage) {
                 assertEquals(13.0, m.getValue());
             }
-            else if (m instanceof SystemCpuLoad)
-            {
+            else if (m instanceof SystemCpuLoad) {
                 assertEquals(0.17, m.getValue());
             }
-            else
-            {
+            else {
                 fail("metric " + m + " should not be here");
             }
         }
     }
 
     @Test
-    public void extrapolate_extraSamples_is_2() throws Exception
-    {
+    public void extrapolate_extraSamples_is_2() throws Exception {
+
         long durationMs = 785L;
         Set<Class<? extends Operation>> operationTypes = new HashSet<>();
         operationTypes.add(MockOperation.class);
@@ -553,26 +527,20 @@ public class SamplingIntervalUtilTest
         // metrics should propagate the same values
         metrics = si2.getMetrics();
         assertEquals(4, metrics.size());
-        for(Metric m: metrics)
-        {
-            if (m instanceof FreePhysicalMemorySize)
-            {
+        for(Metric m: metrics) {
+            if (m instanceof FreePhysicalMemorySize) {
                 assertEquals(7L, m.getValue());
             }
-            else if (m instanceof TotalPhysicalMemorySize)
-            {
+            else if (m instanceof TotalPhysicalMemorySize) {
                 assertEquals(11L, m.getValue());
             }
-            else if (m instanceof SystemLoadAverage)
-            {
+            else if (m instanceof SystemLoadAverage) {
                 assertEquals(13.0, m.getValue());
             }
-            else if (m instanceof SystemCpuLoad)
-            {
+            else if (m instanceof SystemCpuLoad) {
                 assertEquals(0.17, m.getValue());
             }
-            else
-            {
+            else {
                 fail("metric " + m + " should not be here");
             }
         }
@@ -608,26 +576,20 @@ public class SamplingIntervalUtilTest
         // metrics should propagate the same values
         metrics = si3.getMetrics();
         assertEquals(4, metrics.size());
-        for(Metric m: metrics)
-        {
-            if (m instanceof FreePhysicalMemorySize)
-            {
+        for(Metric m: metrics) {
+            if (m instanceof FreePhysicalMemorySize) {
                 assertEquals(7L, m.getValue());
             }
-            else if (m instanceof TotalPhysicalMemorySize)
-            {
+            else if (m instanceof TotalPhysicalMemorySize) {
                 assertEquals(11L, m.getValue());
             }
-            else if (m instanceof SystemLoadAverage)
-            {
+            else if (m instanceof SystemLoadAverage) {
                 assertEquals(13.0, m.getValue());
             }
-            else if (m instanceof SystemCpuLoad)
-            {
+            else if (m instanceof SystemCpuLoad) {
                 assertEquals(0.17, m.getValue());
             }
-            else
-            {
+            else {
                 fail("metric " + m + " should not be here");
             }
         }
@@ -670,26 +632,20 @@ public class SamplingIntervalUtilTest
         // metrics should propagate the same values
         metrics = si4.getMetrics();
         assertEquals(4, metrics.size());
-        for(Metric m: metrics)
-        {
-            if (m instanceof FreePhysicalMemorySize)
-            {
+        for(Metric m: metrics) {
+            if (m instanceof FreePhysicalMemorySize) {
                 assertEquals(7L, m.getValue());
             }
-            else if (m instanceof TotalPhysicalMemorySize)
-            {
+            else if (m instanceof TotalPhysicalMemorySize) {
                 assertEquals(11L, m.getValue());
             }
-            else if (m instanceof SystemLoadAverage)
-            {
+            else if (m instanceof SystemLoadAverage) {
                 assertEquals(13.0, m.getValue());
             }
-            else if (m instanceof SystemCpuLoad)
-            {
+            else if (m instanceof SystemCpuLoad) {
                 assertEquals(0.17, m.getValue());
             }
-            else
-            {
+            else {
                 fail("metric " + m + " should not be here");
             }
         }
@@ -698,8 +654,8 @@ public class SamplingIntervalUtilTest
     // snapshotMetrics() -----------------------------------------------------------------------------------------------
 
     @Test
-    public void snapshotMetrics() throws Exception
-    {
+    public void snapshotMetrics() throws Exception {
+
         Set<Class<? extends Metric>> metricTypes = new HashSet<>();
         metricTypes.add(SystemLoadAverage.class);
         metricTypes.add(SystemCpuLoad.class);
@@ -710,8 +666,7 @@ public class SamplingIntervalUtilTest
 
         assertEquals(4, metrics.size());
 
-        for(Metric m: metrics)
-        {
+        for(Metric m: metrics) {
             assertNotNull(m.getValue());
         }
     }

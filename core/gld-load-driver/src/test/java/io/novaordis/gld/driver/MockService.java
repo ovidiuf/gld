@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld;
+package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.gld.api.todiscard.ContentType;
+import io.novaordis.gld.api.todiscard.Node;
+import io.novaordis.utilities.UserErrorException;
 import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class MockService implements Service
-{
+public class MockService implements Service {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(MockService.class);

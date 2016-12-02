@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.load;
+package io.novaordis.gld.api;
 
-import com.novaordis.gld.Command;
-import com.novaordis.gld.Configuration;
-import com.novaordis.gld.ContentType;
-import com.novaordis.gld.LoadStrategy;
-import com.novaordis.gld.UserErrorException;
-import com.novaordis.gld.Util;
-import com.novaordis.gld.command.Load;
+import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.gld.api.todiscard.ContentType;
+import io.novaordis.utilities.UserErrorException;
 
 import java.util.List;
 
@@ -37,9 +33,7 @@ public class LoadStrategyFactory {
      * to us, including the --load-strategy argument, and downward recursively, to whatever StorageFactory we're
      * building.
      *
-     * TODO this method is virtually identical with StorageStrategyFactory, consolidate.
-     *
-     * @see com.novaordis.gld.strategy.storage.StorageStrategyFactory
+     * TODO this method is virtually identical with com.novaordis.gld.strategy.storage.StorageStrategyFactory, consolidate.
      *
      * @param arguments - mutable list of arguments, arguments pertaining to us will be removed.
      * @param from - the argument list index where we expect to find "--storage-strategy"
@@ -61,15 +55,8 @@ public class LoadStrategyFactory {
                 new NullPointerException("null storage strategy"));
         }
 
-        Command command = configuration.getCommand();
-
-        if (!(command instanceof Load)) {
-            throw new RuntimeException(
-                "NOT YET IMPLEMENTED (2): we temporarily disabled support for ContentType for all commands, except Load. Need to refactor this.");
-        }
-
         String strategyName = arguments.remove(from);
-        ContentType contentType = ((Load)command).getContentType();
+        ContentType contentType = ContentType.TEST; // we must return to this
         return fromString(configuration, strategyName, contentType, arguments, from);
     }
 
@@ -94,8 +81,8 @@ public class LoadStrategyFactory {
         }
 
         try {
-            result = Util.getInstance(LoadStrategy.class,
-                "com.novaordis.gld.strategy.load." + subPackage, strategyName, "LoadStrategy");
+            result = ClassLoadingUtilities.getInstance(LoadStrategy.class,
+                "io.novaordis.gld.strategy.load." + subPackage, strategyName, "LoadStrategy");
         }
         catch(Exception e) {
             // turn all load strategy loading exceptions into UserErrorExceptions and bubble them up

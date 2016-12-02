@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld;
-
-import redis.clients.jedis.exceptions.JedisConnectionException;
-import redis.clients.jedis.exceptions.JedisDataException;
+package io.novaordis.gld.driver;
 
 import java.net.ConnectException;
 import java.net.SocketException;
@@ -25,8 +22,8 @@ import java.net.SocketTimeoutException;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
-public class RedisFailure
-{
+public class RedisFailure  {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     public static final int OTHERS_INDEX = 0;
@@ -159,36 +156,42 @@ public class RedisFailure
             }
         }
 
-        if (root instanceof JedisConnectionException)
-        {
-            if (msg != null)
-            {
-                if (msg.startsWith(LITERALS[JEDIS_SERVER_CLOSED_CONNECTION_INDEX][ERROR_MESSAGE]))
-                {
-                    return JEDIS_SERVER_CLOSED_CONNECTION_INDEX;
-                }
-                else if (msg.startsWith(LITERALS[JEDIS_UNKNOWN_REPLY_INDEX][ERROR_MESSAGE]))
-                {
-                    return JEDIS_UNKNOWN_REPLY_INDEX;
-                }
-            }
+        boolean redis_clients_jedis_exceptions_JedisConnectionException = true;
+
+        if (redis_clients_jedis_exceptions_JedisConnectionException) {
+            throw new RuntimeException("NOT YET IMPLEMENTED, refactor  redis.clients.jedis.exceptions.JedisConnectionException, redis.clients.jedis.exceptions.JedisDataException.JedisDataException");
         }
 
-        if (root instanceof JedisDataException)
-        {
-            if (msg != null)
-            {
-                if (msg.startsWith(LITERALS[JEDIS_MAX_NUMBER_OF_CLIENTS_REACHED_INDEX][ERROR_MESSAGE]))
-                {
-                    return JEDIS_MAX_NUMBER_OF_CLIENTS_REACHED_INDEX;
-                }
+//        if (root instanceof redis.clients.jedis.exceptions.JedisConnectionException)
+//        {
+//            if (msg != null)
+//            {
+//                if (msg.startsWith(LITERALS[JEDIS_SERVER_CLOSED_CONNECTION_INDEX][ERROR_MESSAGE]))
+//                {
+//                    return JEDIS_SERVER_CLOSED_CONNECTION_INDEX;
+//                }
+//                else if (msg.startsWith(LITERALS[JEDIS_UNKNOWN_REPLY_INDEX][ERROR_MESSAGE]))
+//                {
+//                    return JEDIS_UNKNOWN_REPLY_INDEX;
+//                }
+//            }
+//        }
 
-                if (msg.startsWith(LITERALS[JEDIS_CONNECTION_TIMED_OUT_INDEX][ERROR_MESSAGE]))
-                {
-                    return JEDIS_CONNECTION_TIMED_OUT_INDEX;
-                }
-            }
-        }
+//        if (root instanceof redis.clients.jedis.exceptions.JedisDataException.JedisDataException)
+//        {
+//            if (msg != null)
+//            {
+//                if (msg.startsWith(LITERALS[JEDIS_MAX_NUMBER_OF_CLIENTS_REACHED_INDEX][ERROR_MESSAGE]))
+//                {
+//                    return JEDIS_MAX_NUMBER_OF_CLIENTS_REACHED_INDEX;
+//                }
+//
+//                if (msg.startsWith(LITERALS[JEDIS_CONNECTION_TIMED_OUT_INDEX][ERROR_MESSAGE]))
+//                {
+//                    return JEDIS_CONNECTION_TIMED_OUT_INDEX;
+//                }
+//            }
+//        }
 
         if (root instanceof NoSuchElementException)
         {

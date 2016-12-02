@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.load.cache;
+package io.novaordis.gld.driver;
 
-import com.novaordis.gld.LoadStrategy;
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
 import org.apache.log4j.Logger;
 
-public class AnotherTypeOfMockOperation implements Operation
-{
+public class AnotherTypeOfMockOperation implements Operation  {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(AnotherTypeOfMockOperation.class);
@@ -36,8 +36,13 @@ public class AnotherTypeOfMockOperation implements Operation
     // Operation implementation ----------------------------------------------------------------------------------------
 
     @Override
-    public void perform(Service cs) throws Exception
-    {
+    public String getKey() {
+        throw new RuntimeException("getKey() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void perform(Service cs) throws Exception {
+
         log.info("mock \"performing\" " + this);
     }
 
@@ -49,8 +54,8 @@ public class AnotherTypeOfMockOperation implements Operation
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public String toString()
-    {
+    public String toString() {
+
         return "AnotherTypeOfMockOperation[" + Integer.toHexString(System.identityHashCode(this)) + "]";
     }
 

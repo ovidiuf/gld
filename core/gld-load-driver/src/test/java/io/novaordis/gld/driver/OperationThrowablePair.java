@@ -14,79 +14,41 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.operations.cache;
+package io.novaordis.gld.driver;
 
-import com.novaordis.gld.LoadStrategy;
 import io.novaordis.gld.api.Operation;
-import com.novaordis.gld.service.cache.CacheService;
-import io.novaordis.gld.api.Service;
+import org.apache.log4j.Logger;
 
-public class Read implements Operation
+
+public class OperationThrowablePair
 {
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(OperationThrowablePair.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String key;
-    private String value;
-    private volatile boolean performed;
+    public Operation operation;
+    public Throwable throwable;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Read(String key)
-    {
-        this.key = key;
-    }
+    OperationThrowablePair(Operation operation, Throwable throwable) {
 
-    // Operation implementation ----------------------------------------------------------------------------------------
+        this.operation = operation;
+        this.throwable = throwable;
 
-    /**
-     * @see Operation#perform(Service)
-     */
-    @Override
-    public void perform(Service s) throws Exception
-    {
-        performed = true;
-        value = ((CacheService)s).get(key);
-    }
-
-    @Override
-    public LoadStrategy getLoadStrategy()
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        log.debug(this + " constructed");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    /**
-     * May return null in case of cache miss.
-     */
-    public String getValue()
-    {
-        return value;
-    }
-
-    public String getKey()
-    {
-        return key;
-    }
-
-    public void setValue(String s)
-    {
-        this.value = s;
-    }
-
-    public boolean hasBeenPerformed()
-    {
-        return performed;
-    }
-
     @Override
     public String toString()
     {
-        return key + (!performed ? "" : (value == null ? " miss" : " hit (" + value + ")"));
+        return "OperationThrowablePair[" + operation + "," + throwable + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

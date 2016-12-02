@@ -16,11 +16,11 @@
 
 package io.novaordis.gld.driver.sampler;
 
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.strategy.load.cache.MockOperation;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.driver.MockOperation;
 import org.junit.Test;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,8 +28,8 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public abstract class SamplingIntervalTest
-{
+public abstract class SamplingIntervalTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
@@ -41,11 +41,12 @@ public abstract class SamplingIntervalTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void happyPath() throws Exception
-    {
+    public void happyPath() throws Exception {
+
         SamplingInterval si = getSamplingIntervalToTest(
-            7L, 11L, new HashSet<Class<? extends Operation>>(Arrays.asList(MockOperation.class)),
-            Arrays.asList("blah"));
+            7L, 11L,
+                new HashSet<Class<? extends Operation>>(Collections.singletonList(MockOperation.class)),
+                Collections.singletonList("blah"));
 
         assertEquals(7L, si.getStartMs());
 

@@ -18,8 +18,8 @@ package io.novaordis.gld.api.todiscard;
 
 import io.novaordis.utilities.UserErrorException;
 
-public enum ContentType
-{
+public enum ContentType {
+
     KEYVALUE,
     JMS,
     TEST;
@@ -28,10 +28,9 @@ public enum ContentType
      * @throws java.lang.IllegalArgumentException on null argument.
      * @throws UserErrorException
      */
-    public static ContentType fromString(String s) throws UserErrorException
-    {
-        if (s == null)
-        {
+    public static ContentType fromString(String s) throws UserErrorException {
+
+        if (s == null) {
             throw new IllegalArgumentException("null content type");
         }
 
@@ -41,12 +40,10 @@ public enum ContentType
 
         ucs = ucs.replace("-", "");
 
-        try
-        {
+        try {
             return ContentType.valueOf(ucs);
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             // we're fine for now, we'll try alternatives before completely bailing out
         }
 

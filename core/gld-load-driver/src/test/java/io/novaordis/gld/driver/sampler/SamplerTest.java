@@ -16,15 +16,16 @@
 
 package io.novaordis.gld.driver.sampler;
 
+import io.novaordis.gld.driver.AnotherTypeOfMockOperation;
+import io.novaordis.gld.driver.MockOperation;
 import io.novaordis.gld.driver.sampler.metrics.FreePhysicalMemorySize;
 import io.novaordis.gld.driver.sampler.metrics.Metric;
 import io.novaordis.gld.driver.sampler.metrics.SystemCpuLoad;
 import io.novaordis.gld.driver.sampler.metrics.SystemLoadAverage;
 import io.novaordis.gld.driver.sampler.metrics.TotalPhysicalMemorySize;
-import com.novaordis.gld.strategy.load.cache.AnotherTypeOfMockOperation;
-import com.novaordis.gld.strategy.load.cache.MockOperation;
-import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Set;
@@ -39,7 +40,7 @@ public abstract class SamplerTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(SamplerTest.class);
+    private static final Logger log = LoggerFactory.getLogger(SamplerTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -50,8 +51,8 @@ public abstract class SamplerTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void lifecycle() throws Exception
-    {
+    public void lifecycle() throws Exception {
+
         Sampler sampler = getSamplerToTest();
 
         assertFalse(sampler.isStarted());
@@ -60,13 +61,12 @@ public abstract class SamplerTest
 
         assertTrue(defaultSamplingInterval > 0);
 
-        try
-        {
+        try {
+
             sampler.record(0L, 0L, 0L, new MockOperation());
             fail("should throw IllegalStateException on account of calling record() on a stopped sampler");
         }
-        catch(IllegalStateException e)
-        {
+        catch(IllegalStateException e) {
             log.info(e.getMessage());
         }
 
@@ -117,13 +117,12 @@ public abstract class SamplerTest
 
         // try one more record()
 
-        try
-        {
+        try {
+
             sampler.record(0L, 0L, 0L, new MockOperation());
             fail("should throw IllegalStateException on account of calling record() on a stopped sampler");
         }
-        catch(IllegalStateException e)
-        {
+        catch(IllegalStateException e) {
             log.info(e.getMessage());
         }
 
@@ -134,8 +133,8 @@ public abstract class SamplerTest
 
         int totalCount = 0;
 
-        for(SamplingInterval si: samplingIntervals)
-        {
+        for(SamplingInterval si: samplingIntervals) {
+
             totalCount += si.getCounterValues(MockOperation.class).getSuccessCount();
         }
 
@@ -143,101 +142,87 @@ public abstract class SamplerTest
     }
 
     @Test
-    public void unknownOperation() throws Exception
-    {
+    public void unknownOperation() throws Exception {
+
         Sampler sampler = getSamplerToTest();
 
         sampler.registerOperation(MockOperation.class);
 
         sampler.start();
 
-        try
-        {
+        try {
             // try recording an unknown operation
             sampler.record(0L, 0L, 0L, new AnotherTypeOfMockOperation());
             fail("should throw IllegalArgumentException on account of trying to register an unknown operation");
         }
-        catch(IllegalArgumentException e)
-        {
+        catch(IllegalArgumentException e) {
             log.info(e.getMessage());
         }
-        finally
-        {
+        finally {
             sampler.stop();
         }
     }
 
     @Test
-    public void samplingIntervalSmallerThanSamplingTaskRunInterval() throws Exception
-    {
+    public void samplingIntervalSmallerThanSamplingTaskRunInterval() throws Exception {
+
         Sampler sampler = getSamplerToTest();
 
         sampler.setSamplingIntervalMs(2000L);
 
-        try
-        {
+        try {
             sampler.setSamplingTaskRunIntervalMs(3000L);
             fail("should throw IllegalArgumentException because of invalid relationship between sampling intervals");
         }
-        catch(IllegalArgumentException e)
-        {
+        catch(IllegalArgumentException e) {
             log.info(e.getMessage());
         }
-        finally
-        {
+        finally {
             sampler.stop();
         }
     }
 
     @Test
-    public void samplingIntervalEqualsThanSamplingTaskRunInterval() throws Exception
-    {
+    public void samplingIntervalEqualsThanSamplingTaskRunInterval() throws Exception {
+
         Sampler sampler = getSamplerToTest();
 
         sampler.setSamplingIntervalMs(2000L);
 
-        try
-        {
+        try {
             sampler.setSamplingTaskRunIntervalMs(2000L);
             fail("should throw IllegalArgumentException because of invalid relationship between sampling intervals");
         }
-        catch(IllegalArgumentException e)
-        {
+        catch(IllegalArgumentException e) {
             log.info(e.getMessage());
         }
-        finally
-        {
+        finally {
             sampler.stop();
         }
     }
 
     @Test
-    public void attemptToRegisterAnOperationAfterTheSamplerWasStarted() throws Exception
-    {
+    public void attemptToRegisterAnOperationAfterTheSamplerWasStarted() throws Exception {
         Sampler sampler = getSamplerToTest();
 
         sampler.registerOperation(MockOperation.class);
 
         sampler.start();
 
-        try
-        {
+        try {
             sampler.registerOperation(AnotherTypeOfMockOperation.class);
             fail("should throw IllegalStateException on account of trying to register an operation after startup");
         }
-        catch(IllegalStateException e)
-        {
+        catch(IllegalStateException e) {
             log.info(e.getMessage());
         }
-        finally
-        {
+        finally {
             sampler.stop();
         }
     }
 
     @Test
-    public void cantModifyTheSamplingIntervalAfterSamplerWasStarted() throws Exception
-    {
+    public void cantModifyTheSamplingIntervalAfterSamplerWasStarted() throws Exception {
         Sampler s = getSamplerToTest();
 
         s.registerOperation(MockOperation.class);
@@ -246,13 +231,11 @@ public abstract class SamplerTest
 
         assertTrue(s.isStarted());
 
-        try
-        {
+        try {
             s.setSamplingIntervalMs(100L);
             fail("should fail, can't modify the sampling interval after the sampler was started");
         }
-        catch(IllegalStateException e)
-        {
+        catch(IllegalStateException e) {
             log.info(e.getMessage());
         }
 
@@ -262,8 +245,7 @@ public abstract class SamplerTest
     }
 
     @Test
-    public void cantModifyTheSamplingThreadRunIntervalAfterSamplerWasStarted() throws Exception
-    {
+    public void cantModifyTheSamplingThreadRunIntervalAfterSamplerWasStarted() throws Exception {
         Sampler s = getSamplerToTest();
 
         s.registerOperation(MockOperation.class);
@@ -272,13 +254,11 @@ public abstract class SamplerTest
 
         assertTrue(s.isStarted());
 
-        try
-        {
+        try {
             s.setSamplingTaskRunIntervalMs(100L);
             fail("should fail, can't modify the sampling thread run interval after the sampler was started");
         }
-        catch(IllegalStateException e)
-        {
+        catch(IllegalStateException e) {
             log.info(e.getMessage());
         }
 
@@ -288,28 +268,23 @@ public abstract class SamplerTest
     }
 
     @Test
-    public void attemptToStartTheSamplerWithoutAnyRegisteredOperation() throws Exception
-    {
+    public void attemptToStartTheSamplerWithoutAnyRegisteredOperation() throws Exception {
         Sampler sampler = getSamplerToTest();
 
-        try
-        {
+        try {
             sampler.start();
             fail("should throw IllegalStateException on account of trying to start without any registered operation");
         }
-        catch(IllegalStateException e)
-        {
+        catch(IllegalStateException e) {
             log.info(e.getMessage());
         }
-        finally
-        {
+        finally {
             sampler.stop();
         }
     }
 
     @Test
-    public void successfulOperationRegistration() throws Exception
-    {
+    public void successfulOperationRegistration() throws Exception {
         Sampler sampler = getSamplerToTest();
 
         Counter counter = sampler.registerOperation(MockOperation.class);
@@ -320,8 +295,7 @@ public abstract class SamplerTest
     }
 
     @Test
-    public void annotate() throws Exception
-    {
+    public void annotate() throws Exception {
         Sampler sampler = getSamplerToTest();
         sampler.registerOperation(MockOperation.class);
         MockSamplingConsumer msc = new MockSamplingConsumer();
@@ -337,17 +311,14 @@ public abstract class SamplerTest
 
         // at least one of the samples has the comment, but not more than one
         String annotation = null;
-        for(SamplingInterval si: sil)
-        {
+        for(SamplingInterval si: sil) {
             List<String> annotations = si.getAnnotations();
             assertTrue(annotations.size() <= 1);
-            if (annotations.isEmpty())
-            {
+            if (annotations.isEmpty()) {
                 continue;
             }
 
-            if (annotation != null)
-            {
+            if (annotation != null) {
                 fail("annotation found twice: " + annotation + ", " + annotations.get(0));
             }
 
@@ -358,8 +329,7 @@ public abstract class SamplerTest
     }
 
     @Test
-    public void stop_waitForAFullIntervalAndGenerateAFinalSample() throws Exception
-    {
+    public void stop_waitForAFullIntervalAndGenerateAFinalSample() throws Exception {
         Sampler sampler = getSamplerToTest();
         sampler.registerOperation(MockOperation.class);
 
@@ -379,14 +349,11 @@ public abstract class SamplerTest
         int count = 0;
         String annotation = null;
 
-        for(SamplingInterval i: sil)
-        {
+        for(SamplingInterval i: sil) {
             count += i.getCounterValues(MockOperation.class).getSuccessCount();
 
-            for(String a: i.getAnnotations())
-            {
-                if (annotation != null)
-                {
+            for(String a: i.getAnnotations()) {
+                if (annotation != null) {
                     fail("more than one annotation");
                 }
 
@@ -401,8 +368,8 @@ public abstract class SamplerTest
     // metrics ---------------------------------------------------------------------------------------------------------
 
     @Test
-    public void registerDuplicateMetricType() throws Exception
-    {
+    public void registerDuplicateMetricType() throws Exception {
+
         Sampler sampler = getSamplerToTest();
 
         assertTrue(sampler.registerMetric(SystemCpuLoad.class));
@@ -411,8 +378,8 @@ public abstract class SamplerTest
 
 
     @Test
-    public void registerAndReadMetrics() throws Exception
-    {
+    public void registerAndReadMetrics() throws Exception {
+
         Sampler sampler = getSamplerToTest();
         long samplingTaskRunInterval = 10L;
         long samplingInterval = 11L;
@@ -441,17 +408,15 @@ public abstract class SamplerTest
 
         assertFalse(sil.isEmpty());
 
-        for(SamplingInterval si: sil)
-        {
+        for(SamplingInterval si: sil) {
             // sampling interval instances must have system-wide metrics
 
             Set<Metric> metrics = si.getMetrics();
             assertEquals(4, metrics.size());
 
-            for(Metric m: metrics)
-            {
+            for(Metric m: metrics) {
                 assertTrue(m.getValue() != null);
-                log.info(m);
+                log.info("" + m);
             }
         }
     }
@@ -459,8 +424,8 @@ public abstract class SamplerTest
     // stop ------------------------------------------------------------------------------------------------------------
 
     @Test
-    public void verifyThatStopPropagatesToConsumers() throws Exception
-    {
+    public void verifyThatStopPropagatesToConsumers() throws Exception {
+
         Sampler s = getSamplerToTest();
 
         s.registerOperation(MockOperation.class);

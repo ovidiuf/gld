@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.statistics;
+package io.novaordis.gld.driver.statistics;
 
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.driver.sampler.metrics.MeasureUnit;
@@ -23,8 +23,8 @@ import io.novaordis.gld.driver.sampler.metrics.Metric;
 import java.util.List;
 import java.util.Set;
 
-public interface Format
-{
+public interface Format {
+
     String formatTimestamp(long ms);
 
     String getTimestampLabel();

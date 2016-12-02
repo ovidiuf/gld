@@ -23,6 +23,9 @@ import io.novaordis.utilities.UserErrorException;
 
 import java.util.List;
 
+/**
+ *
+ */
 public interface Service {
 
     void setConfiguration(Configuration c);

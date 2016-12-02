@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.statistics;
+package io.novaordis.gld.driver.statistics;
 
 import io.novaordis.gld.driver.sampler.metrics.MeasureUnit;
 import io.novaordis.gld.driver.sampler.metrics.MetricType;

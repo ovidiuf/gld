@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.statistics;
+package io.novaordis.gld.driver.statistics;
 
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.driver.sampler.CounterValues;
@@ -29,25 +29,24 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Set;
 
-import static com.novaordis.gld.statistics.Statistics.calculateAverageDuration;
-import static com.novaordis.gld.statistics.Statistics.calculateRate;
+import static io.novaordis.gld.driver.statistics.Statistics.calculateAverageDuration;
+import static io.novaordis.gld.driver.statistics.Statistics.calculateRate;
 
-public class CSVFormatter implements SamplingConsumer
-{
+public class CSVFormatter implements SamplingConsumer {
+
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(CSVFormatter.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    public static void writeHeaders(SamplingInterval si, Format format, Writer w) throws IOException
-    {
+    public static void writeHeaders(SamplingInterval si, Format format, Writer w) throws IOException  {
         String headers = toLine(si, format, true);
         w.write(headers + "\n");
     }
 
-    public static void writeLine(SamplingInterval si, Format format, Writer w) throws IOException
-    {
+    public static void writeLine(SamplingInterval si, Format format, Writer w) throws IOException {
         String line = toLine(si, format, false);
         w.write(line + "\n");
         w.flush();
@@ -59,8 +58,8 @@ public class CSVFormatter implements SamplingConsumer
      * 1) generate headers (set 'headers' on true)
      * 2) generate a data CSV line - with or without comments.
      */
-    public static String toLine(SamplingInterval si, Format csvFormat, boolean headers)
-    {
+    public static String toLine(SamplingInterval si, Format csvFormat, boolean headers) {
+
         String s = "";
 
         if (headers)

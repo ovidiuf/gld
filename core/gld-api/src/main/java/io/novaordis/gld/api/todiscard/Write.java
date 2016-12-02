@@ -14,29 +14,82 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.statistics;
+package io.novaordis.gld.api.todiscard;
 
-import org.apache.log4j.Logger;
+import io.novaordis.gld.api.LoadStrategy;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.Service;
 
-public abstract class FormatTest
-{
+public class Write implements Operation {
+
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = Logger.getLogger(FormatTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String key;
+    private String value;
+
+    private boolean successful;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public Write(String key, String value)
+    {
+        this.key = key;
+        this.value = value;
+    }
+
+    // Operation implementation ----------------------------------------------------------------------------------------
+
+    /**
+     * @see Operation#perform(Service)
+     */
+    @Override
+    public void perform(Service s) throws Exception {
+
+//        ((CacheService)s).set(key, value);
+//        this.successful = true;
+
+        throw new RuntimeException("NOT YET IMPLEMENTED: refactor CacheService");
+    }
+
+    @Override
+    public LoadStrategy getLoadStrategy()
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public boolean isSuccessful()
+    {
+        return successful;
+    }
+
+    public String getValue()
+    {
+        return value;
+    }
+
+    /**
+     * May return null if the instance was not initialized.
+     */
+    public String getKey()
+    {
+        return key;
+    }
+
+    @Override
+    public String toString()
+    {
+        return key + "=" + value;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    protected abstract Format getFormatToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

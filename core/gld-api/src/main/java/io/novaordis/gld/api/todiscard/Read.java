@@ -14,34 +14,45 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.load.cache;
+package io.novaordis.gld.api.todiscard;
 
-import com.novaordis.gld.LoadStrategy;
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
-import org.apache.log4j.Logger;
 
-public class MockOperation implements Operation {
+public class Read implements Operation {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = Logger.getLogger(MockOperation.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private boolean verbose;
+    private String key;
+    private String value;
+    private volatile boolean performed;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public Read(String key)
+    {
+        this.key = key;
+    }
+
     // Operation implementation ----------------------------------------------------------------------------------------
 
+    /**
+     * @see Operation#perform(Service)
+     */
     @Override
-    public void perform(Service cs) throws Exception
-    {
-        if (verbose) { log.info(this + " mock perform(" + cs + ")"); }
-        cs.perform(this);
+    public void perform(Service s) throws Exception {
+        performed = true;
+
+        //
+        // value = ((CacheService)s).get(key);
+        //
+
+        throw new RuntimeException("NOT YET IMPLEMENTED: refactor CacheService");
     }
 
     @Override
@@ -53,16 +64,32 @@ public class MockOperation implements Operation {
     // Public ----------------------------------------------------------------------------------------------------------
 
     /**
-     * We need to explicitly set the instance as verbose in order to get log.info(), otherwise the high concurrency
-     * tests are too noisy.
+     * May return null in case of cache miss.
      */
-    public void setVerbose(boolean b) {
-        this.verbose = b;
+    public String getValue()
+    {
+        return value;
+    }
+
+    public String getKey()
+    {
+        return key;
+    }
+
+    public void setValue(String s)
+    {
+        this.value = s;
+    }
+
+    public boolean hasBeenPerformed()
+    {
+        return performed;
     }
 
     @Override
-    public String toString() {
-        return "MockOperation[" + Integer.toHexString(System.identityHashCode(this)) + "]";
+    public String toString()
+    {
+        return key + (!performed ? "" : (value == null ? " miss" : " hit (" + value + ")"));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

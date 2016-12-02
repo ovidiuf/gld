@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.mock;
+package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.driver.sampler.Counter;
@@ -28,8 +28,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class MockSampler implements Sampler
-{
+public class MockSampler implements Sampler {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(MockSampler.class);
@@ -48,8 +48,8 @@ public class MockSampler implements Sampler
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockSampler()
-    {
+    public MockSampler() {
+
         this.recorded = new ArrayList<>();
         this.operations = new HashSet<>();
         this.started = false;
@@ -132,16 +132,15 @@ public class MockSampler implements Sampler
     }
 
     @Override
-    public Counter getCounter(Class<? extends Operation> operationType)
-    {
+    public Counter getCounter(Class<? extends Operation> operationType) {
+
         throw new RuntimeException("getCounter() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
     @SuppressWarnings("UnusedDeclaration")
-    public List<OperationThrowablePair> getRecorded()
-    {
+    public List<OperationThrowablePair> getRecorded() {
         return recorded;
     }
 
@@ -151,6 +150,11 @@ public class MockSampler implements Sampler
     public boolean wasStarted()
     {
         return wasStarted;
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    public Set<Class<? extends Operation>> getOperationTypes() {
+        return operations;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

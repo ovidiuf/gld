@@ -16,14 +16,13 @@
 
 package io.novaordis.gld.driver.sampler;
 
-import com.novaordis.gld.Operation;
+import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.driver.sampler.metrics.Metric;
 
 import java.util.List;
 import java.util.Set;
 
-public interface SamplingInterval
-{
+public interface SamplingInterval {
     /**
      * @return the timestamp (in milliseconds) of the sampling interval start.
      */

@@ -16,9 +16,9 @@
 
 package io.novaordis.gld.driver.sampler;
 
+import io.novaordis.gld.driver.MockOperation;
 import io.novaordis.gld.driver.sampler.metrics.MeasureUnit;
-import com.novaordis.gld.statistics.Statistics;
-import com.novaordis.gld.strategy.load.cache.MockOperation;
+import io.novaordis.gld.driver.statistics.Statistics;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
@@ -30,8 +30,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.Assert.assertEquals;
 
-public class SamplerImplStressTest
-{
+public class SamplerImplStressTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(SamplerImplStressTest.class);
@@ -45,8 +45,8 @@ public class SamplerImplStressTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void stress() throws Exception
-    {
+    public void stress() throws Exception {
+
         long interval = 1000L;
 
         final SamplerImpl s = new SamplerImpl(250L, interval);
@@ -62,8 +62,8 @@ public class SamplerImplStressTest
         final CyclicBarrier barrier = new CyclicBarrier(threads + 1);
         final AtomicLong totalTimeAcrossThreadsNs = new AtomicLong(0L);
 
-        for(int i = 0; i < threads; i ++)
-        {
+        for(int i = 0; i < threads; i ++) {
+
             new Thread(new Runnable()
             {
                 @Override
@@ -71,8 +71,7 @@ public class SamplerImplStressTest
                 {
                     long totalTimeNs = 0;
 
-                    for(int j = 0; j < operationsPerThread; j ++)
-                    {
+                    for(int j = 0; j < operationsPerThread; j ++) {
                         long t0Nano = System.nanoTime();
                         MockOperation mo = new MockOperation();
                         long t1Nano = System.nanoTime();
@@ -84,15 +83,13 @@ public class SamplerImplStressTest
 
                     totalTimeAcrossThreadsNs.addAndGet(totalTimeNs);
 
-                    try
-                    {
+                    try {
                         barrier.await();
 
                         log.info(Thread.currentThread().getName() + " released from barrier");
 
                     }
-                    catch(Exception e)
-                    {
+                    catch(Exception e) {
                         throw new IllegalStateException(e);
                     }
 
@@ -120,8 +117,7 @@ public class SamplerImplStressTest
 
         long successful = 0;
 
-        for(SamplingInterval si: samples)
-        {
+        for(SamplingInterval si: samples) {
             successful += si.getCounterValues(MockOperation.class).getSuccessCount();
         }
 
@@ -130,8 +126,7 @@ public class SamplerImplStressTest
 
         // make sure the interval duration is constant and equal with the sampling interval
 
-        for(SamplingInterval si: samples)
-        {
+        for(SamplingInterval si: samples) {
             assertEquals(
                 "the interval duration " + si.getDurationMs() + " ms is not equal to " + interval + " ms for " + si,
                 interval, si.getDurationMs());
@@ -145,16 +140,16 @@ public class SamplerImplStressTest
         long totalSc = 0L;
         long totalScd = 0L;
 
-        for(SamplingInterval si: samples)
-        {
+        for(SamplingInterval si: samples) {
+
             CounterValues cv = si.getCounterValues(MockOperation.class);
 
             long successCount = cv.getSuccessCount();
             long successCumulatedDuration = cv.getSuccessCumulatedDurationNano();
 
-            double averageRequestDuration = ((double) successCumulatedDuration)/ successCount;
+            double averageRequestDuration = ((double) successCumulatedDuration)/successCount;
             double successPerSec = Statistics.calculateRate(
-                successCount, si.getDurationMs(), MeasureUnit.MILLISECOND, MeasureUnit.SECOND);
+                    successCount, si.getDurationMs(), MeasureUnit.MILLISECOND, MeasureUnit.SECOND);
 
             log.info("sample " + index++ + ": " + si + " " +
                 successCount + " invocations, " +

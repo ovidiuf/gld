@@ -16,89 +16,61 @@
 
 package io.novaordis.gld.driver;
 
-import io.novaordis.utilities.time.Duration;
+import io.novaordis.gld.api.KeyStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-
-public class MockMultiThreadRunner implements MultiThreadedRunner {
+public class MockKeyStore implements KeyStore {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(MockKeyStore.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private BlockingQueue<String> stopRendezvous = new ArrayBlockingQueue<>(1);
-
-    private boolean running = true;
+    private boolean started;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockMultiThreadRunner() {
-    }
-
-    // MultiThreadRunner implementation --------------------------------------------------------------------------------
+    // KeyStore implementation -----------------------------------------------------------------------------------------
 
     @Override
-    public boolean isRunning()
+    public void start() throws Exception {
+        this.started = true;
+    }
+
+    @Override
+    public void stop() throws Exception {
+        this.started = false;
+    }
+
+    @Override
+    public boolean isStarted()
     {
-        return running;
+        return started;
     }
 
     @Override
-    public void run()
+    public void store(String key) throws Exception {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public String get()
     {
-        throw new RuntimeException("run() NOT YET IMPLEMENTED");
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void stop()
+    public boolean isReadOnly()
     {
-        try
-        {
-            stopRendezvous.put("");
-
-            running = false;
-        }
-        catch(Exception e)
-        {
-            throw new IllegalStateException("failed to put in rendezvous", e);
-        }
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
-    @Override
-    public ExitGuard getExitGuard() {
-        throw new RuntimeException("getExitGuard() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Duration getDuration() {
-        throw new RuntimeException("getDuration() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void setDuration(Duration d) {
-        throw new RuntimeException("setDuration() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public boolean isWaitForConsoleQuit() {
-        throw new RuntimeException("isWaitForConsoleQuit() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void setWaitForConsoleQuit(boolean b) {
-        throw new RuntimeException("setWaitForConsoleQuit() NOT YET IMPLEMENTED");
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public void waitToBeStopped() throws Exception
-    {
-        stopRendezvous.take();
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

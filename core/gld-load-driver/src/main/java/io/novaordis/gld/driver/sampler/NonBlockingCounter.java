@@ -16,7 +16,7 @@
 
 package io.novaordis.gld.driver.sampler;
 
-import com.novaordis.gld.Operation;
+import io.novaordis.gld.api.Operation;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -32,8 +32,8 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @see CounterValues
  */
-public class NonBlockingCounter implements Counter
-{
+public class NonBlockingCounter implements Counter {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(NonBlockingCounter.class);

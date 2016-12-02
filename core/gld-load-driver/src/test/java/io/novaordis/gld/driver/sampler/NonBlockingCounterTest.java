@@ -16,10 +16,10 @@
 
 package io.novaordis.gld.driver.sampler;
 
-import com.novaordis.gld.Operation;
+import io.novaordis.gld.api.Operation;
 
-public class NonBlockingCounterTest extends CounterTest
-{
+public class NonBlockingCounterTest extends CounterTest {
+    
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------

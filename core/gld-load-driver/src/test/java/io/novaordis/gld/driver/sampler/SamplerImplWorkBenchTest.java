@@ -16,10 +16,10 @@
 
 package io.novaordis.gld.driver.sampler;
 
-import com.novaordis.gld.Operation;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.driver.MockOperation;
 import io.novaordis.gld.driver.sampler.metrics.Metric;
 import io.novaordis.gld.driver.sampler.metrics.SystemLoadAverage;
-import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
@@ -36,8 +36,8 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class SamplerImplWorkBenchTest
-{
+public class SamplerImplWorkBenchTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(SamplerImplWorkBenchTest.class);

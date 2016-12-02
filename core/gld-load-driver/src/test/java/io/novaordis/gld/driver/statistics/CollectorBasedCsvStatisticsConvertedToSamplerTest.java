@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.statistics;
+package io.novaordis.gld.driver.statistics;
 
-import com.novaordis.gld.operations.cache.Read;
-import com.novaordis.gld.operations.cache.Write;
+import io.novaordis.gld.api.todiscard.Read;
+import io.novaordis.gld.api.todiscard.Write;
+import io.novaordis.gld.driver.MockOperation;
 import io.novaordis.gld.driver.sampler.CounterValues;
 import io.novaordis.gld.driver.sampler.MockSamplingConsumer;
 import io.novaordis.gld.driver.sampler.Sampler;
 import io.novaordis.gld.driver.sampler.SamplerImpl;
 import io.novaordis.gld.driver.sampler.SamplingInterval;
-import com.novaordis.gld.strategy.load.cache.MockOperation;
-import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
@@ -39,11 +40,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class CollectorBasedCsvStatisticsConvertedToSamplerTest
-{
+public class CollectorBasedCsvStatisticsConvertedToSamplerTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(CollectorBasedCsvStatisticsConvertedToSamplerTest.class);
+    private static final Logger log = LoggerFactory.getLogger(CollectorBasedCsvStatisticsConvertedToSamplerTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -57,8 +58,8 @@ public class CollectorBasedCsvStatisticsConvertedToSamplerTest
      * Simulates a CollectorBasedStatistics lifecycle, as used in production.
      */
     @Test
-    public void lifeCycleIntegrationTest() throws Exception
-    {
+    public void lifeCycleIntegrationTest() throws Exception {
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream(2048);
         PrintWriter pw = new PrintWriter(new OutputStreamWriter(baos));
         CSVFormatter csvFormatter = new CSVFormatter(pw);

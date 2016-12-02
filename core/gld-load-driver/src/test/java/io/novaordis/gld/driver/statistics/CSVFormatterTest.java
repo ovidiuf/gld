@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.statistics;
+package io.novaordis.gld.driver.statistics;
 
 import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.driver.AnotherTypeOfMockOperation;
+import io.novaordis.gld.driver.MockOperation;
 import io.novaordis.gld.driver.sampler.CounterValuesImpl;
 import io.novaordis.gld.driver.sampler.SamplingIntervalImpl;
 import io.novaordis.gld.driver.sampler.metrics.FreePhysicalMemorySize;
@@ -26,8 +28,6 @@ import io.novaordis.gld.driver.sampler.metrics.MockMetric;
 import io.novaordis.gld.driver.sampler.metrics.SystemCpuLoad;
 import io.novaordis.gld.driver.sampler.metrics.SystemLoadAverage;
 import io.novaordis.gld.driver.sampler.metrics.TotalPhysicalMemorySize;
-import com.novaordis.gld.strategy.load.cache.AnotherTypeOfMockOperation;
-import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 

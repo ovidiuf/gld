@@ -14,39 +14,60 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.mock;
+package io.novaordis.gld.driver;
 
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.Service;
 import org.apache.log4j.Logger;
 
+public class MockOperation implements Operation {
 
-public class OperationThrowablePair
-{
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(com.novaordis.gld.mock.OperationThrowablePair.class);
+    private static final Logger log = Logger.getLogger(MockOperation.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    public Operation operation;
-    public Throwable throwable;
+    private boolean verbose;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    OperationThrowablePair(Operation operation, Throwable throwable)
+    // Operation implementation ----------------------------------------------------------------------------------------
+
+    @Override
+    public String getKey() {
+        throw new RuntimeException("getKey() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void perform(Service cs) throws Exception
     {
-        this.operation = operation;
-        this.throwable = throwable;
+        if (verbose) { log.info(this + " mock perform(" + cs + ")"); }
+        cs.perform(this);
+    }
+
+    @Override
+    public LoadStrategy getLoadStrategy()
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    /**
+     * We need to explicitly set the instance as verbose in order to get log.info(), otherwise the high concurrency
+     * tests are too noisy.
+     */
+    public void setVerbose(boolean b) {
+        this.verbose = b;
+    }
+
     @Override
-    public String toString()
-    {
-        return "OperationThrowablePair[" + operation + "," + throwable + "]";
+    public String toString() {
+        return "MockOperation[" + Integer.toHexString(System.identityHashCode(this)) + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -16,7 +16,7 @@
 
 package io.novaordis.gld.driver.sampler;
 
-import com.novaordis.gld.Operation;
+import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.driver.sampler.metrics.Metric;
 import org.apache.log4j.Logger;
 
@@ -28,8 +28,8 @@ import java.util.Set;
 /**
  * Static utilities related to sampling intervals.
  */
-public class SamplingIntervalUtil
-{
+public class SamplingIntervalUtil {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(SamplingIntervalUtil.class);
@@ -49,15 +49,14 @@ public class SamplingIntervalUtil
      *       last interval.
      *
      */
-    public static SamplingInterval[] extrapolate(SamplingInterval recorded, int extraSamples)
-    {
-        if (recorded == null)
-        {
+    public static SamplingInterval[] extrapolate(SamplingInterval recorded, int extraSamples) {
+
+
+        if (recorded == null) {
             throw new IllegalArgumentException("null sampling interval");
         }
 
-        if (extraSamples == 0)
-        {
+        if (extraSamples == 0) {
             return new SamplingInterval[] { recorded };
         }
 
@@ -72,8 +71,8 @@ public class SamplingIntervalUtil
         // metrics should propagate the same values
         Set<Metric> metrics = recorded.getMetrics();
 
-        for(Class<? extends Operation> ot : recorded.getOperationTypes())
-        {
+        for(Class<? extends Operation> ot : recorded.getOperationTypes()) {
+
             CounterValues valuesToBeDistributed = recorded.getCounterValues(ot);
 
             long successCount = 0L;
@@ -83,25 +82,24 @@ public class SamplingIntervalUtil
             Map<Class<? extends Throwable>, Long> failureCount = zeroInitializedFailureCounterMap(failureTypes);
             Map<Class<? extends Throwable>, Long> failureCumulatedDuration = zeroInitializedFailureCounterMap(failureTypes);
 
-            for(int i = 0; i < n; i ++)
-            {
+            for(int i = 0; i < n; i ++) {
+
                 SamplingIntervalImpl si = result[i];
 
-                if (si == null)
-                {
+                if (si == null) {
+
                     si = new SamplingIntervalImpl(start, duration, recorded.getOperationTypes());
                     si.setMetrics(new HashSet<>(metrics)); // make a copy of the map
                     result[i] = si;
                     start += duration;
                 }
 
-                if ((i == 0) && !annotationsProcessed)
-                {
+                if ((i == 0) && !annotationsProcessed) {
+
                     annotationsProcessed = true;
 
                     // place all annotations in the first sampling interval
-                    for(String a: recorded.getAnnotations())
-                    {
+                    for(String a: recorded.getAnnotations()) {
                         si.addAnnotation(a);
                     }
                 }
@@ -111,46 +109,46 @@ public class SamplingIntervalUtil
                 Map<Class<? extends Throwable>, Long> fc = zeroInitializedFailureCounterMap(failureTypes);
                 Map<Class<? extends Throwable>, Long> fcd = zeroInitializedFailureCounterMap(failureTypes);
 
-                if (i != n - 1)
-                {
+                if (i != n - 1) {
+
                     sc = valuesToBeDistributed.getSuccessCount() / n;
                     successCount += sc;
 
-                    if (sc != 0)
-                    {
+                    if (sc != 0) {
+
                         scd = valuesToBeDistributed.getSuccessCumulatedDurationNano() / n;
                         successCumulatedDuration += scd;
                     }
 
-                    for(Class<? extends Throwable> ft: failureTypes)
-                    {
+                    for(Class<? extends Throwable> ft: failureTypes) {
+
                         fc.put(ft, valuesToBeDistributed.getFailureCount(ft) / n);
                         failureCount.put(ft, failureCount.get(ft) + fc.get(ft));
 
-                        if (fc.get(ft) != 0L)
-                        {
+                        if (fc.get(ft) != 0L) {
+
                             fcd.put(ft, valuesToBeDistributed.getFailureCumulatedDurationNano(ft) / n);
                             failureCumulatedDuration.put(ft, failureCumulatedDuration.get(ft) + fcd.get(ft));
                         }
                     }
                 }
-                else
-                {
+                else {
+
                     // last sampling interval
 
                     sc = valuesToBeDistributed.getSuccessCount() - successCount;
                     scd = valuesToBeDistributed.getSuccessCumulatedDurationNano() - successCumulatedDuration;
 
-                    for(Class<? extends Throwable> ft: failureTypes)
-                    {
+                    for(Class<? extends Throwable> ft: failureTypes) {
                         fc.put(ft, valuesToBeDistributed.getFailureCount(ft) - failureCount.get(ft));
                         fcd.put(ft, valuesToBeDistributed.getFailureCumulatedDurationNano(ft) - failureCumulatedDuration.get(ft));
                     }
                 }
 
                 Map<Class<? extends Throwable>, ImmutableFailureCounter> failures = new HashMap<>();
-                for(Class<? extends Throwable> ft: failureTypes)
-                {
+
+                for(Class<? extends Throwable> ft: failureTypes) {
+
                     ImmutableFailureCounter ifc = new ImmutableFailureCounter(fc.get(ft), fcd.get(ft));
                     failures.put(ft, ifc);
                 }
@@ -163,19 +161,17 @@ public class SamplingIntervalUtil
         return result;
     }
 
-    public static Set<Metric> snapshotMetrics(Set<Class<? extends Metric>> metricTypes)
-    {
+    public static Set<Metric> snapshotMetrics(Set<Class<? extends Metric>> metricTypes) {
+
         Set<Metric> result = new HashSet<>();
 
-        for(Class<? extends Metric> mt: metricTypes)
-        {
-            try
-            {
+        for(Class<? extends Metric> mt: metricTypes) {
+
+            try {
                 Metric m = mt.newInstance();
                 result.add(m);
             }
-            catch(Exception e)
-            {
+            catch(Exception e) {
                 log.warn("could not create Metric instance from " + mt, e);
             }
         }
@@ -188,8 +184,7 @@ public class SamplingIntervalUtil
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    private SamplingIntervalUtil()
-    {
+    private SamplingIntervalUtil() {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -201,12 +196,11 @@ public class SamplingIntervalUtil
     // Private ---------------------------------------------------------------------------------------------------------
 
     private static Map<Class<? extends Throwable>, Long> zeroInitializedFailureCounterMap(
-        Set<Class<? extends Throwable>> failureTypes )
-    {
+        Set<Class<? extends Throwable>> failureTypes ) {
+
         Map<Class<? extends Throwable>, Long> result = new HashMap<>();
 
-        for(Class<? extends Throwable> ft: failureTypes)
-        {
+        for(Class<? extends Throwable> ft: failureTypes) {
             result.put(ft, 0L);
         }
 

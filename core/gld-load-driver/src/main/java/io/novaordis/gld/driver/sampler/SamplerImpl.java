@@ -16,7 +16,7 @@
 
 package io.novaordis.gld.driver.sampler;
 
-import com.novaordis.gld.Operation;
+import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.driver.sampler.metrics.Metric;
 import org.apache.log4j.Logger;
 
@@ -30,8 +30,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class SamplerImpl extends TimerTask implements Sampler
-{
+public class SamplerImpl extends TimerTask implements Sampler {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(SamplerImpl.class);

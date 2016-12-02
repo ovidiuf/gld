@@ -16,17 +16,19 @@
 
 package io.novaordis.gld.driver.sampler;
 
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.strategy.load.cache.AnotherTypeOfMockOperation;
-import com.novaordis.gld.strategy.load.cache.MockOperation;
-import org.apache.log4j.Logger;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.driver.AnotherTypeOfMockOperation;
+import io.novaordis.gld.driver.MockOperation;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -38,11 +40,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class SamplingIntervalImplTest extends SamplingIntervalTest
-{
+public class SamplingIntervalImplTest extends SamplingIntervalTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(SamplingIntervalImplTest.class);
+    private static final Logger log = LoggerFactory.getLogger(SamplingIntervalImplTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -53,15 +55,14 @@ public class SamplingIntervalImplTest extends SamplingIntervalTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void nullOperationTypesSet() throws Exception
-    {
-        try
-        {
+    public void nullOperationTypesSet() throws Exception {
+
+        try {
+
             getSamplingIntervalToTest(0L, 1L, null, new ArrayList<String>());
             fail("should fail on account of null operation types set");
         }
-        catch(IllegalArgumentException iae)
-        {
+        catch(IllegalArgumentException iae) {
             log.info(iae.getMessage());
         }
     }
@@ -84,7 +85,7 @@ public class SamplingIntervalImplTest extends SamplingIntervalTest
     public void nullAnnotationsList() throws Exception
     {
         SamplingIntervalImpl si = getSamplingIntervalToTest(
-            0L, 1L, new HashSet<Class<? extends Operation>>(Arrays.asList(MockOperation.class)), null);
+            0L, 1L, new HashSet<Class<? extends Operation>>(Collections.singletonList(MockOperation.class)), null);
 
         List<String> annotations = si.getAnnotations();
         assertNotNull(annotations);
@@ -95,7 +96,7 @@ public class SamplingIntervalImplTest extends SamplingIntervalTest
     public void setCounterValues_and_addAnnotation() throws Exception
     {
         SamplingIntervalImpl si = getSamplingIntervalToTest(
-            0L, 1L, new HashSet<Class<? extends Operation>>(Arrays.asList(MockOperation.class)), null);
+            0L, 1L, new HashSet<Class<? extends Operation>>(Collections.singletonList(MockOperation.class)), null);
 
 
         List<String> annotations = si.getAnnotations();

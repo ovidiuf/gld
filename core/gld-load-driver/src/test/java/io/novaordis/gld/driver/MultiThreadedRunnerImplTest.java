@@ -16,16 +16,14 @@
 
 package io.novaordis.gld.driver;
 
-import com.novaordis.gld.mock.MockConfiguration;
-import com.novaordis.gld.mock.MockSampler;
-import com.novaordis.gld.strategy.load.cache.MockLoadStrategy;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Service;
-import org.apache.log4j.Logger;
+import io.novaordis.gld.driver.sampler.Sampler;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -33,7 +31,7 @@ public class MultiThreadedRunnerImplTest extends MultiThreadedRunnerTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(MultiThreadedRunnerImplTest.class);
+    private static final Logger log = LoggerFactory.getLogger(MultiThreadedRunnerImplTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -46,23 +44,17 @@ public class MultiThreadedRunnerImplTest extends MultiThreadedRunnerTest
     @Test
     public void lifecycle_ExitGuardPreConfiguredToAllowExit() throws Exception  {
 
-        MockConfiguration mockConfiguration = new MockConfiguration();
-
-        int threads = 3;
-        mockConfiguration.setThreads(threads);
+        int threadCount = 3;
 
         MockService mockService = new MockService();
-        mockConfiguration.setService(mockService);
-
         MockSampler mockSampler = new MockSampler();
-        mockConfiguration.setSampler(mockSampler);
 
         int operations = 10;
         // configure the strategy to generate 10 operations and exit
         MockLoadStrategy mockLoadStrategy = new MockLoadStrategy(operations);
-        mockConfiguration.setLoadStrategy(mockLoadStrategy);
 
-        MultiThreadedRunnerImpl runner = new MultiThreadedRunnerImpl(mockConfiguration);
+        MultiThreadedRunnerImpl runner =
+                new MultiThreadedRunnerImpl(mockService, mockLoadStrategy, threadCount, mockSampler, false, -1L);
 
         // allow exit in advance, so we won't block on exit
         runner.getExitGuard().allowExit();
@@ -87,8 +79,11 @@ public class MultiThreadedRunnerImplTest extends MultiThreadedRunnerTest
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected MultiThreadedRunnerImpl getMultiThreadedRunnerToTest()  {
-        return new MultiThreadedRunnerImpl(null, null, 1, null, false, -1L);
+    protected MultiThreadedRunnerImpl getMultiThreadedRunnerToTest(
+            Service service, LoadStrategy loadStrategy, Sampler sampler, boolean background, int threadCount)
+            throws Exception {
+
+        return new MultiThreadedRunnerImpl(service, loadStrategy, threadCount, sampler, background, -1L);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

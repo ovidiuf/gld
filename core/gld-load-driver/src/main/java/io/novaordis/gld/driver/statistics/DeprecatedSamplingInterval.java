@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.statistics;
-
-import com.novaordis.gld.RedisFailure;
+package io.novaordis.gld.driver.statistics;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 @Deprecated
-public class DeprecatedSamplingInterval
-{
+public class DeprecatedSamplingInterval {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Object RENDEZVOUS_TOKEN = new Object();
@@ -43,7 +41,7 @@ public class DeprecatedSamplingInterval
 
     /**
      * An array with failure counters, indexed by failure type.
-     * @see RedisFailure
+     * @see io.novaordis.gld.driver.RedisFailure
      */
     private long[] failureCounters;
 
