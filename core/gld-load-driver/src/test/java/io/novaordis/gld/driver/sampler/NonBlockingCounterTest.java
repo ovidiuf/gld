@@ -19,7 +19,7 @@ package io.novaordis.gld.driver.sampler;
 import io.novaordis.gld.api.Operation;
 
 public class NonBlockingCounterTest extends CounterTest {
-    
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
