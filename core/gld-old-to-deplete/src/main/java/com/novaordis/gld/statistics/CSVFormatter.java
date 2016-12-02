@@ -16,12 +16,12 @@
 
 package com.novaordis.gld.statistics;
 
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.sampler.CounterValues;
-import com.novaordis.gld.sampler.SamplingConsumer;
-import com.novaordis.gld.sampler.SamplingInterval;
-import com.novaordis.gld.sampler.metrics.MeasureUnit;
-import com.novaordis.gld.sampler.metrics.Metric;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.driver.sampler.CounterValues;
+import io.novaordis.gld.driver.sampler.SamplingConsumer;
+import io.novaordis.gld.driver.sampler.SamplingInterval;
+import io.novaordis.gld.driver.sampler.metrics.MeasureUnit;
+import io.novaordis.gld.driver.sampler.metrics.Metric;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;

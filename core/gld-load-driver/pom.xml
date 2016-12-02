@@ -28,221 +28,42 @@
         <version>1.0.0-SNAPSHOT-1</version>
     </parent>
 
-    <groupId>io.novaordis.gld</groupId>
     <artifactId>gld-load-driver</artifactId>
     <packaging>jar</packaging>
 
-
-
-    <properties>
-        <java.version>1.7</java.version>
-        <test.scratch.directory>target/test-scratch</test.scratch.directory>
-        <test.log.directory>target</test.log.directory>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.build.timestamp.format>MM/dd/yy</maven.build.timestamp.format>
-        <release_date>${maven.build.timestamp}</release_date>
-
-        <!--
-            JDG Dependencies
-        -->
-
-        <!--
-            JDG 6.5.1
-        -->
-        <!--
-        <jdg.infinspan.client.hotrod.version>6.3.1.Final-redhat-1</jdg.infinspan.client.hotrod.version>
-        -->
-
-        <!--
-            JDG 7.0
-        -->
-        <jdg.infinspan.client.hotrod.version>8.3.0.Final-redhat-1</jdg.infinspan.client.hotrod.version>
-    </properties>
-
-
-    <repositories>
-        <repository>
-            <id>jboss-eap-7.0.0.GA-maven</id>
-            <url>file:///Users/ovidiu/runtime/jboss-eap-7.0.0.GA-maven-repository/maven-repository</url>
-        </repository>
-        <repository>
-            <id>jboss-datagrid-7.0-maven</id>
-            <url>file:///Users/ovidiu/runtime/jboss-datagrid-7.0.0-maven-repository/maven-repository</url>
-        </repository>
-    </repositories>
-
-
     <dependencies>
+
+        <!--
+            Inherited Dependencies
+        -->
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.novaordis.utilities</groupId>
+            <artifactId>novaordis-utilities</artifactId>
+        </dependency>
+
+        <!--
+            Dependencies Specific to this Module
+        -->
         <dependency>
             <groupId>io.novaordis.gld</groupId>
             <artifactId>gld-api</artifactId>
             <version>${project.version}</version>
         </dependency>
 
-
-
-
-
-
-
-
-
-
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.14</version>
-        </dependency>
-        <dependency>
-            <groupId>com.novaordis.ac</groupId>
-            <artifactId>async-collector</artifactId>
-            <version>1.4.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-pool2</artifactId>
-            <version>2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>io.novaordis.utilities</groupId>
-            <artifactId>novaordis-utilities</artifactId>
-            <version>4.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
-
-
-        <!--
-            JDG
-        -->
-
-        <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-client-hotrod</artifactId>
-            <version>${jdg.infinspan.client.hotrod.version}</version>
-        </dependency>
-
-        <!--
-            Needed by JDG 7
-        -->
-
-        <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-commons</artifactId>
-            <version>${jdg.infinspan.client.hotrod.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-query-dsl</artifactId>
-            <version>${jdg.infinspan.client.hotrod.version}</version>
-        </dependency>
-
-        <!--
-            redis
-        -->
-
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>2.6.0</version>
-        </dependency>
-
-        <!--
-            Dependencies required by the JMS (ActiveMQ) testing
-        -->
-
-
-        <dependency>
-            <groupId>javax.jms</groupId>
-            <artifactId>jms</artifactId>
-            <version>1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.6</version>
-        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.6</version>
+            <version>1.6.3</version>
         </dependency>
-
-        <!--
-            These dependencies are introduced by Spring and Embedded ActiveMQ
-        -->
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>4.1.6.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jms</artifactId>
-            <version>4.1.6.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.xbean</groupId>
-            <artifactId>xbean-spring</artifactId>
-            <version>3.6</version>
-        </dependency>
-
-        <!--
-           This is needed when we *don't* embed the broker.
-        -->
-        <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-client</artifactId>
-            <version>5.10.1</version>
-        </dependency>
-        <!--
-            This is needed by org.apache.activemq.xbean.PooledBrokerFactoryBean
-        -->
-        <!--
-        <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-all</artifactId>
-            <version>5.10.1</version>
-        </dependency>
-        -->
-        <!--
-        <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-all</artifactId>
-            -->
-            <!--
-               This one does not work.
-            -->
-            <!--
-            <version>5.9.0.redhat-611423</version>
-            -->
-            <!-- <version>5.9.0.redhat-610379</version> -->
-        <!--
-            <version>5.9.0</version>
-        </dependency>
-        -->
-        <!--
-
-        <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-pool</artifactId>
-            <version>5.9.0</version>
-        </dependency>
-
-        -->
-
-        <!--
-            END OF Spring/Embedded ActiveMQ Dependencies
-        -->
-
-
-
-
 
     </dependencies>
 

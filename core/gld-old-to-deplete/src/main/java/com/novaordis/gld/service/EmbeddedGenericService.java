@@ -19,8 +19,8 @@ package com.novaordis.gld.service;
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.ContentType;
 import com.novaordis.gld.Node;
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.Service;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.Service;
 import com.novaordis.gld.UserErrorException;
 import org.apache.log4j.Logger;
 
@@ -62,7 +62,7 @@ public class EmbeddedGenericService implements Service
     }
 
     /**
-     * @see com.novaordis.gld.Service#configure(List)
+     * @see Service#configure(List)
      */
     @Override
     public void configure(List<String> commandLineArguments) throws UserErrorException

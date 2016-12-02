@@ -19,7 +19,7 @@ package com.novaordis.gld.service.cache;
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.mock.MockConfiguration;
-import com.novaordis.gld.service.ServiceTest;
+import io.novaordis.gld.driver.ServiceTest;
 import org.junit.Test;
 
 import java.util.ArrayList;

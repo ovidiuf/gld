@@ -16,8 +16,8 @@
 
 package com.novaordis.gld.operations.jms;
 
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.Service;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.Service;
 import com.novaordis.gld.service.jms.JmsEndpoint;
 import com.novaordis.gld.strategy.load.jms.Destination;
 import com.novaordis.gld.strategy.load.jms.JmsLoadStrategy;
@@ -43,7 +43,7 @@ public abstract class JmsOperation implements Operation
     // Operation implementation ----------------------------------------------------------------------------------------
 
     /**
-     * @see com.novaordis.gld.Operation#perform(com.novaordis.gld.Service)
+     * @see Operation#perform(Service)
      */
     @Override
     public void perform(Service s) throws Exception

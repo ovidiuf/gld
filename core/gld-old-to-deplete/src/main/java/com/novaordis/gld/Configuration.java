@@ -16,7 +16,8 @@
 
 package com.novaordis.gld;
 
-import com.novaordis.gld.sampler.Sampler;
+import io.novaordis.gld.api.Service;
+import io.novaordis.gld.driver.sampler.Sampler;
 import io.novaordis.utilities.time.Duration;
 
 import java.util.List;

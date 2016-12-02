@@ -17,7 +17,7 @@
 package com.novaordis.gld.strategy.load.jms;
 
 import com.novaordis.gld.Configuration;
-import com.novaordis.gld.Operation;
+import io.novaordis.gld.api.Operation;
 import com.novaordis.gld.Util;
 import com.novaordis.gld.operations.jms.Send;
 

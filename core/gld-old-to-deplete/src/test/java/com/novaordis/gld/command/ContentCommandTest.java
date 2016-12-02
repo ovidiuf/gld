@@ -17,7 +17,7 @@
 package com.novaordis.gld.command;
 
 import com.novaordis.gld.Configuration;
-import com.novaordis.gld.Service;
+import io.novaordis.gld.api.Service;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.mock.MockCacheService;
 import com.novaordis.gld.mock.MockConfiguration;

@@ -16,7 +16,7 @@
 
 package com.novaordis.gld.mock;
 
-import com.novaordis.gld.Operation;
+import io.novaordis.gld.api.Operation;
 import org.apache.log4j.Logger;
 
 

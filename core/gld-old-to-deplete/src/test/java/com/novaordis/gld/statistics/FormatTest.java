@@ -16,7 +16,6 @@
 
 package com.novaordis.gld.statistics;
 
-import com.novaordis.gld.sampler.metrics.MeasureUnit;
 import org.apache.log4j.Logger;
 
 public abstract class FormatTest

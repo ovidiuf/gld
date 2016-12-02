@@ -17,7 +17,7 @@ Global Options _________________________________________________________________
 
     --service <service-type> Defines the service provider type. You can use either one of the
       pre-defined values  ("infinispan",  "activemq", etc.)  or a fully qualified  class name of a
-      class available in the class path and that implements com.novaordis.gld.Service. The default
+      class available in the class path and that implements io.novaordis.gld.api.Service. The default
       load strategy for caches is "WriteThenRead" and for JMS load is "Send".   More details about
       load strategies can be found below under the "Load Strategies" section.
 

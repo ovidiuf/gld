@@ -17,7 +17,7 @@
 package com.novaordis.gld.strategy.load.cache;
 
 import com.novaordis.gld.Configuration;
-import com.novaordis.gld.Operation;
+import io.novaordis.gld.api.Operation;
 import com.novaordis.gld.SingleThreadedRunner;
 import com.novaordis.gld.SingleThreadedRunnerTest;
 import com.novaordis.gld.command.Load;

@@ -21,14 +21,12 @@ import com.novaordis.gld.EmbeddedNode;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.mock.MockConfiguration;
-import com.novaordis.gld.service.ServiceTest;
-import io.novaordis.utilities.Files;
+import io.novaordis.gld.driver.ServiceTest;
 import io.novaordis.utilities.testing.Tests;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Test;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

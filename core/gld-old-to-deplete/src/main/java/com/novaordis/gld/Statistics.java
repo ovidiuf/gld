@@ -16,6 +16,8 @@
 
 package com.novaordis.gld;
 
+import io.novaordis.gld.api.Operation;
+
 public interface Statistics
 {
     boolean areWeDone();

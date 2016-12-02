@@ -18,7 +18,7 @@ package com.novaordis.gld.strategy.load.cache;
 
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.KeyStore;
-import com.novaordis.gld.Operation;
+import io.novaordis.gld.api.Operation;
 import com.novaordis.gld.StorageStrategy;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.Util;

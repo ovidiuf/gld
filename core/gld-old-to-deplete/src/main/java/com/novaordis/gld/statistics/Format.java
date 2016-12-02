@@ -16,9 +16,9 @@
 
 package com.novaordis.gld.statistics;
 
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.sampler.metrics.MeasureUnit;
-import com.novaordis.gld.sampler.metrics.Metric;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.driver.sampler.metrics.MeasureUnit;
+import io.novaordis.gld.driver.sampler.metrics.Metric;
 
 import java.util.List;
 import java.util.Set;

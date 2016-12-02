@@ -17,7 +17,8 @@
 package com.novaordis.gld;
 
 import com.novaordis.gld.command.Load;
-import com.novaordis.gld.sampler.Sampler;
+import io.novaordis.gld.api.Service;
+import io.novaordis.gld.driver.sampler.Sampler;
 import com.novaordis.gld.service.cache.EmbeddedCacheService;
 import com.novaordis.gld.service.jms.activemq.ActiveMQService;
 import io.novaordis.utilities.Files;

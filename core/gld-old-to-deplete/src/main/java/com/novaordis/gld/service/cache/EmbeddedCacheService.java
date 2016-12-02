@@ -19,7 +19,7 @@ package com.novaordis.gld.service.cache;
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.ContentType;
 import com.novaordis.gld.Node;
-import com.novaordis.gld.Operation;
+import io.novaordis.gld.api.Operation;
 import com.novaordis.gld.Util;
 import org.apache.log4j.Logger;
 

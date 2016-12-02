@@ -18,7 +18,7 @@ package com.novaordis.gld.strategy.load.jms;
 
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.LoadStrategy;
-import com.novaordis.gld.Operation;
+import io.novaordis.gld.api.Operation;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.command.Load;
 import com.novaordis.gld.mock.MockConfiguration;

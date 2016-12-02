@@ -16,7 +16,7 @@
 
 package com.novaordis.gld.strategy.load.cache;
 
-import com.novaordis.gld.Operation;
+import io.novaordis.gld.api.Operation;
 import com.novaordis.gld.strategy.load.LoadStrategyBase;
 
 import java.util.Set;

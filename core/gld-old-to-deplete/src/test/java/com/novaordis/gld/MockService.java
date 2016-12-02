@@ -16,6 +16,8 @@
 
 package com.novaordis.gld;
 
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.Service;
 import org.apache.log4j.Logger;
 
 import java.util.List;

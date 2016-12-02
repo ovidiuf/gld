@@ -21,7 +21,7 @@ import com.novaordis.gld.ContentType;
 import com.novaordis.gld.KeyStore;
 import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.MultiThreadedRunnerImpl;
-import com.novaordis.gld.Service;
+import io.novaordis.gld.api.Service;
 import com.novaordis.gld.StorageStrategy;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.Util;

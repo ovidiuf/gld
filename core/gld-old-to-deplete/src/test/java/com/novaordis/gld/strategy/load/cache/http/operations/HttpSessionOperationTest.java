@@ -17,7 +17,7 @@
 package com.novaordis.gld.strategy.load.cache.http.operations;
 
 import com.novaordis.gld.MockService;
-import com.novaordis.gld.Service;
+import io.novaordis.gld.api.Service;
 import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
 import org.apache.log4j.Logger;
 import org.junit.Test;

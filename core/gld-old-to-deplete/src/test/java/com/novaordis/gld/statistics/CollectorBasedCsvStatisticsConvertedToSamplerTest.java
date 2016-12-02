@@ -18,11 +18,11 @@ package com.novaordis.gld.statistics;
 
 import com.novaordis.gld.operations.cache.Read;
 import com.novaordis.gld.operations.cache.Write;
-import com.novaordis.gld.sampler.CounterValues;
-import com.novaordis.gld.sampler.MockSamplingConsumer;
-import com.novaordis.gld.sampler.Sampler;
-import com.novaordis.gld.sampler.SamplerImpl;
-import com.novaordis.gld.sampler.SamplingInterval;
+import io.novaordis.gld.driver.sampler.CounterValues;
+import io.novaordis.gld.driver.sampler.MockSamplingConsumer;
+import io.novaordis.gld.driver.sampler.Sampler;
+import io.novaordis.gld.driver.sampler.SamplerImpl;
+import io.novaordis.gld.driver.sampler.SamplingInterval;
 import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;
 import org.junit.Test;

@@ -16,7 +16,7 @@
 
 package com.novaordis.gld.statistics;
 
-import com.novaordis.gld.sampler.metrics.MeasureUnit;
+import io.novaordis.gld.driver.sampler.metrics.MeasureUnit;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 

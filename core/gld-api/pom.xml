@@ -28,9 +28,23 @@
         <version>1.0.0-SNAPSHOT-1</version>
     </parent>
 
-    <groupId>io.novaordis.gld</groupId>
     <artifactId>gld-api</artifactId>
     <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.novaordis.utilities</groupId>
+            <artifactId>novaordis-utilities</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
 

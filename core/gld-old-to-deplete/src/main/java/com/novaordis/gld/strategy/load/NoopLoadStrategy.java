@@ -19,7 +19,7 @@ package com.novaordis.gld.strategy.load;
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.KeyStore;
 import com.novaordis.gld.LoadStrategy;
-import com.novaordis.gld.Operation;
+import io.novaordis.gld.api.Operation;
 
 import java.util.List;
 import java.util.Set;

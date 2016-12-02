@@ -20,8 +20,9 @@ import com.novaordis.gld.service.cache.CacheService;
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.ContentType;
 import com.novaordis.gld.Node;
-import com.novaordis.gld.Operation;
+import io.novaordis.gld.api.Operation;
 import com.novaordis.gld.UserErrorException;
+import io.novaordis.gld.api.Service;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -79,7 +80,7 @@ public class MockCacheService implements CacheService {
     }
 
     /**
-     * @see com.novaordis.gld.Service#configure(List)
+     * @see Service#configure(List)
      */
     @Override
     public void configure(List<String> commandLineArguments) throws UserErrorException

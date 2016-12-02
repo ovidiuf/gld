@@ -20,7 +20,7 @@ import com.novaordis.gld.Configuration;
 import com.novaordis.gld.ContentType;
 import com.novaordis.gld.EmbeddedNode;
 import com.novaordis.gld.Node;
-import com.novaordis.gld.Operation;
+import io.novaordis.gld.api.Operation;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.service.cache.CacheServiceBase;
 import org.infinispan.client.hotrod.RemoteCache;

@@ -16,11 +16,11 @@
 
 package com.novaordis.gld.mock;
 
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.sampler.Counter;
-import com.novaordis.gld.sampler.Sampler;
-import com.novaordis.gld.sampler.SamplingConsumer;
-import com.novaordis.gld.sampler.metrics.Metric;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.driver.sampler.Counter;
+import io.novaordis.gld.driver.sampler.Sampler;
+import io.novaordis.gld.driver.sampler.SamplingConsumer;
+import io.novaordis.gld.driver.sampler.metrics.Metric;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;

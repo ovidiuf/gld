@@ -17,13 +17,13 @@
 package com.novaordis.gld.statistics;
 
 import com.novaordis.gld.UserErrorException;
-import com.novaordis.gld.sampler.Sampler;
-import com.novaordis.gld.sampler.SamplerImpl;
-import com.novaordis.gld.sampler.SamplingConsumer;
-import com.novaordis.gld.sampler.metrics.FreePhysicalMemorySize;
-import com.novaordis.gld.sampler.metrics.SystemCpuLoad;
-import com.novaordis.gld.sampler.metrics.SystemLoadAverage;
-import com.novaordis.gld.sampler.metrics.TotalPhysicalMemorySize;
+import io.novaordis.gld.driver.sampler.Sampler;
+import io.novaordis.gld.driver.sampler.SamplerImpl;
+import io.novaordis.gld.driver.sampler.SamplingConsumer;
+import io.novaordis.gld.driver.sampler.metrics.FreePhysicalMemorySize;
+import io.novaordis.gld.driver.sampler.metrics.SystemCpuLoad;
+import io.novaordis.gld.driver.sampler.metrics.SystemLoadAverage;
+import io.novaordis.gld.driver.sampler.metrics.TotalPhysicalMemorySize;
 
 import java.io.FileWriter;
 import java.io.IOException;

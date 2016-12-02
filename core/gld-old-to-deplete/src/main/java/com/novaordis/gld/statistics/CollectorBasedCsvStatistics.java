@@ -18,13 +18,12 @@ package com.novaordis.gld.statistics;
 
 import com.novaordis.ac.Collector;
 import com.novaordis.gld.LoadStrategy;
-import com.novaordis.gld.Operation;
+import io.novaordis.gld.api.Operation;
 import com.novaordis.gld.RedisFailure;
-import com.novaordis.gld.Service;
+import io.novaordis.gld.api.Service;
 import com.novaordis.gld.Statistics;
 import com.novaordis.gld.external.SystemStatistics;
 import com.novaordis.gld.operations.cache.Read;
-import org.apache.log4j.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
@@ -133,7 +132,7 @@ public class CollectorBasedCsvStatistics implements Statistics
     }
 
     /**
-     * @see Statistics#record(long, long, long, com.novaordis.gld.Operation, Throwable)
+     * @see Statistics#record(long, long, long, Operation, Throwable)
      */
     @Override
     public void record(long t0Ms, long t0Nano, long t1Nano, Operation op, Throwable t)

@@ -19,9 +19,10 @@ package com.novaordis.gld.service.jms.activemq;
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.ContentType;
 import com.novaordis.gld.Node;
-import com.novaordis.gld.Operation;
+import io.novaordis.gld.api.Operation;
 import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.operations.jms.Send;
+import io.novaordis.gld.api.Service;
 import io.novaordis.utilities.Files;
 import org.apache.log4j.Logger;
 import org.springframework.context.support.GenericXmlApplicationContext;
@@ -62,7 +63,7 @@ import java.util.List;
  * @see Configuration#waitForConsoleQuit()
  *
  */
-public class CollocatedBrokerService implements com.novaordis.gld.Service
+public class CollocatedBrokerService implements Service
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -125,7 +126,7 @@ public class CollocatedBrokerService implements com.novaordis.gld.Service
     }
 
     /**
-     * @see com.novaordis.gld.Service#configure(List)
+     * @see Service#configure(List)
      */
     @Override
     public void configure(List<String> commandLineArguments) throws UserErrorException
@@ -174,7 +175,7 @@ public class CollocatedBrokerService implements com.novaordis.gld.Service
     }
 
     /**
-     * @see com.novaordis.gld.Service#start()
+     * @see Service#start()
      *
      * @throws Exception
      * @throws UserErrorException contains a human readable message. Thrown on incomplete command line configuration.

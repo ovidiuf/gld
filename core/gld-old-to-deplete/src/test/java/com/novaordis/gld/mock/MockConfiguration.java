@@ -20,9 +20,9 @@ import com.novaordis.gld.Command;
 import com.novaordis.gld.Configuration;
 import com.novaordis.gld.LoadStrategy;
 import com.novaordis.gld.Node;
-import com.novaordis.gld.Service;
+import io.novaordis.gld.api.Service;
 import com.novaordis.gld.StorageStrategy;
-import com.novaordis.gld.sampler.Sampler;
+import io.novaordis.gld.driver.sampler.Sampler;
 import io.novaordis.utilities.time.Duration;
 
 import java.util.List;

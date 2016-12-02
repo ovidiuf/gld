@@ -18,8 +18,8 @@ package com.novaordis.gld.operations.cache;
 
 import com.novaordis.gld.service.cache.CacheService;
 import com.novaordis.gld.LoadStrategy;
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.Service;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.Service;
 
 public class Delete implements Operation
 {
@@ -45,7 +45,7 @@ public class Delete implements Operation
     // Operation implementation ----------------------------------------------------------------------------------------
 
     /**
-     * @see com.novaordis.gld.Operation#perform(com.novaordis.gld.Service)
+     * @see Operation#perform(Service)
      */
     @Override
     public void perform(Service cs) throws Exception

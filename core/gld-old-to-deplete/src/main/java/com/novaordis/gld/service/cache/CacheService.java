@@ -16,7 +16,7 @@
 
 package com.novaordis.gld.service.cache;
 
-import com.novaordis.gld.Service;
+import io.novaordis.gld.api.Service;
 
 import java.util.Set;
 

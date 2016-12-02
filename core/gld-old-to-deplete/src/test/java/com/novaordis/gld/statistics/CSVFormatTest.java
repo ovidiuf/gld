@@ -16,16 +16,16 @@
 
 package com.novaordis.gld.statistics;
 
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.sampler.metrics.FreePhysicalMemorySize;
-import com.novaordis.gld.sampler.metrics.MeasureUnit;
-import com.novaordis.gld.sampler.metrics.Metric;
-import com.novaordis.gld.sampler.metrics.MetricType;
-import com.novaordis.gld.sampler.metrics.MockMeasureUnit;
-import com.novaordis.gld.sampler.metrics.MockMetric;
-import com.novaordis.gld.sampler.metrics.SystemCpuLoad;
-import com.novaordis.gld.sampler.metrics.SystemLoadAverage;
-import com.novaordis.gld.sampler.metrics.TotalPhysicalMemorySize;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.driver.sampler.metrics.FreePhysicalMemorySize;
+import io.novaordis.gld.driver.sampler.metrics.MeasureUnit;
+import io.novaordis.gld.driver.sampler.metrics.Metric;
+import io.novaordis.gld.driver.sampler.metrics.MetricType;
+import io.novaordis.gld.driver.sampler.metrics.MockMeasureUnit;
+import io.novaordis.gld.driver.sampler.metrics.MockMetric;
+import io.novaordis.gld.driver.sampler.metrics.SystemCpuLoad;
+import io.novaordis.gld.driver.sampler.metrics.SystemLoadAverage;
+import io.novaordis.gld.driver.sampler.metrics.TotalPhysicalMemorySize;
 import com.novaordis.gld.strategy.load.cache.AnotherTypeOfMockOperation;
 import com.novaordis.gld.strategy.load.cache.MockOperation;
 import org.apache.log4j.Logger;

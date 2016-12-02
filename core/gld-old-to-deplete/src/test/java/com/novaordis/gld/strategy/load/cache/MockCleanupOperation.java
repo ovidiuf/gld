@@ -16,9 +16,6 @@
 
 package com.novaordis.gld.strategy.load.cache;
 
-import com.novaordis.gld.LoadStrategy;
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.Service;
 import org.apache.log4j.Logger;
 
 public class MockCleanupOperation extends MockOperation {

@@ -17,8 +17,8 @@
 package com.novaordis.gld.strategy.load.cache.http.operations;
 
 import com.novaordis.gld.LoadStrategy;
-import com.novaordis.gld.Operation;
-import com.novaordis.gld.Service;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.Service;
 import com.novaordis.gld.service.cache.infinispan.InfinispanService;
 import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
 import org.infinispan.client.hotrod.RemoteCache;

@@ -20,7 +20,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Generic Load Driver Runtime Core</name>
+    <name>Generic Load Driver Runtime Core OLD TO DEPLETE</name>
 
     <parent>
         <groupId>io.novaordis.gld</groupId>
