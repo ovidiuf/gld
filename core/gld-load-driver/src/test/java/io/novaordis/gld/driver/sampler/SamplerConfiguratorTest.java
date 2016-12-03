@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.statistics;
+package io.novaordis.gld.driver.sampler;
 
-import com.novaordis.gld.UserErrorException;
+import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.testing.Tests;
-import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import static org.junit.Assert.assertTrue;
@@ -30,7 +31,7 @@ public class SamplerConfiguratorTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(SamplerConfiguratorTest.class);
+    private static final Logger log = LoggerFactory.getLogger(SamplerConfiguratorTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.statistics;
+package io.novaordis.gld.driver.sampler;
 
-import com.novaordis.gld.UserErrorException;
-import io.novaordis.gld.driver.sampler.Sampler;
-import io.novaordis.gld.driver.sampler.SamplerImpl;
-import io.novaordis.gld.driver.sampler.SamplingConsumer;
 import io.novaordis.gld.driver.sampler.metrics.FreePhysicalMemorySize;
 import io.novaordis.gld.driver.sampler.metrics.SystemCpuLoad;
 import io.novaordis.gld.driver.sampler.metrics.SystemLoadAverage;
 import io.novaordis.gld.driver.sampler.metrics.TotalPhysicalMemorySize;
+import io.novaordis.gld.driver.statistics.CSVFormatter;
+import io.novaordis.utilities.UserErrorException;
 
 import java.io.FileWriter;
 import java.io.IOException;
