@@ -52,7 +52,7 @@ public class TextFileStorageStrategyTest extends StorageStrategyTest
         Tests.cleanup();
     }
 
-    // configure() -----------------------------------------------------------------------------------------------------
+    // init() -----------------------------------------------------------------------------------------------------
 
     @Test
     public void configure_NoFileName() throws Exception

@@ -50,7 +50,7 @@ public class MultiThreadedRunnerImplTest extends MultiThreadedRunnerTest
         MockSampler mockSampler = new MockSampler();
 
         int operations = 10;
-        // configure the strategy to generate 10 operations and exit
+        // init the strategy to generate 10 operations and exit
         MockLoadStrategy mockLoadStrategy = new MockLoadStrategy(operations);
 
         MultiThreadedRunnerImpl runner =

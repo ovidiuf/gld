@@ -56,6 +56,7 @@ public abstract class LoadStrategyBase implements LoadStrategy {
         }
 
         if (from < 0){
+
             //
             // this is an invalid situation
             //

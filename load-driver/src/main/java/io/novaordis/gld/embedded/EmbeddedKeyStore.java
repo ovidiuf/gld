@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,111 +14,71 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver.keystore;
+package io.novaordis.gld.embedded;
 
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadDriver;
 
-import java.util.Iterator;
-import java.util.Set;
-
 /**
- * This implementation reads the entire key space in memory on startup and then keeps cycling through it.
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 12/2/16
  */
+public class EmbeddedKeyStore implements KeyStore {
 
-public class SetKeyStore implements KeyStore
-{
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private volatile boolean started;
-
-    private Iterator<String> iterator;
-
-    private int size;
+    private LoadDriver loadDriver;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    /**
-     * Auto-starting.
-     */
-    public SetKeyStore(Set<String> keys) throws Exception
-    {
-        this.size = keys.size();
-        this.iterator = keys.iterator();
-        start();
+    public EmbeddedKeyStore(LoadDriver loadDriver) {
+
+        this.loadDriver = loadDriver;
     }
 
     // KeyStore implementation -----------------------------------------------------------------------------------------
 
     @Override
-    public boolean isReadOnly()
-    {
-        return true;
+    public void start() throws Exception {
+        throw new RuntimeException("start() NOT YET IMPLEMENTED");
     }
 
-    /**
-     * @see KeyStore#store(String)
-     */
     @Override
-    public void store(String key) throws Exception
-    {
-        throw new IllegalStateException("this is a read-only keystore, cannot store");
+    public void stop() throws Exception {
+        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
     }
 
-    /**
-     * @see KeyStore#get()
-     */
     @Override
-    public synchronized String get()
-    {
-        if (!iterator.hasNext())
-        {
-            return null;
-        }
+    public boolean isStarted() {
+        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
+    }
 
-        size --;
-        return iterator.next();
+    @Override
+    public boolean isReadOnly() {
+        throw new RuntimeException("isReadOnly() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void store(String key) throws Exception {
+        throw new RuntimeException("store() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public String get() {
+        throw new RuntimeException("get() NOT YET IMPLEMENTED");
     }
 
     @Override
     public LoadDriver getLoadDriver() {
-        throw new RuntimeException("getLoadDriver() NOT YET IMPLEMENTED");
-    }
 
-    @Override
-    public void start() throws Exception
-    {
-        started = true;
-    }
-
-    @Override
-    public void stop() throws Exception
-    {
-        started = false;
-    }
-
-    @Override
-    public boolean isStarted()
-    {
-        return started;
+        return loadDriver;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public int size()
-    {
-        return size;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "SetKeyStore[" + size + "]";
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

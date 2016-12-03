@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,55 +16,31 @@
 
 package io.novaordis.gld.driver;
 
-import io.novaordis.gld.api.todiscard.Command;
-import io.novaordis.utilities.UserErrorException;
-
-@Deprecated
-public class Main {
+/**
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 12/2/16
+ */
+public class LoadDriverImplTest extends LoadDriverTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    public static void main(String[] args) throws Exception {
-
-        try {
-
-            // ConfigurationImpl c = new ConfigurationImpl(args);
-
-            // Command command = c.getCommand();
-
-            Command command = null;
-
-            command.execute();
-
-            System.exit(0);
-        }
-        catch(UserErrorException e) {
-
-            System.out.println("[error]: " + e.getMessage());
-
-            System.exit(1);
-        }
-        catch(Throwable t) {
-
-            System.out.println("");
-            System.out.println("unexpected failure, send an error report to ovidiu@novaordis.com");
-            System.out.println("");
-            t.printStackTrace();
-
-            System.exit(2);
-        }
-    }
-
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    // Tests -----------------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
+    @Override
+    protected LoadDriverImpl getLoadDriverToTest() throws Exception {
+
+        return new LoadDriverImpl();
+    }
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------

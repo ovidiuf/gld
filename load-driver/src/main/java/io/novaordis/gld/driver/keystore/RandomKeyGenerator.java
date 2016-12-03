@@ -17,6 +17,7 @@
 package io.novaordis.gld.driver.keystore;
 
 import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.driver.Util;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -95,6 +96,11 @@ public class RandomKeyGenerator implements KeyStore
         //noinspection UnnecessaryLocalVariable
         String result = Util.getRandomKey(ThreadLocalRandom.current(), keyLength);
         return result;
+    }
+
+    @Override
+    public LoadDriver getLoadDriver() {
+        throw new RuntimeException("getLoadDriver() NOT YET IMPLEMENTED");
     }
 
     @Override

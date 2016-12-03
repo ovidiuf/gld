@@ -250,7 +250,7 @@ public class SingleThreadedRunnerTest {
 
             @Override
             public void configure(Configuration configuration, List<String> arguments, int from) throws Exception {
-                throw new RuntimeException("configure() NOT YET IMPLEMENTED");
+                throw new RuntimeException("init() NOT YET IMPLEMENTED");
             }
 
             @Override
@@ -306,7 +306,7 @@ public class SingleThreadedRunnerTest {
 
             @Override
             public void configure(List<String> commandLineArguments) throws UserErrorException {
-                throw new RuntimeException("configure() NOT YET IMPLEMENTED");
+                throw new RuntimeException("init() NOT YET IMPLEMENTED");
             }
 
             @Override

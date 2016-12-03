@@ -20,6 +20,7 @@ import com.novaordis.ac.Collector;
 import com.novaordis.ac.CollectorFactory;
 import com.novaordis.ac.Handler;
 import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.api.LoadDriver;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -74,6 +75,11 @@ public class WriteOnlyFileKeyStore implements KeyStore
     public String get()
     {
         throw new IllegalStateException("this is a write-only keystore, cannot get");
+    }
+
+    @Override
+    public LoadDriver getLoadDriver() {
+        throw new RuntimeException("getLoadDriver() NOT YET IMPLEMENTED");
     }
 
     @Override

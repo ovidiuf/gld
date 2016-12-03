@@ -28,6 +28,10 @@ import java.util.List;
  */
 public interface Service {
 
+    LoadDriver getLoadDriver();
+
+    LoadStrategy getLoadStrategy();
+
     void setConfiguration(Configuration c);
 
     void setTarget(List<Node> nodes);
@@ -61,4 +65,7 @@ public interface Service {
     boolean isStarted();
 
     void perform(Operation o) throws Exception;
+
+
+
 }

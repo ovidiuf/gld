@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,52 +14,43 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver;
+package io.novaordis.gld.embedded.operation;
 
-import io.novaordis.gld.api.todiscard.Command;
-import io.novaordis.utilities.UserErrorException;
+import io.novaordis.gld.api.LoadStrategy;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.Service;
 
-@Deprecated
-public class Main {
+/**
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 12/2/16
+ */
+public class SyntheticDelete implements Operation {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    public static void main(String[] args) throws Exception {
-
-        try {
-
-            // ConfigurationImpl c = new ConfigurationImpl(args);
-
-            // Command command = c.getCommand();
-
-            Command command = null;
-
-            command.execute();
-
-            System.exit(0);
-        }
-        catch(UserErrorException e) {
-
-            System.out.println("[error]: " + e.getMessage());
-
-            System.exit(1);
-        }
-        catch(Throwable t) {
-
-            System.out.println("");
-            System.out.println("unexpected failure, send an error report to ovidiu@novaordis.com");
-            System.out.println("");
-            t.printStackTrace();
-
-            System.exit(2);
-        }
-    }
-
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    // Operation implementation ----------------------------------------------------------------------------------------
+
+    @Override
+    public String getKey() {
+        throw new RuntimeException("getKey() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void perform(Service s) throws Exception {
+        throw new RuntimeException("perform() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public LoadStrategy getLoadStrategy() {
+        throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
+    }
+
 
     // Public ----------------------------------------------------------------------------------------------------------
 

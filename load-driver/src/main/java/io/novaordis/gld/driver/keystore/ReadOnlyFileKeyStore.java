@@ -17,6 +17,7 @@
 package io.novaordis.gld.driver.keystore;
 
 import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.api.LoadDriver;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -101,6 +102,11 @@ public class ReadOnlyFileKeyStore implements KeyStore
 
             return s;
         }
+    }
+
+    @Override
+    public LoadDriver getLoadDriver() {
+        throw new RuntimeException("getLoadDriver() NOT YET IMPLEMENTED");
     }
 
     @Override

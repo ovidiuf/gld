@@ -25,10 +25,20 @@ function build-classpath() {
 
 function main() {
 
+    local debug=""
+
+    while [ -n "$1" ]; do
+
+        if [ "$1" = "-d" -o "$1" = "--debug" ]; then
+            debug="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
+        fi
+        shift
+    done
+
     local classpath
     classpath=$(build-classpath) || exit 1
 
-    echo java -cp ${classpath} io.novaordis.gld.Main
+    java ${debug} -cp ${classpath} io.novaordis.gld.Main
 
 }
 

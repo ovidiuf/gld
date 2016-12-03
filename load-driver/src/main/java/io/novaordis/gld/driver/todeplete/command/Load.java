@@ -243,7 +243,7 @@ public class Load extends CommandBase
 //            }
 //
 //            // give the default strategy a chance to pick up configuration from command line
-//            loadStrategy.configure(configuration, getArguments(), 0);
+//            loadStrategy.init(configuration, getArguments(), 0);
 //        }
 //
 //        configuration.setLoadStrategy(loadStrategy);

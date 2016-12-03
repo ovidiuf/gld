@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,46 +14,39 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver;
+package io.novaordis.gld;
 
-import io.novaordis.gld.api.todiscard.Command;
-import io.novaordis.utilities.UserErrorException;
+import io.novaordis.gld.api.LoadDriver;
+import io.novaordis.gld.driver.LoadDriverImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Deprecated
+/**
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 12/2/16
+ */
 public class Main {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    private static final Logger log = LoggerFactory.getLogger(Main.class);
+
     // Static ----------------------------------------------------------------------------------------------------------
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
+
+        LoadDriver ld = new LoadDriverImpl();
 
         try {
 
-            // ConfigurationImpl c = new ConfigurationImpl(args);
+            ld.init();
 
-            // Command command = c.getCommand();
+            ld.run();
 
-            Command command = null;
-
-            command.execute();
-
-            System.exit(0);
-        }
-        catch(UserErrorException e) {
-
-            System.out.println("[error]: " + e.getMessage());
-
-            System.exit(1);
         }
         catch(Throwable t) {
 
-            System.out.println("");
-            System.out.println("unexpected failure, send an error report to ovidiu@novaordis.com");
-            System.out.println("");
-            t.printStackTrace();
-
-            System.exit(2);
+            throw new RuntimeException("NOT YET IMPLEMENTED: " + t);
         }
     }
 

@@ -47,6 +47,7 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
     private int threadCount;
     private boolean isBackground;
     private long singleThreadedRunnerSleepMs;
+    private Duration duration;
 
     private List<SingleThreadedRunner> singleThreadedRunners;
 
@@ -76,6 +77,8 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
         this.singleThreadedRunners = new ArrayList<>(threadCount);
         this.exitGuard = new ExitGuard();
         this.running = false;
+
+        this.duration = null; // run indefinitiely
     }
 
     // MultiThreadRunner implementation --------------------------------------------------------------------------------
@@ -170,7 +173,7 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
 
             for (int i = 0; i < threadCount; i++) {
 
-                String name = "CLD Runner " + i;
+                String name = "GLD Runner " + i;
 
                 SingleThreadedRunner r = new SingleThreadedRunner(
                         name, service, loadStrategy, sampler, barrier, durationExpired, singleThreadedRunnerSleepMs);
@@ -240,12 +243,14 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
 
     @Override
     public Duration getDuration() {
-        throw new RuntimeException("getDuration() NOT YET IMPLEMENTED");
+
+        return duration;
     }
 
     @Override
     public void setDuration(Duration d) {
-        throw new RuntimeException("setDuration() NOT YET IMPLEMENTED");
+
+        this.duration = d;
     }
 
     @Override

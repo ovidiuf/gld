@@ -75,7 +75,7 @@ public class Delete extends CommandBase
 //
 //        loadStrategy = new DeleteLoadStrategy(keysToDelete);
 //
-//        loadStrategy.configure(config, new ArrayList<String>(), 0);
+//        loadStrategy.init(config, new ArrayList<String>(), 0);
 //        config.setLoadStrategy(loadStrategy);
 
         throw new RuntimeException("RETURN HERE");

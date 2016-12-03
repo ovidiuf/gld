@@ -55,7 +55,7 @@ public class HierarchicalStorageStrategyTest extends StorageStrategyTest
         Tests.cleanup();
     }
 
-    // configure() -----------------------------------------------------------------------------------------------------
+    // init() -----------------------------------------------------------------------------------------------------
 
     @Test
     public void configure_NoRootDirectoryName() throws Exception

@@ -41,4 +41,6 @@ public interface KeyStore {
      * @return the next key from the store, or null if there are no keys.
      */
     String get();
+
+    LoadDriver getLoadDriver();
 }

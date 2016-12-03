@@ -87,7 +87,7 @@ public abstract class MultiThreadedRunnerTest {
         assertFalse(r.isRunning());
 
         //
-        // configure it
+        // init it
         //
 
         //

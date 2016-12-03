@@ -68,7 +68,7 @@ public class MockService implements Service {
     @Override
     public void configure(List<String> commandLineArguments) throws UserErrorException
     {
-        throw new RuntimeException("configure() NOT YET IMPLEMENTED");
+        throw new RuntimeException("init() NOT YET IMPLEMENTED");
     }
 
     @Override

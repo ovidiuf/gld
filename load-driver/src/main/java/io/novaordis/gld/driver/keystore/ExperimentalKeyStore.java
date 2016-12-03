@@ -17,6 +17,7 @@
 package io.novaordis.gld.driver.keystore;
 
 import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.driver.todeplete.storage.HierarchicalStorageStrategy;
 
 import java.util.Iterator;
@@ -72,6 +73,11 @@ public class ExperimentalKeyStore implements KeyStore
         }
 
         return null;
+    }
+
+    @Override
+    public LoadDriver getLoadDriver() {
+        throw new RuntimeException("getLoadDriver() NOT YET IMPLEMENTED");
     }
 
     @Override
