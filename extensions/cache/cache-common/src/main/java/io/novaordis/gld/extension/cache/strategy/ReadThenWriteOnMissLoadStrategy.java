@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.load.cache;
+package io.novaordis.gld.extension.cache.strategy;
 
-import com.novaordis.gld.Configuration;
-import com.novaordis.gld.KeyStore;
+import io.novaordis.gld.api.LoadStrategyBase;
 import io.novaordis.gld.api.Operation;
-import com.novaordis.gld.Util;
-import com.novaordis.gld.command.Load;
-import com.novaordis.gld.keystore.RandomKeyGenerator;
-import com.novaordis.gld.keystore.ReadOnlyFileKeyStore;
-import com.novaordis.gld.operations.cache.Read;
-import com.novaordis.gld.operations.cache.Write;
-import com.novaordis.gld.strategy.load.LoadStrategyBase;
+import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.gld.api.todiscard.Read;
+import io.novaordis.gld.api.todiscard.Write;
 
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 /**
@@ -61,7 +55,7 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase
     // LoadStrategy implementation -------------------------------------------------------------------------------------
 
     /**
-     * @see com.novaordis.gld.LoadStrategy#configure(Configuration, java.util.List, int)
+     * @see io.novaordis.gld.api.LoadStrategy#configure(Configuration, java.util.List, int)
      */
     @Override
     public void configure(Configuration conf, List<String> arguments, int from) throws Exception
@@ -73,37 +67,43 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase
         boolean useDifferentValues = conf.isUseDifferentValues();
 
         // TODO this is fishy, refactor both here and in JmsLoadStrategy
-        Load load = (Load)getConfiguration().getCommand();
-        Long maxOperations = null;
+        // Load load = (Load)getConfiguration().getCommand();
+        Object load = null;
 
-        if (load != null)
-        {
-            maxOperations = load.getMaxOperations();
+        if (load == null) {
+            throw new RuntimeException("RETURN HERE");
         }
 
-        String keyStoreFile = conf.getKeyStoreFile();
-        KeyStore keyStore;
-
-        if (keyStoreFile == null)
-        {
-            keyStore = new RandomKeyGenerator(keySize, maxOperations);
-        }
-        else
-        {
-            keyStore = new ReadOnlyFileKeyStore(keyStoreFile);
-            keyStore.start();
-        }
-
-        setKeyStore(keyStore);
-
-        syntheticValue = Util.getRandomValue(
-            new Random(System.currentTimeMillis() + 17L), valueSize, useDifferentValues);
-
-        configured = true;
+//        Long maxOperations = null;
+//
+//        if (load != null)
+//        {
+//            maxOperations = load.getMaxOperations();
+//        }
+//
+//        String keyStoreFile = conf.getKeyStoreFile();
+//        KeyStore keyStore;
+//
+//        if (keyStoreFile == null)
+//        {
+//            keyStore = new RandomKeyGenerator(keySize, maxOperations);
+//        }
+//        else
+//        {
+//            keyStore = new ReadOnlyFileKeyStore(keyStoreFile);
+//            keyStore.start();
+//        }
+//
+//        setKeyStore(keyStore);
+//
+//        syntheticValue = Util.getRandomValue(
+//            new Random(System.currentTimeMillis() + 17L), valueSize, useDifferentValues);
+//
+//        configured = true;
     }
 
     /**
-     * @see com.novaordis.gld.LoadStrategy#next(Operation, String, boolean)
+     * @see io.novaordis.gld.api.LoadStrategy#next(Operation, String, boolean)
      */
     public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown)
     {
@@ -163,13 +163,13 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase
     /**
      * @return a non-null next Read if the key store has not run out of read operations, or null if it has.
      */
-    private Read getNextRead()
-    {
+    private Read getNextRead() {
+
         String key =  getKeyStore().get();
 
-        if (key == null)
-        {
+        if (key == null) {
             // the key store ran out of keys, so we ran out of operations, return null
+
             return null;
         }
 

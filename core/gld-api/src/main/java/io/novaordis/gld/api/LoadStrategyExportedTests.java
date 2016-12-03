@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,7 +17,6 @@
 package io.novaordis.gld.api;
 
 import io.novaordis.gld.api.todiscard.Configuration;
-import io.novaordis.gld.api.todiscard.MockConfiguration;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +26,17 @@ import java.util.List;
 
 import static org.junit.Assert.fail;
 
-public abstract class LoadStrategyTest {
+/**
+ * API call tests to be exported to the implementation modules.
+ *
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 12/2/16
+ */
+public abstract class LoadStrategyExportedTests {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = LoggerFactory.getLogger(LoadStrategyTest.class);
+    private static final Logger log = LoggerFactory.getLogger(LoadStrategyExportedTests.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -41,6 +46,8 @@ public abstract class LoadStrategyTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    // Exported Tests --------------------------------------------------------------------------------------------------
+
     // constructors ----------------------------------------------------------------------------------------------------
 
     @Test
@@ -48,7 +55,7 @@ public abstract class LoadStrategyTest {
 
         LoadStrategy s = getLoadStrategyToTest(null, null, -1);
 
-        Configuration c = new MockConfiguration();
+        Configuration c = getConfigurationToTestWith();
 
         s.configure(c, null, -1);
 
@@ -62,9 +69,11 @@ public abstract class LoadStrategyTest {
 
         List<String> args = Arrays.asList("blah", "blah", "blah");
 
+        Configuration c = getConfigurationToTestWith();
+
         try {
 
-            s.configure(new MockConfiguration(), args, -1);
+            s.configure(c, args, -1);
             fail("should fail with ArrayIndexOutOfBoundsException because from is lower than acceptable");
         }
         catch(ArrayIndexOutOfBoundsException e) {
@@ -118,7 +127,10 @@ public abstract class LoadStrategyTest {
      *     values.
      */
     protected abstract LoadStrategy getLoadStrategyToTest(Configuration config, List<String> arguments, int from)
-        throws Exception;
+            throws Exception;
+
+    protected abstract Configuration getConfigurationToTestWith() throws Exception;
+
 
     // Private ---------------------------------------------------------------------------------------------------------
 

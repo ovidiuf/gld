@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.load;
+package io.novaordis.gld.api;
 
-import com.novaordis.gld.Configuration;
-import com.novaordis.gld.KeyStore;
-import com.novaordis.gld.LoadStrategy;
-import io.novaordis.gld.api.Operation;
+
+import io.novaordis.gld.api.todiscard.Configuration;
 
 import java.util.List;
 import java.util.Set;
 
-public class NoopLoadStrategy implements LoadStrategy
-{
+public class NoopLoadStrategy implements LoadStrategy {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
