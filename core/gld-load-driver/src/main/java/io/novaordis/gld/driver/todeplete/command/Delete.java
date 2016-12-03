@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.command;
+package io.novaordis.gld.driver.todeplete.command;
 
-import com.novaordis.gld.service.cache.CacheService;
-import com.novaordis.gld.Configuration;
-import com.novaordis.gld.LoadStrategy;
-import com.novaordis.gld.MultiThreadedRunnerImpl;
-import com.novaordis.gld.UserErrorException;
-import com.novaordis.gld.strategy.load.cache.DeleteLoadStrategy;
+import io.novaordis.gld.api.LoadStrategy;
+import io.novaordis.gld.api.todiscard.Configuration;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -58,45 +54,53 @@ public class Delete extends CommandBase
     @Override
     public void initialize() throws Exception
     {
-        processCommandSpecificArguments(getArguments());
+//        processCommandSpecificArguments(getArguments());
+//
+//        Configuration config = getConfiguration();
+//        CacheService cacheService = (CacheService) config.getService();
+//
+//        // we need to have a valid cache service
+//        if (cacheService == null)
+//        {
+//            throw new IllegalStateException("null cache service");
+//        }
+//
+//        // start the cache if not started
+//        if (!cacheService.isStarted())
+//        {
+//            cacheService.start();
+//        }
+//
+//        // wire in a "DeleteKeys" strategy
+//
+//        loadStrategy = new DeleteLoadStrategy(keysToDelete);
+//
+//        loadStrategy.configure(config, new ArrayList<String>(), 0);
+//        config.setLoadStrategy(loadStrategy);
 
-        Configuration config = getConfiguration();
-        CacheService cacheService = (CacheService) config.getService();
-
-        // we need to have a valid cache service
-        if (cacheService == null)
-        {
-            throw new IllegalStateException("null cache service");
-        }
-
-        // start the cache if not started
-        if (!cacheService.isStarted())
-        {
-            cacheService.start();
-        }
-
-        // wire in a "DeleteKeys" strategy
-
-        loadStrategy = new DeleteLoadStrategy(keysToDelete);
-
-        loadStrategy.configure(config, new ArrayList<String>(), 0);
-        config.setLoadStrategy(loadStrategy);
+        throw new RuntimeException("RETURN HERE");
     }
 
     @Override
     public boolean isInitialized()
     {
-        return getConfiguration().getLoadStrategy() != null;
+//        return getConfiguration().getLoadStrategy() != null;
+//
+        throw new RuntimeException("RETURN HERE");
+
     }
 
     @Override
     public void execute() throws Exception
     {
-        insureInitialized();
-
-        new MultiThreadedRunnerImpl(getConfiguration()).run();
+//        insureInitialized();
+//
+//        new MultiThreadedRunnerImpl(getConfiguration()).run();
 
         // the command will exit when all parallel threads finish - no exit guard here ...
+
+        throw new RuntimeException("RETURN HERE");
+
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -124,32 +128,34 @@ public class Delete extends CommandBase
 
     private void processCommandSpecificArguments(List<String> args)
     {
-        for(Iterator<String> i = args.iterator(); i.hasNext(); )
-        {
-            String crt = i.next();
-            if ("--key-count".equals(crt))
-            {
-                if (!i.hasNext())
-                {
-                    throw new UserErrorException("--key-count should be followed by an positive integer");
-                }
+//        for(Iterator<String> i = args.iterator(); i.hasNext(); )
+//        {
+//            String crt = i.next();
+//            if ("--key-count".equals(crt))
+//            {
+//                if (!i.hasNext())
+//                {
+//                    throw new UserErrorException("--key-count should be followed by an positive integer");
+//                }
+//
+//                crt = i.next();
+//
+//                try
+//                {
+//                    keysToDelete = Integer.parseInt(crt);
+//                }
+//                catch(Exception e)
+//                {
+//                    throw new UserErrorException("invalid --key-count value: " + crt, e);
+//                }
+//            }
+//            else
+//            {
+//                throw new UserErrorException("unknown 'delete' argument: " + crt);
+//            }
+//        }
 
-                crt = i.next();
-
-                try
-                {
-                    keysToDelete = Integer.parseInt(crt);
-                }
-                catch(Exception e)
-                {
-                    throw new UserErrorException("invalid --key-count value: " + crt, e);
-                }
-            }
-            else
-            {
-                throw new UserErrorException("unknown 'delete' argument: " + crt);
-            }
-        }
+        throw new RuntimeException("RETURN HERE");
     }
 
     // Inner classes ---------------------------------------------------------------------------------------------------

@@ -14,9 +14,20 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld;
+package io.novaordis.gld.driver.todeplete.command;
 
-public class UserErrorException extends RuntimeException
+import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.utilities.UserErrorException;
+
+/**
+ * Use this command to stop gld running in "background" mode, where it reads a scenario from configuration, and starts
+ * sending load into target, writing statistics into local files until it is explicitly stopped with the Stop command
+ * or it runs out of load.
+ *
+ * @see Start
+ * @see Status
+ */
+public class Stop extends CommandBase
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -26,17 +37,32 @@ public class UserErrorException extends RuntimeException
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public UserErrorException(String message)
+    public Stop(Configuration c) throws UserErrorException
     {
-        super(message);
+        super(c);
     }
 
-    public UserErrorException(String message, Throwable cause)
+    // Command implementation ------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean isInitialized()
     {
-        super(message, cause);
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void execute() throws Exception
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString()
+    {
+        return "Stop[" + Integer.toHexString(System.identityHashCode(this)) + "]";
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.command;
+package io.novaordis.gld.driver.todeplete.command;
 
-import com.novaordis.gld.Configuration;
-import com.novaordis.gld.UserErrorException;
-import com.novaordis.gld.Util;
+import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.utilities.UserErrorException;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -49,17 +48,19 @@ public class GenerateKeys extends CommandBase
     @Override
     public void initialize() throws Exception
     {
-        keyCount = getKeyCount();
+//        keyCount = getKeyCount();
+//
+//        Configuration c = getConfiguration();
+//
+//        keySize = c.getKeySize();
+//        fileName = c.getKeyStoreFile();
+//
+//        if (fileName == null)
+//        {
+//            throw new UserErrorException("a key store file name is required, use --key-store-file");
+//        }
 
-        Configuration c = getConfiguration();
-
-        keySize = c.getKeySize();
-        fileName = c.getKeyStoreFile();
-
-        if (fileName == null)
-        {
-            throw new UserErrorException("a key store file name is required, use --key-store-file");
-        }
+        throw new RuntimeException("RETURN HERE");
     }
 
     @Override
@@ -77,31 +78,33 @@ public class GenerateKeys extends CommandBase
     @Override
     public void execute() throws Exception
     {
-        insureInitialized();
+//        insureInitialized();
+//
+//        System.out.println("generating " + keyCount + " " + keySize + "-character keys into " + fileName);
+//
+//        Random random = new Random(System.currentTimeMillis());
+//
+//        BufferedWriter bw = null;
+//
+//        try
+//        {
+//            bw = new BufferedWriter(new FileWriter(fileName));
+//
+//            for(int i = 0; i < keyCount; i ++)
+//            {
+//                bw.write(Util.getRandomKey(random, keySize));
+//                bw.newLine();
+//            }
+//        }
+//        finally
+//        {
+//            if (bw != null)
+//            {
+//                bw.close();
+//            }
+//        }
+        throw new RuntimeException("RETURN HERE");
 
-        System.out.println("generating " + keyCount + " " + keySize + "-character keys into " + fileName);
-
-        Random random = new Random(System.currentTimeMillis());
-
-        BufferedWriter bw = null;
-
-        try
-        {
-            bw = new BufferedWriter(new FileWriter(fileName));
-
-            for(int i = 0; i < keyCount; i ++)
-            {
-                bw.write(Util.getRandomKey(random, keySize));
-                bw.newLine();
-            }
-        }
-        finally
-        {
-            if (bw != null)
-            {
-                bw.close();
-            }
-        }
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

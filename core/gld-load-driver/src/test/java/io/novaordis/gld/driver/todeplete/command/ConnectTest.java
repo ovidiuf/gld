@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.command;
+package io.novaordis.gld.driver.todeplete.command;
 
-import com.novaordis.gld.Configuration;
+import io.novaordis.gld.api.todiscard.Configuration;
 import org.apache.log4j.Logger;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class ConnectTest extends CommandTest
 {

@@ -14,36 +14,58 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.command;
+package io.novaordis.gld.driver.todeplete.command;
 
-import com.novaordis.gld.Configuration;
-import com.novaordis.gld.Util;
+import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.utilities.UserErrorException;
 
-public class Version extends CommandBase
-{
+import java.util.ArrayList;
+import java.util.List;
+
+abstract class CommandBase implements Command {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private Configuration conf;
+    private List<String> arguments;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Version(Configuration c)
+    protected CommandBase(Configuration conf)
     {
-        super(c);
+        this.conf = conf;
+
+        // establish bidirectional relationship
+
+        throw new RuntimeException("NOT YET IMPLEMENTED: bidirectional relationship not implemented");
+//        conf.setCommand(this);
+//
+//        this.arguments = new ArrayList<>();
     }
 
     // Command implementation ------------------------------------------------------------------------------------------
 
+    /**
+     * Some commands do not need initialization, so make this a noop.
+     */
     @Override
-    public boolean isRemote()
+    public void initialize() throws Exception
     {
-        return false;
+        // noop
     }
 
     @Override
-    public boolean isInitialized()
+    public void addArgument(String s)
+    {
+        arguments.add(s);
+    }
+
+    @Override
+    public boolean isRemote()
     {
         return true;
     }
@@ -52,18 +74,42 @@ public class Version extends CommandBase
     public void execute() throws Exception
     {
         insureInitialized();
-
-        String version = Util.getVersion();
-        String releaseDate = Util.getReleaseDate();
-
-        System.out.println("version " + version + ", released on " + releaseDate);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    public Configuration getConfiguration() {
+
+        return conf;
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected List<String> getArguments()
+    {
+        return arguments;
+    }
+
+    /**
+     * @exception IllegalStateException if the command is not initialized.
+     */
+    protected void insureInitialized()
+    {
+        if (!isInitialized())
+        {
+            throw new IllegalStateException(this + " was not initialized, thus it cannot be executed");
+        }
+    }
+
+    protected void failOnUnknownArguments() throws UserErrorException
+    {
+        if (!arguments.isEmpty())
+        {
+            throw new UserErrorException("unknown argument: \"" + arguments.get(0) + "\"");
+        }
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

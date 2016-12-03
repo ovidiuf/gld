@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld;
+package io.novaordis.gld.driver.todeplete.command;
 
 public interface Command
 {
@@ -28,7 +28,7 @@ public interface Command
      *
      * @see Command#execute()
      *
-     * @throws com.novaordis.gld.UserErrorException on configuration errors.
+     * @throws io.novaordis.utilities.UserErrorException on configuration errors.
      */
     void initialize() throws Exception;
 

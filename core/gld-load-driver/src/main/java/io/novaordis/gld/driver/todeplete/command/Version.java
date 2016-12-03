@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.command;
+package io.novaordis.gld.driver.todeplete.command;
 
-import com.novaordis.gld.Configuration;
-import org.apache.log4j.Logger;
+import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.gld.driver.Util;
 
-public class VersionTest extends CommandTest
+public class Version extends CommandBase
 {
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = Logger.getLogger(VersionTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -31,17 +29,41 @@ public class VersionTest extends CommandTest
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public Version(Configuration c)
+    {
+        super(c);
+    }
+
+    // Command implementation ------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean isRemote()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean isInitialized()
+    {
+        return true;
+    }
+
+    @Override
+    public void execute() throws Exception
+    {
+        insureInitialized();
+
+        String version = Util.getVersion();
+        String releaseDate = Util.getReleaseDate();
+
+        System.out.println("version " + version + ", released on " + releaseDate);
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected Version getCommandToTest(Configuration c)
-    {
-        return new Version(c);
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

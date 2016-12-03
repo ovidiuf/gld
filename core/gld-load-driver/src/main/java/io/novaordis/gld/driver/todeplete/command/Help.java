@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.command;
+package io.novaordis.gld.driver.todeplete.command;
 
-import com.novaordis.gld.Configuration;
-import org.apache.log4j.Logger;
+import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.gld.driver.Util;
 
-public class HelpCommandTest extends CommandTest
+public class Help extends CommandBase
 {
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = Logger.getLogger(HelpCommandTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -31,17 +29,37 @@ public class HelpCommandTest extends CommandTest
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public Help(Configuration c)
+    {
+        super(c);
+    }
+
+    // Command implementation ------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean isInitialized()
+    {
+        return true;
+    }
+
+    @Override
+    public boolean isRemote()
+    {
+        return false;
+    }
+
+    @Override
+    public void execute() throws Exception
+    {
+        insureInitialized();
+        Util.displayContentFromClasspath("HELP");
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected Help getCommandToTest(Configuration c)
-    {
-        return new Help(c);
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

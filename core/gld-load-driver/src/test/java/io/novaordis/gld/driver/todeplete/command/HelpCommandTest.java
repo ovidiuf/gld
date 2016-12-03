@@ -14,25 +14,16 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.command;
+package io.novaordis.gld.driver.todeplete.command;
 
-import com.novaordis.gld.Configuration;
-import com.novaordis.gld.ContentType;
-import com.novaordis.gld.UserErrorException;
+import io.novaordis.gld.api.todiscard.Configuration;
+import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-
-/**
- * Use this command to start gld in "background" mode, where it reads a scenario from configuration, and starts
- * sending load into target, writing statistics into local files until it is explicitly stopped with the Stop command
- * or it runs out of load.
- *
- * @see Stop
- * @see Status
- */
-public class Start extends Load
+public class HelpCommandTest extends CommandTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(HelpCommandTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -40,23 +31,17 @@ public class Start extends Load
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Start(Configuration c) throws UserErrorException
-    {
-        // we read the configuration from the file
-        super(c, new ArrayList<String>(), -1);
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
-
-    @Override
-    public String toString()
-    {
-        return "Start[" + Integer.toHexString(System.identityHashCode(this)) + "]";
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected Help getCommandToTest(Configuration c)
+    {
+        return new Help(c);
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

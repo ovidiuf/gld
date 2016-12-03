@@ -14,24 +14,16 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.command;
+package io.novaordis.gld.driver.todeplete.command;
 
-import com.novaordis.gld.Command;
-import com.novaordis.gld.Configuration;
-import com.novaordis.gld.mock.MockConfiguration;
+import io.novaordis.gld.api.todiscard.Configuration;
 import org.apache.log4j.Logger;
-import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-public abstract class CommandTest
+public class VersionTest extends CommandTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(CommandTest.class);
+    private static final Logger log = Logger.getLogger(VersionTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -41,33 +33,15 @@ public abstract class CommandTest
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Test
-    public void weFailIfWeAreNotInitialized() throws Exception
-    {
-        Command c = getCommandToTest(new MockConfiguration());
-
-        if (c.isInitialized())
-        {
-            log.info(c + " initialized by default");
-            return;
-        }
-
-        try
-        {
-            c.execute();
-            fail("should fail with IllegalStateException because we're not initialized");
-        }
-        catch(IllegalStateException e)
-        {
-            log.info(e.getMessage());
-        }
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected abstract Command getCommandToTest(Configuration c);
+    @Override
+    protected Version getCommandToTest(Configuration c)
+    {
+        return new Version(c);
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

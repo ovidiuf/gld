@@ -14,24 +14,16 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.command;
+package io.novaordis.gld.driver.todeplete.command;
 
-import com.novaordis.gld.Configuration;
-import com.novaordis.gld.UserErrorException;
+import io.novaordis.gld.api.todiscard.Configuration;
+import org.apache.log4j.Logger;
 
-import java.util.List;
-
-/**
- * Use this command to stop gld running in "background" mode, where it reads a scenario from configuration, and starts
- * sending load into target, writing statistics into local files until it is explicitly stopped with the Stop command
- * or it runs out of load.
- *
- * @see Start
- * @see Status
- */
-public class Stop extends CommandBase
+public abstract class CommandTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = Logger.getLogger(CommandTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -39,36 +31,35 @@ public class Stop extends CommandBase
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Stop(Configuration c) throws UserErrorException
-    {
-        super(c);
-    }
-
-    // Command implementation ------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean isInitialized()
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void execute() throws Exception
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Override
-    public String toString()
-    {
-        return "Stop[" + Integer.toHexString(System.identityHashCode(this)) + "]";
-    }
+//    @Test
+//    public void weFailIfWeAreNotInitialized() throws Exception
+//    {
+//        Command c = getCommandToTest(new MockConfiguration());
+//
+//        if (c.isInitialized())
+//        {
+//            log.info(c + " initialized by default");
+//            return;
+//        }
+//
+//        try
+//        {
+//            c.execute();
+//            fail("should fail with IllegalStateException because we're not initialized");
+//        }
+//        catch(IllegalStateException e)
+//        {
+//            log.info(e.getMessage());
+//        }
+//    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected abstract Command getCommandToTest(Configuration c);
 
     // Private ---------------------------------------------------------------------------------------------------------
 

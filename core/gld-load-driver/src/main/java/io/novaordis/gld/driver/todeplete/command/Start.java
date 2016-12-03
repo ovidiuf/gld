@@ -14,11 +14,22 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.command;
+package io.novaordis.gld.driver.todeplete.command;
 
-import com.novaordis.gld.ConfigurationImpl;
+import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.utilities.UserErrorException;
 
-public class Test extends CommandBase
+import java.util.ArrayList;
+
+/**
+ * Use this command to start gld in "background" mode, where it reads a scenario from configuration, and starts
+ * sending load into target, writing statistics into local files until it is explicitly stopped with the Stop command
+ * or it runs out of load.
+ *
+ * @see Stop
+ * @see Status
+ */
+public class Start extends Load
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -28,32 +39,19 @@ public class Test extends CommandBase
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Test(ConfigurationImpl c)
+    public Start(Configuration c) throws UserErrorException
     {
-        super(c);
-    }
-
-    // Command implementation ------------------------------------------------------------------------------------------
-
-    @Override
-    public void initialize() throws Exception
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public boolean isInitialized()
-    {
-        return false;
-    }
-
-    @Override
-    public void execute() throws Exception
-    {
-        insureInitialized();
+        // we read the configuration from the file
+        super(c, new ArrayList<String>(), -1);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString()
+    {
+        return "Start[" + Integer.toHexString(System.identityHashCode(this)) + "]";
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

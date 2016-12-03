@@ -14,20 +14,11 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.command;
+package io.novaordis.gld.driver.todeplete.command;
 
-import com.novaordis.gld.Configuration;
-import com.novaordis.gld.UserErrorException;
+import io.novaordis.gld.api.todiscard.Configuration;
 
-import java.util.List;
-
-/**
- * Use this command to get the status of a gld instance running in "background" mode.
- *
- * @see Start
- * @see Stop
- */
-public class Status extends CommandBase
+public class Test extends CommandBase
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -37,7 +28,7 @@ public class Status extends CommandBase
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Status(Configuration c) throws UserErrorException
+    public Test(Configuration c)
     {
         super(c);
     }
@@ -45,24 +36,24 @@ public class Status extends CommandBase
     // Command implementation ------------------------------------------------------------------------------------------
 
     @Override
-    public boolean isInitialized()
+    public void initialize() throws Exception
     {
         throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public boolean isInitialized()
+    {
+        return false;
     }
 
     @Override
     public void execute() throws Exception
     {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        insureInitialized();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    @Override
-    public String toString()
-    {
-        return "Status[" + Integer.toHexString(System.identityHashCode(this)) + "]";
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
