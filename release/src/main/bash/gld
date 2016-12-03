@@ -1,3 +1,35 @@
 #!/bin/bash
 
+function build-classpath() {
 
+    local lib_dir=$(dirname $0)/../lib
+
+    [ -d ${lib_dir} ] || { echo "library directory ${lib_dir} not found" 1>&2; exit 1; }
+
+    local classpath="";
+
+    for i in $(find ${lib_dir} -name *.jar); do
+        [ -z "${classpath}" ] && classpath=${i} || classpath=${classpath}:${i}
+    done
+
+    [ -z "${classpath}" ] && { echo "no jar files found in ${lib_dir}" 1>&2; exit 1; }
+
+    #
+    # place the directory itself (and the log4j.xml) at the front of the classpath
+    #
+
+    classpath="${lib_dir}:${classpath}"
+
+    echo ${classpath}
+}
+
+function main() {
+
+    local classpath
+    classpath=$(build-classpath) || exit 1
+
+    echo java -cp ${classpath} io.novaordis.gld.Main
+
+}
+
+main $@
