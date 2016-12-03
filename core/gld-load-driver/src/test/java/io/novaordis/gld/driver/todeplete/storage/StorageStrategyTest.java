@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.todiscard;
+package io.novaordis.gld.driver.todeplete.storage;
 
+import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.gld.api.todiscard.StorageStrategy;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 

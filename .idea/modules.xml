@@ -9,7 +9,6 @@
       <module fileurl="file://$PROJECT_DIR$/extensions/cache/jdg/jdg-7.0/gld-jdg-7.0.iml" filepath="$PROJECT_DIR$/extensions/cache/jdg/jdg-7.0/gld-jdg-7.0.iml" group="gld-jdg and modules" />
       <module fileurl="file://$PROJECT_DIR$/extensions/cache/jdg/jdg-common/gld-jdg-common.iml" filepath="$PROJECT_DIR$/extensions/cache/jdg/jdg-common/gld-jdg-common.iml" group="gld-jdg and modules" />
       <module fileurl="file://$PROJECT_DIR$/core/gld-load-driver/gld-load-driver.iml" filepath="$PROJECT_DIR$/core/gld-load-driver/gld-load-driver.iml" group="gld-core and modules" />
-      <module fileurl="file://$PROJECT_DIR$/core/gld-old-to-deplete/gld-old-to-deplete.iml" filepath="$PROJECT_DIR$/core/gld-old-to-deplete/gld-old-to-deplete.iml" group="gld-core and modules" />
       <module fileurl="file://$PROJECT_DIR$/release/release.iml" filepath="$PROJECT_DIR$/release/release.iml" />
     </modules>
   </component>

@@ -39,7 +39,6 @@
     <modules>
         <module>gld-api</module>
         <module>gld-load-driver</module>
-        <module>gld-old-to-deplete</module>
     </modules>
 
     <dependencyManagement>
