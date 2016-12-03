@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.storage;
+package io.novaordis.gld.driver.keystore;
 
-import com.novaordis.gld.Configuration;
-import com.novaordis.gld.StorageStrategy;
-import java.util.List;
+import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.driver.todeplete.storage.HierarchicalStorageStrategy;
 
-abstract class StorageStrategyBase implements StorageStrategy
+import java.util.Iterator;
+
+/**
+ * Experimental - interacting with a HierarchicalStorageStrategy. Must refactor.
+
+ */
+public class ExperimentalKeyStore implements KeyStore
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -28,80 +33,79 @@ abstract class StorageStrategyBase implements StorageStrategy
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Configuration configuration;
-    private boolean canRead;
-    private boolean canWrite;
+    private HierarchicalStorageStrategy hss;
+    private Iterator<String> keyIterator;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    protected StorageStrategyBase()
+    public ExperimentalKeyStore(HierarchicalStorageStrategy hss) throws Exception
     {
-        this.canRead = true;
-        this.canWrite = true;
+        this.hss = hss;
     }
 
-    // StorageStrategy implementation ----------------------------------------------------------------------------------
+    // KeyStore implementation -----------------------------------------------------------------------------------------
+
+    @Override
+    public boolean isReadOnly()
+    {
+        return true;
+    }
 
     /**
-     * @see com.novaordis.gld.StorageStrategy#configure(Configuration, List, int)
+     * @see KeyStore#store(String)
      */
     @Override
-    public void configure(Configuration configuration, List<String> arguments, int from) throws Exception
+    public void store(String key) throws Exception
     {
-        if (configuration == null)
+        throw new IllegalStateException("this is a read-only keystore, cannot store");
+    }
+
+    /**
+     * @see KeyStore#get()
+     */
+    @Override
+    public synchronized String get()
+    {
+        if (keyIterator.hasNext())
         {
-            throw new IllegalArgumentException("null configuration");
+            return keyIterator.next();
         }
 
-        if (arguments == null)
-        {
-            throw new IllegalArgumentException("null argument list");
-        }
-
-        if (!arguments.isEmpty() && (from < 0 || from >= arguments.size()))
-        {
-            throw new ArrayIndexOutOfBoundsException("invalid array index: " + from);
-        }
-
-        this.configuration = configuration;
+        return null;
     }
 
     @Override
-    public boolean isRead()
+    public void start() throws Exception
     {
-        return canRead;
+        // read all the keys from storage
+        keyIterator = hss.getKeys().iterator();
     }
 
     @Override
-    public boolean isWrite()
+    public void stop() throws Exception
     {
-        return canWrite;
+        keyIterator = null;
+    }
+
+    @Override
+    public boolean isStarted()
+    {
+        return keyIterator != null;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public void setRead(boolean b)
+    public String getValue(String key) throws Exception
     {
-        this.canRead = b;
-    }
-
-    public void setWrite(boolean b)
-    {
-        this.canWrite = b;
+        return hss.retrieve(key);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected Configuration getConfiguration()
-    {
-        return configuration;
-    }
-
     // Private ---------------------------------------------------------------------------------------------------------
 
     // Inner classes ---------------------------------------------------------------------------------------------------
-
 
 }

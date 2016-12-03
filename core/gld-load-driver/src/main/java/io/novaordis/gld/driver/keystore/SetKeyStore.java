@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.keystore;
+package io.novaordis.gld.driver.keystore;
 
-import com.novaordis.gld.KeyStore;
+import io.novaordis.gld.api.KeyStore;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * This implementation reads the entire key space in memory on startup and then keeps cycling through it.
  */
 
-public class ReadOnlyFileKeyStore implements KeyStore
+public class SetKeyStore implements KeyStore
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -37,32 +34,21 @@ public class ReadOnlyFileKeyStore implements KeyStore
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private volatile boolean started;
-    private String fileName;
 
-    private List<String> keys;
+    private Iterator<String> iterator;
 
-    private int currentKey;
+    private int size;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public ReadOnlyFileKeyStore(String fileName) throws Exception
-    {
-        this(fileName, new ArrayList<String>());
-    }
-
     /**
-     * For testing only.
+     * Auto-starting.
      */
-    public ReadOnlyFileKeyStore(List<String> keys) throws Exception
+    public SetKeyStore(Set<String> keys) throws Exception
     {
-        this(null, keys);
-    }
-
-    private ReadOnlyFileKeyStore(String fileName, List<String> keys) throws Exception
-    {
-        this.fileName = fileName;
-        this.keys = keys;
-        currentKey = 0;
+        this.size = keys.size();
+        this.iterator = keys.iterator();
+        start();
     }
 
     // KeyStore implementation -----------------------------------------------------------------------------------------
@@ -74,7 +60,7 @@ public class ReadOnlyFileKeyStore implements KeyStore
     }
 
     /**
-     * @see com.novaordis.gld.KeyStore#store(String)
+     * @see KeyStore#store(String)
      */
     @Override
     public void store(String key) throws Exception
@@ -83,76 +69,30 @@ public class ReadOnlyFileKeyStore implements KeyStore
     }
 
     /**
-     * @see com.novaordis.gld.KeyStore#get()
+     * @see KeyStore#get()
      */
     @Override
-    public String get()
+    public synchronized String get()
     {
-        if (keys.isEmpty())
+        if (!iterator.hasNext())
         {
             return null;
         }
 
-        synchronized (this)
-        {
-            String s = keys.get(currentKey);
-
-            currentKey = (currentKey + 1) % keys.size();
-
-            return s;
-        }
+        size --;
+        return iterator.next();
     }
 
     @Override
     public void start() throws Exception
     {
-        if (fileName == null && keys.size() > 0)
-        {
-            // already preloaded
-            started = true;
-        }
-        else
-        {
-            File keyFile = new File(fileName);
-
-            BufferedReader br = null;
-
-            try
-            {
-                br = new BufferedReader(new FileReader(keyFile));
-
-                String line;
-
-                while ((line = br.readLine()) != null)
-                {
-                    keys.add(line);
-                }
-
-                currentKey = 0;
-
-                System.out.println(keys.size() + " keys loaded in memory");
-
-                started = true;
-            }
-            finally
-            {
-                if (br != null)
-                {
-                    br.close();
-                }
-            }
-        }
+        started = true;
     }
 
     @Override
     public void stop() throws Exception
     {
-        if (started)
-        {
-            keys.clear();
-            started = false;
-            currentKey = 0;
-        }
+        started = false;
     }
 
     @Override
@@ -163,10 +103,15 @@ public class ReadOnlyFileKeyStore implements KeyStore
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    public int size()
+    {
+        return size;
+    }
+
     @Override
     public String toString()
     {
-        return fileName + " (" + (started ? keys.size() + " keys" : "NOT STARTED") + ")";
+        return "SetKeyStore[" + size + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

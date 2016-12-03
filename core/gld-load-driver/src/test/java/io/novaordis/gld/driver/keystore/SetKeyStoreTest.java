@@ -14,22 +14,24 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.storage;
+package io.novaordis.gld.driver.keystore;
 
-import com.novaordis.gld.StorageStrategy;
-import com.novaordis.gld.mock.MockConfiguration;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
-import static junit.framework.TestCase.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-public abstract class StorageStrategyTest
+public class SetKeyStoreTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(StorageStrategyTest.class);
+    private static final Logger log = Logger.getLogger(SetKeyStoreTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -40,64 +42,58 @@ public abstract class StorageStrategyTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void insureConfigureBehavesConsistentlyOnNullList() throws Exception
+    public void lifeCycle() throws Exception
     {
-        StorageStrategy ss = getStorageStrategyToTest();
+        Set<String> keys = new HashSet<>();
+        keys.add("KEY1");
+        keys.add("KEY2");
+        keys.add("KEY3");
+
+        Set<String> expected = new HashSet<>(keys);
+
+        SetKeyStore sks = new SetKeyStore(keys);
+
+        assertTrue(sks.isReadOnly());
+        assertTrue(sks.isStarted());
+
+        assertEquals(3, sks.size());
 
         try
         {
-            ss.configure(new MockConfiguration(), null, -1);
-            fail("should be failing with IllegalArgumentException");
-        }
-        catch(IllegalArgumentException e)
-        {
-            log.info(e.getMessage());
-        }
-    }
-
-    @Test
-    public void invalidFromValue() throws Exception
-    {
-        StorageStrategy ss = getStorageStrategyToTest();
-
-        try
-        {
-            ss.configure(new MockConfiguration(), new ArrayList<String>(), -1);
-            fail("should be failing with ArrayIndexOutOfBoundsException");
-        }
-        catch(ArrayIndexOutOfBoundsException e)
-        {
-            log.info(e.getMessage());
-        }
-    }
-
-    @Test
-    public void insureStartFailsIfNotConfigured() throws Exception
-    {
-        StorageStrategy ss = getStorageStrategyToTest();
-
-        if (ss.isConfigured())
-        {
-            log.info(ss + " already configured, OK");
-            return;
-        }
-
-        try
-        {
-            ss.start();
-            fail("should be failing with IllegalStateException");
+            sks.store("blah");
+            fail("should throw IllegalStateException, we're a read only key store");
         }
         catch(IllegalStateException e)
         {
             log.info(e.getMessage());
         }
+
+        String key = sks.get();
+
+        assertTrue(expected.contains(key));
+        expected.remove(key);
+        assertEquals(2, sks.size());
+
+        key = sks.get();
+
+        assertTrue(expected.contains(key));
+        expected.remove(key);
+        assertEquals(1, sks.size());
+
+        key = sks.get();
+
+        assertTrue(expected.contains(key));
+        expected.remove(key);
+        assertEquals(0, sks.size());
+
+        assertNull(sks.get());
+
+        assertEquals(0, sks.size());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    protected abstract StorageStrategy getStorageStrategyToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

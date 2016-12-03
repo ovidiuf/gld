@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.storage;
+package io.novaordis.gld.driver.todeplete.storage;
 
-import com.novaordis.gld.Configuration;
+import io.novaordis.gld.api.todiscard.Configuration;
 
 import java.util.List;
 import java.util.Set;

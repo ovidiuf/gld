@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.keystore;
+package io.novaordis.gld.driver.keystore;
 
-import com.novaordis.gld.KeyStore;
+import com.novaordis.ac.Collector;
+import com.novaordis.ac.CollectorFactory;
+import com.novaordis.ac.Handler;
+import io.novaordis.gld.api.KeyStore;
 
-import java.util.Iterator;
-import java.util.Set;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 
-/**
- * This implementation reads the entire key space in memory on startup and then keeps cycling through it.
- */
-
-public class SetKeyStore implements KeyStore
+public class WriteOnlyFileKeyStore implements KeyStore
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -33,66 +33,71 @@ public class SetKeyStore implements KeyStore
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private BufferedWriter bw = null;
+
     private volatile boolean started;
 
-    private Iterator<String> iterator;
+    private Collector asyncWriter;
 
-    private int size;
+    private String fileName;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    /**
-     * Auto-starting.
-     */
-    public SetKeyStore(Set<String> keys) throws Exception
+    public WriteOnlyFileKeyStore(String fileName) throws Exception
     {
-        this.size = keys.size();
-        this.iterator = keys.iterator();
-        start();
+        this.fileName = fileName;
     }
 
-    // KeyStore implementation -----------------------------------------------------------------------------------------
+    // Configuration implementation ------------------------------------------------------------------------------------
 
     @Override
     public boolean isReadOnly()
     {
-        return true;
+        return false;
     }
 
     /**
-     * @see com.novaordis.gld.KeyStore#store(String)
+     * @see KeyStore#store(String)
      */
     @Override
     public void store(String key) throws Exception
     {
-        throw new IllegalStateException("this is a read-only keystore, cannot store");
-    }
-
-    /**
-     * @see com.novaordis.gld.KeyStore#get()
-     */
-    @Override
-    public synchronized String get()
-    {
-        if (!iterator.hasNext())
+        if (!started)
         {
-            return null;
+            throw new IllegalArgumentException(this + " not started");
         }
 
-        size --;
-        return iterator.next();
+        asyncWriter.handOver(key);
+    }
+
+    @Override
+    public String get()
+    {
+        throw new IllegalStateException("this is a write-only keystore, cannot get");
     }
 
     @Override
     public void start() throws Exception
     {
         started = true;
+
+        File keyFile = new File(fileName);
+
+        bw = new BufferedWriter(new FileWriter(keyFile));
+
+        asyncWriter = CollectorFactory.getInstance("KEY STORAGE", Thread.NORM_PRIORITY + 1);
+        asyncWriter.registerHandler(new WritingHandler());
     }
 
     @Override
     public void stop() throws Exception
     {
-        started = false;
+        if (started)
+        {
+            bw.close();
+            asyncWriter.dispose();
+            started = false;
+        }
     }
 
     @Override
@@ -103,22 +108,41 @@ public class SetKeyStore implements KeyStore
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public int size()
-    {
-        return size;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "SetKeyStore[" + size + "]";
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private class WritingHandler implements Handler
+    {
+        @Override
+        public boolean canHandle(Object o)
+        {
+            return true;
+        }
+
+        @Override
+        public void handle(long timestamp, String originatorThreadName, Object o)
+        {
+            String key = (String)o;
+
+            try
+            {
+                bw.write(key);
+                bw.newLine();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void close()
+        {
+        }
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

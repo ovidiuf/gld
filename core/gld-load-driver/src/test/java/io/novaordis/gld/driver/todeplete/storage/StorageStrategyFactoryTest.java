@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.storage;
+package io.novaordis.gld.driver.todeplete.storage;
 
-import com.novaordis.gld.UserErrorException;
-import com.novaordis.gld.mock.MockConfiguration;
+import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.utilities.UserErrorException;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
@@ -49,7 +49,10 @@ public class StorageStrategyFactoryTest
     {
         try
         {
-            StorageStrategyFactory.fromArguments(new MockConfiguration(), Arrays.asList("blah"), 0);
+            //            Configuration c = new MockConfiguration();
+            Configuration c = null;
+
+            StorageStrategyFactory.fromArguments(c, Arrays.asList("blah"), 0);
             fail("should have failed with IllegalArgumentException");
         }
         catch(IllegalArgumentException e)
@@ -66,7 +69,10 @@ public class StorageStrategyFactoryTest
 
         try
         {
-            StorageStrategyFactory.fromArguments(new MockConfiguration(), args, 0);
+            //            Configuration c = new MockConfiguration();
+            Configuration c = null;
+
+            StorageStrategyFactory.fromArguments(c, args, 0);
             fail("should fail with UserErrorException, missing storage strategy");
         }
         catch(UserErrorException e)
@@ -88,7 +94,10 @@ public class StorageStrategyFactoryTest
 
         try
         {
-            StorageStrategyFactory.fromArguments(new MockConfiguration(), args, 0);
+            //            Configuration c = new MockConfiguration();
+            Configuration c = null;
+
+            StorageStrategyFactory.fromArguments(c, args, 0);
             fail("should fail with UserErrorException, no such storage strategy");
         }
         catch(UserErrorException e)
@@ -107,8 +116,11 @@ public class StorageStrategyFactoryTest
         args.add("--storage-strategy");
         args.add("stdout");
 
+        //            Configuration c = new MockConfiguration();
+        Configuration c = null;
+
         StdoutStorageStrategy ss =
-            (StdoutStorageStrategy)StorageStrategyFactory.fromArguments(new MockConfiguration(), args, 0);
+            (StdoutStorageStrategy)StorageStrategyFactory.fromArguments(c, args, 0);
         assertNotNull(ss);
     }
 
@@ -119,8 +131,11 @@ public class StorageStrategyFactoryTest
         args.add("--storage-strategy");
         args.add("Stdout");
 
+        //            Configuration c = new MockConfiguration();
+        Configuration c = null;
+
         StdoutStorageStrategy ss =
-            (StdoutStorageStrategy)StorageStrategyFactory.fromArguments(new MockConfiguration(), args, 0);
+            (StdoutStorageStrategy)StorageStrategyFactory.fromArguments(c, args, 0);
         assertNotNull(ss);
     }
 
@@ -135,8 +150,12 @@ public class StorageStrategyFactoryTest
         args.add("something");
         args.add("post-argument");
 
+        //            Configuration c = new MockConfiguration();
+        Configuration c = null;
+
+
         MockStorageStrategy mss =
-            (MockStorageStrategy)StorageStrategyFactory.fromArguments(new MockConfiguration(), args, 1);
+            (MockStorageStrategy)StorageStrategyFactory.fromArguments(c, args, 1);
         assertNotNull(mss);
 
         assertEquals("something", mss.getMockArgument());

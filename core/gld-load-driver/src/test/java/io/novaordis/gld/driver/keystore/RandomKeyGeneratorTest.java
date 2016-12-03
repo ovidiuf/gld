@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.keystore;
+package io.novaordis.gld.driver.keystore;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class SetKeyStoreTest
+public class RandomKeyGeneratorTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(SetKeyStoreTest.class);
+    private static final Logger log = Logger.getLogger(RandomKeyGeneratorTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -42,54 +39,56 @@ public class SetKeyStoreTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void lifeCycle() throws Exception
+    public void store() throws Exception
     {
-        Set<String> keys = new HashSet<>();
-        keys.add("KEY1");
-        keys.add("KEY2");
-        keys.add("KEY3");
-
-        Set<String> expected = new HashSet<>(keys);
-
-        SetKeyStore sks = new SetKeyStore(keys);
-
-        assertTrue(sks.isReadOnly());
-        assertTrue(sks.isStarted());
-
-        assertEquals(3, sks.size());
+        RandomKeyGenerator rkg = new RandomKeyGenerator(10);
 
         try
         {
-            sks.store("blah");
-            fail("should throw IllegalStateException, we're a read only key store");
+            rkg.store("doesnotmatter");
+            fail("should fail with IllegalStateException");
         }
         catch(IllegalStateException e)
         {
             log.info(e.getMessage());
         }
-
-        String key = sks.get();
-
-        assertTrue(expected.contains(key));
-        expected.remove(key);
-        assertEquals(2, sks.size());
-
-        key = sks.get();
-
-        assertTrue(expected.contains(key));
-        expected.remove(key);
-        assertEquals(1, sks.size());
-
-        key = sks.get();
-
-        assertTrue(expected.contains(key));
-        expected.remove(key);
-        assertEquals(0, sks.size());
-
-        assertNull(sks.get());
-
-        assertEquals(0, sks.size());
     }
+
+    @Test
+    public void get() throws Exception
+    {
+        int keySize = 10;
+        RandomKeyGenerator rkg = new RandomKeyGenerator(keySize);
+
+        String s = rkg.get();
+        log.info(s);
+        assertEquals(keySize, s.length());
+    }
+
+    @Test
+    public void get_maxKeys() throws Exception
+    {
+        int keySize = 10;
+        long maxKeys = 3;
+        RandomKeyGenerator rkg = new RandomKeyGenerator(keySize, maxKeys);
+
+        String s = rkg.get();
+        assertNotNull(s);
+        assertEquals(keySize, s.length());
+
+        s = rkg.get();
+        assertNotNull(s);
+
+        s = rkg.get();
+        assertNotNull(s);
+
+        s = rkg.get();
+        assertNull(s);
+
+        s = rkg.get();
+        assertNull(s);
+    }
+
 
     // Package protected -----------------------------------------------------------------------------------------------
 

@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.keystore;
+package io.novaordis.gld.driver.todeplete.storage;
 
-import io.novaordis.utilities.testing.Tests;
+import io.novaordis.gld.api.todiscard.Configuration;
 import org.apache.log4j.Logger;
-import org.junit.After;
 import org.junit.Test;
 
-import java.io.File;
+import java.util.ArrayList;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
+import static junit.framework.TestCase.fail;
 
-public class WriteOnlyFileKeyStoreTest
+public abstract class StorageStrategyTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(WriteOnlyFileKeyStoreTest.class);
+    private static final Logger log = Logger.getLogger(StorageStrategyTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -40,47 +38,71 @@ public class WriteOnlyFileKeyStoreTest
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @After
-    public void scratchCleanup() throws Exception
-    {
-        Tests.cleanup();
-    }
-
     @Test
-    public void getShouldFail() throws Exception
+    public void insureConfigureBehavesConsistentlyOnNullList() throws Exception
     {
-        File keyFile = new File(Tests.getScratchDir(), "test-keys.txt");
-
-        WriteOnlyFileKeyStore wofs = new WriteOnlyFileKeyStore(keyFile.getPath());
-
-        wofs.start();
+        StorageStrategy ss = getStorageStrategyToTest();
 
         try
         {
-            wofs.get();
-            fail("should fail because we cannot get from a write-only keystore");
+            //            Configuration c = new MockConfiguration();
+            Configuration c = null;
+
+            ss.configure(c, null, -1);
+            fail("should be failing with IllegalArgumentException");
+        }
+        catch(IllegalArgumentException e)
+        {
+            log.info(e.getMessage());
+        }
+    }
+
+    @Test
+    public void invalidFromValue() throws Exception
+    {
+        StorageStrategy ss = getStorageStrategyToTest();
+
+        try
+        {
+            //            Configuration c = new MockConfiguration();
+            Configuration c = null;
+
+            ss.configure(c, new ArrayList<String>(), -1);
+            fail("should be failing with ArrayIndexOutOfBoundsException");
+        }
+        catch(ArrayIndexOutOfBoundsException e)
+        {
+            log.info(e.getMessage());
+        }
+    }
+
+    @Test
+    public void insureStartFailsIfNotConfigured() throws Exception
+    {
+        StorageStrategy ss = getStorageStrategyToTest();
+
+        if (ss.isConfigured())
+        {
+            log.info(ss + " already configured, OK");
+            return;
+        }
+
+        try
+        {
+            ss.start();
+            fail("should be failing with IllegalStateException");
         }
         catch(IllegalStateException e)
         {
             log.info(e.getMessage());
         }
-        finally
-        {
-            wofs.stop();
-        }
-    }
-
-    @Test
-    public void isReadOnly() throws Exception
-    {
-        File keyFile = new File(Tests.getScratchDir(), "test-keys.txt");
-        WriteOnlyFileKeyStore wofs = new WriteOnlyFileKeyStore(keyFile.getPath());
-        assertFalse(wofs.isReadOnly());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected abstract StorageStrategy getStorageStrategyToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

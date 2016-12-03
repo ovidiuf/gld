@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.storage;
+package io.novaordis.gld.driver.todeplete.storage;
 
-import com.novaordis.gld.Configuration;
-import com.novaordis.gld.UserErrorException;
+import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.utilities.UserErrorException;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -44,7 +44,7 @@ public class TextFileStorageStrategy extends StorageStrategyBase
     // StorageStrategy implementation ----------------------------------------------------------------------------------
 
     /**
-     * @see com.novaordis.gld.StorageStrategy#configure(Configuration, List, int)
+     * @see StorageStrategy#configure(Configuration, List, int)
      */
     @Override
     public void configure(Configuration config, List<String> arguments, int from) throws Exception
@@ -81,7 +81,7 @@ public class TextFileStorageStrategy extends StorageStrategyBase
     }
 
     /**
-     * @see com.novaordis.gld.StorageStrategy#start()
+     * @see StorageStrategy#start()
      */
     @Override
     public void start() throws Exception
@@ -111,7 +111,7 @@ public class TextFileStorageStrategy extends StorageStrategyBase
     }
 
     /**
-     * @see com.novaordis.gld.StorageStrategy#store(String, String)
+     * @see StorageStrategy#store(String, String)
      */
     @Override
     public void store(String key, String value) throws Exception
@@ -120,7 +120,7 @@ public class TextFileStorageStrategy extends StorageStrategyBase
     }
 
     /**
-     * @see com.novaordis.gld.StorageStrategy#retrieve(String)
+     * @see StorageStrategy#retrieve(String)
      */
     @Override
     public String retrieve(String key) throws Exception

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.keystore;
+package io.novaordis.gld.driver.keystore;
 
 import io.novaordis.utilities.Files;
 import io.novaordis.utilities.testing.Tests;

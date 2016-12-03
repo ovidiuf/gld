@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.storage;
+package io.novaordis.gld.driver.todeplete.storage;
 
-import com.novaordis.gld.Configuration;
-import com.novaordis.gld.KeyStore;
-import com.novaordis.gld.LoadStrategy;
-import com.novaordis.gld.UserErrorException;
-import com.novaordis.gld.command.Content;
+import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.api.LoadStrategy;
+import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.utilities.Files;
+import io.novaordis.utilities.UserErrorException;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -102,7 +101,7 @@ public class HierarchicalStorageStrategy extends StorageStrategyBase
     // StorageStrategy implementation ----------------------------------------------------------------------------------
 
     /**
-     * @see com.novaordis.gld.StorageStrategy#configure(Configuration, java.util.List, int)
+     * @see StorageStrategy#configure(Configuration, java.util.List, int)
      */
     @Override
     public void configure(Configuration configuration, List<String> arguments, int from) throws Exception
@@ -140,7 +139,7 @@ public class HierarchicalStorageStrategy extends StorageStrategyBase
     }
 
     /**
-     * @see com.novaordis.gld.StorageStrategy#start()
+     * @see StorageStrategy#start()
      */
     @Override
     public void start() throws Exception
@@ -157,7 +156,14 @@ public class HierarchicalStorageStrategy extends StorageStrategyBase
         // figure out whether we're going to be reading, writing or both
 
         Configuration c = getConfiguration();
-        LoadStrategy loadStrategy = c.getLoadStrategy();
+
+        //LoadStrategy loadStrategy = c.getLoadStrategy();
+        LoadStrategy loadStrategy = null;
+        if (loadStrategy == null) {
+            throw new RuntimeException("RETURN HERE");
+        }
+
+
         if (loadStrategy != null)
         {
             KeyStore ks = loadStrategy.getKeyStore();
@@ -166,11 +172,11 @@ public class HierarchicalStorageStrategy extends StorageStrategyBase
                 setWrite(false);
             }
         }
-        else if (c.getCommand() instanceof Content)
-        {
-            setWrite(true);
-            setRead(false);
-        }
+//        else if (c.getCommand() instanceof Content)
+//        {
+//            setWrite(true);
+//            setRead(false);
+//        }
 
         //
         //
@@ -229,7 +235,7 @@ public class HierarchicalStorageStrategy extends StorageStrategyBase
     }
 
     /**
-     * @see com.novaordis.gld.StorageStrategy#store(String, String)
+     * @see StorageStrategy#store(String, String)
      */
     @Override
     public void store(String key, String value) throws Exception
@@ -240,7 +246,7 @@ public class HierarchicalStorageStrategy extends StorageStrategyBase
     }
 
     /**
-     * @see com.novaordis.gld.StorageStrategy#retrieve(String)
+     * @see StorageStrategy#retrieve(String)
      */
     @Override
     public String retrieve(String key) throws Exception

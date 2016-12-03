@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.storage;
+package io.novaordis.gld.driver.todeplete.storage;
 
-import com.novaordis.gld.Configuration;
-import com.novaordis.gld.StorageStrategy;
+import io.novaordis.gld.api.todiscard.Configuration;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
-public class StdoutStorageStrategy implements StorageStrategy
+abstract class StorageStrategyBase implements StorageStrategy
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -31,93 +28,80 @@ public class StdoutStorageStrategy implements StorageStrategy
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private Configuration configuration;
+    private boolean canRead;
+    private boolean canWrite;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    protected StorageStrategyBase()
+    {
+        this.canRead = true;
+        this.canWrite = true;
+    }
 
     // StorageStrategy implementation ----------------------------------------------------------------------------------
 
     /**
-     * @see com.novaordis.gld.StorageStrategy#configure(Configuration, List, int)
+     * @see StorageStrategy#configure(Configuration, List, int)
      */
     @Override
-    public void configure(Configuration conf, List arguments, int from) throws Exception
+    public void configure(Configuration configuration, List<String> arguments, int from) throws Exception
     {
-        // nothing to do, noop
-    }
+        if (configuration == null)
+        {
+            throw new IllegalArgumentException("null configuration");
+        }
 
-    @Override
-    public boolean isConfigured()
-    {
-        return true;
-    }
+        if (arguments == null)
+        {
+            throw new IllegalArgumentException("null argument list");
+        }
 
-    @Override
-    public void start() throws Exception
-    {
-        // noop
-    }
+        if (!arguments.isEmpty() && (from < 0 || from >= arguments.size()))
+        {
+            throw new ArrayIndexOutOfBoundsException("invalid array index: " + from);
+        }
 
-    @Override
-    public void stop() throws Exception
-    {
-        // noop
-    }
-
-    @Override
-    public boolean isStarted()
-    {
-        return true;
-    }
-
-    /**
-     * @see com.novaordis.gld.StorageStrategy#store(String, String)
-     */
-    @Override
-    public void store(String key, String value) throws Exception
-    {
-        System.out.println(key + "=" + value);
-    }
-
-    /**
-     * @see com.novaordis.gld.StorageStrategy#retrieve(String)
-     */
-    @Override
-    public String retrieve(String key) throws Exception
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Set<String> getKeys() throws Exception
-    {
-        return Collections.emptySet();
+        this.configuration = configuration;
     }
 
     @Override
     public boolean isRead()
     {
-        return false;
+        return canRead;
     }
 
     @Override
     public boolean isWrite()
     {
-        return true;
+        return canWrite;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Override
-    public String toString()
+    public void setRead(boolean b)
     {
-        return "StdoutStorageStrategy[" + Integer.toHexString(System.identityHashCode(this)) + "]";
+        this.canRead = b;
+    }
+
+    public void setWrite(boolean b)
+    {
+        this.canWrite = b;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
+    protected Configuration getConfiguration()
+    {
+        return configuration;
+    }
+
     // Private ---------------------------------------------------------------------------------------------------------
 
     // Inner classes ---------------------------------------------------------------------------------------------------
+
 
 }

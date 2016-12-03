@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.storage;
+package io.novaordis.gld.driver.todeplete.storage;
 
-import com.novaordis.gld.UserErrorException;
-import com.novaordis.gld.mock.MockConfiguration;
+import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.utilities.Files;
+import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.testing.Tests;
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -66,7 +66,10 @@ public class HierarchicalStorageStrategyTest extends StorageStrategyTest
 
         try
         {
-            s.configure(new MockConfiguration(), emptyArgumentList, 0);
+//            Configuration c = new MockConfiguration();
+            Configuration c = null;
+
+            s.configure(c, emptyArgumentList, 0);
             fail("should fail with UserErrorException, no root directory name");
         }
         catch(UserErrorException e)
@@ -84,7 +87,11 @@ public class HierarchicalStorageStrategyTest extends StorageStrategyTest
 
         try
         {
-            s.configure(new MockConfiguration(), arguments, 2);
+
+            //            Configuration c = new MockConfiguration();
+            Configuration c = null;
+
+            s.configure(c, arguments, 2);
             fail("should fail with UserErrorException, --root last in list");
         }
         catch(UserErrorException e)
@@ -101,7 +108,10 @@ public class HierarchicalStorageStrategyTest extends StorageStrategyTest
         List<String> arguments = new ArrayList<>(Arrays.asList(
             "something", "something-else", "--root", "./test-root"));
 
-        s.configure(new MockConfiguration(), arguments, 2);
+        //            Configuration c = new MockConfiguration();
+        Configuration c = null;
+
+        s.configure(c, arguments, 2);
 
         assertEquals("./test-root", s.getRootDirectoryName());
     }
@@ -126,7 +136,10 @@ public class HierarchicalStorageStrategyTest extends StorageStrategyTest
         arguments.add("--root");
         arguments.add(root.getPath());
 
-        s.configure(new MockConfiguration(), arguments, 0);
+        //            Configuration c = new MockConfiguration();
+        Configuration c = null;
+
+        s.configure(c, arguments, 0);
 
         try
         {
@@ -154,7 +167,10 @@ public class HierarchicalStorageStrategyTest extends StorageStrategyTest
         arguments.add("--root");
         arguments.add(root.getPath());
 
-        s.configure(new MockConfiguration(), arguments, 0);
+        //            Configuration c = new MockConfiguration();
+        Configuration c = null;
+
+        s.configure(c, arguments, 0);
 
         try
         {
@@ -180,7 +196,10 @@ public class HierarchicalStorageStrategyTest extends StorageStrategyTest
         arguments.add("--root");
         arguments.add(root.getPath());
 
-        s.configure(new MockConfiguration(), arguments, 0);
+        //            Configuration c = new MockConfiguration();
+        Configuration c = null;
+
+        s.configure(c, arguments, 0);
 
         assertFalse(root.exists());
 
@@ -218,7 +237,10 @@ public class HierarchicalStorageStrategyTest extends StorageStrategyTest
         arguments.add("--root");
         arguments.add(root.getPath());
 
-        s.configure(new MockConfiguration(), arguments, 0);
+        //            Configuration c = new MockConfiguration();
+        Configuration c = null;
+
+        s.configure(c, arguments, 0);
 
         assertFalse(root.exists());
 

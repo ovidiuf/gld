@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.storage;
+package io.novaordis.gld.driver.todeplete.storage;
 
-import com.novaordis.gld.Configuration;
-import com.novaordis.gld.StorageStrategy;
-import com.novaordis.gld.UserErrorException;
-import com.novaordis.gld.Util;
+import io.novaordis.gld.api.ClassLoadingUtilities;
+import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.utilities.UserErrorException;
 
 import java.util.List;
 
@@ -34,8 +33,6 @@ public class StorageStrategyFactory
      * downward recursively, to whatever StorageFactory we're building) from the list.
      *
      * TODO this method is virtually identical with LoadStrategyFactory, consolidate.
-     *
-     * @see com.novaordis.gld.strategy.load.LoadStrategyFactory
      *
      * @param arguments - mutable list of arguments, arguments pertaining to us will be removed.
      * @param from - the argument list index where we expect to find "--storage-strategy"
@@ -72,8 +69,8 @@ public class StorageStrategyFactory
 
         try
         {
-            result = Util.getInstance(StorageStrategy.class,
-                "com.novaordis.gld.strategy.storage", strategyName, "StorageStrategy");
+            result = ClassLoadingUtilities.getInstance(StorageStrategy.class,
+                    "com.novaordis.gld.strategy.storage", strategyName, "StorageStrategy");
         }
         catch(Exception e)
         {

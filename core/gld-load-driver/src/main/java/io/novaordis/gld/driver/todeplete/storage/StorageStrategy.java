@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld;
+package io.novaordis.gld.driver.todeplete.storage;
+
+import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.utilities.UserErrorException;
 
 import java.util.List;
 import java.util.Set;
@@ -22,8 +25,8 @@ import java.util.Set;
 /**
  * Implementations *must* provide a no-argument constructor.
  */
-public interface StorageStrategy
-{
+public interface StorageStrategy {
+
     /**
      * Allows the strategy instance to pull and remove configuration arguments that pertains to it from an argument
      * list leaving the uninteresting arguments in the list for further processing by the upper level.

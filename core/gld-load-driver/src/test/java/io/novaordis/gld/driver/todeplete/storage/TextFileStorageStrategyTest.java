@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.storage;
+package io.novaordis.gld.driver.todeplete.storage;
 
-import com.novaordis.gld.UserErrorException;
-import com.novaordis.gld.mock.MockConfiguration;
+import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.utilities.Files;
+import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.testing.Tests;
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -63,7 +63,10 @@ public class TextFileStorageStrategyTest extends StorageStrategyTest
 
         try
         {
-            tfss.configure(new MockConfiguration(), emptyArgumentList, 0);
+            //            Configuration c = new MockConfiguration();
+            Configuration c = null;
+
+            tfss.configure(c, emptyArgumentList, 0);
             fail("should fail with UserErrorException, no output file name");
         }
         catch(UserErrorException e)
@@ -81,7 +84,10 @@ public class TextFileStorageStrategyTest extends StorageStrategyTest
 
         try
         {
-            tfss.configure(new MockConfiguration(), arguments, 2);
+            //            Configuration c = new MockConfiguration();
+            Configuration c = null;
+
+            tfss.configure(c, arguments, 2);
             fail("should fail with UserErrorException, --output last in list");
         }
         catch(UserErrorException e)
@@ -98,7 +104,10 @@ public class TextFileStorageStrategyTest extends StorageStrategyTest
         List<String> arguments = new ArrayList<>(Arrays.asList(
             "something", "something-else", "--output", "./file.txt"));
 
-        tfss.configure(new MockConfiguration(), arguments, 2);
+        //            Configuration c = new MockConfiguration();
+        Configuration c = null;
+
+        tfss.configure(c, arguments, 2);
 
         assertEquals("./file.txt", tfss.getFileName());
     }
@@ -116,7 +125,11 @@ public class TextFileStorageStrategyTest extends StorageStrategyTest
         arguments.add("--output");
         arguments.add(file.getPath());
 
-        ss.configure(new MockConfiguration(), arguments, 0);
+        //            Configuration c = new MockConfiguration();
+        Configuration c = null;
+
+
+        ss.configure(c, arguments, 0);
 
         ss.start();
 

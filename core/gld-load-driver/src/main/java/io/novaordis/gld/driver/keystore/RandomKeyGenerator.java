@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.keystore;
+package io.novaordis.gld.driver.keystore;
 
-import com.novaordis.gld.KeyStore;
-import com.novaordis.gld.Util;
+import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.driver.Util;
 
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
@@ -72,7 +72,7 @@ public class RandomKeyGenerator implements KeyStore
     }
 
     /**
-     * @see com.novaordis.gld.KeyStore#store(String)
+     * @see KeyStore#store(String)
      */
     @Override
     public void store(String key) throws Exception
@@ -81,7 +81,7 @@ public class RandomKeyGenerator implements KeyStore
     }
 
     /**
-     * @see com.novaordis.gld.KeyStore#get()
+     * @see KeyStore#get()
      */
     @Override
     public String get()

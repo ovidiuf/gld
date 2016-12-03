@@ -14,21 +14,23 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.keystore;
+package io.novaordis.gld.driver.keystore;
 
+import io.novaordis.utilities.testing.Tests;
 import org.apache.log4j.Logger;
+import org.junit.After;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import java.io.File;
+
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
-public class RandomKeyGeneratorTest
+public class WriteOnlyFileKeyStoreTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(RandomKeyGeneratorTest.class);
+    private static final Logger log = Logger.getLogger(WriteOnlyFileKeyStoreTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -38,57 +40,43 @@ public class RandomKeyGeneratorTest
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Test
-    public void store() throws Exception
+    @After
+    public void scratchCleanup() throws Exception
     {
-        RandomKeyGenerator rkg = new RandomKeyGenerator(10);
+        Tests.cleanup();
+    }
+
+    @Test
+    public void getShouldFail() throws Exception
+    {
+        File keyFile = new File(Tests.getScratchDir(), "test-keys.txt");
+
+        WriteOnlyFileKeyStore wofs = new WriteOnlyFileKeyStore(keyFile.getPath());
+
+        wofs.start();
 
         try
         {
-            rkg.store("doesnotmatter");
-            fail("should fail with IllegalStateException");
+            wofs.get();
+            fail("should fail because we cannot get from a write-only keystore");
         }
         catch(IllegalStateException e)
         {
             log.info(e.getMessage());
         }
+        finally
+        {
+            wofs.stop();
+        }
     }
 
     @Test
-    public void get() throws Exception
+    public void isReadOnly() throws Exception
     {
-        int keySize = 10;
-        RandomKeyGenerator rkg = new RandomKeyGenerator(keySize);
-
-        String s = rkg.get();
-        log.info(s);
-        assertEquals(keySize, s.length());
+        File keyFile = new File(Tests.getScratchDir(), "test-keys.txt");
+        WriteOnlyFileKeyStore wofs = new WriteOnlyFileKeyStore(keyFile.getPath());
+        assertFalse(wofs.isReadOnly());
     }
-
-    @Test
-    public void get_maxKeys() throws Exception
-    {
-        int keySize = 10;
-        long maxKeys = 3;
-        RandomKeyGenerator rkg = new RandomKeyGenerator(keySize, maxKeys);
-
-        String s = rkg.get();
-        assertNotNull(s);
-        assertEquals(keySize, s.length());
-
-        s = rkg.get();
-        assertNotNull(s);
-
-        s = rkg.get();
-        assertNotNull(s);
-
-        s = rkg.get();
-        assertNull(s);
-
-        s = rkg.get();
-        assertNull(s);
-    }
-
 
     // Package protected -----------------------------------------------------------------------------------------------
 

@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.keystore;
+package io.novaordis.gld.driver.keystore;
 
-import com.novaordis.gld.KeyStore;
-import com.novaordis.gld.strategy.storage.HierarchicalStorageStrategy;
+import io.novaordis.gld.api.KeyStore;
 
-import java.util.Iterator;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Experimental - interacting with a HierarchicalStorageStrategy. Must refactor.
-
+ * This implementation reads the entire key space in memory on startup and then keeps cycling through it.
  */
-public class ExperimentalKeyStore implements KeyStore
+
+public class ReadOnlyFileKeyStore implements KeyStore
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -33,14 +36,33 @@ public class ExperimentalKeyStore implements KeyStore
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private HierarchicalStorageStrategy hss;
-    private Iterator<String> keyIterator;
+    private volatile boolean started;
+    private String fileName;
+
+    private List<String> keys;
+
+    private int currentKey;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public ExperimentalKeyStore(HierarchicalStorageStrategy hss) throws Exception
+    public ReadOnlyFileKeyStore(String fileName) throws Exception
     {
-        this.hss = hss;
+        this(fileName, new ArrayList<String>());
+    }
+
+    /**
+     * For testing only.
+     */
+    public ReadOnlyFileKeyStore(List<String> keys) throws Exception
+    {
+        this(null, keys);
+    }
+
+    private ReadOnlyFileKeyStore(String fileName, List<String> keys) throws Exception
+    {
+        this.fileName = fileName;
+        this.keys = keys;
+        currentKey = 0;
     }
 
     // KeyStore implementation -----------------------------------------------------------------------------------------
@@ -52,7 +74,7 @@ public class ExperimentalKeyStore implements KeyStore
     }
 
     /**
-     * @see com.novaordis.gld.KeyStore#store(String)
+     * @see KeyStore#store(String)
      */
     @Override
     public void store(String key) throws Exception
@@ -61,43 +83,90 @@ public class ExperimentalKeyStore implements KeyStore
     }
 
     /**
-     * @see com.novaordis.gld.KeyStore#get()
+     * @see KeyStore#get()
      */
     @Override
-    public synchronized String get()
+    public String get()
     {
-        if (keyIterator.hasNext())
+        if (keys.isEmpty())
         {
-            return keyIterator.next();
+            return null;
         }
 
-        return null;
+        synchronized (this)
+        {
+            String s = keys.get(currentKey);
+
+            currentKey = (currentKey + 1) % keys.size();
+
+            return s;
+        }
     }
 
     @Override
     public void start() throws Exception
     {
-        // read all the keys from storage
-        keyIterator = hss.getKeys().iterator();
+        if (fileName == null && keys.size() > 0)
+        {
+            // already preloaded
+            started = true;
+        }
+        else
+        {
+            File keyFile = new File(fileName);
+
+            BufferedReader br = null;
+
+            try
+            {
+                br = new BufferedReader(new FileReader(keyFile));
+
+                String line;
+
+                while ((line = br.readLine()) != null)
+                {
+                    keys.add(line);
+                }
+
+                currentKey = 0;
+
+                System.out.println(keys.size() + " keys loaded in memory");
+
+                started = true;
+            }
+            finally
+            {
+                if (br != null)
+                {
+                    br.close();
+                }
+            }
+        }
     }
 
     @Override
     public void stop() throws Exception
     {
-        keyIterator = null;
+        if (started)
+        {
+            keys.clear();
+            started = false;
+            currentKey = 0;
+        }
     }
 
     @Override
     public boolean isStarted()
     {
-        return keyIterator != null;
+        return started;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public String getValue(String key) throws Exception
+    @Override
+    public String toString()
     {
-        return hss.retrieve(key);
+        return fileName + " (" + (started ? keys.size() + " keys" : "NOT STARTED") + ")";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
