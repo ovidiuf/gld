@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.driver.todeplete.command;
 
+import io.novaordis.gld.api.todiscard.Command;
 import io.novaordis.gld.api.todiscard.Configuration;
 import org.apache.log4j.Logger;
 

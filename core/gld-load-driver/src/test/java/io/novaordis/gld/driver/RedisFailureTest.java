@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld;
+package io.novaordis.gld.driver;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
-import redis.clients.jedis.exceptions.JedisConnectionException;
-import redis.clients.jedis.exceptions.JedisDataException;
+//import redis.clients.jedis.exceptions.JedisConnectionException;
+//import redis.clients.jedis.exceptions.JedisDataException;
 
 import java.net.ConnectException;
 import java.net.SocketException;
@@ -102,38 +102,45 @@ public class RedisFailureTest extends Assert
     @Test
     public void toFailureIndex_JedisServerClosedConnection() throws Exception
     {
-        Throwable t = new Exception("test",
-            new JedisConnectionException("It seems like server has closed the connection"));
-        int i = RedisFailure.toFailureIndex(t);
-
-        assertTrue(RedisFailure.JEDIS_SERVER_CLOSED_CONNECTION_INDEX == i);
+        fail("return here");
+//        Throwable t = new Exception("test",
+//            new JedisConnectionException("It seems like server has closed the connection"));
+//        int i = RedisFailure.toFailureIndex(t);
+//
+//        assertTrue(RedisFailure.JEDIS_SERVER_CLOSED_CONNECTION_INDEX == i);
     }
 
     @Test
     public void toFailureIndex_JedisUnknownReply() throws Exception
     {
-        Throwable t = new Exception("test", new JedisConnectionException("Unknown reply: something"));
-        int i = RedisFailure.toFailureIndex(t);
+        fail("return here");
 
-        assertTrue(RedisFailure.JEDIS_UNKNOWN_REPLY_INDEX == i);
+//        Throwable t = new Exception("test", new JedisConnectionException("Unknown reply: something"));
+//        int i = RedisFailure.toFailureIndex(t);
+//
+//        assertTrue(RedisFailure.JEDIS_UNKNOWN_REPLY_INDEX == i);
     }
 
     @Test
     public void toFailureIndex_MaxNumberOfClientsReached() throws Exception
     {
-        Throwable t = new Exception("test", new JedisDataException("ERR max number of clients reached"));
-        int i = RedisFailure.toFailureIndex(t);
+        fail("return here");
 
-        assertTrue(RedisFailure.JEDIS_MAX_NUMBER_OF_CLIENTS_REACHED_INDEX == i);
+//        Throwable t = new Exception("test", new JedisDataException("ERR max number of clients reached"));
+//        int i = RedisFailure.toFailureIndex(t);
+//
+//        assertTrue(RedisFailure.JEDIS_MAX_NUMBER_OF_CLIENTS_REACHED_INDEX == i);
     }
 
     @Test
     public void toFailureIndex_JedisConnectionTimedOutIndex() throws Exception
     {
-        Throwable t = new Exception("test", new JedisDataException("ERR Connection timed out"));
-        int i = RedisFailure.toFailureIndex(t);
+        fail("return here");
 
-        assertTrue(RedisFailure.JEDIS_CONNECTION_TIMED_OUT_INDEX == i);
+//        Throwable t = new Exception("test", new JedisDataException("ERR Connection timed out"));
+//        int i = RedisFailure.toFailureIndex(t);
+//
+//        assertTrue(RedisFailure.JEDIS_CONNECTION_TIMED_OUT_INDEX == i);
     }
 
     @Test

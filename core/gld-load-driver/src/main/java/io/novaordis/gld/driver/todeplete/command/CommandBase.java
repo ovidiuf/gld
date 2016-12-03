@@ -16,10 +16,10 @@
 
 package io.novaordis.gld.driver.todeplete.command;
 
+import io.novaordis.gld.api.todiscard.Command;
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.utilities.UserErrorException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 abstract class CommandBase implements Command {

@@ -17,6 +17,7 @@
 package io.novaordis.gld.driver.todeplete.storage;
 
 import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.gld.api.todiscard.StorageStrategy;
 import io.novaordis.utilities.UserErrorException;
 
 import java.io.BufferedWriter;

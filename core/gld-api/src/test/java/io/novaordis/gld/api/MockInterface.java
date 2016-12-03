@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.mock.mockpackage;
+package io.novaordis.gld.api;
 
-import com.novaordis.gld.mock.MockInterface;
-
-public class WinningStrategy implements MockInterface
+public interface MockInterface
 {
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver.todeplete.command;
+package io.novaordis.gld.api.todiscard;
 
 public interface Command
 {

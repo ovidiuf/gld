@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.mock;
+package io.novaordis.gld.api;
 
 public interface MockInterface2
 {

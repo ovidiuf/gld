@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.mock;
+package io.novaordis.gld.api.mockpackage;
 
-public interface MockInterface
+import io.novaordis.gld.api.MockInterface;
+
+public class PrivateNoArgConstructorStrategy implements MockInterface
 {
+    private PrivateNoArgConstructorStrategy()
+    {
+    }
 }

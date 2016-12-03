@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld;
+package io.novaordis.gld.api.todiscard;
 
-import com.novaordis.gld.command.Load;
-import io.novaordis.gld.api.Service;
-import io.novaordis.gld.driver.sampler.Sampler;
-import com.novaordis.gld.service.cache.EmbeddedCacheService;
-import com.novaordis.gld.service.jms.activemq.ActiveMQService;
 import io.novaordis.utilities.Files;
+import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.testing.Tests;
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -31,8 +27,6 @@ import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -384,47 +378,55 @@ public class ConfigurationImplTest
     @Test
     public void defaultSampler() throws Exception
     {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--nodes",
-                "embedded",
-            });
+//        ConfigurationImpl c = new ConfigurationImpl(new String[]
+//            {
+//                "load",
+//                "--nodes",
+//                "embedded",
+//            });
+//
+//        Sampler s = c.getSampler();
+//        assertNotNull(s);
 
-        Sampler s = c.getSampler();
-        assertNotNull(s);
+        fail("RETURN HERE");
     }
 
     @Test
     public void csvSampler() throws Exception
     {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--nodes",
-                "embedded",
-                "--statistics",
-                "csv"
-            });
+//        ConfigurationImpl c = new ConfigurationImpl(new String[]
+//            {
+//                "load",
+//                "--nodes",
+//                "embedded",
+//                "--statistics",
+//                "csv"
+//            });
+//
+//        Sampler s = c.getSampler();
+//        assertNotNull(s);
+//        assertFalse(s.isStarted());
 
-        Sampler s = c.getSampler();
-        assertNotNull(s);
-        assertFalse(s.isStarted());
+        fail("RETURN HERE");
+
     }
 
     @Test
     public void noStatistics() throws Exception
     {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--nodes",
-                "embedded",
-                "--statistics",
-                "none"
-            });
+//        ConfigurationImpl c = new ConfigurationImpl(new String[]
+//            {
+//                "load",
+//                "--nodes",
+//                "embedded",
+//                "--statistics",
+//                "none"
+//            });
+//
+//        assertNull(c.getSampler());
 
-        assertNull(c.getSampler());
+        fail("RETURN HERE");
+
     }
 
     @Test
@@ -484,37 +486,43 @@ public class ConfigurationImplTest
     @Test
     public void implicitService() throws Exception
     {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--nodes",
-                "embedded",
-            });
+//        ConfigurationImpl c = new ConfigurationImpl(new String[]
+//            {
+//                "load",
+//                "--nodes",
+//                "embedded",
+//            });
+//
+//        Command command = c.getCommand();
+//        assertTrue(command instanceof Load);
+//        Service s = c.getService();
+//        assertTrue(s instanceof EmbeddedCacheService);
 
-        Command command = c.getCommand();
-        assertTrue(command instanceof Load);
-        Service s = c.getService();
-        assertTrue(s instanceof EmbeddedCacheService);
+        fail("RETURN HERE");
+
     }
 
     @Test
     public void explicitService() throws Exception
     {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--service",
-                "com.novaordis.gld.service.jms.activemq.ActiveMQService",
-                "--nodes",
-                "embedded",
-                "--queue",
-                "TEST"
-            });
+//        ConfigurationImpl c = new ConfigurationImpl(new String[]
+//            {
+//                "load",
+//                "--service",
+//                "com.novaordis.gld.service.jms.activemq.ActiveMQService",
+//                "--nodes",
+//                "embedded",
+//                "--queue",
+//                "TEST"
+//            });
+//
+//        Command command = c.getCommand();
+//        assertTrue(command instanceof Load);
+//        Service s = c.getService();
+//        assertTrue(s instanceof ActiveMQService);
 
-        Command command = c.getCommand();
-        assertTrue(command instanceof Load);
-        Service s = c.getService();
-        assertTrue(s instanceof ActiveMQService);
+        fail("RETURN HERE");
+
     }
 
     // --sleep ---------------------------------------------------------------------------------------------------------
@@ -522,19 +530,21 @@ public class ConfigurationImplTest
     @Test
     public void sleep() throws Exception
     {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--nodes",
-                "embedded",
-                "--sleep",
-                "200"
-            });
+//        ConfigurationImpl c = new ConfigurationImpl(new String[]
+//            {
+//                "load",
+//                "--nodes",
+//                "embedded",
+//                "--sleep",
+//                "200"
+//            });
+//
+//        Command command = c.getCommand();
+//        assertTrue(command instanceof Load);
+//
+//        assertEquals(200L, c.getSleepMs());
 
-        Command command = c.getCommand();
-        assertTrue(command instanceof Load);
-
-        assertEquals(200L, c.getSleepMs());
+        fail("RETURN HERE");
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

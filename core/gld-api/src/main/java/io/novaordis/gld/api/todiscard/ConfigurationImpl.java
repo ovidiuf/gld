@@ -14,27 +14,11 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld;
+package io.novaordis.gld.api.todiscard;
 
-import com.novaordis.gld.command.Connect;
-import com.novaordis.gld.command.Content;
-import com.novaordis.gld.command.Delete;
-import com.novaordis.gld.command.GenerateKeys;
-import com.novaordis.gld.command.Help;
-import com.novaordis.gld.command.Load;
-import com.novaordis.gld.command.Start;
-import com.novaordis.gld.command.Status;
-import com.novaordis.gld.command.Stop;
-import com.novaordis.gld.command.Test;
-import com.novaordis.gld.command.Version;
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Service;
-import io.novaordis.gld.driver.sampler.Sampler;
-import com.novaordis.gld.service.EmbeddedGenericService;
-import com.novaordis.gld.service.cache.EmbeddedCacheService;
-import com.novaordis.gld.service.jms.activemq.ActiveMQService;
-import com.novaordis.gld.service.cache.infinispan.InfinispanService;
-import com.novaordis.gld.statistics.SamplerConfigurator;
-import com.novaordis.gld.strategy.load.LoadStrategyFactory;
+import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.time.Duration;
 
 import java.io.BufferedReader;
@@ -81,7 +65,6 @@ public class ConfigurationImpl implements Configuration {
     private LoadStrategy loadStrategy;
     private StorageStrategy storageStrategy;
     private Service service;
-    private Sampler sampler;
     private String serviceString;
     private boolean waitForConsoleQuit;
     private boolean background;
@@ -267,18 +250,6 @@ public class ConfigurationImpl implements Configuration {
     }
 
     @Override
-    public Sampler getSampler()
-    {
-        return sampler;
-    }
-
-    @Override
-    public void setSampler(Sampler sampler)
-    {
-        this.sampler = sampler;
-    }
-
-    @Override
     public boolean inBackground()
     {
         return background;
@@ -345,7 +316,9 @@ public class ConfigurationImpl implements Configuration {
     private void parseCommandLine(String[] args) throws Exception  {
 
         if (args.length == 0) {
-            command = new Help(this);
+
+            //command = new Help(this);
+            command = null;
             command.initialize();
             return;
         }
@@ -370,7 +343,8 @@ public class ConfigurationImpl implements Configuration {
 
         List<String> arguments = new ArrayList<>(Arrays.asList(args));
 
-        String statisticsString = Util.extractString("--statistics", arguments, 0);
+        //String statisticsString = Util.extractString("--statistics", arguments, 0);
+        String statisticsString = null;
 
         for(int i = 0; i < arguments.size(); i ++) {
 
@@ -389,41 +363,44 @@ public class ConfigurationImpl implements Configuration {
             }
 
             if ("--help".equals(crt) || "help".equals(crt)) {
-                command = new Help(this);
+                //command = new Help(this);
                 return;
             }
             else if ("version".equals(crt)) {
-                command = new Version(this);
+                //command = new Version(this);
+                command = null;
                 command.initialize();
                 return;
             }
             else if (command == null && "test".equals(crt)) {
-                command = new Test(this);
+                //command = new Test(this);
+                command = null;
                 return;
             }
             else if ("load".equals(crt)) {
-                command = new Load(this, arguments, i + 1);
+
+                //command = new Load(this, arguments, i + 1);
             }
             else if ("content".equals(crt)) {
-                command = new Content(this);
+                // command = new Content(this);
             }
             else if ("connect".equals(crt)) {
-                command = new Connect(this);
+                // command = new Connect(this);
             }
             else if ("generate-keys".equals(crt)) {
-                command = new GenerateKeys(this);
+                // command = new GenerateKeys(this);
             }
             else if ("delete".equals(crt)) {
-                command = new Delete(this);
+                // command = new Delete(this);
             }
             else if ("start".equals(crt)) {
-                command = new Start(this);
+                // command = new Start(this);
             }
             else if ("stop".equals(crt)) {
-                command = new Stop(this);
+                // command = new Stop(this);
             }
             else if ("status".equals(crt)) {
-                command = new Status(this);
+                // command = new Status(this);
             }
             else if ("--conf".equals(crt)) {
                 // load configuration from the specified file but overlay the command line values, if provided.
@@ -497,7 +474,7 @@ public class ConfigurationImpl implements Configuration {
             else if ("--use-different-values".equals(crt)) {
                 useDifferentValues = true;
             }
-            else if ("--output".equals(crt) && !(command instanceof Content)) {
+            else if ("--output".equals(crt) /* && !(command instanceof Content) */) {
                 if (i < arguments.size() - 1) {
                     outputFileName = arguments.get(++i);
                     if (outputFileName.startsWith("--")) {
@@ -674,8 +651,9 @@ public class ConfigurationImpl implements Configuration {
                 configurationFileContent != null &&
                 configurationFileContent.get("load-strategy") != null) {
             String strategyName = (String)configurationFileContent.get("load-strategy");
-            ContentType contentType = command != null && command instanceof Load ? ((Load)command).getContentType() : null;
-            loadStrategy = LoadStrategyFactory.fromString(this, strategyName, contentType, null, -1);
+            //ContentType contentType = command != null && command instanceof Load ? ((Load)command).getContentType() : null;
+            //loadStrategy = LoadStrategyFactory.fromString(this, strategyName, contentType, null, -1);
+            throw new RuntimeException("NOT YET IMPLEMENTED");
         }
 
         if (username == null &&
@@ -706,7 +684,8 @@ public class ConfigurationImpl implements Configuration {
 
         command.initialize();
 
-        this.sampler = SamplerConfigurator.getSampler(getOutputFile(), statisticsString);
+        // this.sampler = SamplerConfigurator.getSampler(getOutputFile(), statisticsString);
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     /**
@@ -767,16 +746,20 @@ public class ConfigurationImpl implements Configuration {
 
             // shortcuts
             if ("embedded-generic".equalsIgnoreCase(serviceString)) {
-                service = new EmbeddedGenericService();
+                // service = new EmbeddedGenericService();
+                throw new RuntimeException("NOT YET IMPLEMENTED");
             }
             else if ("embedded-cache".equalsIgnoreCase(serviceString)) {
-                service = new EmbeddedCacheService();
+                // service = new EmbeddedCacheService();
+                throw new RuntimeException("NOT YET IMPLEMENTED");
             }
             else if ("activemq".equalsIgnoreCase(serviceString)) {
-                service = new ActiveMQService();
+                // service = new ActiveMQService();
+                throw new RuntimeException("NOT YET IMPLEMENTED");
             }
             else if ("infinispan".equalsIgnoreCase(serviceString)) {
-                service = new InfinispanService();
+                // service = new InfinispanService();
+                throw new RuntimeException("NOT YET IMPLEMENTED");
             }
             else {
 
@@ -803,9 +786,10 @@ public class ConfigurationImpl implements Configuration {
 
         ContentType contentType;
 
-        if (command instanceof Load) {
-            Load loadCommand = (Load)command;
-            contentType = loadCommand.getContentType();
+        if (true /* command instanceof Load */) {
+            // Load loadCommand = (Load)command;
+            // contentType = loadCommand.getContentType();
+            throw new RuntimeException("NOT YET IMPLEMENTED");
         }
         else {
             contentType = ContentType.valueOf(configurationFileContent.getProperty("content-type"));
@@ -813,31 +797,38 @@ public class ConfigurationImpl implements Configuration {
 
         if (nodes.get(0) instanceof EmbeddedNode && !ContentType.JMS.equals(contentType)) {
             EmbeddedNode en = (EmbeddedNode)nodes.get(0);
-            result = new EmbeddedCacheService(en.getCapacity());
+            // result = new EmbeddedCacheService(en.getCapacity());
+            throw new RuntimeException("NOT YET IMPLEMENTED");
         }
         else {
 
             if (ContentType.TEST.equals(contentType)) {
-                result = new EmbeddedGenericService();
+                // result = new EmbeddedGenericService();
+                throw new RuntimeException("NOT YET IMPLEMENTED");
             }
             else if (ContentType.KEYVALUE.equals(contentType)) {
-                throw new DeprecatedException("a cache service initialization must be done via --service");
+                // throw new DeprecatedException("a cache service initialization must be done via --service");
+                throw new RuntimeException("NOT YET IMPLEMENTED");
             }
             else if (ContentType.JMS.equals(contentType)) {
-                result = new ActiveMQService(this, nodes);
+                // result = new ActiveMQService(this, nodes);
+                throw new RuntimeException("NOT YET IMPLEMENTED");
             }
             else {
                 throw new UserErrorException("unknown content type: " + contentType + ", use --service");
             }
         }
 
-        return result;
+        // return result;
     }
 
     private void setExceptionFile(String s) {
-        throw new UserErrorException(
-            "currently we don't support dumping specific exception information into a file (" + s +
-                "), but this feature can be revived if needed. See com.novaordis.gld.statistics.ThrowableHandler");
+
+
+//        throw new UserErrorException(
+//            "currently we don't support dumping specific exception information into a file (" + s +
+//                "), but this feature can be revived if needed. See com.novaordis.gld.statistics.ThrowableHandler");
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
 

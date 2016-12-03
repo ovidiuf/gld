@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver.todeplete.storage;
+package io.novaordis.gld.api.todiscard;
 
-import io.novaordis.gld.api.todiscard.Configuration;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import static junit.framework.TestCase.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public abstract class StorageStrategyTest
+public class NodeTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(StorageStrategyTest.class);
+    private static final Logger log = Logger.getLogger(NodeTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -39,70 +39,60 @@ public abstract class StorageStrategyTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void insureConfigureBehavesConsistentlyOnNullList() throws Exception
+    public void embeddedUppercase() throws Exception
     {
-        StorageStrategy ss = getStorageStrategyToTest();
-
-        try
-        {
-            //            Configuration c = new MockConfiguration();
-            Configuration c = null;
-
-            ss.configure(c, null, -1);
-            fail("should be failing with IllegalArgumentException");
-        }
-        catch(IllegalArgumentException e)
-        {
-            log.info(e.getMessage());
-        }
+        List<Node> nl = Node.toNodeList("EMBEDDED");
+        assertEquals(1, nl.size());
+        assertTrue(nl.get(0) instanceof EmbeddedNode);
     }
 
     @Test
-    public void invalidFromValue() throws Exception
+    public void embeddedLowercase() throws Exception
     {
-        StorageStrategy ss = getStorageStrategyToTest();
-
-        try
-        {
-            //            Configuration c = new MockConfiguration();
-            Configuration c = null;
-
-            ss.configure(c, new ArrayList<String>(), -1);
-            fail("should be failing with ArrayIndexOutOfBoundsException");
-        }
-        catch(ArrayIndexOutOfBoundsException e)
-        {
-            log.info(e.getMessage());
-        }
+        List<Node> nl = Node.toNodeList("embedded");
+        assertEquals(1, nl.size());
+        assertTrue(nl.get(0) instanceof EmbeddedNode);
     }
 
     @Test
-    public void insureStartFailsIfNotConfigured() throws Exception
+    public void embeddedWithPortThatWillBeIgnored() throws Exception
     {
-        StorageStrategy ss = getStorageStrategyToTest();
+        List<Node> nl = Node.toNodeList("embedded:10001");
+        assertEquals(1, nl.size());
+        Node n = nl.get(0);
+        assertTrue(n instanceof EmbeddedNode);
+        assertEquals(0, n.getPort());
+    }
 
-        if (ss.isConfigured())
-        {
-            log.info(ss + " already configured, OK");
-            return;
-        }
+    @Test
+    public void embeddedWithPortThatWillBeIgnored2() throws Exception
+    {
+        List<Node> nl = Node.toNodeList("embedded:10001,localhost:10002");
+        assertEquals(2, nl.size());
 
-        try
-        {
-            ss.start();
-            fail("should be failing with IllegalStateException");
-        }
-        catch(IllegalStateException e)
-        {
-            log.info(e.getMessage());
-        }
+        Node n = nl.get(0);
+        assertTrue(n instanceof EmbeddedNode);
+        assertEquals(0, n.getPort());
+
+        Node n2 = nl.get(1);
+        assertEquals("localhost", n2.getHost());
+        assertEquals(10002, n2.getPort());
+    }
+
+    @Test
+    public void embedded_PrePopulated() throws Exception
+    {
+        List<Node> nl = Node.toNodeList("embedded[5]");
+        assertEquals(1, nl.size());
+
+        EmbeddedNode n = (EmbeddedNode)nl.get(0);
+
+        assertEquals(5, n.getCapacity());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    protected abstract StorageStrategy getStorageStrategyToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

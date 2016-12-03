@@ -16,7 +16,7 @@
 
 package io.novaordis.gld.driver;
 
-import io.novaordis.gld.driver.todeplete.command.Command;
+import io.novaordis.gld.api.todiscard.Command;
 import io.novaordis.utilities.UserErrorException;
 
 public class Main {

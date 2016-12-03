@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld;
+package io.novaordis.gld.driver;
 
-import com.novaordis.gld.mock.MockInterface;
-import com.novaordis.gld.mock.MockInterface2;
-import com.novaordis.gld.mock.mockpackage.WinningStrategy;
-import org.apache.log4j.Logger;
+import io.novaordis.utilities.UserErrorException;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,11 +28,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class UtilTest extends Assert
-{
+public class UtilTest extends Assert {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(UtilTest.class);
+    private static final Logger log = LoggerFactory.getLogger(UtilTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -167,150 +166,6 @@ public class UtilTest extends Assert
         {
             log.info(e.getMessage());
         }
-    }
-
-    // getInstance() tests ---------------------------------------------------------------------------------------------
-
-    @Test
-    public void getInstance_WrongPackageName() throws Exception
-    {
-        try
-        {
-            Util.getInstance(MockInterface.class, "com.novaordis.gld.mock.nosuchpackate", "Winning", "Strategy");
-            fail("should have failed with IllegalArgumentException - wrong package name");
-        }
-        catch(IllegalArgumentException e)
-        {
-            log.info(e.getMessage());
-
-            Throwable t = e.getCause();
-
-            assertTrue(t instanceof ClassNotFoundException);
-
-            log.info(t.getMessage());
-        }
-    }
-
-    @Test
-    public void getInstance_WrongBaseName() throws Exception
-    {
-        try
-        {
-            Util.getInstance(MockInterface.class, "com.novaordis.gld.mock.mockpackage", "winning", "Strategy");
-            fail("should have failed with IllegalArgumentException - wrong base name");
-        }
-        catch(IllegalArgumentException e)
-        {
-            log.info(e.getMessage());
-
-            Throwable t = e.getCause();
-
-            assertTrue((t instanceof NoClassDefFoundError) || (t instanceof ClassNotFoundException));
-
-            log.info(t.getMessage());
-        }
-    }
-
-    @Test
-    public void getInstance_WrongSuffix() throws Exception
-    {
-        try
-        {
-            Util.getInstance(MockInterface.class, "com.novaordis.gld.mock.mockpackage", "Winning", "Trickery");
-            fail("should have failed with IllegalArgumentException - wrong suffix");
-        }
-        catch(IllegalArgumentException e)
-        {
-            log.info(e.getMessage());
-
-            Throwable t = e.getCause();
-
-            assertTrue(t instanceof ClassNotFoundException);
-
-            log.info(t.getMessage());
-        }
-    }
-
-    @Test
-    public void getInstance_WrongType() throws Exception
-    {
-        try
-        {
-            Util.getInstance(MockInterface2.class, "com.novaordis.gld.mock.mockpackage", "Winning", "Strategy");
-            fail("should have failed with IllegalArgumentException - wrong suffix");
-        }
-        catch(IllegalArgumentException e)
-        {
-            log.info(e.getMessage());
-
-            Throwable t = e.getCause();
-
-            assertTrue(t instanceof ClassCastException);
-
-            log.info(t.getMessage());
-        }
-    }
-
-    @Test
-    public void getInstance_NoNoArgumentConstructor() throws Exception
-    {
-        try
-        {
-            Util.getInstance(MockInterface.class, "com.novaordis.gld.mock.mockpackage", "NoNoArgConstructor", "Strategy");
-            fail("should have failed with IllegalArgumentException - no no-argument constructor");
-        }
-        catch(IllegalArgumentException e)
-        {
-            log.info(e.getMessage());
-
-            Throwable t = e.getCause();
-
-            assertTrue(t instanceof InstantiationException);
-
-            log.info(t.getMessage());
-        }
-    }
-
-    @Test
-    public void getInstance_PrivateNoArgumentConstructor() throws Exception
-    {
-        try
-        {
-            Util.getInstance(MockInterface.class, "com.novaordis.gld.mock.mockpackage", "PrivateNoArgConstructor", "Strategy");
-            fail("should have failed with IllegalArgumentException - no no-argument constructor");
-        }
-        catch(IllegalArgumentException e)
-        {
-            log.info(e.getMessage());
-
-            Throwable t = e.getCause();
-
-            assertTrue(t instanceof IllegalAccessException);
-
-            log.info(t.getMessage());
-        }
-    }
-
-    @Test
-    public void getInstance() throws Exception
-    {
-        MockInterface o =
-            Util.getInstance(MockInterface.class, "com.novaordis.gld.mock.mockpackage", "Winning", "Strategy");
-
-        WinningStrategy ws = (WinningStrategy)o;
-
-        assertNotNull(ws);
-    }
-
-    @Test
-    public void getInstance_EmptySuffix() throws Exception
-    {
-        MockInterface o =
-            Util.getInstance(MockInterface.class, "com.novaordis.gld.mock.mockpackage", "WinningStrategy", "");
-
-        WinningStrategy ws = (WinningStrategy)o;
-
-        assertNotNull(ws);
     }
 
     // command line processing utilities -------------------------------------------------------------------------------
