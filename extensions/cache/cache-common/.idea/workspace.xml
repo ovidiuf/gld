@@ -1,36 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dfc350a2-85df-4984-8eb0-22e727bf1965" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/copyright/Apache_2_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../../core/gld-api/src/main/java/io/novaordis/gld/api/LoadStrategyExportedTests.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_novaordis_gld_gld_api_1_0_0_SNAPSHOT_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_novaordis_utilities_novaordis_utilities_4_3_0_SNAPSHOT_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__junit_junit_4_11.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__log4j_log4j_1_2_16.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hamcrest_hamcrest_core_1_3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_api_1_7_6.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/java/io/novaordis/gld/extension/cache/strategy/MockConfiguration.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gld-extension-cache-common.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../core/gld-api/src/test/java/io/novaordis/gld/api/LoadStrategyTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../core/gld-old-to-deplete/src/main/java/com/novaordis/gld/strategy/load/NoopLoadStrategy.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../../../core/gld-old-to-deplete/src/main/java/com/novaordis/gld/strategy/load/cache/ReadThenWriteOnMissLoadStrategy.java" afterPath="$PROJECT_DIR$/src/main/java/io/novaordis/gld/extension/cache/strategy/ReadThenWriteOnMissLoadStrategy.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../../../core/gld-old-to-deplete/src/test/java/com/novaordis/gld/strategy/load/cache/ReadThenWriteOnMissLoadStrategyTest.java" afterPath="$PROJECT_DIR$/src/test/java/io/novaordis/gld/extension/cache/strategy/ReadThenWriteOnMissLoadStrategyTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../core/gld-api/gld-api.iml" afterPath="$PROJECT_DIR$/../../../core/gld-api/gld-api.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../http/gld-http.iml" afterPath="$PROJECT_DIR$/../../http/gld-http.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../jdg/jdg-7.0/gld-jdg-7.0.iml" afterPath="$PROJECT_DIR$/../jdg/jdg-7.0/gld-jdg-7.0.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../jdg/jdg-common/gld-jdg-common.iml" afterPath="$PROJECT_DIR$/../jdg/jdg-common/gld-jdg-common.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../jdg/gld-jdg.iml" afterPath="$PROJECT_DIR$/../jdg/gld-jdg.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../core/gld-load-driver/gld-load-driver.iml" afterPath="$PROJECT_DIR$/../../../core/gld-load-driver/gld-load-driver.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../core/pom.xml" afterPath="$PROJECT_DIR$/../../../core/pom.xml" />
-    </list>
+    <list default="true" id="dfc350a2-85df-4984-8eb0-22e727bf1965" name="Default" comment="" />
     <ignored path="gld-extension-cache-common.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -603,12 +574,12 @@
       <created>1480732426651</created>
       <option name="number" value="Default" />
       <updated>1480732426651</updated>
-      <workItem from="1480732427902" duration="3597000" />
+      <workItem from="1480732427902" duration="3933000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3597000" />
+    <option name="totallyTimeSpent" value="3933000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="745" y="27" width="1796" height="1384" extended-state="0" />
