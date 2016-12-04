@@ -18,10 +18,14 @@ package io.novaordis.gld.api;
 
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.Node;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public abstract class ServiceTest {
 
@@ -36,6 +40,42 @@ public abstract class ServiceTest {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // Tests -----------------------------------------------------------------------------------------------------------
+
+    // topology --------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void loadDriver() throws Exception {
+
+        MockLoadDriver md = new MockLoadDriver();
+
+        Service s = getServiceToTest(md);
+
+        LoadDriver d = s.getLoadDriver();
+
+        assertEquals(md, d);
+    }
+
+    @Test
+    public void loadStrategy() throws Exception {
+
+        MockLoadDriver md = new MockLoadDriver();
+
+        Service s = getServiceToTest(md);
+
+        assertNull(s.getLoadStrategy());
+
+        MockLoadStrategy ms = new MockLoadStrategy();
+
+        ServiceBase sb = (ServiceBase)s;
+
+        sb.setLoadStrategy(ms);
+
+        LoadStrategy s2 = s.getLoadStrategy();
+
+        assertEquals(ms, s2);
+    }
 
 //    @Test
 //    public void lifeCycle() throws Exception {
@@ -111,9 +151,7 @@ public abstract class ServiceTest {
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected abstract Service getServiceToTest(Configuration configuration, List<Node> nodes) throws Exception;
-
-    protected abstract Node getTestNode();
+    protected abstract Service getServiceToTest(LoadDriver d) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

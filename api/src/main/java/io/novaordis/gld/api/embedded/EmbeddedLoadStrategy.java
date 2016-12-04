@@ -14,17 +14,25 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.embedded.operation;
+package io.novaordis.gld.api.embedded;
 
-import io.novaordis.gld.api.LoadStrategy;
+import io.novaordis.gld.api.LoadStrategyBase;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.embedded.operation.SyntheticDelete;
+import io.novaordis.gld.api.embedded.operation.SyntheticRead;
+import io.novaordis.gld.api.embedded.operation.SyntheticWrite;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
+ * Simulates the interaction with a cache (SyntheticRead, SyntheticWrite and SyntheticDelete).
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/2/16
  */
-public class SyntheticDelete implements Operation {
+public class EmbeddedLoadStrategy extends LoadStrategyBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,25 +40,34 @@ public class SyntheticDelete implements Operation {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private Service service;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Operation implementation ----------------------------------------------------------------------------------------
+    public EmbeddedLoadStrategy(Service service) {
+
+        this.service = service;
+
+        setKeyStore(service.getLoadDriver().getKeyStore());
+    }
+
+    // LoadStrategy implementation -------------------------------------------------------------------------------------
 
     @Override
-    public String getKey() {
-        throw new RuntimeException("getKey() NOT YET IMPLEMENTED");
+    public Set<Class<? extends Operation>> getOperationTypes() {
+
+        Set<Class<? extends Operation>> result = new HashSet<>();
+        result.add(SyntheticRead.class);
+        result.add(SyntheticWrite.class);
+        result.add(SyntheticDelete.class);
+        return result;
     }
 
     @Override
-    public void perform(Service s) throws Exception {
-        throw new RuntimeException("perform() NOT YET IMPLEMENTED");
-    }
+    public Operation next(Operation last, String lastWrittenKey, boolean runtimeShuttingDown) throws Exception {
 
-    @Override
-    public LoadStrategy getLoadStrategy() {
-        throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
+        throw new RuntimeException("next() NOT YET IMPLEMENTED");
     }
-
 
     // Public ----------------------------------------------------------------------------------------------------------
 

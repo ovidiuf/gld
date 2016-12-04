@@ -48,11 +48,18 @@ public interface LoadDriver {
     boolean isBackground();
 
     //
-    // runtime context -------------------------------------------------------------------------------------------------
+    // topology --------------------------------------------------------------------------------------------------------
     //
 
+    /**
+     * A LoadDriver instance can only be associated with a service at a time.
+     */
+    Service getService();
+
+    /**
+     * A LoadDriver instance can only be associated with a service at a time.
+     */
     KeyStore getKeyStore();
 
-    Service getService();
 
 }

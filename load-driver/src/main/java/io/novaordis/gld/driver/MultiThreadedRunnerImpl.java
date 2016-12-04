@@ -64,11 +64,11 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MultiThreadedRunnerImpl(Service service, LoadStrategy loadStrategy, int threadCount, Sampler sampler,
+    public MultiThreadedRunnerImpl(Service service, int threadCount, Sampler sampler,
                                    boolean isBackground, long singleThreadedRunnerSleepMs) {
 
         this.service = service;
-        this.loadStrategy = loadStrategy;
+        this.loadStrategy = service.getLoadStrategy();
         this.threadCount = threadCount;
         this.sampler = sampler;
         this.isBackground = isBackground;

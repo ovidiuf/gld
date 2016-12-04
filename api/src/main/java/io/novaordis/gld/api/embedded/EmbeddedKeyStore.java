@@ -14,109 +14,68 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver;
+package io.novaordis.gld.api.embedded;
 
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadDriver;
-import io.novaordis.gld.api.Service;
-import io.novaordis.gld.driver.sampler.Sampler;
-import io.novaordis.gld.driver.sampler.SamplerImpl;
-import io.novaordis.gld.api.embedded.EmbeddedKeyStore;
-import io.novaordis.gld.api.embedded.EmbeddedService;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/2/16
  */
-public class LoadDriverImpl implements LoadDriver {
+public class EmbeddedKeyStore implements KeyStore {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    // Package protected static ----------------------------------------------------------------------------------------
-
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private volatile boolean background;
-
-    private Service service;
-
-    private KeyStore keyStore;
-
-    private MultiThreadedRunner multiThreadedRunner;
-
-    private Sampler sampler;
+    private LoadDriver loadDriver;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public LoadDriverImpl() {
+    public EmbeddedKeyStore(LoadDriver loadDriver) {
 
-        this.background = false;
+        this.loadDriver = loadDriver;
     }
 
-    // LoadDriver implementation ---------------------------------------------------------------------------------------
+    // KeyStore implementation -----------------------------------------------------------------------------------------
 
     @Override
-    public KeyStore getKeyStore() {
-
-        return keyStore;
-    }
-
-    @Override
-    public Service getService() {
-
-        return service;
+    public void start() throws Exception {
+        throw new RuntimeException("start() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void init() throws Exception {
-
-        this.keyStore = new EmbeddedKeyStore(this);
-        this.service = new EmbeddedService(this);
-        this.sampler = new SamplerImpl();
-
-        keyStore.start();
-        service.start();
-        sampler.start();
-
-        //
-        // configure
-        //
-
-        int threadCount = 2;
-
-        long singleThreadedRunnerSleepMs = -1L;
-
-        multiThreadedRunner =
-                new MultiThreadedRunnerImpl(service, threadCount, sampler, background, singleThreadedRunnerSleepMs);
+    public void stop() throws Exception {
+        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void run() {
-
-        //
-        // start the load and then enter the main control loop
-        //
-
-        try {
-
-            multiThreadedRunner.run();
-        }
-        catch(Exception e) {
-
-            throw new RuntimeException("NOT YET IMPLEMENTED " + e);
-        }
-
-        //
-        // the main control loop
-        //
+    public boolean isStarted() {
+        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public boolean isBackground() {
+    public boolean isReadOnly() {
+        throw new RuntimeException("isReadOnly() NOT YET IMPLEMENTED");
+    }
 
-        return background;
+    @Override
+    public void store(String key) throws Exception {
+        throw new RuntimeException("store() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public String get() {
+        throw new RuntimeException("get() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public LoadDriver getLoadDriver() {
+
+        return loadDriver;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

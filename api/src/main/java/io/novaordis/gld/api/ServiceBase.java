@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.embedded;
+package io.novaordis.gld.api;
 
-import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.ContentType;
 import io.novaordis.gld.api.todiscard.Node;
-import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.utilities.UserErrorException;
 
 import java.util.List;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/2/16
+ * @since 12/4/16
  */
-public class EmbeddedService implements Service {
+public abstract class ServiceBase implements Service {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -43,17 +39,16 @@ public class EmbeddedService implements Service {
 
     private LoadStrategy loadStrategy;
 
-    private volatile boolean started;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedService(LoadDriver loadDriver) {
+    protected ServiceBase(LoadDriver d) {
 
-        this.loadDriver = loadDriver;
-        this.loadStrategy = new EmbeddedLoadStrategy(this);
+        this.loadDriver = d;
     }
 
     // Service implementation ------------------------------------------------------------------------------------------
+
+    // topology --------------------------------------------------------------------------------------------------------
 
     @Override
     public LoadDriver getLoadDriver() {
@@ -67,33 +62,11 @@ public class EmbeddedService implements Service {
         return loadStrategy;
     }
 
-    @Override
-    public void start() throws Exception {
+    // lifecycle -------------------------------------------------------------------------------------------------------
 
-        if (started) {
+    // execution -------------------------------------------------------------------------------------------------------
 
-            return;
-        }
-
-        started = true;
-    }
-
-    @Override
-    public void stop() throws Exception {
-
-        if (!started) {
-
-            return;
-        }
-
-        started = false;
-    }
-
-    @Override
-    public boolean isStarted() {
-
-        return started;
-    }
+    // to deplete ------------------------------------------------------------------------------------------------------
 
     @Override
     public void setConfiguration(Configuration c) {
@@ -115,12 +88,14 @@ public class EmbeddedService implements Service {
         throw new RuntimeException("getContentType() NOT YET IMPLEMENTED");
     }
 
-    @Override
-    public void perform(Operation o) throws Exception {
-        throw new RuntimeException("perform() NOT YET IMPLEMENTED");
+    // Public ----------------------------------------------------------------------------------------------------------
+
+    public void setLoadStrategy(LoadStrategy s) {
+
+        this.loadStrategy = s;
     }
 
-    // Public ----------------------------------------------------------------------------------------------------------
+    // topology --------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 

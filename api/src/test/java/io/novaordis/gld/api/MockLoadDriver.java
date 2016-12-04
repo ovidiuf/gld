@@ -14,25 +14,13 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.embedded;
-
-import io.novaordis.gld.api.LoadStrategyBase;
-import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.Service;
-import io.novaordis.gld.embedded.operation.SyntheticDelete;
-import io.novaordis.gld.embedded.operation.SyntheticRead;
-import io.novaordis.gld.embedded.operation.SyntheticWrite;
-
-import java.util.HashSet;
-import java.util.Set;
+package io.novaordis.gld.api;
 
 /**
- * Simulates the interaction with a cache (SyntheticRead, SyntheticWrite and SyntheticDelete).
- *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/2/16
+ * @since 12/4/16
  */
-public class EmbeddedLoadStrategy extends LoadStrategyBase {
+public class MockLoadDriver implements LoadDriver {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -40,34 +28,35 @@ public class EmbeddedLoadStrategy extends LoadStrategyBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Service service;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedLoadStrategy(Service service) {
-
-        this.service = service;
-
-        setKeyStore(service.getLoadDriver().getKeyStore());
-    }
-
-    // LoadStrategy implementation -------------------------------------------------------------------------------------
+    // LoadDriver implementation ---------------------------------------------------------------------------------------
 
     @Override
-    public Set<Class<? extends Operation>> getOperationTypes() {
-
-        Set<Class<? extends Operation>> result = new HashSet<>();
-        result.add(SyntheticRead.class);
-        result.add(SyntheticWrite.class);
-        result.add(SyntheticDelete.class);
-        return result;
+    public void init() throws Exception {
+        throw new RuntimeException("init() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public Operation next(Operation last, String lastWrittenKey, boolean runtimeShuttingDown) throws Exception {
-
-        throw new RuntimeException("next() NOT YET IMPLEMENTED");
+    public void run() {
+        throw new RuntimeException("run() NOT YET IMPLEMENTED");
     }
+
+    @Override
+    public boolean isBackground() {
+        throw new RuntimeException("isBackground() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Service getService() {
+        throw new RuntimeException("getService() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public KeyStore getKeyStore() {
+        throw new RuntimeException("getKeyStore() NOT YET IMPLEMENTED");
+    }
+
 
     // Public ----------------------------------------------------------------------------------------------------------
 

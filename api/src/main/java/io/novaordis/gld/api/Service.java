@@ -28,9 +28,34 @@ import java.util.List;
  */
 public interface Service {
 
+    // topology --------------------------------------------------------------------------------------------------------
+
     LoadDriver getLoadDriver();
 
     LoadStrategy getLoadStrategy();
+
+    // lifecycle -------------------------------------------------------------------------------------------------------
+
+    /**
+     * Starting an already started service should throw IllegalStateException.
+     *
+     * @throws IllegalStateException on attempt to start an already started service instance.
+     * @throws UserErrorException contains a human readable message. Thrown on incomplete command line configuration.
+     */
+    void start() throws Exception;
+
+    /**
+     * Stopping an already stopped service instance should be a noop.
+     */
+    void stop() throws Exception;
+
+    boolean isStarted();
+
+    // execution -------------------------------------------------------------------------------------------------------
+
+    void perform(Operation o) throws Exception;
+
+    // to deplete ------------------------------------------------------------------------------------------------------
 
     void setConfiguration(Configuration c);
 
@@ -48,24 +73,5 @@ public interface Service {
     void configure(List<String> commandLineArguments) throws UserErrorException;
 
     ContentType getContentType();
-
-    /**
-     * Starting an already started service should throw IllegalStateException.
-     *
-     * @throws IllegalStateException on attempt to start an already started service instance.
-     * @throws UserErrorException contains a human readable message. Thrown on incomplete command line configuration.
-     */
-    void start() throws Exception;
-
-    /**
-     * Stopping an already stopped service instance should be a noop.
-     */
-    void stop() throws Exception;
-
-    boolean isStarted();
-
-    void perform(Operation o) throws Exception;
-
-
 
 }

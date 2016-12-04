@@ -53,499 +53,499 @@ public class ConfigurationImplTest {
 
     // nodes - embedded ------------------------------------------------------------------------------------------------
 
-    @Test
-    public void embeddedNodes() throws Exception
-    {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--nodes",
-                "embedded:10001,localhost2:10002",
-            });
-
-        List<Node> nodes = c.getNodes();
-
-        assertEquals(2, nodes.size());
-        assertTrue(nodes.get(0) instanceof EmbeddedNode);
-        assertEquals("localhost2", nodes.get(1).getHost());
-        assertEquals(10002, nodes.get(1).getPort());
-    }
-
-    @Test
-    public void embeddedNodes_comma() throws Exception
-    {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--nodes",
-                "embedded:10001,",
-                "localhost2:10002"
-            });
-
-        List<Node> nodes = c.getNodes();
-
-        assertEquals(2, nodes.size());
-        assertTrue(nodes.get(0) instanceof EmbeddedNode);
-        assertEquals("localhost2", nodes.get(1).getHost());
-        assertEquals(10002, nodes.get(1).getPort());
-    }
-
-    // nodes -----------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void singleNode() throws Exception
-    {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--service",
-                "embedded-generic",
-                "--nodes",
-                "localhost:10001",
-                "--statistics",
-                "none"
-            });
-
-        List<Node> nodes = c.getNodes();
-
-        assertEquals(1, nodes.size());
-        Node n = nodes.get(0);
-        assertEquals("localhost", n.getHost());
-        assertEquals(10001, n.getPort());
-    }
-
-    @Test
-    public void twoNodes() throws Exception
-    {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--service",
-                "embedded-generic",
-                "--nodes",
-                "localhost:10001,example.com:10002",
-                "--statistics",
-                "none"
-            });
-
-        List<Node> nodes = c.getNodes();
-
-        assertEquals(2, nodes.size());
-        Node n = nodes.get(0);
-        assertEquals("localhost", n.getHost());
-        assertEquals(10001, n.getPort());
-        Node n2 = nodes.get(1);
-        assertEquals("example.com", n2.getHost());
-        assertEquals(10002, n2.getPort());
-    }
-
-    // key/value/payload size ------------------------------------------------------------------------------------------
-
-    @Test
-    public void keySizeValueSize() throws Exception
-    {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--nodes", "embedded",
-                "--key-size", "55",
-                "--value-size", "77"
-            });
-
-        assertEquals(55, c.getKeySize());
-        assertEquals(77, c.getValueSize());
-        assertEquals(-1L, c.getKeyExpirationSecs());
-    }
-
-    @Test
-    public void payloadSize() throws Exception
-    {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--nodes", "embedded",
-                "--payload-size", "7878"
-            });
-
-        assertEquals(7878, c.getValueSize());
-    }
-
-    // expiration ------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void expiration() throws Exception
-    {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--nodes", "embedded",
-                "--expiration", "2"
-            });
-
-        assertEquals(2, c.getKeyExpirationSecs());
-    }
-
-    @Test
-    public void maxWaitMillis() throws Exception
-    {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--nodes", "embedded",
-            });
-
-        assertEquals(ConfigurationImpl.DEFAULT_MAX_WAIT_MILLIS, c.getMaxWaitMillis());
-
-        c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--nodes", "embedded",
-                "--max-wait-millis", "777"
-            });
-
-        assertEquals(777L, c.getMaxWaitMillis());
-    }
-
-    @Test
-    public void noCommand() throws Exception
-    {
-        try
-        {
-            new ConfigurationImpl(new String[]
-                {
-                    "--nodes", "embedded"
-                });
-
-            fail("should have failed with UserErrorException, no command specified");
-        }
-        catch(UserErrorException e)
-        {
-            log.info(e.getMessage());
-        }
-    }
-
-    // configuration from file -----------------------------------------------------------------------------------------
-
-    @Test
-    public void nodesFromConfigurationFile() throws Exception
-    {
-        File d = Tests.getScratchDirectory();
-        File configurationFile = new File(d, "test.conf");
-
-        assertTrue(Files.write(configurationFile,
-            "nodes=embedded:2222\n"
-        ));
-
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--conf", configurationFile.getPath()
-            });
-
-        // make sure the command line overrides the configuration file value, but those that are not overridden surface
-
-        List<Node> nodes = c.getNodes();
-
-        assertEquals(1, nodes.size());
-
-        Node n = nodes.get(0);
-
-        assertTrue(n instanceof EmbeddedNode);
-    }
-
-    @Test
-    public void configurationOverlay() throws Exception
-    {
-        File d = Tests.getScratchDirectory();
-        File configurationFile = new File(d, "test.conf");
-
-        assertTrue(Files.write(configurationFile,
-            "nodes=blah:2222\n" +
-                "expiration=777\n"
-        ));
-
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--nodes", "embedded:10005",
-                "--conf", configurationFile.getPath()
-            });
-
-        // make sure the command line overrides the configuration file value, but those that are not overridden surface
-
-        List<Node> nodes = c.getNodes();
-
-        assertEquals(1, nodes.size());
-
-        Node n = nodes.get(0);
-
-        assertTrue(n instanceof EmbeddedNode);
-
-        assertEquals(777, c.getKeyExpirationSecs());
-    }
-
-    @Test
-    public void noPassword() throws Exception
-    {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--nodes", "embedded",
-            });
-
-        assertNull(c.getPassword());
-    }
-
-    @Test
-    public void passwordConfigFile() throws Exception
-    {
-        File d = Tests.getScratchDirectory();
-        File configurationFile = new File(d, "test.conf");
-
-        assertTrue(Files.write(configurationFile,
-            "password=something\n"
-        ));
-
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--nodes", "embedded",
-                "--conf", configurationFile.getPath()
-            });
-
-        assertEquals("something", c.getPassword());
-    }
-
-    @Test
-    public void passwordCommandLine() throws Exception
-    {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--nodes", "embedded",
-                "--password", "somethingelse"
-            });
-
-        assertEquals("somethingelse", c.getPassword());
-    }
-
-    @Test
-    public void passwordBothConfigFileAndCommandLine() throws Exception
-    {
-        File d = Tests.getScratchDirectory();
-        File configurationFile = new File(d, "test.conf");
-        assertTrue(Files.write(configurationFile, "password=A\n"));
-
-        try
-        {
-            System.setProperty("password.file.directory", d.getPath());
-
-            ConfigurationImpl c = new ConfigurationImpl(new String[]
-                {
-                    "load",
-                    "--nodes", "embedded",
-                    "--conf", configurationFile.getPath(),
-                    "--password", "commandlinetakesprecedence"
-                });
-
-            assertEquals("commandlinetakesprecedence", c.getPassword());
-        }
-        finally
-        {
-            System.clearProperty("password.file.directory");
-        }
-    }
-
-    // --username -----------------------------------------------------------------------------------------------------
-
-    @Test
-    public void username() throws Exception
-    {
-        ConfigurationImpl c = new ConfigurationImpl(new String[]
-            {
-                "load",
-                "--nodes",
-                "embedded",
-                "--username",
-                "something"
-            });
-
-        assertEquals("something", c.getUsername());
-    }
-
-    // --statistics ----------------------------------------------------------------------------------------------------
-
-    @Test
-    public void defaultSampler() throws Exception
-    {
+//    @Test
+//    public void embeddedNodes() throws Exception
+//    {
 //        ConfigurationImpl c = new ConfigurationImpl(new String[]
 //            {
 //                "load",
 //                "--nodes",
-//                "embedded",
+//                "embedded:10001,localhost2:10002",
 //            });
 //
-//        Sampler s = c.getSampler();
-//        assertNotNull(s);
-
-        fail("RETURN HERE");
-    }
-
-    @Test
-    public void csvSampler() throws Exception
-    {
+//        List<Node> nodes = c.getNodes();
+//
+//        assertEquals(2, nodes.size());
+//        assertTrue(nodes.get(0) instanceof EmbeddedNode);
+//        assertEquals("localhost2", nodes.get(1).getHost());
+//        assertEquals(10002, nodes.get(1).getPort());
+//    }
+//
+//    @Test
+//    public void embeddedNodes_comma() throws Exception
+//    {
 //        ConfigurationImpl c = new ConfigurationImpl(new String[]
 //            {
 //                "load",
 //                "--nodes",
-//                "embedded",
-//                "--statistics",
-//                "csv"
+//                "embedded:10001,",
+//                "localhost2:10002"
 //            });
 //
-//        Sampler s = c.getSampler();
-//        assertNotNull(s);
-//        assertFalse(s.isStarted());
-
-        fail("RETURN HERE");
-
-    }
-
-    @Test
-    public void noStatistics() throws Exception
-    {
-//        ConfigurationImpl c = new ConfigurationImpl(new String[]
-//            {
-//                "load",
-//                "--nodes",
-//                "embedded",
-//                "--statistics",
-//                "none"
-//            });
+//        List<Node> nodes = c.getNodes();
 //
-//        assertNull(c.getSampler());
-
-        fail("RETURN HERE");
-
-    }
-
-    @Test
-    public void invalidStatistics() throws Exception
-    {
-
-        try
-        {
-            new ConfigurationImpl(new String[]
-                {
-                    "load",
-                    "--nodes",
-                    "embedded",
-                    "--statistics",
-                    "blah"
-                });
-        }
-        catch(UserErrorException e)
-        {
-            log.info(e.getMessage());
-        }
-    }
-
-    // miscellaneous ---------------------------------------------------------------------------------------------------
-
-    @Test
-    public void miscellaneous() throws Exception
-    {
-
-        try
-        {
-            new ConfigurationImpl(new String[]
-                {
-                    "load",
-                    "--type",
-                    "jms",
-                    "--nodes",
-                    "embedded",
-                    "--queue",
-                    "TEST",
-                    "--max-operations",
-                    "1",
-                    "--statistics",
-                    "none",
-                    "--threads",
-                    "10",
-                });
-        }
-        catch(UserErrorException e)
-        {
-            log.info(e.getMessage());
-        }
-    }
-
-    // --service -------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void implicitService() throws Exception
-    {
-//        ConfigurationImpl c = new ConfigurationImpl(new String[]
-//            {
-//                "load",
-//                "--nodes",
-//                "embedded",
-//            });
+//        assertEquals(2, nodes.size());
+//        assertTrue(nodes.get(0) instanceof EmbeddedNode);
+//        assertEquals("localhost2", nodes.get(1).getHost());
+//        assertEquals(10002, nodes.get(1).getPort());
+//    }
 //
-//        Command command = c.getCommand();
-//        assertTrue(command instanceof Load);
-//        Service s = c.getService();
-//        assertTrue(s instanceof EmbeddedCacheService);
-
-        fail("RETURN HERE");
-
-    }
-
-    @Test
-    public void explicitService() throws Exception
-    {
+//    // nodes -----------------------------------------------------------------------------------------------------------
+//
+//    @Test
+//    public void singleNode() throws Exception
+//    {
 //        ConfigurationImpl c = new ConfigurationImpl(new String[]
 //            {
 //                "load",
 //                "--service",
-//                "com.novaordis.gld.service.jms.activemq.ActiveMQService",
+//                "embedded-generic",
 //                "--nodes",
-//                "embedded",
-//                "--queue",
-//                "TEST"
+//                "localhost:10001",
+//                "--statistics",
+//                "none"
 //            });
 //
-//        Command command = c.getCommand();
-//        assertTrue(command instanceof Load);
-//        Service s = c.getService();
-//        assertTrue(s instanceof ActiveMQService);
-
-        fail("RETURN HERE");
-
-    }
-
-    // --sleep ---------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void sleep() throws Exception
-    {
+//        List<Node> nodes = c.getNodes();
+//
+//        assertEquals(1, nodes.size());
+//        Node n = nodes.get(0);
+//        assertEquals("localhost", n.getHost());
+//        assertEquals(10001, n.getPort());
+//    }
+//
+//    @Test
+//    public void twoNodes() throws Exception
+//    {
+//        ConfigurationImpl c = new ConfigurationImpl(new String[]
+//            {
+//                "load",
+//                "--service",
+//                "embedded-generic",
+//                "--nodes",
+//                "localhost:10001,example.com:10002",
+//                "--statistics",
+//                "none"
+//            });
+//
+//        List<Node> nodes = c.getNodes();
+//
+//        assertEquals(2, nodes.size());
+//        Node n = nodes.get(0);
+//        assertEquals("localhost", n.getHost());
+//        assertEquals(10001, n.getPort());
+//        Node n2 = nodes.get(1);
+//        assertEquals("example.com", n2.getHost());
+//        assertEquals(10002, n2.getPort());
+//    }
+//
+//    // key/value/payload size ------------------------------------------------------------------------------------------
+//
+//    @Test
+//    public void keySizeValueSize() throws Exception
+//    {
+//        ConfigurationImpl c = new ConfigurationImpl(new String[]
+//            {
+//                "load",
+//                "--nodes", "embedded",
+//                "--key-size", "55",
+//                "--value-size", "77"
+//            });
+//
+//        assertEquals(55, c.getKeySize());
+//        assertEquals(77, c.getValueSize());
+//        assertEquals(-1L, c.getKeyExpirationSecs());
+//    }
+//
+//    @Test
+//    public void payloadSize() throws Exception
+//    {
+//        ConfigurationImpl c = new ConfigurationImpl(new String[]
+//            {
+//                "load",
+//                "--nodes", "embedded",
+//                "--payload-size", "7878"
+//            });
+//
+//        assertEquals(7878, c.getValueSize());
+//    }
+//
+//    // expiration ------------------------------------------------------------------------------------------------------
+//
+//    @Test
+//    public void expiration() throws Exception
+//    {
+//        ConfigurationImpl c = new ConfigurationImpl(new String[]
+//            {
+//                "load",
+//                "--nodes", "embedded",
+//                "--expiration", "2"
+//            });
+//
+//        assertEquals(2, c.getKeyExpirationSecs());
+//    }
+//
+//    @Test
+//    public void maxWaitMillis() throws Exception
+//    {
+//        ConfigurationImpl c = new ConfigurationImpl(new String[]
+//            {
+//                "load",
+//                "--nodes", "embedded",
+//            });
+//
+//        assertEquals(ConfigurationImpl.DEFAULT_MAX_WAIT_MILLIS, c.getMaxWaitMillis());
+//
+//        c = new ConfigurationImpl(new String[]
+//            {
+//                "load",
+//                "--nodes", "embedded",
+//                "--max-wait-millis", "777"
+//            });
+//
+//        assertEquals(777L, c.getMaxWaitMillis());
+//    }
+//
+//    @Test
+//    public void noCommand() throws Exception
+//    {
+//        try
+//        {
+//            new ConfigurationImpl(new String[]
+//                {
+//                    "--nodes", "embedded"
+//                });
+//
+//            fail("should have failed with UserErrorException, no command specified");
+//        }
+//        catch(UserErrorException e)
+//        {
+//            log.info(e.getMessage());
+//        }
+//    }
+//
+//    // configuration from file -----------------------------------------------------------------------------------------
+//
+//    @Test
+//    public void nodesFromConfigurationFile() throws Exception
+//    {
+//        File d = Tests.getScratchDirectory();
+//        File configurationFile = new File(d, "test.conf");
+//
+//        assertTrue(Files.write(configurationFile,
+//            "nodes=embedded:2222\n"
+//        ));
+//
+//        ConfigurationImpl c = new ConfigurationImpl(new String[]
+//            {
+//                "load",
+//                "--conf", configurationFile.getPath()
+//            });
+//
+//        // make sure the command line overrides the configuration file value, but those that are not overridden surface
+//
+//        List<Node> nodes = c.getNodes();
+//
+//        assertEquals(1, nodes.size());
+//
+//        Node n = nodes.get(0);
+//
+//        assertTrue(n instanceof EmbeddedNode);
+//    }
+//
+//    @Test
+//    public void configurationOverlay() throws Exception
+//    {
+//        File d = Tests.getScratchDirectory();
+//        File configurationFile = new File(d, "test.conf");
+//
+//        assertTrue(Files.write(configurationFile,
+//            "nodes=blah:2222\n" +
+//                "expiration=777\n"
+//        ));
+//
+//        ConfigurationImpl c = new ConfigurationImpl(new String[]
+//            {
+//                "load",
+//                "--nodes", "embedded:10005",
+//                "--conf", configurationFile.getPath()
+//            });
+//
+//        // make sure the command line overrides the configuration file value, but those that are not overridden surface
+//
+//        List<Node> nodes = c.getNodes();
+//
+//        assertEquals(1, nodes.size());
+//
+//        Node n = nodes.get(0);
+//
+//        assertTrue(n instanceof EmbeddedNode);
+//
+//        assertEquals(777, c.getKeyExpirationSecs());
+//    }
+//
+//    @Test
+//    public void noPassword() throws Exception
+//    {
+//        ConfigurationImpl c = new ConfigurationImpl(new String[]
+//            {
+//                "load",
+//                "--nodes", "embedded",
+//            });
+//
+//        assertNull(c.getPassword());
+//    }
+//
+//    @Test
+//    public void passwordConfigFile() throws Exception
+//    {
+//        File d = Tests.getScratchDirectory();
+//        File configurationFile = new File(d, "test.conf");
+//
+//        assertTrue(Files.write(configurationFile,
+//            "password=something\n"
+//        ));
+//
+//        ConfigurationImpl c = new ConfigurationImpl(new String[]
+//            {
+//                "load",
+//                "--nodes", "embedded",
+//                "--conf", configurationFile.getPath()
+//            });
+//
+//        assertEquals("something", c.getPassword());
+//    }
+//
+//    @Test
+//    public void passwordCommandLine() throws Exception
+//    {
+//        ConfigurationImpl c = new ConfigurationImpl(new String[]
+//            {
+//                "load",
+//                "--nodes", "embedded",
+//                "--password", "somethingelse"
+//            });
+//
+//        assertEquals("somethingelse", c.getPassword());
+//    }
+//
+//    @Test
+//    public void passwordBothConfigFileAndCommandLine() throws Exception
+//    {
+//        File d = Tests.getScratchDirectory();
+//        File configurationFile = new File(d, "test.conf");
+//        assertTrue(Files.write(configurationFile, "password=A\n"));
+//
+//        try
+//        {
+//            System.setProperty("password.file.directory", d.getPath());
+//
+//            ConfigurationImpl c = new ConfigurationImpl(new String[]
+//                {
+//                    "load",
+//                    "--nodes", "embedded",
+//                    "--conf", configurationFile.getPath(),
+//                    "--password", "commandlinetakesprecedence"
+//                });
+//
+//            assertEquals("commandlinetakesprecedence", c.getPassword());
+//        }
+//        finally
+//        {
+//            System.clearProperty("password.file.directory");
+//        }
+//    }
+//
+//    // --username -----------------------------------------------------------------------------------------------------
+//
+//    @Test
+//    public void username() throws Exception
+//    {
 //        ConfigurationImpl c = new ConfigurationImpl(new String[]
 //            {
 //                "load",
 //                "--nodes",
 //                "embedded",
-//                "--sleep",
-//                "200"
+//                "--username",
+//                "something"
 //            });
 //
-//        Command command = c.getCommand();
-//        assertTrue(command instanceof Load);
+//        assertEquals("something", c.getUsername());
+//    }
 //
-//        assertEquals(200L, c.getSleepMs());
-
-        fail("RETURN HERE");
-    }
+//    // --statistics ----------------------------------------------------------------------------------------------------
+//
+//    @Test
+//    public void defaultSampler() throws Exception
+//    {
+////        ConfigurationImpl c = new ConfigurationImpl(new String[]
+////            {
+////                "load",
+////                "--nodes",
+////                "embedded",
+////            });
+////
+////        Sampler s = c.getSampler();
+////        assertNotNull(s);
+//
+//        fail("RETURN HERE");
+//    }
+//
+//    @Test
+//    public void csvSampler() throws Exception
+//    {
+////        ConfigurationImpl c = new ConfigurationImpl(new String[]
+////            {
+////                "load",
+////                "--nodes",
+////                "embedded",
+////                "--statistics",
+////                "csv"
+////            });
+////
+////        Sampler s = c.getSampler();
+////        assertNotNull(s);
+////        assertFalse(s.isStarted());
+//
+//        fail("RETURN HERE");
+//
+//    }
+//
+//    @Test
+//    public void noStatistics() throws Exception
+//    {
+////        ConfigurationImpl c = new ConfigurationImpl(new String[]
+////            {
+////                "load",
+////                "--nodes",
+////                "embedded",
+////                "--statistics",
+////                "none"
+////            });
+////
+////        assertNull(c.getSampler());
+//
+//        fail("RETURN HERE");
+//
+//    }
+//
+//    @Test
+//    public void invalidStatistics() throws Exception
+//    {
+//
+//        try
+//        {
+//            new ConfigurationImpl(new String[]
+//                {
+//                    "load",
+//                    "--nodes",
+//                    "embedded",
+//                    "--statistics",
+//                    "blah"
+//                });
+//        }
+//        catch(UserErrorException e)
+//        {
+//            log.info(e.getMessage());
+//        }
+//    }
+//
+//    // miscellaneous ---------------------------------------------------------------------------------------------------
+//
+//    @Test
+//    public void miscellaneous() throws Exception
+//    {
+//
+//        try
+//        {
+//            new ConfigurationImpl(new String[]
+//                {
+//                    "load",
+//                    "--type",
+//                    "jms",
+//                    "--nodes",
+//                    "embedded",
+//                    "--queue",
+//                    "TEST",
+//                    "--max-operations",
+//                    "1",
+//                    "--statistics",
+//                    "none",
+//                    "--threads",
+//                    "10",
+//                });
+//        }
+//        catch(UserErrorException e)
+//        {
+//            log.info(e.getMessage());
+//        }
+//    }
+//
+//    // --service -------------------------------------------------------------------------------------------------------
+//
+//    @Test
+//    public void implicitService() throws Exception
+//    {
+////        ConfigurationImpl c = new ConfigurationImpl(new String[]
+////            {
+////                "load",
+////                "--nodes",
+////                "embedded",
+////            });
+////
+////        Command command = c.getCommand();
+////        assertTrue(command instanceof Load);
+////        Service s = c.getService();
+////        assertTrue(s instanceof EmbeddedCacheService);
+//
+//        fail("RETURN HERE");
+//
+//    }
+//
+//    @Test
+//    public void explicitService() throws Exception
+//    {
+////        ConfigurationImpl c = new ConfigurationImpl(new String[]
+////            {
+////                "load",
+////                "--service",
+////                "com.novaordis.gld.service.jms.activemq.ActiveMQService",
+////                "--nodes",
+////                "embedded",
+////                "--queue",
+////                "TEST"
+////            });
+////
+////        Command command = c.getCommand();
+////        assertTrue(command instanceof Load);
+////        Service s = c.getService();
+////        assertTrue(s instanceof ActiveMQService);
+//
+//        fail("RETURN HERE");
+//
+//    }
+//
+//    // --sleep ---------------------------------------------------------------------------------------------------------
+//
+//    @Test
+//    public void sleep() throws Exception
+//    {
+////        ConfigurationImpl c = new ConfigurationImpl(new String[]
+////            {
+////                "load",
+////                "--nodes",
+////                "embedded",
+////                "--sleep",
+////                "200"
+////            });
+////
+////        Command command = c.getCommand();
+////        assertTrue(command instanceof Load);
+////
+////        assertEquals(200L, c.getSleepMs());
+//
+//        fail("RETURN HERE");
+//    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

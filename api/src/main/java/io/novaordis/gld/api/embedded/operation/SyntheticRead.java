@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.embedded.operation;
+package io.novaordis.gld.api.embedded.operation;
 
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
