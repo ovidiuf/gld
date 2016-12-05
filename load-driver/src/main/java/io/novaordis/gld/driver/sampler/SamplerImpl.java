@@ -66,13 +66,13 @@ public class SamplerImpl extends TimerTask implements Sampler {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public SamplerImpl()
-    {
+    public SamplerImpl() {
+
         this(DEFAULT_SAMPLING_TASK_RUN_INTERVAL_MS, DEFAULT_SAMPLING_INTERVAL_MS);
     }
 
-    public SamplerImpl(long samplingTaskRunIntervalMs, long samplingIntervalMs)
-    {
+    public SamplerImpl(long samplingTaskRunIntervalMs, long samplingIntervalMs) {
+
         this.samplingIntervalMs = samplingIntervalMs;
         this.samplingTaskRunIntervalMs = samplingTaskRunIntervalMs;
         this.consumers = new ArrayList<>();
@@ -91,26 +91,22 @@ public class SamplerImpl extends TimerTask implements Sampler {
 
     // Sampler implementation ------------------------------------------------------------------------------------------
 
-    /**
-     * @see Sampler#start()
-     */
     @Override
-    public synchronized void start()
-    {
-        if (started)
-        {
+    public synchronized void start() {
+
+        if (started) {
             return;
         }
 
-        if (samplingTimer != null)
-        {
+        if (samplingTimer != null) {
+
             throw new IllegalStateException(
                 "a stopped sampler is supposed to have a null timer, and this one doesn't: " + samplingTimer);
         }
 
-        if (counters.isEmpty())
-        {
-            throw new IllegalStateException("no operations were registered");
+        if (counters.isEmpty()) {
+
+            throw new IllegalStateException("no operations were registered with " + this);
         }
 
         // execute an initial sampling run to initialize the state
@@ -203,19 +199,16 @@ public class SamplerImpl extends TimerTask implements Sampler {
         return samplingTaskRunIntervalMs;
     }
 
-    /**
-     * @see Sampler#registerOperation(Class)
-     */
     @Override
-    public synchronized Counter registerOperation(Class<? extends Operation> operationType)
-    {
-        if (isStarted())
-        {
+    public synchronized Counter registerOperation(Class<? extends Operation> operationType) {
+
+        if (isStarted()) {
+
             throw new IllegalStateException("can't register an operation after the sampler was started");
         }
 
-        if (!Operation.class.isAssignableFrom(operationType))
-        {
+        if (!Operation.class.isAssignableFrom(operationType)) {
+
             throw new IllegalArgumentException(operationType + " is not assignable from Operation");
         }
 

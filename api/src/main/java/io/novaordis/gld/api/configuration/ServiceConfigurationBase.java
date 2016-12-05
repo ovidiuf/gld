@@ -36,6 +36,7 @@ public class ServiceConfigurationBase implements ServiceConfiguration {
 
     private ServiceType type;
     private String implementation;
+    private String loadStrategyName;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -59,6 +60,17 @@ public class ServiceConfigurationBase implements ServiceConfiguration {
     public String getImplementation() {
 
         return implementation;
+    }
+
+    @Override
+    public String getLoadStrategyName() {
+
+        return loadStrategyName;
+    }
+
+    @Override
+    public Map<String, Object> getMap(String... path) {
+        throw new RuntimeException("getMap() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -113,6 +125,24 @@ public class ServiceConfigurationBase implements ServiceConfiguration {
         }
 
         implementation = (String)o;
+
+        //
+        // load strategy name
+        //
+
+        o = map.get(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL);
+
+        if (o == null) {
+
+            throw new UserErrorException("missing load strategy name");
+        }
+
+        if (!(o instanceof String)) {
+            throw new UserErrorException(
+                    "the load strategy name should be a string, but it is a(n) " + o.getClass().getSimpleName());
+        }
+
+        loadStrategyName = (String)o;
     }
 
     // Inner classes ---------------------------------------------------------------------------------------------------

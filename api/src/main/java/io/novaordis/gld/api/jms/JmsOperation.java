@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.jms;
+
+import io.novaordis.gld.api.Operation;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 12/5/16
  */
-public enum ServiceType {
+public interface JmsOperation extends Operation {
 
-    cache,
-    jms,
-    http,
-    mock,   // used for testing
-    unknown // used for testing
+    // Constants -------------------------------------------------------------------------------------------------------
+
+    // Static ----------------------------------------------------------------------------------------------------------
+
+    // Public ----------------------------------------------------------------------------------------------------------
+
 }

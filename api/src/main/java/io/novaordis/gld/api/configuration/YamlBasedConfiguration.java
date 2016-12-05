@@ -43,12 +43,15 @@ public class YamlBasedConfiguration implements Configuration {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private File file;
     private ServiceConfiguration serviceConfiguration;
     private LoadDriverConfiguration loadDriverConfiguration;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public YamlBasedConfiguration(File file) throws Exception {
+
+        this.file = file;
 
         parse(file);
 
@@ -69,6 +72,12 @@ public class YamlBasedConfiguration implements Configuration {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+
+        return file == null ? "null" : file.getAbsolutePath();
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

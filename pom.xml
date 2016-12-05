@@ -35,6 +35,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>MM/dd/yy</maven.build.timestamp.format>
         <release_date>${maven.build.timestamp}</release_date>
+
+        <slf4j.version>1.7.6</slf4j.version>
     </properties>
 
     <modules>
@@ -48,7 +50,7 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.6</version>
+                <version>${slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.novaordis.utilities</groupId>

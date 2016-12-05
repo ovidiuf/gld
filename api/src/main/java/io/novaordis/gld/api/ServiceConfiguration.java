@@ -16,7 +16,11 @@
 
 package io.novaordis.gld.api;
 
+import java.util.Map;
+
 /**
+ * Typed and untyped access to underlying service configuration.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
@@ -26,13 +30,26 @@ public interface ServiceConfiguration {
 
     String TYPE_LABEL = "type";
     String IMPLEMENTATION_LABEL = "implementation";
+    String LOAD_STRATEGY_NAME_LABEL = "load-strategy";
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    // Typed Access ----------------------------------------------------------------------------------------------------
+
     ServiceType getType();
 
     String getImplementation();
+
+    String getLoadStrategyName();
+
+    // Untyped Access --------------------------------------------------------------------------------------------------
+
+    /**
+     * @return the underlying raw configuration map corresponding to the given path, or null if the path does not
+     * match anything in the underlying configuration structure.
+     */
+    Map<String, Object> getMap(String ... path);
 
 }

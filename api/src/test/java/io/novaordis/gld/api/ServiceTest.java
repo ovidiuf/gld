@@ -16,13 +16,12 @@
 
 package io.novaordis.gld.api;
 
-import io.novaordis.gld.api.todiscard.Configuration;
-import io.novaordis.gld.api.todiscard.Node;
+import io.novaordis.gld.api.mock.load.MockLoadStrategy;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

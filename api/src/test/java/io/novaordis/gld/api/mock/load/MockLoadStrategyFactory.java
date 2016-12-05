@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.mock.load;
 
-import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.gld.api.LoadStrategyFactory;
+import io.novaordis.gld.api.mock.load.MockLoadStrategy;
 
-import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 12/5/16
  */
-public class MockLoadStrategy implements LoadStrategy {
+public class MockLoadStrategyFactory implements LoadStrategyFactory {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -35,31 +35,12 @@ public class MockLoadStrategy implements LoadStrategy {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // LoadStrategy implementation -------------------------------------------------------------------------------------
+    // LoadStrategyFactory implementation ------------------------------------------------------------------------------
 
     @Override
-    public String getName() {
-        throw new RuntimeException("getName() NOT YET IMPLEMENTED");
-    }
+    public MockLoadStrategy buildInstance(Map<String, Object> configuration) throws Exception {
 
-    @Override
-    public void configure(Configuration configuration, List<String> arguments, int from) throws Exception {
-        throw new RuntimeException("configure() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Operation next(Operation last, String lastWrittenKey, boolean runtimeShuttingDown) throws Exception {
-        throw new RuntimeException("next() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Set<Class<? extends Operation>> getOperationTypes() {
-        throw new RuntimeException("getOperationTypes() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public KeyStore getKeyStore() {
-        throw new RuntimeException("getKeyStore() NOT YET IMPLEMENTED");
+        return new MockLoadStrategy(configuration);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

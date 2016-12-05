@@ -20,14 +20,18 @@ import io.novaordis.gld.api.Configuration;
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadDriverConfiguration;
+import io.novaordis.gld.api.LoadStrategy;
+import io.novaordis.gld.api.LoadStrategyFactory;
+import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceFactory;
 import io.novaordis.gld.driver.sampler.Sampler;
 import io.novaordis.gld.driver.sampler.SamplerImpl;
 import io.novaordis.gld.api.cache.local.LocalCacheKeyStore;
-import io.novaordis.gld.api.cache.local.LocalCacheService;
 import io.novaordis.utilities.UserErrorException;
+
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -85,6 +89,14 @@ public class LoadDriverImpl implements LoadDriver {
 
         ServiceConfiguration sc = c.getServiceConfiguration();
         service = ServiceFactory.buildInstance(sc.getType(), sc.getImplementation(), this);
+
+        //
+        // load strategy instantiation and installation
+        //
+
+        Map<String, Object> loadStrategyConfiguration = sc.getMap(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL);
+        LoadStrategy ls = LoadStrategyFactory.buildInstance(sc.getType(), loadStrategyConfiguration);
+
         service.start();
 
         keyStore = new LocalCacheKeyStore(this);
@@ -97,6 +109,16 @@ public class LoadDriverImpl implements LoadDriver {
         LoadDriverConfiguration lc = c.getLoadDriverConfiguration();
 
         sampler = new SamplerImpl();
+
+        //
+        // register operations
+        //
+
+        for(Class<? extends Operation> ot : service.getLoadStrategy().getOperationTypes()) {
+
+            sampler.registerOperation(ot);
+        }
+
         sampler.start();
 
         long singleThreadedRunnerSleepMs = -1L;

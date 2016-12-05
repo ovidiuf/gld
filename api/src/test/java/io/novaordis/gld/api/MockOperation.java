@@ -18,13 +18,14 @@ package io.novaordis.gld.api;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 12/5/16
  */
-public enum ServiceType {
+public interface MockOperation extends Operation {
 
-    cache,
-    jms,
-    http,
-    mock,   // used for testing
-    unknown // used for testing
+    // Constants -------------------------------------------------------------------------------------------------------
+
+    // Static ----------------------------------------------------------------------------------------------------------
+
+    // Public ----------------------------------------------------------------------------------------------------------
+
 }

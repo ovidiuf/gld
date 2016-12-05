@@ -16,23 +16,23 @@
 
 package io.novaordis.gld.api;
 
-import io.novaordis.gld.api.todiscard.MockConfiguration;
+import io.novaordis.gld.api.mock.load.MockLoadStrategy;
 import io.novaordis.utilities.UserErrorException;
-import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class LoadStrategyFactoryTest
-{
+public class LoadStrategyFactoryTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(LoadStrategyFactoryTest.class);
+    private static final Logger log = LoggerFactory.getLogger(LoadStrategyFactoryTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -42,87 +42,48 @@ public class LoadStrategyFactoryTest
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Test
-    public void missingLoadStrategyOption() throws Exception
-    {
-        List<String> args = Arrays.asList("blah", "blah");
+    // Tests -----------------------------------------------------------------------------------------------------------
 
-        try
-        {
-            LoadStrategyFactory.fromArguments(new MockConfiguration(), args, 1);
-            fail("should fail with IllegalArgumentException, --load-strategy missing at the given position");
+    // buildInstance() static wrapper ----------------------------------------------------------------------------------
+
+    @Test
+    public void buildInstance_NullServiceType() throws Exception {
+
+        try {
+
+            LoadStrategyFactory.buildInstance(null, new HashMap<>());
+            fail("should throw exception");
         }
-        catch(IllegalArgumentException e)
-        {
-            log.info(e.getMessage());
+        catch(IllegalArgumentException e) {
+
+            assertEquals("null service type", e.getMessage());
         }
     }
 
     @Test
-    public void missingLoadStrategyName() throws Exception
-    {
-        List<String> args = new ArrayList<>(Arrays.asList("--load-strategy"));
+    public void buildInstance_KnownServiceType() throws Exception {
 
-        try
-        {
-            LoadStrategyFactory.fromArguments(new MockConfiguration(), args, 0);
-            fail("should fail with IllegalArgumentException, --load-strategy is on the last position");
+        LoadStrategy s = LoadStrategyFactory.buildInstance(ServiceType.mock, new HashMap<>());
+        assertTrue(s instanceof MockLoadStrategy);
+    }
+
+    @Test
+    public void buildInstance_UnknownServiceType() throws Exception {
+
+        try {
+            LoadStrategyFactory.buildInstance(ServiceType.unknown, new HashMap<>());
+            fail("should have thrown exception");
         }
-        catch(UserErrorException e)
-        {
-            log.info(e.getMessage());
+        catch(UserErrorException e) {
 
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches(
+                    "failed to instantiate a load strategy factory corresponding to a service of type unknown"));
             Throwable t = e.getCause();
-
-            assertTrue(t instanceof NullPointerException);
-
-            log.info(t.getMessage());
+            assertTrue(t instanceof ClassNotFoundException);
         }
     }
-
-//    @Test
-//    public void upperCaseStrategyName() throws Exception
-//    {
-//        String name = "Mock";
-//
-//        List<String> args = new ArrayList<>(Arrays.asList(
-//            "something", "--load-strategy", name, "--mock-argument", "blah", "something-else"));
-//
-//        MockConfiguration mc = new MockConfiguration();
-//        new Load(mc, Collections.<String>emptyList(), 0); // Load install itself in the configuration
-//
-//        MockLoadStrategy mls = (MockLoadStrategy)LoadStrategyFactory.fromArguments(mc, args, 1);
-//
-//        assertNotNull(mls);
-//
-//        assertEquals("blah", mls.getMockArgument());
-//
-//        assertEquals(2, args.size());
-//        assertEquals("something", args.get(0));
-//        assertEquals("something-else", args.get(1));
-//    }
-//
-//    @Test
-//    public void lowerCaseStrategyName() throws Exception
-//    {
-//        String name = "mock";
-//
-//        List<String> args = new ArrayList<>(Arrays.asList(
-//            "something", "--load-strategy", name, "--mock-argument", "blah", "something-else"));
-//
-//        MockConfiguration mc = new MockConfiguration();
-//        new Load(mc, Collections.<String>emptyList(), 0); // Load install itself in the configuration
-//
-//        MockLoadStrategy mls = (MockLoadStrategy)LoadStrategyFactory.fromArguments(mc, args, 1);
-//
-//        assertNotNull(mls);
-//
-//        assertEquals("blah", mls.getMockArgument());
-//
-//        assertEquals(2, args.size());
-//        assertEquals("something", args.get(0));
-//        assertEquals("something-else", args.get(1));
-//    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

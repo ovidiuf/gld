@@ -17,6 +17,8 @@
 package io.novaordis.gld.api;
 
 /**
+ * Typed access to underlying load driver configuration.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
@@ -31,6 +33,10 @@ public interface LoadDriverConfiguration {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    // Typed Access ----------------------------------------------------------------------------------------------------
+
     int getThreadCount();
+
+    // Untyped Access --------------------------------------------------------------------------------------------------
 
 }

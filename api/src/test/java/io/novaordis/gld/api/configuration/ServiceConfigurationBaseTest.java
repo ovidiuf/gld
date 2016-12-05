@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -99,6 +98,7 @@ public class ServiceConfigurationBaseTest extends ServiceConfigurationTest {
         Map<String, String> m = new HashMap<>();
         m.put(ServiceConfiguration.TYPE_LABEL, "cache");
         m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
 
         ServiceConfigurationBase c = new ServiceConfigurationBase(m);
         assertEquals(ServiceType.cache, c.getType());
@@ -110,6 +110,7 @@ public class ServiceConfigurationBaseTest extends ServiceConfigurationTest {
         Map<String, String> m = new HashMap<>();
         m.put(ServiceConfiguration.TYPE_LABEL, "jms");
         m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
 
         ServiceConfigurationBase c = new ServiceConfigurationBase(m);
         assertEquals(ServiceType.jms, c.getType());
@@ -121,6 +122,7 @@ public class ServiceConfigurationBaseTest extends ServiceConfigurationTest {
         Map<String, String> m = new HashMap<>();
         m.put(ServiceConfiguration.TYPE_LABEL, "http");
         m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
 
         ServiceConfigurationBase c = new ServiceConfigurationBase(m);
         assertEquals(ServiceType.http, c.getType());
@@ -175,10 +177,69 @@ public class ServiceConfigurationBaseTest extends ServiceConfigurationTest {
 
         m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
         m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
 
         ServiceConfigurationBase scb = new ServiceConfigurationBase(m);
         assertEquals(ServiceType.cache, scb.getType());
         assertEquals("local", scb.getImplementation());
+    }
+
+    // load strategy name ----------------------------------------------------------------------------------------------
+
+    @Test
+    public void missingLoadStrategyName() throws Exception {
+
+        Map<String, String> m = new HashMap<>();
+
+        m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
+        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+
+        try {
+
+            new ServiceConfigurationBase(m);
+            fail("should throw exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("missing load strategy name"));
+        }
+    }
+
+    @Test
+    public void wrongLoadStrategyType() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+
+        m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
+        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, 1);
+
+        try {
+
+            new ServiceConfigurationBase(m);
+            fail("should throw exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("the load strategy name should be a string, but it is a\\(n\\) .*"));
+        }
+    }
+
+    @Test
+    public void loadStrategyName() throws Exception {
+
+        Map<String, String> m = new HashMap<>();
+
+        m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
+        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
+
+        ServiceConfigurationBase scb = new ServiceConfigurationBase(m);
+        assertEquals("test", scb.getLoadStrategyName());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

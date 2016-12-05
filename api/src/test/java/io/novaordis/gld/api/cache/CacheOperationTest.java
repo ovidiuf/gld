@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.cache;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertNotNull;
+import io.novaordis.gld.api.OperationTest;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 12/5/16
  */
-public abstract class ConfigurationTest {
+public abstract class CacheOperationTest extends OperationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -36,25 +34,12 @@ public abstract class ConfigurationTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // Tests -----------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void constructor() throws Exception {
-
-        Configuration c = getConfigurationToTest();
-
-        ServiceConfiguration sc = c.getServiceConfiguration();
-        assertNotNull(sc);
-
-        LoadDriverConfiguration ldc = c.getLoadDriverConfiguration();
-        assertNotNull(ldc);
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
-    // Protected -------------------------------------------------------------------------------------------------------
+    @Override
+    protected abstract CacheOperation getOperationToTest() throws Exception;
 
-    protected abstract Configuration getConfigurationToTest() throws Exception;
+    // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
 

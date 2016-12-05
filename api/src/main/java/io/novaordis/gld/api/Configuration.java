@@ -16,7 +16,11 @@
 
 package io.novaordis.gld.api;
 
+import java.util.Map;
+
 /**
+ * Typed access to underlying configuration.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
@@ -31,6 +35,8 @@ public interface Configuration {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // Typed Access ----------------------------------------------------------------------------------------------------
 
     ServiceConfiguration getServiceConfiguration();
 
