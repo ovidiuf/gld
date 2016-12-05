@@ -26,11 +26,14 @@ function build-classpath() {
 function main() {
 
     local debug=""
+    local args=""
 
     while [ -n "$1" ]; do
 
         if [ "$1" = "-d" -o "$1" = "--debug" ]; then
             debug="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
+        else
+            [ -z "${args}" ] && args=$1 || args="${args} $1"
         fi
         shift
     done
@@ -38,7 +41,7 @@ function main() {
     local classpath
     classpath=$(build-classpath) || exit 1
 
-    java ${debug} -cp ${classpath} io.novaordis.gld.Main
+    java ${debug} -cp ${classpath} io.novaordis.gld.Main ${args}
 
 }
 
