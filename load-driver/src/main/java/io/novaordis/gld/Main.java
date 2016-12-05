@@ -57,6 +57,8 @@ public class Main {
 
             ld.init(c);
 
+            log.debug(ld + " initialized");
+
             ld.run();
         }
         catch(Throwable t) {

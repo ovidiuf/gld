@@ -20,6 +20,8 @@ import io.novaordis.gld.api.Configuration;
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.gld.api.ServiceFactory;
 import io.novaordis.gld.driver.sampler.Sampler;
 import io.novaordis.gld.driver.sampler.SamplerImpl;
 import io.novaordis.gld.api.cache.local.LocalCacheKeyStore;
@@ -76,12 +78,14 @@ public class LoadDriverImpl implements LoadDriver {
     @Override
     public void init(Configuration c) throws Exception {
 
-        this.keyStore = new LocalCacheKeyStore(this);
-        this.service = new LocalCacheService(this);
-        this.sampler = new SamplerImpl();
-
-        keyStore.start();
+        ServiceConfiguration sc = c.getServiceConfiguration();
+        service = ServiceFactory.buildInstance(sc.getType(), sc.getImplementation(), this);
         service.start();
+
+        keyStore = new LocalCacheKeyStore(this);
+        keyStore.start();
+
+        sampler = new SamplerImpl();
         sampler.start();
 
         //
