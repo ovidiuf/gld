@@ -16,6 +16,8 @@
 
 package io.novaordis.gld.driver;
 
+import io.novaordis.gld.api.LoadDriver;
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.todiscard.Configuration;
@@ -75,6 +77,16 @@ public class MockService implements Service {
     public ContentType getContentType()
     {
         throw new RuntimeException("getContentType() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public LoadDriver getLoadDriver() {
+        throw new RuntimeException("getLoadDriver() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public LoadStrategy getLoadStrategy() {
+        throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
     }
 
     @Override

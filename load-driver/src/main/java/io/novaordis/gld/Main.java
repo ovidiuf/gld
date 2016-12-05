@@ -16,10 +16,20 @@
 
 package io.novaordis.gld;
 
+import io.novaordis.gld.api.Configuration;
 import io.novaordis.gld.api.LoadDriver;
+import io.novaordis.gld.api.configuration.YamlBasedConfiguration;
 import io.novaordis.gld.driver.LoadDriverImpl;
+import io.novaordis.utilities.UserErrorException;
+import io.novaordis.utilities.env.EnvironmentVariableProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -29,25 +39,99 @@ public class Main {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    public static final String CONFIGURATION_FILE_ENVIRONMENT_VARIABLE_NAME = "GLD_CONF_FILE";
+
     private static final Logger log = LoggerFactory.getLogger(Main.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     public static void main(String[] args) {
 
-        LoadDriver ld = new LoadDriverImpl();
-
         try {
 
-            ld.init();
+            List<String> arguments = new ArrayList<>(Arrays.asList(args));
+
+            File configurationFile = extractConfigurationFile(arguments);
+
+            Configuration c = new YamlBasedConfiguration();
+
+            LoadDriver ld = new LoadDriverImpl();
+
+            ld.init(c);
 
             ld.run();
-
         }
         catch(Throwable t) {
 
             throw new RuntimeException("NOT YET IMPLEMENTED: " + t);
         }
+    }
+
+    // Package protected static ----------------------------------------------------------------------------------------
+
+    /**
+     * Extracts the configuration file from the argument list, removing the related elements from the list. If the
+     * configuration file is not specified in the command line argument list, the implementation attempts to locate the
+     * name of the configuration file from the environment, using the environment variable 'GLD_CONF_FILE'.
+     *
+     * @exception io.novaordis.utilities.UserErrorException
+     */
+    static File extractConfigurationFile(List<String> arguments) throws Exception {
+
+        File f = null;
+
+        for(Iterator<String> i = arguments.iterator(); i.hasNext(); ) {
+
+            String crt = i.next();
+
+            if ("-c".equals(crt)) {
+
+                if (!i.hasNext()) {
+                    throw new UserErrorException("a configuration file name must follow -c");
+                }
+
+                i.remove();
+
+                String file = i.next();
+
+                i.remove();
+
+                f = new File(file);
+
+                break;
+            }
+        }
+
+        if (f == null) {
+
+            //
+            // no configuration file specified
+            //
+
+            EnvironmentVariableProvider evp = EnvironmentVariableProvider.getInstance();
+            String defaultConfigurationFile = evp.getenv(CONFIGURATION_FILE_ENVIRONMENT_VARIABLE_NAME);
+
+            if (defaultConfigurationFile == null) {
+                throw new UserErrorException("no configuration file specified on command line with -c and no " +
+                        Main.CONFIGURATION_FILE_ENVIRONMENT_VARIABLE_NAME + " environment variable defined");
+            }
+
+            f = new File(defaultConfigurationFile);
+        }
+
+        if (!f.isFile()) {
+
+            throw new UserErrorException("the configuration file " + f.getAbsolutePath() + " does not exist");
+        }
+
+        if (!f.canRead()) {
+
+            throw new UserErrorException("the configuration file " + f.getAbsolutePath() + " cannot be read");
+        }
+
+        log.debug("configuration file " + f.getAbsolutePath());
+
+        return f;
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------

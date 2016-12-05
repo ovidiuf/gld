@@ -39,65 +39,65 @@ public abstract class StorageStrategyTest
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Test
-    public void insureConfigureBehavesConsistentlyOnNullList() throws Exception
-    {
-        StorageStrategy ss = getStorageStrategyToTest();
-
-        try
-        {
-            //            Configuration c = new MockConfiguration();
-            Configuration c = null;
-
-            ss.configure(c, null, -1);
-            fail("should be failing with IllegalArgumentException");
-        }
-        catch(IllegalArgumentException e)
-        {
-            log.info(e.getMessage());
-        }
-    }
-
-    @Test
-    public void invalidFromValue() throws Exception
-    {
-        StorageStrategy ss = getStorageStrategyToTest();
-
-        try
-        {
-            //            Configuration c = new MockConfiguration();
-            Configuration c = null;
-
-            ss.configure(c, new ArrayList<String>(), -1);
-            fail("should be failing with ArrayIndexOutOfBoundsException");
-        }
-        catch(ArrayIndexOutOfBoundsException e)
-        {
-            log.info(e.getMessage());
-        }
-    }
-
-    @Test
-    public void insureStartFailsIfNotConfigured() throws Exception
-    {
-        StorageStrategy ss = getStorageStrategyToTest();
-
-        if (ss.isConfigured())
-        {
-            log.info(ss + " already configured, OK");
-            return;
-        }
-
-        try
-        {
-            ss.start();
-            fail("should be failing with IllegalStateException");
-        }
-        catch(IllegalStateException e)
-        {
-            log.info(e.getMessage());
-        }
-    }
+//    @Test
+//    public void insureConfigureBehavesConsistentlyOnNullList() throws Exception
+//    {
+//        StorageStrategy ss = getStorageStrategyToTest();
+//
+//        try
+//        {
+//            //            Configuration c = new MockConfiguration();
+//            Configuration c = null;
+//
+//            ss.configure(c, null, -1);
+//            fail("should be failing with IllegalArgumentException");
+//        }
+//        catch(IllegalArgumentException e)
+//        {
+//            log.info(e.getMessage());
+//        }
+//    }
+//
+//    @Test
+//    public void invalidFromValue() throws Exception
+//    {
+//        StorageStrategy ss = getStorageStrategyToTest();
+//
+//        try
+//        {
+//            //            Configuration c = new MockConfiguration();
+//            Configuration c = null;
+//
+//            ss.configure(c, new ArrayList<String>(), -1);
+//            fail("should be failing with ArrayIndexOutOfBoundsException");
+//        }
+//        catch(ArrayIndexOutOfBoundsException e)
+//        {
+//            log.info(e.getMessage());
+//        }
+//    }
+//
+//    @Test
+//    public void insureStartFailsIfNotConfigured() throws Exception
+//    {
+//        StorageStrategy ss = getStorageStrategyToTest();
+//
+//        if (ss.isConfigured())
+//        {
+//            log.info(ss + " already configured, OK");
+//            return;
+//        }
+//
+//        try
+//        {
+//            ss.start();
+//            fail("should be failing with IllegalStateException");
+//        }
+//        catch(IllegalStateException e)
+//        {
+//            log.info(e.getMessage());
+//        }
+//    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

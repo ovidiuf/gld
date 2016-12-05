@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.todiscard;
 
+@Deprecated
 public interface Command
 {
     /**

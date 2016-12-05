@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,64 +14,52 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.todiscard;
+package io.novaordis.gld;
 
-@Deprecated
-public class EmbeddedNode extends Node
-{
+import io.novaordis.utilities.env.EnvironmentVariableProvider;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 12/4/16
+ */
+public class MockEnvironmentVariableProvider implements EnvironmentVariableProvider {
+
     // Constants -------------------------------------------------------------------------------------------------------
-
-    public static final String EMBEDDED_LABEL = "EMBEDDED";
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private int capacity;
+    private Map<String, String> values;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedNode()
-    {
-        this(EMBEDDED_LABEL);
+    public MockEnvironmentVariableProvider() {
+
+        this.values = new HashMap<>();
     }
 
-    public EmbeddedNode(String tok)
-    {
-        super(EMBEDDED_LABEL, 0);
+    // EnvironmentVariableProvider implementation ----------------------------------------------------------------------
 
-        if (tok == null)
-        {
-            throw new IllegalArgumentException("null label");
+    @Override
+    public String getenv(String s) {
+
+        if (s == null) {
+            throw new NullPointerException("null name");
         }
 
-        if (!tok.toUpperCase().startsWith("EMBEDDED"))
-        {
-            throw new IllegalArgumentException("invalid embedded label: " + tok);
-        }
-
-
-        int i = tok.indexOf('[');
-        int j = tok.indexOf(']');
-
-        if (i != -1 && j != -1 && i < j)
-        {
-            String cs = tok.substring(i + 1, j);
-            capacity = Integer.parseInt(cs);
-        }
+        return values.get(s);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public int getCapacity()
-    {
-        return capacity;
-    }
+    public void setenv(String name, String value) {
 
-    @Override
-    public String toString()
-    {
-        return "EmbeddedNode(" + capacity + ")";
+        values.put(name, value);
+
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

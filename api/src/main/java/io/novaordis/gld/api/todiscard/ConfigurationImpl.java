@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+@Deprecated
 public class ConfigurationImpl implements Configuration {
 
     // Constants -------------------------------------------------------------------------------------------------------

@@ -33,7 +33,7 @@ public class MockLoadDriver implements LoadDriver {
     // LoadDriver implementation ---------------------------------------------------------------------------------------
 
     @Override
-    public void init() throws Exception {
+    public void init(Configuration c) throws Exception {
         throw new RuntimeException("init() NOT YET IMPLEMENTED");
     }
 

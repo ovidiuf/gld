@@ -33,10 +33,10 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="GLD" target="1.7" />
-      <module name="gld-api" target="1.7" />
-      <module name="gld-load-driver" target="1.7" />
-      <module name="release" target="1.7" />
+      <module name="GLD" target="1.8" />
+      <module name="gld-api" target="1.8" />
+      <module name="gld-load-driver" target="1.8" />
+      <module name="release" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

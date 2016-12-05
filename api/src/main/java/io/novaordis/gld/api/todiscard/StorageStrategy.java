@@ -24,6 +24,7 @@ import java.util.Set;
 /**
  * Implementations *must* provide a no-argument constructor.
  */
+@Deprecated
 public interface StorageStrategy {
 
     /**

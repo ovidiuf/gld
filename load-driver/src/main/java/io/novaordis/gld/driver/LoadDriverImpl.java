@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.driver;
 
+import io.novaordis.gld.api.Configuration;
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.Service;
@@ -70,7 +71,7 @@ public class LoadDriverImpl implements LoadDriver {
     }
 
     @Override
-    public void init() throws Exception {
+    public void init(Configuration c) throws Exception {
 
         this.keyStore = new EmbeddedKeyStore(this);
         this.service = new EmbeddedService(this);

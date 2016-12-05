@@ -23,6 +23,7 @@ import io.novaordis.utilities.time.Duration;
 import java.util.List;
 import java.util.Properties;
 
+@Deprecated
 public interface Configuration
 {
     Service getService();

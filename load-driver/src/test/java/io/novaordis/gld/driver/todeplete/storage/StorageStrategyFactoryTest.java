@@ -44,125 +44,125 @@ public class StorageStrategyFactoryTest
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Test
-    public void fromArguments_NoStorageStrategyFlag() throws Exception
-    {
-        try
-        {
-            //            Configuration c = new MockConfiguration();
-            Configuration c = null;
-
-            StorageStrategyFactory.fromArguments(c, Arrays.asList("blah"), 0);
-            fail("should have failed with IllegalArgumentException");
-        }
-        catch(IllegalArgumentException e)
-        {
-            log.info(e.getMessage());
-        }
-    }
-
-    @Test
-    public void missingStrategy() throws Exception
-    {
-        List<String> args = new ArrayList<>();
-        args.add("--storage-strategy");
-
-        try
-        {
-            //            Configuration c = new MockConfiguration();
-            Configuration c = null;
-
-            StorageStrategyFactory.fromArguments(c, args, 0);
-            fail("should fail with UserErrorException, missing storage strategy");
-        }
-        catch(UserErrorException e)
-        {
-            log.info(e.getMessage());
-
-            Throwable t = e.getCause();
-
-            assertTrue(t instanceof NullPointerException);
-        }
-    }
-
-    @Test
-    public void unknownStrategy() throws Exception
-    {
-        List<String> args = new ArrayList<>();
-        args.add("--storage-strategy");
-        args.add("NoSuchStrategy");
-
-        try
-        {
-            //            Configuration c = new MockConfiguration();
-            Configuration c = null;
-
-            StorageStrategyFactory.fromArguments(c, args, 0);
-            fail("should fail with UserErrorException, no such storage strategy");
-        }
-        catch(UserErrorException e)
-        {
-            log.info(e.getMessage());
-
-            Throwable cause = e.getCause();
-            assertNotNull(cause);
-        }
-    }
-
-    @Test
-    public void strategy_stdout() throws Exception
-    {
-        List<String> args = new ArrayList<>();
-        args.add("--storage-strategy");
-        args.add("stdout");
-
-        //            Configuration c = new MockConfiguration();
-        Configuration c = null;
-
-        StdoutStorageStrategy ss =
-            (StdoutStorageStrategy)StorageStrategyFactory.fromArguments(c, args, 0);
-        assertNotNull(ss);
-    }
-
-    @Test
-    public void strategy_Stdout() throws Exception
-    {
-        List<String> args = new ArrayList<>();
-        args.add("--storage-strategy");
-        args.add("Stdout");
-
-        //            Configuration c = new MockConfiguration();
-        Configuration c = null;
-
-        StdoutStorageStrategy ss =
-            (StdoutStorageStrategy)StorageStrategyFactory.fromArguments(c, args, 0);
-        assertNotNull(ss);
-    }
-
-    @Test
-    public void makeSureAllRelevantArgumentsAreRemovedFromList() throws Exception
-    {
-        List<String> args = new ArrayList<>();
-        args.add("blah");
-        args.add("--storage-strategy");
-        args.add("Mock");
-        args.add("--mock-argument");
-        args.add("something");
-        args.add("post-argument");
-
-        //            Configuration c = new MockConfiguration();
-        Configuration c = null;
-
-
-        MockStorageStrategy mss =
-            (MockStorageStrategy)StorageStrategyFactory.fromArguments(c, args, 1);
-        assertNotNull(mss);
-
-        assertEquals("something", mss.getMockArgument());
-        assertEquals(2, args.size());
-        assertEquals("blah", args.get(0));
-        assertEquals("post-argument", args.get(1));
-    }
+//    @Test
+//    public void fromArguments_NoStorageStrategyFlag() throws Exception
+//    {
+//        try
+//        {
+//            //            Configuration c = new MockConfiguration();
+//            Configuration c = null;
+//
+//            StorageStrategyFactory.fromArguments(c, Arrays.asList("blah"), 0);
+//            fail("should have failed with IllegalArgumentException");
+//        }
+//        catch(IllegalArgumentException e)
+//        {
+//            log.info(e.getMessage());
+//        }
+//    }
+//
+//    @Test
+//    public void missingStrategy() throws Exception
+//    {
+//        List<String> args = new ArrayList<>();
+//        args.add("--storage-strategy");
+//
+//        try
+//        {
+//            //            Configuration c = new MockConfiguration();
+//            Configuration c = null;
+//
+//            StorageStrategyFactory.fromArguments(c, args, 0);
+//            fail("should fail with UserErrorException, missing storage strategy");
+//        }
+//        catch(UserErrorException e)
+//        {
+//            log.info(e.getMessage());
+//
+//            Throwable t = e.getCause();
+//
+//            assertTrue(t instanceof NullPointerException);
+//        }
+//    }
+//
+//    @Test
+//    public void unknownStrategy() throws Exception
+//    {
+//        List<String> args = new ArrayList<>();
+//        args.add("--storage-strategy");
+//        args.add("NoSuchStrategy");
+//
+//        try
+//        {
+//            //            Configuration c = new MockConfiguration();
+//            Configuration c = null;
+//
+//            StorageStrategyFactory.fromArguments(c, args, 0);
+//            fail("should fail with UserErrorException, no such storage strategy");
+//        }
+//        catch(UserErrorException e)
+//        {
+//            log.info(e.getMessage());
+//
+//            Throwable cause = e.getCause();
+//            assertNotNull(cause);
+//        }
+//    }
+//
+//    @Test
+//    public void strategy_stdout() throws Exception
+//    {
+//        List<String> args = new ArrayList<>();
+//        args.add("--storage-strategy");
+//        args.add("stdout");
+//
+//        //            Configuration c = new MockConfiguration();
+//        Configuration c = null;
+//
+//        StdoutStorageStrategy ss =
+//            (StdoutStorageStrategy)StorageStrategyFactory.fromArguments(c, args, 0);
+//        assertNotNull(ss);
+//    }
+//
+//    @Test
+//    public void strategy_Stdout() throws Exception
+//    {
+//        List<String> args = new ArrayList<>();
+//        args.add("--storage-strategy");
+//        args.add("Stdout");
+//
+//        //            Configuration c = new MockConfiguration();
+//        Configuration c = null;
+//
+//        StdoutStorageStrategy ss =
+//            (StdoutStorageStrategy)StorageStrategyFactory.fromArguments(c, args, 0);
+//        assertNotNull(ss);
+//    }
+//
+//    @Test
+//    public void makeSureAllRelevantArgumentsAreRemovedFromList() throws Exception
+//    {
+//        List<String> args = new ArrayList<>();
+//        args.add("blah");
+//        args.add("--storage-strategy");
+//        args.add("Mock");
+//        args.add("--mock-argument");
+//        args.add("something");
+//        args.add("post-argument");
+//
+//        //            Configuration c = new MockConfiguration();
+//        Configuration c = null;
+//
+//
+//        MockStorageStrategy mss =
+//            (MockStorageStrategy)StorageStrategyFactory.fromArguments(c, args, 1);
+//        assertNotNull(mss);
+//
+//        assertEquals("something", mss.getMockArgument());
+//        assertEquals(2, args.size());
+//        assertEquals("blah", args.get(0));
+//        assertEquals("post-argument", args.get(1));
+//    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

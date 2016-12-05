@@ -18,6 +18,7 @@ package io.novaordis.gld.api.todiscard;
 
 import io.novaordis.utilities.UserErrorException;
 
+@Deprecated
 public enum ContentType {
 
     KEYVALUE,

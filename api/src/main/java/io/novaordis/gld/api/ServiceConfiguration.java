@@ -17,50 +17,15 @@
 package io.novaordis.gld.api;
 
 /**
- * @{linktourl https://kb.novaordis.com/index.php/Gld_Concepts#Load_Driver_Instance}
- *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/2/16
+ * @since 12/4/16
  */
-public interface LoadDriver {
+public interface ServiceConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    /**
-     * Initialize the load driver and dependencies (the service and auxiliary components), based on the Configuration
-     * passed to it.
-     */
-    void init(Configuration c) throws Exception;
-
-    /**
-     * The main LoadDriver instance loop.
-     */
-    void run();
-
-
-    /**
-     * @return true if the load driver runs in background and cannot be controlled directly from stdin, false if it
-     * runs in foreground and can be controlled from stdin.
-     */
-    boolean isBackground();
-
-    //
-    // topology --------------------------------------------------------------------------------------------------------
-    //
-
-    /**
-     * A LoadDriver instance can only be associated with a service at a time.
-     */
-    Service getService();
-
-    /**
-     * A LoadDriver instance can only be associated with a service at a time.
-     */
-    KeyStore getKeyStore();
-
 
 }

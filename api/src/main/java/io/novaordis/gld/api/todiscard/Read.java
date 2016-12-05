@@ -20,6 +20,7 @@ import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
 
+@Deprecated
 public class Read implements Operation {
 
     // Constants -------------------------------------------------------------------------------------------------------
