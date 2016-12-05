@@ -3,4 +3,5 @@ target
 *.iws
 .DS_Store
 ~$*.docx
+.~*odg#
 
