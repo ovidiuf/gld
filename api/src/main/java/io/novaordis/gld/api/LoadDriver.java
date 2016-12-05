@@ -61,11 +61,13 @@ public interface LoadDriver {
 
     /**
      * Logs the exception, in a human readable format, to the error stream.
+     * The details debug logging must be done by the calling layer.
      */
     void error(Throwable t);
 
     /**
      * Logs the message (which should be in a human readable format), to the error stream.
+     * The details debug logging must be done by the calling layer.
      */
     void error(String msg);
 

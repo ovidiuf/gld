@@ -57,6 +57,16 @@ public class MockLoadDriver implements LoadDriver {
         throw new RuntimeException("getKeyStore() NOT YET IMPLEMENTED");
     }
 
+    @Override
+    public void error(Throwable t) {
+        throw new RuntimeException("error() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void error(String msg) {
+        throw new RuntimeException("error() NOT YET IMPLEMENTED");
+    }
+
 
     // Public ----------------------------------------------------------------------------------------------------------
 
