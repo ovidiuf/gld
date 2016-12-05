@@ -46,7 +46,7 @@ function configure-user-environment() {
 
 function remove-older-releases() {
 
-    for i in $(dirname $0)/../../nort-*; do
+    for i in $(dirname $0)/../../gld-*; do
 
         [ ! -d ${i} ] && continue
 
