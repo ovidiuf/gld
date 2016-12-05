@@ -61,7 +61,8 @@ public class Main {
         }
         catch(Throwable t) {
 
-            throw new RuntimeException("NOT YET IMPLEMENTED: " + t);
+            log.debug("load driver failure: " + t.getMessage(), t);
+            ld.error(t);
         }
     }
 

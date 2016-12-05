@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.embedded;
+package io.novaordis.gld.api.cache.local.operation;
 
-import io.novaordis.gld.api.KeyStore;
-import io.novaordis.gld.api.LoadDriver;
+import io.novaordis.gld.api.LoadStrategy;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.Service;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/2/16
  */
-public class EmbeddedKeyStore implements KeyStore {
+public class SyntheticRead implements Operation {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -31,52 +32,25 @@ public class EmbeddedKeyStore implements KeyStore {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private LoadDriver loadDriver;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedKeyStore(LoadDriver loadDriver) {
-
-        this.loadDriver = loadDriver;
-    }
-
-    // KeyStore implementation -----------------------------------------------------------------------------------------
+    // Operation implementation ----------------------------------------------------------------------------------------
 
     @Override
-    public void start() throws Exception {
-        throw new RuntimeException("start() NOT YET IMPLEMENTED");
+    public String getKey() {
+        throw new RuntimeException("getKey() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void stop() throws Exception {
-        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
+    public void perform(Service s) throws Exception {
+        throw new RuntimeException("perform() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public boolean isStarted() {
-        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
+    public LoadStrategy getLoadStrategy() {
+        throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
     }
 
-    @Override
-    public boolean isReadOnly() {
-        throw new RuntimeException("isReadOnly() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void store(String key) throws Exception {
-        throw new RuntimeException("store() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public String get() {
-        throw new RuntimeException("get() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public LoadDriver getLoadDriver() {
-
-        return loadDriver;
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 

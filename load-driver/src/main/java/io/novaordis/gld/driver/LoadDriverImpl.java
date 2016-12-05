@@ -22,8 +22,9 @@ import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.driver.sampler.Sampler;
 import io.novaordis.gld.driver.sampler.SamplerImpl;
-import io.novaordis.gld.api.embedded.EmbeddedKeyStore;
-import io.novaordis.gld.api.embedded.EmbeddedService;
+import io.novaordis.gld.api.cache.local.LocalCacheKeyStore;
+import io.novaordis.gld.api.cache.local.LocalCacheService;
+import io.novaordis.utilities.UserErrorException;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -75,8 +76,8 @@ public class LoadDriverImpl implements LoadDriver {
     @Override
     public void init(Configuration c) throws Exception {
 
-        this.keyStore = new EmbeddedKeyStore(this);
-        this.service = new EmbeddedService(this);
+        this.keyStore = new LocalCacheKeyStore(this);
+        this.service = new LocalCacheService(this);
         this.sampler = new SamplerImpl();
 
         keyStore.start();
@@ -123,6 +124,36 @@ public class LoadDriverImpl implements LoadDriver {
     public boolean isBackground() {
 
         return background;
+    }
+
+    @Override
+    public void error(Throwable t) {
+
+        if (t instanceof UserErrorException) {
+
+            String msg = t.getMessage();
+            error(msg);
+
+        }
+        else {
+
+            String msg = "internal error: " + t.getClass().getSimpleName();
+
+            String m = t.getMessage();
+
+            if (m != null) {
+
+                msg += " (" + m + "), consult the log for more details";
+            }
+
+            error(msg);
+        }
+    }
+
+    @Override
+    public void error(String msg) {
+
+        System.err.println("[error]: " + msg);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

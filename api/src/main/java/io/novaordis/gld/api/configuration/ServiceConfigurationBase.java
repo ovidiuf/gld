@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.embedded.operation;
+package io.novaordis.gld.api.configuration;
 
-import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.gld.api.ServiceType;
+import io.novaordis.utilities.UserErrorException;
+
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/2/16
+ * @since 12/4/16
  */
-public class SyntheticRead implements Operation {
+public class ServiceConfigurationBase implements ServiceConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,25 +34,30 @@ public class SyntheticRead implements Operation {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private ServiceType type;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Operation implementation ----------------------------------------------------------------------------------------
+    /**
+     * @param map the map extracted from the YAML file from under the "service" section.
+     */
+    public ServiceConfigurationBase(Map map) throws Exception {
+
+        load(map);
+    }
+
+    // ServiceConfiguration implementation -----------------------------------------------------------------------------
 
     @Override
-    public String getKey() {
-        throw new RuntimeException("getKey() NOT YET IMPLEMENTED");
+    public ServiceType getType() {
+
+        return type;
     }
 
     @Override
-    public void perform(Service s) throws Exception {
-        throw new RuntimeException("perform() NOT YET IMPLEMENTED");
+    public String getImplementation() {
+        throw new RuntimeException("getImplementation() NOT YET IMPLEMENTED");
     }
-
-    @Override
-    public LoadStrategy getLoadStrategy() {
-        throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
-    }
-
 
     // Public ----------------------------------------------------------------------------------------------------------
 
@@ -59,6 +66,30 @@ public class SyntheticRead implements Operation {
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private void load(Map map) throws Exception {
+
+        Object o = map.get(ServiceConfiguration.TYPE_LABEL);
+
+        if (o == null) {
+
+            throw new UserErrorException("missing service type");
+        }
+
+        if (!(o instanceof String)) {
+            throw new UserErrorException(
+                    "the service type should be a string, but it is a " + o.getClass().getSimpleName());
+        }
+
+        try {
+
+            type = ServiceType.valueOf((String) o);
+        }
+        catch(Exception e) {
+
+            throw new UserErrorException("unknown service type '" + o + "'", e);
+        }
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

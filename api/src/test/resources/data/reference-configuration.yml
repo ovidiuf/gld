@@ -2,7 +2,9 @@
 # reference configuration for a load driver instance
 #
 service:
+  # service types: cache, jms, http
   type: cache
+  implementation: local
 
 load:
   threads: 10

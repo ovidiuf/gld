@@ -102,15 +102,13 @@ public class YamlBasedConfiguration implements Configuration {
                         "'" + SERVICE_SECTION_LABEL + "' section empty or missing from configuration file " + file);
             }
 
+            serviceConfiguration = new ServiceConfigurationBase(serviceConfigurationMap);
 
             if (loadConfigurationMap == null) {
 
                 throw new UserErrorException(
                         "'" + LOAD_SECTION_LABEL + "' section empty or missing from configuration file " + file);
             }
-
-            serviceConfiguration = new ServiceConfiguration() {
-            };
 
             loadDriverConfiguration = new LoadDriverConfiguration() {
             };

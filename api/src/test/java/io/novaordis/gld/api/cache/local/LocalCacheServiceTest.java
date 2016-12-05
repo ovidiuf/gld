@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.embedded.operation;
+package io.novaordis.gld.api.cache.local;
 
-import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.ServiceTest;
+import io.novaordis.gld.api.cache.local.LocalCacheService;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/2/16
+ * @since 12/4/16
  */
-public class SyntheticWrite implements Operation {
+public class LocalCacheServiceTest extends ServiceTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,27 +35,15 @@ public class SyntheticWrite implements Operation {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Operation implementation ----------------------------------------------------------------------------------------
-
-    @Override
-    public String getKey() {
-        throw new RuntimeException("getKey() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void perform(Service s) throws Exception {
-        throw new RuntimeException("perform() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public LoadStrategy getLoadStrategy() {
-        throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
-    }
-
-
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
+
+    @Override
+    protected Service getServiceToTest(LoadDriver d) throws Exception {
+
+        return new LocalCacheService(d);
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

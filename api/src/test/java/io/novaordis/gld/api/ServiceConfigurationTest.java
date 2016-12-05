@@ -16,6 +16,8 @@
 
 package io.novaordis.gld.api;
 
+import java.util.Map;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
@@ -34,7 +36,7 @@ public abstract class ServiceConfigurationTest {
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    protected abstract ServiceConfiguration getServiceConfigurationToTest() throws Exception;
+    protected abstract ServiceConfiguration getServiceConfigurationToTest(Map map) throws Exception;
 
     // Protected -------------------------------------------------------------------------------------------------------
 

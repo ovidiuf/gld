@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.embedded;
+package io.novaordis.gld.api.cache.local;
 
+import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadDriver;
-import io.novaordis.gld.api.Service;
-import io.novaordis.gld.api.ServiceTest;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 12/2/16
  */
-public class EmbeddedServiceTest extends ServiceTest {
+public class LocalCacheKeyStore implements KeyStore {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,17 +31,56 @@ public class EmbeddedServiceTest extends ServiceTest {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private LoadDriver loadDriver;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public LocalCacheKeyStore(LoadDriver loadDriver) {
+
+        this.loadDriver = loadDriver;
+    }
+
+    // KeyStore implementation -----------------------------------------------------------------------------------------
+
+    @Override
+    public void start() throws Exception {
+        throw new RuntimeException("start() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void stop() throws Exception {
+        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public boolean isStarted() {
+        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        throw new RuntimeException("isReadOnly() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void store(String key) throws Exception {
+        throw new RuntimeException("store() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public String get() {
+        throw new RuntimeException("get() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public LoadDriver getLoadDriver() {
+
+        return loadDriver;
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
-
-    @Override
-    protected Service getServiceToTest(LoadDriver d) throws Exception {
-
-        return new EmbeddedService(d);
-    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

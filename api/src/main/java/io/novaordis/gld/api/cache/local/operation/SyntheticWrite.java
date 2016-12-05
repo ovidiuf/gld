@@ -14,25 +14,17 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.embedded;
+package io.novaordis.gld.api.cache.local.operation;
 
-import io.novaordis.gld.api.LoadStrategyBase;
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
-import io.novaordis.gld.api.embedded.operation.SyntheticDelete;
-import io.novaordis.gld.api.embedded.operation.SyntheticRead;
-import io.novaordis.gld.api.embedded.operation.SyntheticWrite;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
- * Simulates the interaction with a cache (SyntheticRead, SyntheticWrite and SyntheticDelete).
- *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/2/16
  */
-public class EmbeddedLoadStrategy extends LoadStrategyBase {
+public class SyntheticWrite implements Operation {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -40,34 +32,25 @@ public class EmbeddedLoadStrategy extends LoadStrategyBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Service service;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedLoadStrategy(Service service) {
-
-        this.service = service;
-
-        setKeyStore(service.getLoadDriver().getKeyStore());
-    }
-
-    // LoadStrategy implementation -------------------------------------------------------------------------------------
+    // Operation implementation ----------------------------------------------------------------------------------------
 
     @Override
-    public Set<Class<? extends Operation>> getOperationTypes() {
-
-        Set<Class<? extends Operation>> result = new HashSet<>();
-        result.add(SyntheticRead.class);
-        result.add(SyntheticWrite.class);
-        result.add(SyntheticDelete.class);
-        return result;
+    public String getKey() {
+        throw new RuntimeException("getKey() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public Operation next(Operation last, String lastWrittenKey, boolean runtimeShuttingDown) throws Exception {
-
-        throw new RuntimeException("next() NOT YET IMPLEMENTED");
+    public void perform(Service s) throws Exception {
+        throw new RuntimeException("perform() NOT YET IMPLEMENTED");
     }
+
+    @Override
+    public LoadStrategy getLoadStrategy() {
+        throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
+    }
+
 
     // Public ----------------------------------------------------------------------------------------------------------
 

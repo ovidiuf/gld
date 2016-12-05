@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.embedded;
+package io.novaordis.gld.api.cache.local;
 
-import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.LoadStrategyTest;
-import io.novaordis.gld.api.todiscard.Configuration;
-
-import java.util.List;
+import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.api.KeyStoreTest;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/3/16
+ * @since 12/4/16
  */
-public class EmbeddedLoadStrategyTest extends LoadStrategyTest {
+public class LocalCacheKeyStoreTest extends KeyStoreTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -41,13 +38,8 @@ public class EmbeddedLoadStrategyTest extends LoadStrategyTest {
     // Package protected -----------------------------------------------------------------------------------------------
 
     @Override
-    protected LoadStrategy getLoadStrategyToTest(Configuration config, List<String> arguments, int from) throws Exception {
-        throw new RuntimeException("getLoadStrategyToTest() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    protected Configuration getConfigurationToTestWith() throws Exception {
-        throw new RuntimeException("getConfigurationToTestWith() NOT YET IMPLEMENTED");
+    protected KeyStore getKeyStoreToTest() throws Exception {
+        throw new RuntimeException("getKeyStoreToTest() NOT YET IMPLEMENTED");
     }
 
     // Protected -------------------------------------------------------------------------------------------------------

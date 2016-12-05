@@ -41,13 +41,6 @@ public interface LoadDriver {
      */
     void run();
 
-
-    /**
-     * @return true if the load driver runs in background and cannot be controlled directly from stdin, false if it
-     * runs in foreground and can be controlled from stdin.
-     */
-    boolean isBackground();
-
     //
     // topology --------------------------------------------------------------------------------------------------------
     //
@@ -62,5 +55,24 @@ public interface LoadDriver {
      */
     KeyStore getKeyStore();
 
+    //
+    // logging ---------------------------------------------------------------------------------------------------------
+    //
+
+    /**
+     * Logs the exception, in a human readable format, to the error stream.
+     */
+    void error(Throwable t);
+
+    /**
+     * Logs the message (which should be in a human readable format), to the error stream.
+     */
+    void error(String msg);
+
+    /**
+     * @return true if the load driver runs in background and cannot be controlled directly from stdin, false if it
+     * runs in foreground and can be controlled from stdin.
+     */
+    boolean isBackground();
 
 }

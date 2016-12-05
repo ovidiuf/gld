@@ -14,23 +14,17 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.embedded;
+package io.novaordis.gld.api.cache.local.operation;
 
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.ServiceBase;
-import io.novaordis.gld.api.todiscard.Configuration;
-import io.novaordis.gld.api.todiscard.ContentType;
-import io.novaordis.gld.api.todiscard.Node;
-import io.novaordis.gld.api.LoadDriver;
-import io.novaordis.utilities.UserErrorException;
-
-import java.util.List;
+import io.novaordis.gld.api.Service;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/2/16
  */
-public class EmbeddedService extends ServiceBase {
+public class SyntheticDelete implements Operation {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -38,72 +32,23 @@ public class EmbeddedService extends ServiceBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-
-    private volatile boolean started;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedService(LoadDriver loadDriver) {
-
-        super(loadDriver);
-    }
-
-    // Service implementation ------------------------------------------------------------------------------------------
+    // Operation implementation ----------------------------------------------------------------------------------------
 
     @Override
-    public void start() throws Exception {
-
-        if (started) {
-
-            return;
-        }
-
-        started = true;
+    public String getKey() {
+        throw new RuntimeException("getKey() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void stop() throws Exception {
-
-        if (!started) {
-
-            return;
-        }
-
-        started = false;
-    }
-
-    @Override
-    public boolean isStarted() {
-
-        return started;
-    }
-
-    // execution -------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void perform(Operation o) throws Exception {
+    public void perform(Service s) throws Exception {
         throw new RuntimeException("perform() NOT YET IMPLEMENTED");
     }
 
-
     @Override
-    public void setConfiguration(Configuration c) {
-        throw new RuntimeException("setConfiguration() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void setTarget(List<Node> nodes) {
-        throw new RuntimeException("setTarget() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void configure(List<String> commandLineArguments) throws UserErrorException {
-        throw new RuntimeException("configure() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public ContentType getContentType() {
-        throw new RuntimeException("getContentType() NOT YET IMPLEMENTED");
+    public LoadStrategy getLoadStrategy() {
+        throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
     }
 
 

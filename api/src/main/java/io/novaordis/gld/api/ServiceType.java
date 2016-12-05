@@ -20,19 +20,9 @@ package io.novaordis.gld.api;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-public interface ServiceConfiguration {
+public enum ServiceType {
 
-    // Constants -------------------------------------------------------------------------------------------------------
-
-    String TYPE_LABEL = "type";
-    String IMPLEMENTATION_LABEL = "implementation";
-
-    // Static ----------------------------------------------------------------------------------------------------------
-
-    // Public ----------------------------------------------------------------------------------------------------------
-
-    ServiceType getType();
-
-    String getImplementation();
-
+    cache,
+    jms,
+    http
 }
