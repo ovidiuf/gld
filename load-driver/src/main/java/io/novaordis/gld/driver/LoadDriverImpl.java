@@ -53,7 +53,9 @@ public class LoadDriverImpl implements LoadDriver {
 
     public LoadDriverImpl() {
 
-        this.background = false;
+        //
+        // noop constructor, all initialization takes place in init()
+        //
     }
 
     // LoadDriver implementation ---------------------------------------------------------------------------------------
@@ -88,6 +90,9 @@ public class LoadDriverImpl implements LoadDriver {
         int threadCount = 2;
 
         long singleThreadedRunnerSleepMs = -1L;
+
+        this.background = false;
+
 
         multiThreadedRunner =
                 new MultiThreadedRunnerImpl(service, threadCount, sampler, background, singleThreadedRunnerSleepMs);

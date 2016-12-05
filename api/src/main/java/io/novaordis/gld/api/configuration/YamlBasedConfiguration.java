@@ -19,6 +19,14 @@ package io.novaordis.gld.api.configuration;
 import io.novaordis.gld.api.Configuration;
 import io.novaordis.gld.api.LoadDriverConfiguration;
 import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.utilities.UserErrorException;
+import org.yaml.snakeyaml.Yaml;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -28,24 +36,36 @@ public class YamlBasedConfiguration implements Configuration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    public static final String SERVICE_SECTION_LABEL = "service";
+    public static final String LOAD_SECTION_LABEL = "load";
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private ServiceConfiguration serviceConfiguration;
+    private LoadDriverConfiguration loadDriverConfiguration;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public YamlBasedConfiguration(File file) throws Exception {
+
+        parse(file);
+
+    }
 
     // Configuration implementation ------------------------------------------------------------------------------------
 
     @Override
     public ServiceConfiguration getServiceConfiguration() {
 
-        throw new RuntimeException("getServiceConfiguration() NOT YET IMPLEMENTED");
+        return serviceConfiguration;
     }
 
     @Override
     public LoadDriverConfiguration getLoadDriverConfiguration() {
 
-        throw new RuntimeException("getLoadDriverConfiguration() NOT YET IMPLEMENTED");
+        return loadDriverConfiguration;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -55,6 +75,55 @@ public class YamlBasedConfiguration implements Configuration {
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private void parse(File file) throws Exception {
+
+        InputStream is = null;
+
+        try {
+
+            is = new BufferedInputStream(new FileInputStream(file));
+
+            Yaml yaml = new Yaml();
+
+            Map topLevelConfigurationMap = (Map)yaml.load(is);
+            Map serviceConfigurationMap = null;
+            Map loadConfigurationMap = null;
+
+            if (topLevelConfigurationMap != null) {
+
+                serviceConfigurationMap = (Map) topLevelConfigurationMap.get(SERVICE_SECTION_LABEL);
+                loadConfigurationMap = (Map) topLevelConfigurationMap.get(LOAD_SECTION_LABEL);
+            }
+
+            if (serviceConfigurationMap == null) {
+
+                throw new UserErrorException(
+                        "'" + SERVICE_SECTION_LABEL + "' section empty or missing from configuration file " + file);
+            }
+
+
+            if (loadConfigurationMap == null) {
+
+                throw new UserErrorException(
+                        "'" + LOAD_SECTION_LABEL + "' section empty or missing from configuration file " + file);
+            }
+
+            serviceConfiguration = new ServiceConfiguration() {
+            };
+
+            loadDriverConfiguration = new LoadDriverConfiguration() {
+            };
+
+        }
+        finally {
+
+            if (is != null) {
+
+                is.close();
+            }
+        }
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

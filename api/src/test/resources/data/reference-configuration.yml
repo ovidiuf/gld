@@ -1,0 +1,8 @@
+#
+# reference configuration for a load driver instance
+#
+service:
+  type: cache
+
+load:
+  threads: 10

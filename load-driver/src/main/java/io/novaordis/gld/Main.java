@@ -47,15 +47,13 @@ public class Main {
 
     public static void main(String[] args) {
 
+        LoadDriver ld = new LoadDriverImpl();
+
         try {
 
             List<String> arguments = new ArrayList<>(Arrays.asList(args));
-
             File configurationFile = extractConfigurationFile(arguments);
-
-            Configuration c = new YamlBasedConfiguration();
-
-            LoadDriver ld = new LoadDriverImpl();
+            Configuration c = new YamlBasedConfiguration(configurationFile);
 
             ld.init(c);
 

@@ -16,16 +16,11 @@
 
 package io.novaordis.gld.api;
 
-import io.novaordis.gld.api.todiscard.*;
-import org.junit.Test;
-
-import static org.junit.Assert.assertNotNull;
-
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-public abstract class ConfigurationTest {
+public abstract class ServiceConfigurationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -37,25 +32,11 @@ public abstract class ConfigurationTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // Tests -----------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void constructor() throws Exception {
-
-        Configuration c = getConfigurationToTest();
-
-        ServiceConfiguration sc = c.getServiceConfiguration();
-        assertNotNull(sc);
-
-        LoadDriverConfiguration ldc = c.getLoadDriverConfiguration();
-        assertNotNull(ldc);
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
-    // Protected -------------------------------------------------------------------------------------------------------
+    protected abstract ServiceConfiguration getServiceConfigurationToTest() throws Exception;
 
-    protected abstract Configuration getConfigurationToTest() throws Exception;
+    // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
 

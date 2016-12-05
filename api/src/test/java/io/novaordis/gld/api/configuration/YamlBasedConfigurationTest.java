@@ -17,6 +17,18 @@
 package io.novaordis.gld.api.configuration;
 
 import io.novaordis.gld.api.ConfigurationTest;
+import io.novaordis.utilities.Files;
+import io.novaordis.utilities.UserErrorException;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -26,22 +38,96 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    private static final Logger log = LoggerFactory.getLogger(YamlBasedConfigurationTest.class);
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
+
+    private File scratchDirectory;
+    private File baseDirectory;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    @Before
+    public void before() throws Exception {
+
+        String projectBaseDirName = System.getProperty("basedir");
+        scratchDirectory = new File(projectBaseDirName, "target/test-scratch");
+        assertTrue(scratchDirectory.isDirectory());
+
+        baseDirectory = new File(System.getProperty("basedir"));
+        assertTrue(baseDirectory.isDirectory());
+    }
+
+    @After
+    public void after() throws Exception {
+
+        //
+        // scratch directory cleanup
+        //
+
+        assertTrue(io.novaordis.utilities.Files.rmdir(scratchDirectory, false));
+    }
+
     // Tests -----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void missingServiceSection() throws Exception {
+
+        File f = new File(scratchDirectory, "test.yml");
+        assertTrue(Files.write(f, "# empty"));
+
+        try {
+
+            new YamlBasedConfiguration(f);
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches(
+                    "'" + YamlBasedConfiguration.SERVICE_SECTION_LABEL +
+                            "' section empty or missing from configuration file .*test.yml"));
+        }
+    }
+
+    @Test
+    public void emptyServiceSection() throws Exception {
+
+        File f = new File(scratchDirectory, "test.yml");
+        assertTrue(Files.write(f,
+                "service:\n" +
+                        "\n" +
+                        "\n"));
+
+        try {
+
+            new YamlBasedConfiguration(f);
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches(
+                    "'" + YamlBasedConfiguration.SERVICE_SECTION_LABEL +
+                            "' section empty or missing from configuration file .*test.yml"));
+        }
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     @Override
     protected YamlBasedConfiguration getConfigurationToTest() throws Exception {
 
-        return new YamlBasedConfiguration();
+        File f = new File(baseDirectory, "src/test/resources/data/reference-configuration.yml");
+        assertTrue(f.isFile());
+
+        return new YamlBasedConfiguration(f);
     }
 
     // Protected -------------------------------------------------------------------------------------------------------
