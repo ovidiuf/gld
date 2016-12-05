@@ -19,6 +19,7 @@ package io.novaordis.gld.driver;
 import io.novaordis.gld.api.Configuration;
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadDriver;
+import io.novaordis.gld.api.LoadDriverConfiguration;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceFactory;
@@ -78,6 +79,10 @@ public class LoadDriverImpl implements LoadDriver {
     @Override
     public void init(Configuration c) throws Exception {
 
+        //
+        // service initialization and configuration
+        //
+
         ServiceConfiguration sc = c.getServiceConfiguration();
         service = ServiceFactory.buildInstance(sc.getType(), sc.getImplementation(), this);
         service.start();
@@ -85,22 +90,21 @@ public class LoadDriverImpl implements LoadDriver {
         keyStore = new LocalCacheKeyStore(this);
         keyStore.start();
 
+        //
+        // load configuration
+        //
+
+        LoadDriverConfiguration lc = c.getLoadDriverConfiguration();
+
         sampler = new SamplerImpl();
         sampler.start();
-
-        //
-        // configure
-        //
-
-        int threadCount = 2;
 
         long singleThreadedRunnerSleepMs = -1L;
 
         this.background = false;
 
-
-        multiThreadedRunner =
-                new MultiThreadedRunnerImpl(service, threadCount, sampler, background, singleThreadedRunnerSleepMs);
+        multiThreadedRunner = new MultiThreadedRunnerImpl(
+                service, lc.getThreadCount(), sampler, background, singleThreadedRunnerSleepMs);
     }
 
     @Override

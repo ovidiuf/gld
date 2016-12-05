@@ -50,6 +50,7 @@ public class MainTest {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private File scratchDirectory;
+    private File baseDirectory;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -61,6 +62,9 @@ public class MainTest {
         String projectBaseDirName = System.getProperty("basedir");
         scratchDirectory = new File(projectBaseDirName, "target/test-scratch");
         assertTrue(scratchDirectory.isDirectory());
+
+        baseDirectory = new File(System.getProperty("basedir"));
+        assertTrue(baseDirectory.isDirectory());
     }
 
     @After
@@ -246,6 +250,21 @@ public class MainTest {
             System.clearProperty(EnvironmentVariableProvider.ENVIRONMENT_VARIABLE_PROVIDER_CLASS_NAME_SYSTEM_PROPERTY);
             EnvironmentVariableProvider.reset();
         }
+    }
+
+    // lifecycle -------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void lifecycle() throws Exception {
+
+        File f = new File(baseDirectory, "../api/src/test/resources/data/reference-configuration.yml");
+        assertTrue(f.isFile());
+
+        String[] args = new String[] {"-c", f.getPath()};
+
+        boolean success = Main.lifecycle(args);
+
+        assertTrue(success);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

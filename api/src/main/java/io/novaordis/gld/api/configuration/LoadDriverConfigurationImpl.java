@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.cache.local.operation;
+package io.novaordis.gld.api.configuration;
 
-import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.LoadDriverConfiguration;
+import io.novaordis.utilities.UserErrorException;
+
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/2/16
+ * @since 12/4/16
  */
-public class SyntheticDelete implements Operation {
+public class LoadDriverConfigurationImpl implements LoadDriverConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,25 +33,25 @@ public class SyntheticDelete implements Operation {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private int threadCount;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Operation implementation ----------------------------------------------------------------------------------------
+    /**
+     * @param map the map extracted from the YAML file from under the "load" section.
+     */
+    public LoadDriverConfigurationImpl(Map map) throws Exception {
 
-    @Override
-    public String getKey() {
-        throw new RuntimeException("getKey() NOT YET IMPLEMENTED");
+        load(map);
     }
 
-    @Override
-    public void perform(Service s) throws Exception {
-        throw new RuntimeException("perform() NOT YET IMPLEMENTED");
-    }
+    // LoadDriverConfiguration implementation --------------------------------------------------------------------------
 
     @Override
-    public LoadStrategy getLoadStrategy() {
-        throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
-    }
+    public int getThreadCount() {
 
+        return threadCount;
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
@@ -59,6 +60,25 @@ public class SyntheticDelete implements Operation {
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private void load(Map map) throws Exception {
+
+        Object o = map.get(LoadDriverConfiguration.THREAD_COUNT_LABEL);
+
+        if (o == null) {
+
+            threadCount = LoadDriverConfiguration.DEFAULT_THREAD_COUNT;
+        }
+        else {
+
+            if (!(o instanceof Integer)) {
+                throw new UserErrorException(
+                        "'" + LoadDriverConfiguration.THREAD_COUNT_LABEL + "' not an integer: \"" + o + "\"");
+            }
+
+            threadCount = ((Integer)o);
+        }
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

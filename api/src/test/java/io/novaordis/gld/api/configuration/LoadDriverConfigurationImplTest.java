@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.cache.local.operation;
+package io.novaordis.gld.api.configuration;
 
-import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.LoadDriverConfigurationTest;
+
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/2/16
+ * @since 12/4/16
  */
-public class SyntheticWrite implements Operation {
+public class LoadDriverConfigurationImplTest extends LoadDriverConfigurationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,27 +34,17 @@ public class SyntheticWrite implements Operation {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Operation implementation ----------------------------------------------------------------------------------------
-
-    @Override
-    public String getKey() {
-        throw new RuntimeException("getKey() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void perform(Service s) throws Exception {
-        throw new RuntimeException("perform() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public LoadStrategy getLoadStrategy() {
-        throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
-    }
-
-
     // Public ----------------------------------------------------------------------------------------------------------
 
+    // Tests -----------------------------------------------------------------------------------------------------------
+
     // Package protected -----------------------------------------------------------------------------------------------
+
+    @Override
+    protected LoadDriverConfigurationImpl getLoadDriverConfigurationToTest(Map map) throws Exception {
+
+        return new LoadDriverConfigurationImpl(map);
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

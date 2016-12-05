@@ -32,6 +32,7 @@ public class LocalCacheKeyStore implements KeyStore {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private LoadDriver loadDriver;
+    private boolean started;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -44,17 +45,28 @@ public class LocalCacheKeyStore implements KeyStore {
 
     @Override
     public void start() throws Exception {
-        throw new RuntimeException("start() NOT YET IMPLEMENTED");
+
+        if (started) {
+            return;
+        }
+
+        started = true;
     }
 
     @Override
     public void stop() throws Exception {
-        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
+
+        if (!started) {
+            return;
+        }
+
+        started = false;
     }
 
     @Override
     public boolean isStarted() {
-        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
+
+        return started;
     }
 
     @Override

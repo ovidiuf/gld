@@ -98,6 +98,7 @@ public class ServiceConfigurationBaseTest extends ServiceConfigurationTest {
 
         Map<String, String> m = new HashMap<>();
         m.put(ServiceConfiguration.TYPE_LABEL, "cache");
+        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
 
         ServiceConfigurationBase c = new ServiceConfigurationBase(m);
         assertEquals(ServiceType.cache, c.getType());
@@ -108,6 +109,7 @@ public class ServiceConfigurationBaseTest extends ServiceConfigurationTest {
 
         Map<String, String> m = new HashMap<>();
         m.put(ServiceConfiguration.TYPE_LABEL, "jms");
+        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
 
         ServiceConfigurationBase c = new ServiceConfigurationBase(m);
         assertEquals(ServiceType.jms, c.getType());
@@ -118,9 +120,65 @@ public class ServiceConfigurationBaseTest extends ServiceConfigurationTest {
 
         Map<String, String> m = new HashMap<>();
         m.put(ServiceConfiguration.TYPE_LABEL, "http");
+        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
 
         ServiceConfigurationBase c = new ServiceConfigurationBase(m);
         assertEquals(ServiceType.http, c.getType());
+    }
+
+    // implementation --------------------------------------------------------------------------------------------------
+
+    @Test
+    public void missingImplementation() throws Exception {
+
+        Map<String, String> m = new HashMap<>();
+
+        m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
+
+        try {
+
+            new ServiceConfigurationBase(m);
+            fail("should throw exception");
+        }
+        catch(UserErrorException e) {
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("missing implementation"));
+        }
+    }
+
+    @Test
+    public void wrongImplementationType() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+
+        m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
+        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, 1);
+
+        try {
+
+            new ServiceConfigurationBase(m);
+            fail("should throw exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("the implementation should be a string, but it is a\\(n\\) .*"));
+        }
+    }
+
+    @Test
+    public void implementation() throws Exception {
+
+        Map<String, String> m = new HashMap<>();
+
+        m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
+        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+
+        ServiceConfigurationBase scb = new ServiceConfigurationBase(m);
+        assertEquals(ServiceType.cache, scb.getType());
+        assertEquals("local", scb.getImplementation());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

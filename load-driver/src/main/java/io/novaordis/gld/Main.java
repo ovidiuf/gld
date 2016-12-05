@@ -47,7 +47,26 @@ public class Main {
 
     public static void main(String[] args) {
 
+        boolean success = lifecycle(args);
+
+        if (success) {
+            System.exit(0);
+        }
+        else {
+            System.exit(1);
+        }
+    }
+
+    // Package protected static ----------------------------------------------------------------------------------------
+
+    /**
+     * @return true if the driver completed its scenario and exited successfully.
+     */
+    static boolean lifecycle(String[] args) {
+
         LoadDriver ld = new LoadDriverImpl();
+
+        boolean success = false;
 
         try {
 
@@ -60,15 +79,19 @@ public class Main {
             log.debug(ld + " initialized");
 
             ld.run();
+
+            log.debug(ld + " executed scenario successfully");
+
+            success = true;
         }
         catch(Throwable t) {
 
             log.debug("load driver failure: " + t.getMessage(), t);
             ld.error(t);
         }
-    }
 
-    // Package protected static ----------------------------------------------------------------------------------------
+        return success;
+    }
 
     /**
      * Extracts the configuration file from the argument list, removing the related elements from the list. If the

@@ -35,6 +35,7 @@ public class ServiceConfigurationBase implements ServiceConfiguration {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private ServiceType type;
+    private String implementation;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -56,7 +57,8 @@ public class ServiceConfigurationBase implements ServiceConfiguration {
 
     @Override
     public String getImplementation() {
-        throw new RuntimeException("getImplementation() NOT YET IMPLEMENTED");
+
+        return implementation;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -68,6 +70,10 @@ public class ServiceConfigurationBase implements ServiceConfiguration {
     // Private ---------------------------------------------------------------------------------------------------------
 
     private void load(Map map) throws Exception {
+
+        //
+        // type
+        //
 
         Object o = map.get(ServiceConfiguration.TYPE_LABEL);
 
@@ -89,6 +95,24 @@ public class ServiceConfigurationBase implements ServiceConfiguration {
 
             throw new UserErrorException("unknown service type '" + o + "'", e);
         }
+
+        //
+        // implementation
+        //
+
+        o = map.get(ServiceConfiguration.IMPLEMENTATION_LABEL);
+
+        if (o == null) {
+
+            throw new UserErrorException("missing implementation");
+        }
+
+        if (!(o instanceof String)) {
+            throw new UserErrorException(
+                    "the implementation should be a string, but it is a(n) " + o.getClass().getSimpleName());
+        }
+
+        implementation = (String)o;
     }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
