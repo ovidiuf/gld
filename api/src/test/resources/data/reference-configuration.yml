@@ -5,7 +5,8 @@ service:
   # service types: cache, jms, http
   type: cache
   implementation: local
-  load-strategy: read-then-write-on-miss
+  load-strategy:
+    name: read-then-write-on-miss
 
 load:
   threads: 10

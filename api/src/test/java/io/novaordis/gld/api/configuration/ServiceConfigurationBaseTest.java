@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,7 +58,7 @@ public class ServiceConfigurationBaseTest extends ServiceConfigurationTest {
     @Test
     public void missingType() throws Exception {
 
-        Map<String, String> m = new HashMap<>();
+        Map<String, Object> m = new HashMap<>();
 
         try {
 
@@ -74,7 +75,7 @@ public class ServiceConfigurationBaseTest extends ServiceConfigurationTest {
     @Test
     public void unknownType() throws Exception {
 
-        Map<String, String> m = new HashMap<>();
+        Map<String, Object> m = new HashMap<>();
         m.put(ServiceConfiguration.TYPE_LABEL, "no-such-type");
 
         try {
@@ -95,10 +96,12 @@ public class ServiceConfigurationBaseTest extends ServiceConfigurationTest {
     @Test
     public void type_cache() throws Exception {
 
-        Map<String, String> m = new HashMap<>();
+        Map<String, Object> m = new HashMap<>();
         m.put(ServiceConfiguration.TYPE_LABEL, "cache");
         m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
-        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
+        Map<String, Object> lsc = new HashMap<>();
+        m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
+        lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
 
         ServiceConfigurationBase c = new ServiceConfigurationBase(m);
         assertEquals(ServiceType.cache, c.getType());
@@ -107,10 +110,12 @@ public class ServiceConfigurationBaseTest extends ServiceConfigurationTest {
     @Test
     public void type_jms() throws Exception {
 
-        Map<String, String> m = new HashMap<>();
+        Map<String, Object> m = new HashMap<>();
         m.put(ServiceConfiguration.TYPE_LABEL, "jms");
         m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
-        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
+        Map<String, Object> lsc = new HashMap<>();
+        m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
+        lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
 
         ServiceConfigurationBase c = new ServiceConfigurationBase(m);
         assertEquals(ServiceType.jms, c.getType());
@@ -119,10 +124,12 @@ public class ServiceConfigurationBaseTest extends ServiceConfigurationTest {
     @Test
     public void type_http() throws Exception {
 
-        Map<String, String> m = new HashMap<>();
+        Map<String, Object> m = new HashMap<>();
         m.put(ServiceConfiguration.TYPE_LABEL, "http");
         m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
-        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
+        Map<String, Object> lsc = new HashMap<>();
+        m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
+        lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
 
         ServiceConfigurationBase c = new ServiceConfigurationBase(m);
         assertEquals(ServiceType.http, c.getType());
@@ -133,7 +140,7 @@ public class ServiceConfigurationBaseTest extends ServiceConfigurationTest {
     @Test
     public void missingImplementation() throws Exception {
 
-        Map<String, String> m = new HashMap<>();
+        Map<String, Object> m = new HashMap<>();
 
         m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
 
@@ -173,26 +180,74 @@ public class ServiceConfigurationBaseTest extends ServiceConfigurationTest {
     @Test
     public void implementation() throws Exception {
 
-        Map<String, String> m = new HashMap<>();
+        Map<String, Object> m = new HashMap<>();
 
         m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
         m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
-        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
+        Map<String, Object> lsc = new HashMap<>();
+        m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
+        lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
 
         ServiceConfigurationBase scb = new ServiceConfigurationBase(m);
         assertEquals(ServiceType.cache, scb.getType());
         assertEquals("local", scb.getImplementation());
     }
 
-    // load strategy name ----------------------------------------------------------------------------------------------
+    // load strategy configuration -------------------------------------------------------------------------------------
 
     @Test
-    public void missingLoadStrategyName() throws Exception {
+    public void missingLoadStrategyConfig() throws Exception {
 
-        Map<String, String> m = new HashMap<>();
+        Map<String, Object> m = new HashMap<>();
 
         m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
         m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+
+        try {
+
+            new ServiceConfigurationBase(m);
+            fail("should throw exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("missing load strategy configuration"));
+        }
+    }
+
+    @Test
+    public void wrongLoadStrategyConfigurationType() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+
+        m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
+        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, "something");
+
+        try {
+
+            new ServiceConfigurationBase(m);
+            fail("should throw exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("the load strategy configuration should be a map, but it is a\\(n\\) .*"));
+        }
+    }
+
+    @Test
+    public void loadStrategyConfiguration_NoName() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+
+        m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
+        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+
+        Map<String, Object> lsc = Collections.emptyMap();
+        m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
 
         try {
 
@@ -208,13 +263,16 @@ public class ServiceConfigurationBaseTest extends ServiceConfigurationTest {
     }
 
     @Test
-    public void wrongLoadStrategyType() throws Exception {
+    public void loadStrategyConfiguration_NameWrongType() throws Exception {
 
         Map<String, Object> m = new HashMap<>();
 
         m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
         m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
-        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, 1);
+
+        Map<String, Object> lsc = new HashMap<>();
+        m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
+        lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, 1);
 
         try {
 
@@ -230,22 +288,29 @@ public class ServiceConfigurationBaseTest extends ServiceConfigurationTest {
     }
 
     @Test
-    public void loadStrategyName() throws Exception {
+    public void loadStrategyConfiguration_NoExtraConfigurationExceptName() throws Exception {
 
-        Map<String, String> m = new HashMap<>();
+        Map<String, Object> m = new HashMap<>();
 
         m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
         m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
-        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
 
-        ServiceConfigurationBase scb = new ServiceConfigurationBase(m);
-        assertEquals("test", scb.getLoadStrategyName());
+        Map<String, Object> lsc = new HashMap<>();
+        m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
+        lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
+
+        ServiceConfigurationBase c = new ServiceConfigurationBase(m);
+        assertEquals("test", c.getLoadStrategyName());
+
+        Map<String, Object> rawConfig = c.getMap(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        assertEquals(1, rawConfig.size());
+        assertEquals("test", rawConfig.get(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     @Override
-    protected ServiceConfigurationBase getServiceConfigurationToTest(Map map) throws Exception {
+    protected ServiceConfigurationBase getServiceConfigurationToTest(Map<String, Object> map) throws Exception {
 
         return new ServiceConfigurationBase(map);
     }

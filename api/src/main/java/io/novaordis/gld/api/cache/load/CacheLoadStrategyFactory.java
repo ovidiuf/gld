@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.cache.load;
 
+import io.novaordis.gld.api.LoadStrategy;
+import io.novaordis.gld.api.LoadStrategyFactory;
+import io.novaordis.gld.api.ServiceType;
 
-import io.novaordis.gld.api.todiscard.Configuration;
+import java.util.Map;
 
-import java.util.List;
-import java.util.Set;
-
-public class NoopLoadStrategy implements LoadStrategy {
+/**
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 12/5/16
+ */
+public class CacheLoadStrategyFactory implements LoadStrategyFactory {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,38 +36,17 @@ public class NoopLoadStrategy implements LoadStrategy {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // LoadStrategy implementation -------------------------------------------------------------------------------------
+    // LoadStrategyFactory implementation ------------------------------------------------------------------------------
 
     @Override
-    public String getName()
-    {
-        return "Noop";
+    public LoadStrategy buildInstance(Map<String, Object> configuration) throws Exception {
+        throw new RuntimeException("buildInstance() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void configure(Configuration configuration, List<String> arguments, int from) throws Exception
-    {
-        // noop
-    }
+    public ServiceType getServiceType() {
 
-    @Override
-    public Operation next(Operation last, String lastWrittenKey, boolean runtimeShuttingDown) throws Exception
-    {
-        // noop
-        return null;
-    }
-
-    @Override
-    public KeyStore getKeyStore()
-    {
-        // noop
-        return null;
-    }
-
-    @Override
-    public Set<Class<? extends Operation>> getOperationTypes()
-    {
-        throw new RuntimeException("getOperationTypes() NOT YET IMPLEMENTED");
+        return ServiceType.cache;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

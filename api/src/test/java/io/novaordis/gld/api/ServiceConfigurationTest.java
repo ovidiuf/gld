@@ -16,7 +16,14 @@
 
 package io.novaordis.gld.api;
 
+import org.junit.Test;
+
+import java.util.HashMap;
 import java.util.Map;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -34,9 +41,55 @@ public abstract class ServiceConfigurationTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    // Tests -----------------------------------------------------------------------------------------------------------
+
+    // untyped access --------------------------------------------------------------------------------------------------
+
+    @Test
+    public void untypedAccess_AllRawConfiguration() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+
+        m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
+        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        Map<String, Object> lsc = new HashMap<>();
+        lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
+        m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
+
+        ServiceConfiguration c = getServiceConfigurationToTest(m);
+
+        Map<String, Object> uam = c.getMap();
+
+        assertEquals(3, uam.size());
+        assertEquals(ServiceType.cache.toString(), uam.get(ServiceConfiguration.TYPE_LABEL));
+        assertEquals("local", uam.get(ServiceConfiguration.IMPLEMENTATION_LABEL));
+        //noinspection unchecked
+        Map<String, Object> lsc2 = (Map<String, Object>)uam.get(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        assertNotNull(lsc2);
+        assertEquals(1, lsc2.size());
+        assertEquals("test", lsc2.get(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL));
+    }
+
+    @Test
+    public void untypedAccess_NoSuchPath() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+
+        m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
+        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        Map<String, Object> lsc = new HashMap<>();
+        lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
+        m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
+
+        ServiceConfiguration c = getServiceConfigurationToTest(m);
+
+        Map<String, Object> uam = c.getMap("no-such-key");
+        assertTrue(uam.isEmpty());
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
-    protected abstract ServiceConfiguration getServiceConfigurationToTest(Map map) throws Exception;
+    protected abstract ServiceConfiguration getServiceConfigurationToTest(Map<String, Object> map) throws Exception;
 
     // Protected -------------------------------------------------------------------------------------------------------
 

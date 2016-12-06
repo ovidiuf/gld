@@ -20,6 +20,7 @@ import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
 import io.novaordis.utilities.UserErrorException;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -38,14 +39,18 @@ public class ServiceConfigurationBase implements ServiceConfiguration {
     private String implementation;
     private String loadStrategyName;
 
+    // the actual raw configuration map passed at construction
+    private Map<String, Object> rawConfiguration;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
      * @param map the map extracted from the YAML file from under the "service" section.
      */
-    public ServiceConfigurationBase(Map map) throws Exception {
+    public ServiceConfigurationBase(Map<String, Object> map) throws Exception {
 
-        load(map);
+        this.rawConfiguration = map;
+        load(rawConfiguration);
     }
 
     // ServiceConfiguration implementation -----------------------------------------------------------------------------
@@ -70,7 +75,28 @@ public class ServiceConfigurationBase implements ServiceConfiguration {
 
     @Override
     public Map<String, Object> getMap(String... path) {
-        throw new RuntimeException("getMap() NOT YET IMPLEMENTED");
+
+        Map<String, Object> crtMap = rawConfiguration;
+
+        for(String pathElement: path) {
+
+            Object o = crtMap.get(pathElement);
+
+            if (o == null) {
+                return Collections.emptyMap();
+            }
+
+            if (o instanceof Map) {
+
+                //noinspection unchecked
+                crtMap = (Map<String, Object>)o;
+                continue;
+            }
+
+            throw new RuntimeException("NOT YET IMPLEMENTED: don't know how to handle this");
+        }
+
+        return crtMap;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -130,7 +156,22 @@ public class ServiceConfigurationBase implements ServiceConfiguration {
         // load strategy name
         //
 
-        o = map.get(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL);
+        o = map.get(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+
+        if (o == null) {
+
+            throw new UserErrorException("missing load strategy configuration");
+        }
+
+        if (!(o instanceof Map)) {
+            throw new UserErrorException(
+                    "the load strategy configuration should be a map, but it is a(n) " + o.getClass().getSimpleName());
+        }
+
+        //noinspection unchecked
+        Map<String, Object> loadStrategyConfig = (Map<String, Object>)o;
+
+        o = loadStrategyConfig.get(LOAD_STRATEGY_NAME_LABEL);
 
         if (o == null) {
 

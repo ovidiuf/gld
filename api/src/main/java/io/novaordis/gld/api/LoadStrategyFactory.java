@@ -73,7 +73,7 @@ public interface LoadStrategyFactory {
 
         log.debug("attempting to use load strategy factory class " + className);
 
-        LoadStrategyFactory f = null;
+        LoadStrategyFactory f;
 
         try {
 
@@ -139,12 +139,16 @@ public interface LoadStrategyFactory {
 
     }
 
-
     // Public ----------------------------------------------------------------------------------------------------------
 
     /**
      * @param configuration map (typically extracted from the YAML configuration file)
      */
     LoadStrategy buildInstance(Map<String, Object> configuration) throws Exception;
+
+    /**
+     * @return the service type the load strategies built by this factory are associated with.
+     */
+    ServiceType getServiceType();
 
 }

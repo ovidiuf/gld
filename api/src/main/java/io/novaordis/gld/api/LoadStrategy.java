@@ -22,10 +22,13 @@ import java.util.Set;
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.utilities.UserErrorException;
 
-/**
- * Implementations *must* provide a no-argument constructor.
- */
 public interface LoadStrategy {
+
+    /**
+     * @return the service type this load strategy is associated with.
+     */
+    ServiceType getServiceType();
+
 
     String getName();
 
@@ -70,4 +73,6 @@ public interface LoadStrategy {
      * @return the key store used by this load strategy. May return null.
      */
     KeyStore getKeyStore();
+
+
 }

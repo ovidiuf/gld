@@ -96,12 +96,13 @@ public class YamlBasedConfiguration implements Configuration {
             Yaml yaml = new Yaml();
 
             Map topLevelConfigurationMap = (Map)yaml.load(is);
-            Map serviceConfigurationMap = null;
+            Map<String, Object> serviceConfigurationMap = null;
             Map loadConfigurationMap = null;
 
             if (topLevelConfigurationMap != null) {
 
-                serviceConfigurationMap = (Map) topLevelConfigurationMap.get(SERVICE_SECTION_LABEL);
+                //noinspection unchecked
+                serviceConfigurationMap = (Map<String, Object>)topLevelConfigurationMap.get(SERVICE_SECTION_LABEL);
                 loadConfigurationMap = (Map) topLevelConfigurationMap.get(LOAD_SECTION_LABEL);
             }
 

@@ -30,7 +30,8 @@ public interface ServiceConfiguration {
 
     String TYPE_LABEL = "type";
     String IMPLEMENTATION_LABEL = "implementation";
-    String LOAD_STRATEGY_NAME_LABEL = "load-strategy";
+    String LOAD_STRATEGY_CONFIGURATION_LABEL = "load-strategy";
+    String LOAD_STRATEGY_NAME_LABEL = "name";
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -47,8 +48,13 @@ public interface ServiceConfiguration {
     // Untyped Access --------------------------------------------------------------------------------------------------
 
     /**
-     * @return the underlying raw configuration map corresponding to the given path, or null if the path does not
-     * match anything in the underlying configuration structure.
+     * @return the underlying raw configuration map corresponding to the given path, or an empty map if the path does
+     * not match anything in the underlying configuration structure. The path is relative to the root of the service
+     * configuration section.
+     *
+     * If the path does not contain elements, the top level raw configuration map is returned.
+     *
+     * Never return null.
      */
     Map<String, Object> getMap(String ... path);
 

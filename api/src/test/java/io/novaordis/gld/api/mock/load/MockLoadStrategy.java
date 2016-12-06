@@ -19,6 +19,7 @@ package io.novaordis.gld.api.mock.load;
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.ServiceType;
 import io.novaordis.gld.api.todiscard.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,12 @@ public class MockLoadStrategy implements LoadStrategy {
     }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
+
+    @Override
+    public ServiceType getServiceType() {
+
+        return ServiceType.mock;
+    }
 
     @Override
     public String getName() {

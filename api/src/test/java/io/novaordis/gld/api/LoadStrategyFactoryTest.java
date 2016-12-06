@@ -23,12 +23,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class LoadStrategyFactoryTest {
+public abstract class LoadStrategyFactoryTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -85,9 +86,27 @@ public class LoadStrategyFactoryTest {
         }
     }
 
+    // buildInstance() -------------------------------------------------------------------------------------------------
+
+    @Test
+    public void buildInstance() throws Exception {
+
+        LoadStrategyFactory f = getLoadStrategyFactoryToTest();
+        ServiceType t = f.getServiceType();
+
+        Map<String, Object> c = getCorrespondingConfigurationToTest();
+        LoadStrategy s = f.buildInstance(c);
+        ServiceType t2 = s.getServiceType();
+
+        assertEquals(t, t2);
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected abstract LoadStrategyFactory getLoadStrategyFactoryToTest() throws Exception;
+    protected abstract Map<String, Object> getCorrespondingConfigurationToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

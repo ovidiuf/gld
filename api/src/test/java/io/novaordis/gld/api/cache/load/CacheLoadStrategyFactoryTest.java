@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.mock.load;
+package io.novaordis.gld.api.cache.load;
 
-import io.novaordis.gld.api.LoadStrategyFactory;
-import io.novaordis.gld.api.ServiceType;
-import io.novaordis.gld.api.mock.load.MockLoadStrategy;
+import io.novaordis.gld.api.LoadStrategyFactoryTest;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/5/16
  */
-public class MockLoadStrategyFactory implements LoadStrategyFactory {
+public class CacheLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -36,25 +35,23 @@ public class MockLoadStrategyFactory implements LoadStrategyFactory {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // LoadStrategyFactory implementation ------------------------------------------------------------------------------
-
-    @Override
-    public MockLoadStrategy buildInstance(Map<String, Object> configuration) throws Exception {
-
-        return new MockLoadStrategy(configuration);
-    }
-
-    @Override
-    public ServiceType getServiceType() {
-
-        return ServiceType.mock;
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected CacheLoadStrategyFactory getLoadStrategyFactoryToTest() throws Exception {
+
+        return new CacheLoadStrategyFactory();
+    }
+
+    @Override
+    protected Map<String, Object> getCorrespondingConfigurationToTest() throws Exception {
+
+        return new HashMap<>();
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 
