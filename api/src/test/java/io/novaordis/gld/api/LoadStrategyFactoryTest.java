@@ -101,6 +101,14 @@ public abstract class LoadStrategyFactoryTest {
         assertEquals(t, t2);
     }
 
+    // inferFullyQualifiedLoadStrategyClassName() ----------------------------------------------------------------------
+
+    @Test
+    public void inferFullyQualifiedLoadStrategyClassName() throws Exception {
+
+        fail("return here");
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

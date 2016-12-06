@@ -16,8 +16,10 @@
 
 package io.novaordis.gld.api.cache.load;
 
+import io.novaordis.gld.api.ClassLoadingUtilities;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.LoadStrategyFactory;
+import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
 
 import java.util.Map;
@@ -40,7 +42,32 @@ public class CacheLoadStrategyFactory implements LoadStrategyFactory {
 
     @Override
     public LoadStrategy buildInstance(Map<String, Object> configuration) throws Exception {
-        throw new RuntimeException("buildInstance() NOT YET IMPLEMENTED");
+
+        String loadStrategyName = (String)configuration.get(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL);
+
+        //
+        // loadStrategyName can't be null, because we parsed the configuration already and we would have detected
+        // the problem, but check nonetheless
+        //
+
+        if (loadStrategyName == null) {
+            throw new IllegalArgumentException(
+                    "missing or null '" + ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL + "' map element");
+        }
+
+        //
+        // infer the class name from the strategy name and attempt to instantiate
+        //
+
+        String fqcn = LoadStrategyFactory.inferFullyQualifiedLoadStrategyClassName(loadStrategyName);
+
+        LoadStrategy s = ClassLoadingUtilities.getInstance(LoadStrategy.class, fqcn);
+
+        throw new RuntimeException("RETURN HERE");
+
+//        s.configure(configuration);
+//
+//        return s;
     }
 
     @Override

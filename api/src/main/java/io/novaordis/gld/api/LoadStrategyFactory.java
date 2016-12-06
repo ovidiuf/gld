@@ -78,9 +78,8 @@ public interface LoadStrategyFactory {
         try {
 
             Class c = Class.forName(className);
-            f = (LoadStrategyFactory)c.newInstance();
-        }
-        catch (Exception e) {
+            f = (LoadStrategyFactory) c.newInstance();
+        } catch (Exception e) {
 
             throw new UserErrorException(
                     "failed to instantiate a load strategy factory corresponding to a service of type " + serviceType,
@@ -91,28 +90,17 @@ public interface LoadStrategyFactory {
         LoadStrategy ls = f.buildInstance(configuration);
         return ls;
 
+    }
 
-        //    NOMBP2:gld ovidiu$ grep -r "extends *LoadStrategyBase" *
-//    TO-DISTRIBUTE-extensions/cache/cache-common/src/main/java/io/novaordis/gld/extension/cache/strategy/ReadThenWriteOnMissLoadStrategy.java:public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase
-//            TO-DISTRIBUTE-extensions/cache/cache-common/tmp-src/DeleteLoadStrategy.java:public class DeleteLoadStrategy extends LoadStrategyBase
-//            TO-DISTRIBUTE-extensions/cache/cache-common/tmp-src/HttpSessionLoadStrategy.java:public class HttpSessionLoadStrategy extends LoadStrategyBase {
-//        TO-DISTRIBUTE-extensions/cache/cache-common/tmp-src/WriteThenReadLoadStrategy.java:public class WriteThenReadLoadStrategy extends LoadStrategyBase
-//                TO-DISTRIBUTE-extensions/cache/cache-common/tmp-src-test/FailureToInstantiateLoadStrategy.java:public class FailureToInstantiateLoadStrategy extends LoadStrategyBase
-//                TO-DISTRIBUTE-extensions/jms/jms-common/tmp-src/JmsLoadStrategy.java:public abstract class JmsLoadStrategy extends LoadStrategyBase
-//                load-driver/src/test/java/io/novaordis/gld/driver/MockLoadStrategy.java:public class MockLoadStrategy extends LoadStrategyBase {
+    /**
+     * @param loadStrategyName the load strategy name, as read from the configuration file.
+     *
+     * @exception UserErrorException with a human readable messages if encountering difficulties.
+     */
+    static String inferFullyQualifiedLoadStrategyClassName(String loadStrategyName) throws Exception {
 
+        throw new RuntimeException("NYE");
 
-
-//    public static LoadStrategy fromString(
-//            Configuration configuration, String strategyName, ContentType contentType, List<String> arguments, int from)
-//            throws Exception {
-//
-//        String subPackage = ContentType.JMS.equals(contentType) ? "jms" : "cache";
-//
-//        LoadStrategy result;
-//
-//        String originalStrategyName = strategyName;
-//
 //        // user friendliness - if the first letter of the strategy name is not capitalized,
 //        // capitalize it for her. This will allow the user to specify --load-strategy read
 //
@@ -122,7 +110,7 @@ public interface LoadStrategyFactory {
 //
 //        try {
 //            result = ClassLoadingUtilities.getInstance(LoadStrategy.class,
-//                "io.novaordis.gld.strategy.load." + subPackage, strategyName, "LoadStrategy");
+//                    "io.novaordis.gld.strategy.load." + subPackage, strategyName, "LoadStrategy");
 //        }
 //        catch(Exception e) {
 //            // turn all load strategy loading exceptions into UserErrorExceptions and bubble them up
@@ -131,18 +119,26 @@ public interface LoadStrategyFactory {
 //            throw new UserErrorException(msg, cause);
 //        }
 //
-//        // provide the rest of the arguments to the strategy, which will pick the ones it needs and
-//        // remove them from the list, leaving the rest of the arguments in the list
-//        result.configure(configuration, arguments, from);
-//        return result;
-//    }
 
     }
+
+        //    NOMBP2:gld ovidiu$ grep -r "extends *LoadStrategyBase" *
+//        TO-DISTRIBUTE-extensions/cache/cache-common/tmp-src/WriteThenReadLoadStrategy.java:public class WriteThenReadLoadStrategy extends LoadStrategyBase
+//    TO-DISTRIBUTE-extensions/cache/cache-common/src/main/java/io/novaordis/gld/extension/cache/strategy/ReadThenWriteOnMissLoadStrategy.java:public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase
+//            TO-DISTRIBUTE-extensions/cache/cache-common/tmp-src/DeleteLoadStrategy.java:public class DeleteLoadStrategy extends LoadStrategyBase
+//            TO-DISTRIBUTE-extensions/cache/cache-common/tmp-src/HttpSessionLoadStrategy.java:public class HttpSessionLoadStrategy extends LoadStrategyBase {
+
+//                TO-DISTRIBUTE-extensions/cache/cache-common/tmp-src-test/FailureToInstantiateLoadStrategy.java:public class FailureToInstantiateLoadStrategy extends LoadStrategyBase
+
+//                TO-DISTRIBUTE-extensions/jms/jms-common/tmp-src/JmsLoadStrategy.java:public abstract class JmsLoadStrategy extends LoadStrategyBase
+//                load-driver/src/test/java/io/novaordis/gld/driver/MockLoadStrategy.java:public class MockLoadStrategy extends LoadStrategyBase {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
     /**
      * @param configuration map (typically extracted from the YAML configuration file)
+     *
+     * @exception UserErrorException with a human readable messages if encountering difficulties.
      */
     LoadStrategy buildInstance(Map<String, Object> configuration) throws Exception;
 

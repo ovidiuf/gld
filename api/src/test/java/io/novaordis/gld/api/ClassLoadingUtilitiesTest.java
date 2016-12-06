@@ -17,6 +17,7 @@
 package io.novaordis.gld.api;
 
 import io.novaordis.gld.api.mockpackage.WinningStrategy;
+import io.novaordis.utilities.UserErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,64 +45,19 @@ public class ClassLoadingUtilitiesTest extends Assert {
 
         try {
 
-            ClassLoadingUtilities.getInstance(
-                    MockInterface.class, "com.novaordis.gld.mock.nosuchpackate", "Winning", "Strategy");
+            ClassLoadingUtilities.
+                    getInstance(MockInterface.class, "io.novaordis.gld.api.nosuchpackage.WinningStrategy");
 
-            fail("should have failed with IllegalArgumentException - wrong package name");
+            fail("should have thrown exception");
         }
-        catch(IllegalArgumentException e) {
+        catch(UserErrorException e) {
 
-            log.info(e.getMessage());
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("class io\\.novaordis\\.gld\\.api\\.nosuchpackage\\.WinningStrategy not found"));
 
             Throwable t = e.getCause();
-
             assertTrue(t instanceof ClassNotFoundException);
-
-            log.info(t.getMessage());
-        }
-    }
-
-    @Test
-    public void getInstance_WrongBaseName() throws Exception {
-
-        try {
-
-            ClassLoadingUtilities.getInstance(
-                    MockInterface.class, "io.novaordis.gld.api.mockpackage", "winning", "Strategy");
-
-            fail("should have failed with IllegalArgumentException - wrong base name");
-        }
-        catch(IllegalArgumentException e) {
-
-            log.info(e.getMessage());
-
-            Throwable t = e.getCause();
-
-            assertTrue((t instanceof NoClassDefFoundError) || (t instanceof ClassNotFoundException));
-
-            log.info(t.getMessage());
-        }
-    }
-
-    @Test
-    public void getInstance_WrongSuffix() throws Exception {
-
-        try {
-
-            ClassLoadingUtilities.getInstance(
-                    MockInterface.class, "io.novaordis.gld.api.mockpackage", "Winning", "Trickery");
-
-            fail("should have failed with IllegalArgumentException - wrong suffix");
-        }
-        catch(IllegalArgumentException e) {
-
-            log.info(e.getMessage());
-
-            Throwable t = e.getCause();
-
-            assertTrue(t instanceof ClassNotFoundException);
-
-            log.info(t.getMessage());
         }
     }
 
@@ -110,42 +66,41 @@ public class ClassLoadingUtilitiesTest extends Assert {
 
         try
         {
-            ClassLoadingUtilities.getInstance(
-                    MockInterface2.class, "io.novaordis.gld.api.mockpackage", "Winning", "Strategy");
+            ClassLoadingUtilities.
+                    getInstance(MockInterface2.class, "io.novaordis.gld.api.mockpackage.WinningStrategy");
 
-            fail("should have failed with IllegalArgumentException - wrong suffix");
+            fail("should have thrown exception");
         }
-        catch(IllegalArgumentException e) {
+        catch(UserErrorException e) {
 
-            log.info(e.getMessage());
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches(
+                    "io\\.novaordis\\.gld\\.api\\.mockpackage\\.WinningStrategy does not implement interface io.novaordis.gld.api.MockInterface2"));
 
             Throwable t = e.getCause();
-
             assertTrue(t instanceof ClassCastException);
-
-            log.info(t.getMessage());
         }
     }
 
     @Test
     public void getInstance_NoNoArgumentConstructor() throws Exception {
 
-        try
-        {
+        try {
             ClassLoadingUtilities.getInstance(
-                    MockInterface.class, "io.novaordis.gld.api.mockpackage", "NoNoArgConstructor", "Strategy");
+                    MockInterface.class, "io.novaordis.gld.api.mockpackage.NoNoArgConstructorStrategy");
 
-            fail("should have failed with IllegalArgumentException - no no-argument constructor");
+            fail("should have thrown exception");
         }
-        catch(IllegalArgumentException e) {
+        catch(UserErrorException e) {
 
-            log.info(e.getMessage());
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches(
+                    "class '.*' failed to instantiate, most likely the class has no no-argument constructor or a private no-argument constructor: .*"));
 
             Throwable t = e.getCause();
-
             assertTrue(t instanceof InstantiationException);
-
-            log.info(t.getMessage());
         }
     }
 
@@ -153,41 +108,28 @@ public class ClassLoadingUtilitiesTest extends Assert {
     public void getInstance_PrivateNoArgumentConstructor() throws Exception {
 
         try {
-            ClassLoadingUtilities.getInstance(
-                    MockInterface.class, "io.novaordis.gld.api.mockpackage", "PrivateNoArgConstructor", "Strategy");
+            ClassLoadingUtilities.
+                    getInstance(MockInterface.class, "io.novaordis.gld.api.mockpackage.PrivateNoArgConstructorStrategy");
 
-            fail("should have failed with IllegalArgumentException - no no-argument constructor");
+            fail("should have thrown exception");
         }
-        catch(IllegalArgumentException e) {
+        catch(UserErrorException e) {
 
-            log.info(e.getMessage());
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches(
+                    "class '.*' failed to instantiate, most likely the class has no no-argument constructor or a private no-argument constructor: .*"));
 
             Throwable t = e.getCause();
-
             assertTrue(t instanceof IllegalAccessException);
-
-            log.info(t.getMessage());
         }
     }
 
     @Test
     public void getInstance() throws Exception {
 
-        MockInterface o =
-                ClassLoadingUtilities.getInstance(
-                        MockInterface.class, "io.novaordis.gld.api.mockpackage", "Winning", "Strategy");
-
-        WinningStrategy ws = (WinningStrategy)o;
-
-        assertNotNull(ws);
-    }
-
-    @Test
-    public void getInstance_EmptySuffix() throws Exception {
-
-        MockInterface o =
-                ClassLoadingUtilities.getInstance(
-                        MockInterface.class, "io.novaordis.gld.api.mockpackage", "WinningStrategy", "");
+        MockInterface o = ClassLoadingUtilities.
+                getInstance(MockInterface.class, "io.novaordis.gld.api.mockpackage.WinningStrategy");
 
         WinningStrategy ws = (WinningStrategy)o;
 

@@ -16,63 +16,55 @@
 
 package io.novaordis.gld.api;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.novaordis.utilities.UserErrorException;
 
 public class ClassLoadingUtilities {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = LoggerFactory.getLogger(ClassLoadingUtilities.class);
-
     // Static ----------------------------------------------------------------------------------------------------------
 
     /**
-     * Generic utility class that looks up classes on the classpath and tries to find
-     * <package>.<nameRoot><suffix> that implements the given interfaceType and then instantiates it using a no-argument
-     * constructor.
+     * Generic static utility that looks specific interface implementations on the classpath and tries to find those
+     * that match the name. If found, they are instantiated using a no-argument constructor.
      *
      * @param interfaceType - the interface to be implemented by the returned class.
-     * @param packageName - the package name (dot separated components) - must NOT end in dot.
-     * @param nameRoot - the name root - capitalization matters.
-     * @param suffix - the suffix - capitalization matters.
+     * @param fullyQualifiedClassName - the fully qualified class name
      * @param <T> - the interface to be implemented by the returned class.
      *
-     * @exception IllegalArgumentException (with cause) when the class is not found or it cannot be instantiated.
+     * @exception io.novaordis.utilities.UserErrorException with a human readable message and embedded cause.
      */
-    public static <T> T getInstance(Class<T> interfaceType, String packageName, String nameRoot, String suffix)
-        throws Exception {
-
-        String fullyQualifiedClassName = packageName + "." + nameRoot + suffix;
-
-        ClassLoader cl = ClassLoadingUtilities.class.getClassLoader();
+    public static <T> T getInstance(Class<T> interfaceType, String fullyQualifiedClassName) throws Exception {
 
         Class<T> c;
 
-        try
-        {
+        try {
+
             //noinspection unchecked
-            c = (Class<T>)cl.loadClass(fullyQualifiedClassName);
+            c = (Class<T>)Class.forName(fullyQualifiedClassName);
         }
-        catch(Throwable t)
-        {
-            throw new IllegalArgumentException("cannot find class " + t.getMessage(), t);
+        catch(Throwable t) {
+
+            throw new UserErrorException("class " + fullyQualifiedClassName + " not found", t);
         }
 
         T result;
 
-        try
-        {
+        try {
+
             result = c.newInstance();
         }
-        catch(Exception e)
-        {
-            throw new IllegalArgumentException("class '" + fullyQualifiedClassName + "' failed to instantiate, most likely the class has no no-argument constructor or a private no-argument constructor: " + e.getMessage(), e);
+        catch(Throwable t) {
+
+            throw new UserErrorException(
+                    "class '" + fullyQualifiedClassName +
+                            "' failed to instantiate, most likely the class has no no-argument constructor or a private no-argument constructor: " +
+                            t.getMessage(), t);
         }
 
-        if (!interfaceType.isAssignableFrom(c))
-        {
-            throw new IllegalArgumentException(fullyQualifiedClassName + " does not implement " + interfaceType,
+        if (!interfaceType.isAssignableFrom(c)) {
+
+            throw new UserErrorException(fullyQualifiedClassName + " does not implement " + interfaceType,
                 new ClassCastException(interfaceType.getName()));
         }
 
