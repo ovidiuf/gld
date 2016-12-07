@@ -62,6 +62,11 @@ public class CacheLoadStrategyFactory implements LoadStrategyFactory {
 
         ServiceType ourServiceType = getServiceType();
 
+        if (!ServiceType.cache.equals(ourServiceType)) {
+            throw new IllegalStateException(
+                    "invalid service type " + ourServiceType + ", it should be " + ServiceType.cache);
+        }
+
         String fqcn = LoadStrategyFactory.inferFullyQualifiedLoadStrategyClassName(ourServiceType, loadStrategyName);
 
         LoadStrategy s = ClassLoadingUtilities.getInstance(LoadStrategy.class, fqcn);
