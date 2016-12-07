@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.cache;
 
+import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.configuration.RawConfigurationMapWrapper;
 import io.novaordis.utilities.UserErrorException;
 
@@ -67,6 +68,18 @@ public class CacheServiceConfigurationImpl extends RawConfigurationMapWrapper im
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+
+        Object o = getRawConfigurationMap().get(ServiceConfiguration.IMPLEMENTATION_LABEL);
+
+        if (o == null) {
+            return "null";
+        }
+
+        return o.toString();
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
