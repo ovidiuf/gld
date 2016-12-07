@@ -370,11 +370,11 @@ public class MainTest {
         File f = new File(baseDirectory, "../api/src/test/resources/data/reference-configuration.yml");
         assertTrue(f.isFile());
 
-        String[] args = new String[] {"-c", f.getPath()};
+        List<String> args = new ArrayList<>(Arrays.asList("-c", f.getPath()));
 
-        boolean success = Main.loadDriverLifeCycle(args);
+        int exitCode = Main.loadDriverLifeCycle(args);
 
-        assertTrue(success);
+        assertEquals(0, exitCode);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
