@@ -362,7 +362,7 @@ public class MainTest {
         }
     }
 
-    // lifecycle -------------------------------------------------------------------------------------------------------
+    // loadDriverLifeCycle -------------------------------------------------------------------------------------------------------
 
     @Test
     public void lifecycle() throws Exception {
@@ -372,7 +372,7 @@ public class MainTest {
 
         String[] args = new String[] {"-c", f.getPath()};
 
-        boolean success = Main.lifecycle(args);
+        boolean success = Main.loadDriverLifeCycle(args);
 
         assertTrue(success);
     }

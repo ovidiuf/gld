@@ -47,32 +47,41 @@ public class Main {
 
     public static void main(String[] args) {
 
-        boolean success = lifecycle(args);
+        List<String> arguments = new ArrayList<>(Arrays.asList(args));
 
-        if (success) {
+        int exitCode;
 
-            System.exit(0);
+        //
+        // attempt to handle first the commands that do not need a load driver instance
+        //
+
+        if ((exitCode = displayVersion(arguments)) >= 0) {
+
+            System.exit(exitCode);
         }
-        else {
 
-            System.exit(1);
-        }
+        //
+        // instantiate the load driver instance and execute the life cycle
+        //
+
+        exitCode = loadDriverLifeCycle(arguments);
+        System.exit(exitCode);
+
     }
 
     // Package protected static ----------------------------------------------------------------------------------------
 
     /**
-     * @return true if the driver completed its scenario and exited successfully.
+     * @return an appropriate exit code: 0 if the driver completed its scenario and exited successfully, non-zero
+     * otherwise
      */
-    static boolean lifecycle(String[] args) {
+    static int loadDriverLifeCycle(List<String> arguments) {
 
         LoadDriver ld = null;
 
-        boolean success = false;
+        int exitCode = 1;
 
         try {
-
-            List<String> arguments = new ArrayList<>(Arrays.asList(args));
 
             boolean background = extractBackgroundSetting(arguments);
             File configurationFile = extractConfigurationFile(arguments);
@@ -88,7 +97,7 @@ public class Main {
 
             log.debug(ld + " executed scenario successfully");
 
-            success = true;
+            exitCode = 0;
         }
         catch(Throwable t) {
 
@@ -99,7 +108,7 @@ public class Main {
             }
         }
 
-        return success;
+        return exitCode;
     }
 
     /**
@@ -238,6 +247,24 @@ public class Main {
         }
 
         throw new UserErrorException("invalid " + optionLiteral + " value: \"" + s + "\"");
+    }
+
+    /**
+     * @return a zero exit code if the version was found and displayed successfully, a non-zero positive exit code
+     * in case of a failure, and a negative exit code if there was no version display request
+     */
+    static int displayVersion(List<String> arguments) {
+
+        for(String s: arguments) {
+
+            if ("version".equals(s)) {
+
+                System.out.println("?");
+                return 0;
+            }
+        }
+
+        return -1;
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------
