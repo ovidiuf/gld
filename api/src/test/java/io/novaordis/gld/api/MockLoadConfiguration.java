@@ -14,82 +14,46 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.mock.load;
-
-import io.novaordis.gld.api.KeyStore;
-import io.novaordis.gld.api.LoadConfiguration;
-import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.ServiceConfiguration;
-import io.novaordis.gld.api.ServiceType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Set;
-
-import static org.junit.Assert.fail;
+package io.novaordis.gld.api;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 12/7/16
  */
-public class MockLoadStrategy implements LoadStrategy {
+public class MockLoadConfiguration implements LoadConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = LoggerFactory.getLogger(MockLoadStrategy.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private boolean initialized;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // LoadStrategy implementation -------------------------------------------------------------------------------------
+    // LoadConfiguration implementation --------------------------------------------------------------------------------
 
     @Override
-    public ServiceType getServiceType() {
-
-        return ServiceType.mock;
+    public int getThreadCount() {
+        throw new RuntimeException("getThreadCount() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public String getName() {
-        throw new RuntimeException("getName() NOT YET IMPLEMENTED");
+    public Long getOperations() {
+
+        // unlimited
+        return null;
     }
 
     @Override
-    public void init(ServiceConfiguration sc, LoadConfiguration lc) throws Exception {
+    public Long getRequests() {
 
-        //
-        // because init() is usually NOT idempotent, fail this if we call it twice
-        //
-
-        if (initialized) {
-
-            fail(this + ".init(...) called twice");
-        }
-
-        this.initialized = true;
-
-        log.info(this + ".init()");
+        return getOperations();
     }
 
     @Override
-    public Operation next(Operation last, String lastWrittenKey, boolean runtimeShuttingDown) throws Exception {
-        throw new RuntimeException("next() NOT YET IMPLEMENTED");
-    }
+    public Long getMessages() {
 
-    @Override
-    public Set<Class<? extends Operation>> getOperationTypes() {
-        throw new RuntimeException("getOperationTypes() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public KeyStore getKeyStore() {
-        throw new RuntimeException("getKeyStore() NOT YET IMPLEMENTED");
+        return getOperations();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

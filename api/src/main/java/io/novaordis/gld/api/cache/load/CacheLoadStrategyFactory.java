@@ -17,6 +17,7 @@
 package io.novaordis.gld.api.cache.load;
 
 import io.novaordis.gld.api.ClassLoadingUtilities;
+import io.novaordis.gld.api.LoadConfiguration;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.LoadStrategyFactory;
 import io.novaordis.gld.api.ServiceConfiguration;
@@ -40,9 +41,9 @@ public class CacheLoadStrategyFactory implements LoadStrategyFactory {
     // LoadStrategyFactory implementation ------------------------------------------------------------------------------
 
     @Override
-    public LoadStrategy buildInstance(ServiceConfiguration configuration) throws Exception {
+    public LoadStrategy buildInstance(ServiceConfiguration sc, LoadConfiguration lc) throws Exception {
 
-        CacheServiceConfiguration csc = (CacheServiceConfiguration)configuration;
+        CacheServiceConfiguration csc = (CacheServiceConfiguration)sc;
 
         String loadStrategyName = csc.getLoadStrategyName();
 
@@ -71,7 +72,7 @@ public class CacheLoadStrategyFactory implements LoadStrategyFactory {
 
         LoadStrategy s = ClassLoadingUtilities.getInstance(LoadStrategy.class, fqcn);
 
-        s.init(configuration);
+        s.init(sc, lc);
 
         return s;
     }

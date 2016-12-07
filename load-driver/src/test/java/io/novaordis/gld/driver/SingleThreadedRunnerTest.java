@@ -17,6 +17,7 @@
 package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.api.LoadConfiguration;
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
@@ -257,7 +258,7 @@ public class SingleThreadedRunnerTest {
             }
 
             @Override
-            public void init(ServiceConfiguration serviceConfiguration) throws Exception {
+            public void init(ServiceConfiguration sc, LoadConfiguration lc) throws Exception {
                 throw new RuntimeException("init() NOT YET IMPLEMENTED");
             }
 

@@ -16,8 +16,7 @@
 
 package io.novaordis.gld.api.configuration;
 
-import io.novaordis.gld.api.LoadDriverConfiguration;
-import io.novaordis.utilities.UserErrorException;
+import io.novaordis.gld.api.LoadConfigurationTest;
 
 import java.util.Map;
 
@@ -25,7 +24,7 @@ import java.util.Map;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-public class LoadDriverConfigurationImpl implements LoadDriverConfiguration {
+public class LoadConfigurationImplTest extends LoadConfigurationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -33,52 +32,23 @@ public class LoadDriverConfigurationImpl implements LoadDriverConfiguration {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private int threadCount;
-
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    /**
-     * @param map the map extracted from the YAML file from under the "load" section.
-     */
-    public LoadDriverConfigurationImpl(Map map) throws Exception {
-
-        load(map);
-    }
-
-    // LoadDriverConfiguration implementation --------------------------------------------------------------------------
-
-    @Override
-    public int getThreadCount() {
-
-        return threadCount;
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    // Tests -----------------------------------------------------------------------------------------------------------
+
     // Package protected -----------------------------------------------------------------------------------------------
+
+    @Override
+    protected LoadConfigurationImpl getLoadConfigurationToTest(Map map) throws Exception {
+
+        return new LoadConfigurationImpl(map);
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
-
-    private void load(Map map) throws Exception {
-
-        Object o = map.get(LoadDriverConfiguration.THREAD_COUNT_LABEL);
-
-        if (o == null) {
-
-            threadCount = LoadDriverConfiguration.DEFAULT_THREAD_COUNT;
-        }
-        else {
-
-            if (!(o instanceof Integer)) {
-                throw new UserErrorException(
-                        "'" + LoadDriverConfiguration.THREAD_COUNT_LABEL + "' not an integer: \"" + o + "\"");
-            }
-
-            threadCount = ((Integer)o);
-        }
-    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

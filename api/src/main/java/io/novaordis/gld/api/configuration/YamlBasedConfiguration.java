@@ -17,7 +17,7 @@
 package io.novaordis.gld.api.configuration;
 
 import io.novaordis.gld.api.Configuration;
-import io.novaordis.gld.api.LoadDriverConfiguration;
+import io.novaordis.gld.api.LoadConfiguration;
 import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
 import io.novaordis.gld.api.cache.CacheServiceConfigurationImpl;
@@ -48,7 +48,7 @@ public class YamlBasedConfiguration implements Configuration {
 
     private File file;
     private ServiceConfiguration serviceConfiguration;
-    private LoadDriverConfiguration loadDriverConfiguration;
+    private LoadConfiguration loadConfiguration;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -69,9 +69,9 @@ public class YamlBasedConfiguration implements Configuration {
     }
 
     @Override
-    public LoadDriverConfiguration getLoadDriverConfiguration() {
+    public LoadConfiguration getLoadConfiguration() {
 
-        return loadDriverConfiguration;
+        return loadConfiguration;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -141,7 +141,7 @@ public class YamlBasedConfiguration implements Configuration {
                         "'" + LOAD_SECTION_LABEL + "' section empty or missing from configuration file " + file);
             }
 
-            loadDriverConfiguration = new LoadDriverConfigurationImpl(loadConfigurationMap);
+            loadConfiguration = new LoadConfigurationImpl(loadConfigurationMap);
         }
         finally {
 

@@ -16,8 +16,6 @@
 
 package io.novaordis.gld.api;
 
-import java.util.Map;
-
 /**
  * Typed access to underlying configuration.
  *
@@ -40,7 +38,7 @@ public interface Configuration {
 
     ServiceConfiguration getServiceConfiguration();
 
-    LoadDriverConfiguration getLoadDriverConfiguration();
+    LoadConfiguration getLoadConfiguration();
 
     // Package protected -----------------------------------------------------------------------------------------------
 

@@ -18,6 +18,7 @@ package io.novaordis.gld.api.cache.load;
 
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.LoadStrategyFactoryTest;
+import io.novaordis.gld.api.MockLoadConfiguration;
 import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.cache.CacheServiceConfiguration;
 import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
@@ -55,11 +56,12 @@ public class CacheLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
 
         CacheLoadStrategyFactory f = getLoadStrategyFactoryToTest();
 
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockCacheServiceConfiguration mc = new MockCacheServiceConfiguration();
 
         try {
 
-            f.buildInstance(mc);
+            f.buildInstance(mc, mlc);
             fail("should have failed");
         }
         catch(IllegalArgumentException e) {
@@ -75,13 +77,14 @@ public class CacheLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
 
         CacheLoadStrategyFactory f = getLoadStrategyFactoryToTest();
 
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockCacheServiceConfiguration mc = new MockCacheServiceConfiguration();
 
         mc.setLoadStrategyName("surely-there-is-no-such-load-strategy");
 
         try {
 
-            f.buildInstance(mc);
+            f.buildInstance(mc, mlc);
             fail("should have failed");
         }
         catch(UserErrorException e) {
@@ -101,11 +104,12 @@ public class CacheLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
 
         CacheLoadStrategyFactory f = getLoadStrategyFactoryToTest();
 
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockCacheServiceConfiguration mc = new MockCacheServiceConfiguration();
 
         mc.setLoadStrategyName("mock");
 
-        LoadStrategy s = f.buildInstance(mc);
+        LoadStrategy s = f.buildInstance(mc, mlc);
 
         //
         // make sure the load strategy was built without any incident

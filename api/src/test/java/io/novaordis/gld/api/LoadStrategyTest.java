@@ -16,11 +16,16 @@
 
 package io.novaordis.gld.api;
 
+import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
+import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertEquals;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -42,6 +47,58 @@ public abstract class LoadStrategyTest {
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Tests -----------------------------------------------------------------------------------------------------------
+
+    // init() ----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void implementationsAreRequiredToFailIfTheyEncounterUnknownConfigurationOptions() throws Exception {
+
+        LoadStrategy s = getLoadStrategyToTest();
+
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+        MockCacheServiceConfiguration msc = new MockCacheServiceConfiguration();
+
+        Map<String, Object> mockRawConfig = new HashMap<>();
+        mockRawConfig.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        mockRawConfig.put("unknown-configuration-element", "some-value");
+        msc.setMap(mockRawConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+
+        try {
+
+            s.init(msc, mlc);
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.startsWith("unknown " + s.getName() + " load strategy configuration option(s): "));
+        }
+    }
+
+    @Test
+    public void configurationContainsInconsistentName() throws Exception {
+
+        LoadStrategy s = getLoadStrategyToTest();
+
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+        MockServiceConfiguration msc = new MockServiceConfiguration();
+        Map<String, Object> mockRawConfigu = new HashMap<>();
+        mockRawConfigu.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "wrong-name");
+        msc.setMap(mockRawConfigu, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+
+        try {
+
+            s.init(msc, mlc);
+            fail("should have thrown exception");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.contains("inconsistent load strategy name, expected "));
+        }
+    }
 
     // constructors ----------------------------------------------------------------------------------------------------
 
@@ -93,22 +150,25 @@ public abstract class LoadStrategyTest {
 //        }
 //    }
 //
-//    // next() ----------------------------------------------------------------------------------------------------------
-//
-//    @Test
-//    public void unconfiguredStrategyFailsUponFirstUsage() throws Exception {
-//
-//        LoadStrategy s = getLoadStrategyToTest(null, null, -1);
-//
-//        try {
-//
-//            s.next(null, null, false);
-//            fail("should fail with IllegalStateException because it was not configured");
-//        }
-//        catch(IllegalStateException e) {
-//            log.info(e.getMessage());
-//        }
-//    }
+    // next() ----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void uninitializedStrategyShouldFailUponFirstUse() throws Exception {
+
+        LoadStrategy s = getLoadStrategyToTest();
+
+        try {
+
+            s.next(null, null, false);
+            fail("should have thrown exception");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.contains("was not initialized"));
+        }
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

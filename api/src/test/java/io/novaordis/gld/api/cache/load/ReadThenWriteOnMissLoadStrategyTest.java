@@ -17,13 +17,19 @@
 package io.novaordis.gld.api.cache.load;
 
 import io.novaordis.gld.api.LoadStrategyTest;
+import io.novaordis.gld.api.MockLoadConfiguration;
+import io.novaordis.gld.api.MockServiceConfiguration;
 import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
 import io.novaordis.gld.api.cache.operation.Read;
 import io.novaordis.gld.api.cache.operation.Write;
+import io.novaordis.utilities.UserErrorException;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -59,7 +65,33 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
         assertEquals(2, operations.size());
         assertTrue(operations.contains(Read.class));
         assertTrue(operations.contains(Write.class));
+
+        assertTrue(s.isReuseValue());
     }
+
+    @Test
+    public void reuseValue_InvalidValue() throws Exception {
+
+        ReadThenWriteOnMissLoadStrategy s = getLoadStrategyToTest();
+
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+        MockServiceConfiguration sc = new MockServiceConfiguration();
+        Map<String, Object> m = new HashMap<>();
+        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        m.put(ReadThenWriteOnMissLoadStrategy.REUSE_VALUE_LABEL, "true");
+        sc.setMap(m, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+
+        try {
+            s.init(sc, mlc);
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("illegal '" +  ReadThenWriteOnMissLoadStrategy.REUSE_VALUE_LABEL + "' String value", msg);
+        }
+    }
+
 
 //    @Test
 //    public void hit_noKeyStore() throws Exception {

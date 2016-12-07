@@ -14,78 +14,90 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.configuration;
 
+import io.novaordis.gld.api.LoadConfiguration;
 import io.novaordis.utilities.UserErrorException;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-public abstract class LoadDriverConfigurationTest {
+public class LoadConfigurationImpl implements LoadConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = LoggerFactory.getLogger(LoadDriverConfigurationTest.class);
-
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private int threadCount;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    /**
+     * @param map the map extracted from the YAML file from under the "load" section.
+     */
+    public LoadConfigurationImpl(Map map) throws Exception {
+
+        load(map);
+    }
+
+    // LoadConfiguration implementation --------------------------------------------------------------------------
+
+    @Override
+    public int getThreadCount() {
+
+        return threadCount;
+    }
+
+    @Override
+    public Long getOperations() {
+
+        // default value is "unlimited"
+        return null;
+    }
+
+    @Override
+    public Long getRequests() {
+
+        return getOperations();
+    }
+
+    @Override
+    public Long getMessages() {
+
+        return getOperations();
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // Tests -----------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void threadCount_NotAnInteger() throws Exception {
-
-        Map<String, String> map = new HashMap<>();
-        map.put(LoadDriverConfiguration.THREAD_COUNT_LABEL, "blah");
-
-        try {
-
-            getLoadDriverConfigurationToTest(map);
-            fail("should have thrown exception");
-        }
-        catch(UserErrorException e) {
-
-            String msg = e.getMessage();
-            log.info(msg);
-            assertEquals(msg, "'" + LoadDriverConfiguration.THREAD_COUNT_LABEL + "' not an integer: \"blah\"");
-        }
-    }
-
-    @Test
-    public void threadCountMissing_DefaultValue() throws Exception {
-
-        Map<String, String> map = new HashMap<>();
-        assertNull(map.get(LoadDriverConfiguration.THREAD_COUNT_LABEL));
-
-        LoadDriverConfiguration c = getLoadDriverConfigurationToTest(map);
-        assertEquals(LoadDriverConfiguration.DEFAULT_THREAD_COUNT, c.getThreadCount());
-    }
-
-
     // Package protected -----------------------------------------------------------------------------------------------
-
-    protected abstract LoadDriverConfiguration getLoadDriverConfigurationToTest(Map map) throws Exception;
 
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private void load(Map map) throws Exception {
+
+        Object o = map.get(LoadConfiguration.THREAD_COUNT_LABEL);
+
+        if (o == null) {
+
+            threadCount = LoadConfiguration.DEFAULT_THREAD_COUNT;
+        }
+        else {
+
+            if (!(o instanceof Integer)) {
+                throw new UserErrorException(
+                        "'" + LoadConfiguration.THREAD_COUNT_LABEL + "' not an integer: \"" + o + "\"");
+            }
+
+            threadCount = ((Integer)o);
+        }
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

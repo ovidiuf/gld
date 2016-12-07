@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.cache.load;
 
+import io.novaordis.gld.api.LoadConfiguration;
 import io.novaordis.gld.api.LoadStrategyBase;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.ServiceConfiguration;
@@ -23,9 +24,11 @@ import io.novaordis.gld.api.ServiceType;
 import io.novaordis.gld.api.cache.CacheServiceConfiguration;
 import io.novaordis.gld.api.cache.operation.Read;
 import io.novaordis.gld.api.cache.operation.Write;
+import io.novaordis.utilities.UserErrorException;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -40,6 +43,10 @@ import java.util.Set;
  *
  * It is supposed to be thread-safe, the intention is to be accessed concurrently from different threads. This implies
  * that the KeyStore implementation is also thread-safe.
+ *
+ * Configuration documentation:
+ *
+ * @{linktourl https://kb.novaordis.com/index.php/Gld_Configuration#read-then-write-on-miss_Load_Strategy_Configuration}
  */
 public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
 
@@ -55,18 +62,23 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
         OPERATION_TYPES = Collections.unmodifiableSet(s);
     }
 
+    public static final String REUSE_VALUE_LABEL = "reuse-value";
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private String syntheticValue;
-    private volatile boolean configured;
+
+    private boolean reuseValue;
+
+    private volatile boolean initialized;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public ReadThenWriteOnMissLoadStrategy()
-    {
-        configured = false;
+    public ReadThenWriteOnMissLoadStrategy() {
+
+        this.reuseValue = true;
     }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
@@ -83,60 +95,11 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
         return ServiceType.cache;
     }
 
-    @Override
-    public void init(ServiceConfiguration sc) throws Exception {
+    public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown) {
 
-        CacheServiceConfiguration csc = (CacheServiceConfiguration)sc;
+        if (!initialized) {
 
-
-//        int keySize = conf.getKeySize();
-//        int valueSize = conf.getValueSize();
-//        boolean useDifferentValues = conf.isUseDifferentValues();
-//
-//        // TODO this is fishy, refactor both here and in JmsLoadStrategy
-//        // Load load = (Load)getConfiguration().getCommand();
-//        Object load = null;
-//
-//        if (load == null) {
-//            throw new RuntimeException("RETURN HERE");
-//        }
-
-//        Long maxOperations = null;
-//
-//        if (load != null)
-//        {
-//            maxOperations = load.getMaxOperations();
-//        }
-//
-//        String keyStoreFile = conf.getKeyStoreFile();
-//        KeyStore keyStore;
-//
-//        if (keyStoreFile == null)
-//        {
-//            keyStore = new RandomKeyGenerator(keySize, maxOperations);
-//        }
-//        else
-//        {
-//            keyStore = new ReadOnlyFileKeyStore(keyStoreFile);
-//            keyStore.start();
-//        }
-//
-//        setKeyStore(keyStore);
-//
-//        syntheticValue = Util.getRandomValue(
-//            new Random(System.currentTimeMillis() + 17L), valueSize, useDifferentValues);
-//
-//        configured = true;
-    }
-
-    /**
-     * @see io.novaordis.gld.api.LoadStrategy#next(Operation, String, boolean)
-     */
-    public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown)
-    {
-        if (!configured)
-        {
-            throw new IllegalStateException(this + " not properly configured");
+            throw new IllegalStateException(this + " was not initialized");
         }
 
         Operation result;
@@ -182,6 +145,17 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    /**
+     * By default, the load strategy randomly generates the first entry value and then keeps reusing it, as a speed
+     * optimization (reuse-value: "true"). To change this behavior and configure the load strategy to generate a new
+     * random value every times it needs one, set "reuse-value" to "false" in the configuration. Configuring the load
+     * strategy to not reuse values will make it somewhat slower.
+     */
+    public boolean isReuseValue() {
+
+        return reuseValue;
+    }
+
     @Override
     public String toString() {
 
@@ -191,6 +165,55 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected void init(ServiceConfiguration sc, Map<String, Object> loadStrategyRawConfig, LoadConfiguration lc)
+            throws Exception {
+
+        Object o = loadStrategyRawConfig.remove(REUSE_VALUE_LABEL);
+
+        if (o != null) {
+
+            if (!(o instanceof Boolean)) {
+                throw new UserErrorException(
+                        "illegal '" +  REUSE_VALUE_LABEL + "' " + o.getClass().getSimpleName() + " value");
+            }
+
+            this.reuseValue = (Boolean)o;
+        }
+
+        if (!(sc instanceof CacheServiceConfiguration)) {
+
+            throw new IllegalArgumentException(sc + " not a CacheServiceConfiguration");
+        }
+
+        CacheServiceConfiguration cc = (CacheServiceConfiguration)sc;
+        int keySize = cc.getKeySize();
+        int valueSize = cc.getValueSize();
+        Long operations = lc.getOperations();
+
+//        String keyStoreFile = conf.getKeyStoreFile();
+//        KeyStore keyStore;
+//
+//        if (keyStoreFile == null)
+//        {
+//            keyStore = new RandomKeyGenerator(keySize, maxOperations);
+//        }
+//        else
+//        {
+//            keyStore = new ReadOnlyFileKeyStore(keyStoreFile);
+//            keyStore.start();
+//        }
+//
+//        setKeyStore(keyStore);
+//
+//        syntheticValue = Util.getRandomValue(
+//                new Random(System.currentTimeMillis() + 17L), valueSize, useDifferentValues);
+//
+//        configured = true;
+
+        initialized = true;
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

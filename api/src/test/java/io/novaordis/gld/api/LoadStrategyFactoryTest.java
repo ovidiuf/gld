@@ -75,17 +75,18 @@ public abstract class LoadStrategyFactoryTest {
         assertEquals("SomeLoadStrategy", s);
     }
 
-    // build() static wrapper ----------------------------------------------------------------------------------
+    // build() static wrapper ------------------------------------------------------------------------------------------
 
     @Test
     public void buildInstance_NullServiceType() throws Exception {
 
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockServiceConfiguration msc = new MockServiceConfiguration();
         msc.setServiceType(null);
 
         try {
 
-            LoadStrategyFactory.build(msc);
+            LoadStrategyFactory.build(msc, mlc);
             fail("should throw exception");
         }
         catch(IllegalArgumentException e) {
@@ -97,19 +98,21 @@ public abstract class LoadStrategyFactoryTest {
     @Test
     public void buildInstance_KnownServiceType() throws Exception {
 
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockServiceConfiguration msc = new MockServiceConfiguration();
-        LoadStrategy s = LoadStrategyFactory.build(msc);
+        LoadStrategy s = LoadStrategyFactory.build(msc, mlc);
         assertTrue(s instanceof MockLoadStrategy);
     }
 
     @Test
     public void buildInstance_UnknownServiceType() throws Exception {
 
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockServiceConfiguration msc = new MockServiceConfiguration();
         msc.setServiceType(ServiceType.unknown);
 
         try {
-            LoadStrategyFactory.build(msc);
+            LoadStrategyFactory.build(msc, mlc);
             fail("should have thrown exception");
         }
         catch(UserErrorException e) {
@@ -123,7 +126,7 @@ public abstract class LoadStrategyFactoryTest {
         }
     }
 
-    // build() -------------------------------------------------------------------------------------------------
+    // buildInstance() -------------------------------------------------------------------------------------------------
 
     @Test
     public void buildInstance() throws Exception {
@@ -136,7 +139,7 @@ public abstract class LoadStrategyFactoryTest {
         String loadStrategyName = c.getLoadStrategyName();
         assertNotNull(loadStrategyName);
 
-        LoadStrategy s = f.buildInstance(c);
+        LoadStrategy s = f.buildInstance(c, new MockLoadConfiguration());
         ServiceType t2 = s.getServiceType();
 
         assertEquals(t, t2);

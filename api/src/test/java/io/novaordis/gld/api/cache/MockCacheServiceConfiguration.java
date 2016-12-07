@@ -45,12 +45,14 @@ public class MockCacheServiceConfiguration extends MockServiceConfiguration impl
 
     @Override
     public int getKeySize() {
-        throw new RuntimeException("getKeySize() NOT YET IMPLEMENTED");
+
+        return CacheServiceConfiguration.DEFAULT_KEY_SIZE;
     }
 
     @Override
     public int getValueSize() {
-        throw new RuntimeException("getValueSize() NOT YET IMPLEMENTED");
+
+        return CacheServiceConfiguration.DEFAULT_VALUE_SIZE;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

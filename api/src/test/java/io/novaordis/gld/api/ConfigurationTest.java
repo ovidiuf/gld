@@ -46,7 +46,7 @@ public abstract class ConfigurationTest {
         ServiceConfiguration sc = c.getServiceConfiguration();
         assertNotNull(sc);
 
-        LoadDriverConfiguration ldc = c.getLoadDriverConfiguration();
+        LoadConfiguration ldc = c.getLoadConfiguration();
         assertNotNull(ldc);
     }
 

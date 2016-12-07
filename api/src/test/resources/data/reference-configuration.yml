@@ -6,12 +6,12 @@ service:
   type: cache # options: cache, jms, http, etc.
   implementation: local
 
-  key-size: 1024
+  key-size: 512
   value-size: 1024
 
   load-strategy:
     name: read-then-write-on-miss
-    use-different-values: true
+    reuse-value: false
 
 load:
   threads: 10

@@ -27,6 +27,9 @@ public interface CacheServiceConfiguration extends ServiceConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    int DEFAULT_KEY_SIZE = 12; // in characters
+    int DEFAULT_VALUE_SIZE = 512; // in characters
+
     String KEY_SIZE_LABEL = "key-size";
     String VALUE_SIZE_LABEL = "value-size";
 
@@ -39,14 +42,16 @@ public interface CacheServiceConfiguration extends ServiceConfiguration {
     // Public ----------------------------------------------------------------------------------------------------------
 
     /**
-     * @return the default key size, in bytes. A specific load strategy may override this default value with
-     * load-strategy specific defaults or variable values.
+     * @return the default key size, in bytes. A specific load strategy may choose to ignore this default and use a
+     * load-strategy specific value. The configuration value is optional, if not present in the configuration file,
+     * the default value (see DEFAULT_KEY_SIZE above) is used.
      */
     int getKeySize() throws UserErrorException;
 
     /**
-     * @return the default value size, in bytes. A specific load strategy may override this default value with
-     * load-strategy specific defaults or variable values.
+     * @return the default value size, in bytes. A specific load strategy may choose to ignore this default and use a
+     * load-strategy specific value. The configuration value is optional, if not present in the configuration file,
+     * the default value (see DEFAULT_VALUE_SIZE above) is used.
      */
     int getValueSize() throws UserErrorException;
 

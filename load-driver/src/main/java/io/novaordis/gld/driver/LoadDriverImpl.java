@@ -18,11 +18,12 @@ package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.Configuration;
 import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.api.LoadConfiguration;
 import io.novaordis.gld.api.LoadDriver;
-import io.novaordis.gld.api.LoadDriverConfiguration;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.LoadStrategyFactory;
 import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.RandomContentGenerator;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceFactory;
@@ -48,6 +49,8 @@ public class LoadDriverImpl implements LoadDriver {
 
     private volatile boolean background;
 
+    private RandomContentGenerator contentGenerator;
+
     private Service service;
 
     private KeyStore keyStore;
@@ -65,6 +68,8 @@ public class LoadDriverImpl implements LoadDriver {
     public LoadDriverImpl(boolean background) {
 
         this.background = background;
+
+        this.contentGenerator = new RandomContentGenerator();
     }
 
     // LoadDriver implementation ---------------------------------------------------------------------------------------
@@ -84,13 +89,14 @@ public class LoadDriverImpl implements LoadDriver {
     @Override
     public void init(Configuration c) throws Exception {
 
+        LoadConfiguration lc = c.getLoadConfiguration();
         ServiceConfiguration sc = c.getServiceConfiguration();
 
         //
         // load strategy instantiation and installation
         //
 
-        LoadStrategy ls = LoadStrategyFactory.build(sc);
+        LoadStrategy ls = LoadStrategyFactory.build(sc, lc);
 
 
         //
@@ -108,8 +114,6 @@ public class LoadDriverImpl implements LoadDriver {
         //
         // load configuration
         //
-
-        LoadDriverConfiguration lc = c.getLoadDriverConfiguration();
 
         Sampler sampler = new SamplerImpl();
 

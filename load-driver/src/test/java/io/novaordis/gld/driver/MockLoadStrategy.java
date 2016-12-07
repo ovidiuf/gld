@@ -17,6 +17,7 @@
 package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.api.LoadConfiguration;
 import io.novaordis.gld.api.LoadStrategyBase;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.ServiceConfiguration;
@@ -24,6 +25,7 @@ import io.novaordis.gld.api.ServiceType;
 import org.apache.log4j.Logger;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -82,9 +84,10 @@ public class MockLoadStrategy extends LoadStrategyBase {
     }
 
     @Override
-    public void init(ServiceConfiguration serviceConfiguration) throws Exception {
+    protected void init(ServiceConfiguration sc, Map<String, Object> loadStrategyRawConfig, LoadConfiguration lc)
+            throws Exception {
 
-//        for(int i = 0; i < arguments.size(); i ++) {
+        //        for(int i = 0; i < arguments.size(); i ++) {
 //
 //            if ("--mock-argument".equals(arguments.get(i))) {
 //

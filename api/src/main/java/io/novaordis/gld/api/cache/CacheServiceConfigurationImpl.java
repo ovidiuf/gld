@@ -52,7 +52,7 @@ public class CacheServiceConfigurationImpl extends RawConfigurationMapWrapper im
 
         consistencyCheck(CacheServiceConfiguration.KEY_SIZE_LABEL, o, Integer.class);
 
-        return (Integer)o;
+        return o == null ? DEFAULT_KEY_SIZE : (Integer)o;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class CacheServiceConfigurationImpl extends RawConfigurationMapWrapper im
 
         consistencyCheck(CacheServiceConfiguration.VALUE_SIZE_LABEL, o, Integer.class);
 
-        return (Integer)o;
+        return o == null ? DEFAULT_VALUE_SIZE : (Integer)o;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -91,7 +91,8 @@ public class CacheServiceConfigurationImpl extends RawConfigurationMapWrapper im
 
         if (o == null) {
 
-            throw new UserErrorException("missing required configuration element '" +label + "'");
+            // will use the default value
+            return;
         }
 
         Class actualClass = o.getClass();

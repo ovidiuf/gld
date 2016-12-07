@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.driver;
 
+import io.novaordis.gld.api.RandomContentGenerator;
 import io.novaordis.utilities.UserErrorException;
 import org.apache.log4j.Logger;
 
@@ -64,77 +65,9 @@ public class Util {
         return msg;
     }
 
-    /**
-     * Naive implementation - come up with something smarter.
-     *
-     * @param random - the Random instance to use while generated the value. We are exposing it externally to give
-     *        the caller a chance to provide an efficient Random (such as
-     * @param totalLength - the total length of the string.
-     * @param randomSectionLength - the length of the random section of the string. If randomSectionLength
-     *       is smaller than totalLength, the final string consists in identical repeated sections; the section that
-     *       will be repeated is 'randomSectionLength' long and it is randomly generated.
-     */
-    public static String getRandomString(Random random, int totalLength, int randomSectionLength) {
-        String randomSection = "";
-        int r;
-
-        if (totalLength < randomSectionLength)
-        {
-            randomSectionLength = totalLength;
-        }
-
-        if (randomSectionLength <= 0)
-        {
-            throw new IllegalArgumentException("invalid length " + randomSectionLength);
-        }
-
-        for (int i = 0; i < randomSectionLength; i ++)
-        {
-            r = random.nextInt(122);
-
-            if (r >=0 && r <= 25)
-            {
-                r += 65;
-            }
-            else if (r >=26 && r <= 47)
-            {
-                r += 71;
-            }
-            else if (r >= 58 && r <= 64)
-            {
-                r += 10;
-            }
-            else if (r >= 91 && r <= 96)
-            {
-                r += 10;
-            }
-
-            randomSection += ((char)r);
-        }
-
-        if (totalLength == randomSectionLength)
-        {
-            return randomSection;
-        }
-        else if (totalLength > randomSectionLength)
-        {
-            char[] src = randomSection.toCharArray();
-            int sections = totalLength / randomSectionLength;
-            char[] buffer = new char[totalLength];
-            for(int i = 0; i < sections; i ++)
-            {
-                System.arraycopy(src, 0, buffer, i * randomSectionLength, randomSectionLength);
-            }
-            int rest = totalLength - sections * randomSectionLength;
-            System.arraycopy(src, 0, buffer, sections * randomSectionLength, rest);
-            return new String(buffer);
-        }
-
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
     public static String getRandomKey(Random random, int keySize) {
-        return getRandomString(random, keySize, keySize);
+
+        return new RandomContentGenerator().getRandomString(random, keySize, keySize);
     }
 
     /**
@@ -159,32 +92,6 @@ public class Util {
         }
 
         return result;
-    }
-
-    public static String getRandomValue(Random random, int valueSize, boolean useDifferentValues) {
-
-        synchronized (Util.class)
-        {
-            String s;
-
-            if (!useDifferentValues)
-            {
-                s = VALUE_CACHE.get(valueSize);
-
-                if (s == null)
-                {
-                    s = getRandomString(random, valueSize, 10);
-                    VALUE_CACHE.put(valueSize, s);
-                }
-            }
-            else
-            {
-                s = getRandomString(random, valueSize, 10);
-            }
-
-            return s;
-        }
-
     }
 
     public static Throwable getRoot(Throwable t) {

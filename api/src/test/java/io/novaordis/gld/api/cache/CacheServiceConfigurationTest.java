@@ -50,7 +50,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
     // Tests -----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void getKeySize_MissingKeySize() throws Exception {
+    public void getKeySize_MissingKeySize_DefaultShouldBeUsed() throws Exception {
 
         Map<String, Object> map = new HashMap<>();
         map.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.name());
@@ -61,18 +61,8 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
 
         CacheServiceConfiguration c =  getServiceConfigurationToTest(map);
 
-        try {
-
-            c.getKeySize();
-            fail("should have thrown exception");
-        }
-        catch(UserErrorException e) {
-
-            String msg = e.getMessage();
-            log.info(e.getMessage());
-            assertEquals(
-                    "missing required configuration element '" + CacheServiceConfiguration.KEY_SIZE_LABEL + "'", msg);
-        }
+        int s = c.getKeySize();
+        assertEquals(CacheServiceConfiguration.DEFAULT_KEY_SIZE, s);
     }
 
     @Test
@@ -119,7 +109,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
     }
 
     @Test
-    public void getValueSize_MissingKeySize() throws Exception {
+    public void getValueSize_MissingKeySize_DefaultShouldBeUsed() throws Exception {
 
         Map<String, Object> map = new HashMap<>();
         map.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.name());
@@ -130,18 +120,8 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
 
         CacheServiceConfiguration c =  getServiceConfigurationToTest(map);
 
-        try {
-
-            c.getValueSize();
-            fail("should have thrown exception");
-        }
-        catch(UserErrorException e) {
-
-            String msg = e.getMessage();
-            log.info(e.getMessage());
-            assertEquals(
-                    "missing required configuration element '" + CacheServiceConfiguration.VALUE_SIZE_LABEL + "'", msg);
-        }
+        int s = c.getValueSize();
+        assertEquals(CacheServiceConfiguration.DEFAULT_VALUE_SIZE, s);
     }
 
     @Test

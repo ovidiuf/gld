@@ -17,6 +17,7 @@
 package io.novaordis.gld.api.cache.load;
 
 import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.api.LoadConfiguration;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.ServiceConfiguration;
@@ -75,7 +76,7 @@ public class MockLoadStrategy implements LoadStrategy {
     }
 
     @Override
-    public void init(ServiceConfiguration sc) throws Exception {
+    public void init(ServiceConfiguration sc, LoadConfiguration lc) throws Exception {
 
         //
         // by default, we don't require any specific configuration

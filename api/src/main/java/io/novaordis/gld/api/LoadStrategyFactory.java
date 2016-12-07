@@ -33,7 +33,7 @@ public interface LoadStrategyFactory {
      * because we want to be able to add arbitrary service types in the future without modifying the code of this layer
      * of the factory.
      *
-     * @param configuration the associated service configuration instance.
+     * @param sc the associated service configuration instance.
      *
      * @return a LoadStrategy instance
      *
@@ -42,9 +42,9 @@ public interface LoadStrategyFactory {
      *
      * @exception IllegalArgumentException on null service type
      */
-    static LoadStrategy build(ServiceConfiguration configuration) throws Exception {
+    static LoadStrategy build(ServiceConfiguration sc, LoadConfiguration lc) throws Exception {
 
-        ServiceType t = configuration.getType();
+        ServiceType t = sc.getType();
 
         if (t == null) {
             throw new IllegalArgumentException("null service type");
@@ -85,9 +85,11 @@ public interface LoadStrategyFactory {
                     "failed to instantiate a load strategy factory corresponding to a service of type " + t, e);
         }
 
-        LoadStrategy ls = f.buildInstance(configuration);
+        LoadStrategy ls = f.buildInstance(sc, lc);
 
-        ls.init(configuration);
+        //
+        // don't init(), the factory instance is supposed to do it
+        //
 
         return ls;
     }
@@ -159,11 +161,11 @@ public interface LoadStrategyFactory {
     // Public ----------------------------------------------------------------------------------------------------------
 
     /**
-     * @param configuration the associated ServiceConfiguration instance.
+     * @param sc the associated ServiceConfiguration instance.
      *
      * @exception UserErrorException with a human readable messages if encountering difficulties.
      */
-    LoadStrategy buildInstance(ServiceConfiguration configuration) throws Exception;
+    LoadStrategy buildInstance(ServiceConfiguration sc, LoadConfiguration lc) throws Exception;
 
     /**
      * @return the service type the load strategies built by this factory are associated with.

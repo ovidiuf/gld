@@ -16,6 +16,8 @@
 
 package io.novaordis.gld.api;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -26,6 +28,8 @@ public class MockServiceConfiguration implements ServiceConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    private static final String CONTENT_KEY = "CONFIGURATION_MAP_FRAGMENT";
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
@@ -34,11 +38,14 @@ public class MockServiceConfiguration implements ServiceConfiguration {
     private String implementation;
     private ServiceType serviceType;
 
+    private Map<String, Object> rawConfigurationMaps;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockServiceConfiguration() {
 
         this.serviceType = ServiceType.mock;
+        this.rawConfigurationMaps = new HashMap<>();
     }
 
     // ServiceConfiguration implementation -----------------------------------------------------------------------------
@@ -63,7 +70,44 @@ public class MockServiceConfiguration implements ServiceConfiguration {
 
     @Override
     public Map<String, Object> getMap(String... path) {
-        throw new RuntimeException("getMap() NOT YET IMPLEMENTED");
+
+        Map<String, Object> current = rawConfigurationMaps;
+
+        for(int i = 0; i < path.length; i ++) {
+
+            String pathElement = path[i];
+
+            //noinspection unchecked
+            Map<String, Object> m = (Map<String, Object>)current.get(pathElement);
+
+            if (m == null) {
+
+                return Collections.emptyMap();
+            }
+
+            if (i == path.length - 1) {
+
+                //
+                // the last path element, attempt to get the content
+                //
+
+                //noinspection unchecked
+                Map<String, Object> content = (Map<String, Object>)m.get(CONTENT_KEY);
+
+                if (content == null) {
+
+                    content = Collections.emptyMap();
+                }
+
+                return content;
+            }
+            else {
+
+                current = m;
+            }
+        }
+
+        return Collections.emptyMap();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -81,6 +125,38 @@ public class MockServiceConfiguration implements ServiceConfiguration {
     public void setServiceType(ServiceType t) {
 
         this.serviceType = t;
+    }
+
+    public void setMap(Map<String, Object> rawConfigurationMap, String ... path) {
+
+        Map<String, Object> current = rawConfigurationMaps;
+
+        for(int i = 0; i < path.length; i ++) {
+
+            String pathElement = path[i];
+
+            //noinspection unchecked
+            Map<String, Object> m = (Map<String, Object>)current.get(pathElement);
+
+            if (m == null) {
+
+                m = new HashMap<>();
+                current.put(pathElement, m);
+            }
+
+            if (i == path.length - 1) {
+
+                //
+                // the last path element
+                //
+
+                m.put(CONTENT_KEY, rawConfigurationMap);
+            }
+            else {
+
+                current = m;
+            }
+        }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

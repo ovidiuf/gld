@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.configuration;
-
-import io.novaordis.gld.api.LoadDriverConfigurationTest;
-
-import java.util.Map;
+package io.novaordis.gld.api;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 12/7/16
  */
-public class LoadDriverConfigurationImplTest extends LoadDriverConfigurationTest {
+public class UtilTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -39,12 +35,6 @@ public class LoadDriverConfigurationImplTest extends LoadDriverConfigurationTest
     // Tests -----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
-
-    @Override
-    protected LoadDriverConfigurationImpl getLoadDriverConfigurationToTest(Map map) throws Exception {
-
-        return new LoadDriverConfigurationImpl(map);
-    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 
