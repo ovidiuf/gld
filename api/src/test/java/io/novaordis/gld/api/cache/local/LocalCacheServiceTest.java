@@ -17,6 +17,7 @@
 package io.novaordis.gld.api.cache.local;
 
 import io.novaordis.gld.api.LoadDriver;
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.ServiceTest;
 import io.novaordis.gld.api.cache.local.LocalCacheService;
@@ -40,9 +41,9 @@ public class LocalCacheServiceTest extends ServiceTest {
     // Package protected -----------------------------------------------------------------------------------------------
 
     @Override
-    protected Service getServiceToTest(LoadDriver d) throws Exception {
+    protected Service getServiceToTest(LoadStrategy s, LoadDriver d) throws Exception {
 
-        return new LocalCacheService(d);
+        return new LocalCacheService(s, d);
     }
 
     // Protected -------------------------------------------------------------------------------------------------------

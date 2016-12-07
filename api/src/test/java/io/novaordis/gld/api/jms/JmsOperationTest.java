@@ -17,7 +17,6 @@
 package io.novaordis.gld.api.jms;
 
 import io.novaordis.gld.api.OperationTest;
-import io.novaordis.gld.api.cache.CacheOperation;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -38,7 +37,7 @@ public abstract class JmsOperationTest extends OperationTest {
     // Package protected -----------------------------------------------------------------------------------------------
 
     @Override
-    protected abstract JmsOperation getOperationToTest() throws Exception;
+    protected abstract JmsOperation getOperationToTest(String key) throws Exception;
 
     // Protected -------------------------------------------------------------------------------------------------------
 

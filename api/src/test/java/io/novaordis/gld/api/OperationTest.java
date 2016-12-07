@@ -16,6 +16,11 @@
 
 package io.novaordis.gld.api;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/1/16
@@ -32,11 +37,23 @@ public abstract class OperationTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    @Test
+    public void identity() throws Exception {
+
+        Operation o = getOperationToTest("test");
+
+        assertFalse(o.wasPerformed());
+        assertFalse(o.wasSuccessful());
+
+        String key = o.getKey();
+        assertEquals("test", key);
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected abstract Operation getOperationToTest() throws Exception;
+    protected abstract Operation getOperationToTest(String key) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

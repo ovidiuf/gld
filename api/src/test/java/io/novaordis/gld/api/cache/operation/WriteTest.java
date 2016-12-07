@@ -14,22 +14,27 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.cache.operation;
 
-import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
-import io.novaordis.gld.api.cache.load.MockLoadStrategy;
-import io.novaordis.gld.api.cache.local.LocalCacheService;
+import io.novaordis.gld.api.cache.MockCacheService;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/5/16
+ * @since 12/7/16
  */
-public class ServiceFactoryTest {
+public class WriteTest extends CacheOperationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(WriteTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -39,29 +44,38 @@ public class ServiceFactoryTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // Tests -----------------------------------------------------------------------------------------------------------
-
-    // buildInstance() -------------------------------------------------------------------------------------------------
-
     @Test
-    public void buildInstance() throws Exception {
+    public void lifecycle() throws Exception {
 
-        MockLoadDriver md = new MockLoadDriver();
-        MockLoadStrategy ms = new MockLoadStrategy();
-        MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
-        sc.setImplementation("local");
+        Write w = getOperationToTest("test-key");
 
-        Service service = ServiceFactory.buildInstance(sc, ms, md);
+        assertFalse(w.wasPerformed());
+        assertFalse(w.wasSuccessful());
+        assertEquals("test-value", w.getValue());
 
-        LocalCacheService lcs = (LocalCacheService)service;
+        MockCacheService ms = new MockCacheService();
+        assertNull(ms.get("test-key"));
 
-        assertEquals(md, lcs.getLoadDriver());
-        assertEquals(ms, lcs.getLoadStrategy());
+        w.perform(ms);
+
+        assertTrue(w.wasPerformed());
+        assertTrue(w.wasSuccessful());
+
+        String value = ms.get("test-key");
+
+        log.info(value);
+        assertEquals("test-value", value);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected Write getOperationToTest(String key) throws Exception {
+
+        return new Write(key, "test-value");
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -21,10 +21,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 public abstract class ServiceTest {
 
@@ -45,35 +44,64 @@ public abstract class ServiceTest {
     // topology --------------------------------------------------------------------------------------------------------
 
     @Test
-    public void loadDriver() throws Exception {
+    public void nullLoadStrategy() throws Exception {
 
         MockLoadDriver md = new MockLoadDriver();
 
-        Service s = getServiceToTest(md);
+        try {
 
-        LoadDriver d = s.getLoadDriver();
+            getServiceToTest(null, md);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
 
-        assertEquals(md, d);
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("null load strategy", msg);
+        }
     }
 
     @Test
-    public void loadStrategy() throws Exception {
+    public void identity() throws Exception {
 
+        MockLoadStrategy ms = new MockLoadStrategy();
         MockLoadDriver md = new MockLoadDriver();
 
-        Service s = getServiceToTest(md);
+        Service s = getServiceToTest(ms, md);
+
+        LoadStrategy ls = s.getLoadStrategy();
+        assertEquals(ms, ls);
+
+        LoadDriver ld = s.getLoadDriver();
+        assertEquals(md, ld);
+    }
+
+    // lifecycle -------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void start_MissingLoadStrategy() throws Exception {
+
+        MockLoadStrategy ms = new MockLoadStrategy();
+        MockLoadDriver md = new MockLoadDriver();
+
+        Service s = getServiceToTest(ms, md);
+        ((ServiceBase)s).setLoadStrategy(null);
 
         assertNull(s.getLoadStrategy());
 
-        MockLoadStrategy ms = new MockLoadStrategy();
+        try {
 
-        ServiceBase sb = (ServiceBase)s;
+            s.start();
+            fail("should have thrown exception");
+        }
+        catch(IllegalStateException e) {
 
-        sb.setLoadStrategy(ms);
+            String msg = e.getMessage();
+            log.info(msg);
 
-        LoadStrategy s2 = s.getLoadStrategy();
+            assertEquals("incompletely configured service instance: load strategy not installed", msg);
+        }
 
-        assertEquals(ms, s2);
     }
 
 //    @Test
@@ -150,7 +178,7 @@ public abstract class ServiceTest {
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected abstract Service getServiceToTest(LoadDriver d) throws Exception;
+    protected abstract Service getServiceToTest(LoadStrategy s, LoadDriver d) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

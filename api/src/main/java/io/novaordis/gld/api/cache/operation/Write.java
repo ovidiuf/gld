@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.todiscard;
+package io.novaordis.gld.api.cache.operation;
 
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.cache.CacheService;
 
-@Deprecated
-public class Read implements Operation {
+public class Write extends CacheOperationBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -29,15 +29,12 @@ public class Read implements Operation {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String key;
-    private String value;
-    private volatile boolean performed;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Read(String key)
-    {
-        this.key = key;
+    public Write(String key, String value) {
+
+        super(key);
+        setValue(value);
     }
 
     // Operation implementation ----------------------------------------------------------------------------------------
@@ -47,13 +44,24 @@ public class Read implements Operation {
      */
     @Override
     public void perform(Service s) throws Exception {
-        performed = true;
 
-        //
-        // value = ((CacheService)s).get(key);
-        //
+        CacheService cs = insureCacheService(s);
 
-        throw new RuntimeException("NOT YET IMPLEMENTED: refactor CacheService");
+        String key = getKey();
+        String value = getValue();
+
+        try {
+
+            setPerformed(true);
+
+            cs.put(key, value);
+
+            setSuccessful(true);
+        }
+        catch(Throwable t) {
+
+            throw new RuntimeException("NOT YET IMPLEMENTED: we did not decide yet how to handle service failures");
+        }
     }
 
     @Override
@@ -64,33 +72,10 @@ public class Read implements Operation {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    /**
-     * May return null in case of cache miss.
-     */
-    public String getValue()
-    {
-        return value;
-    }
-
-    public String getKey()
-    {
-        return key;
-    }
-
-    public void setValue(String s)
-    {
-        this.value = s;
-    }
-
-    public boolean hasBeenPerformed()
-    {
-        return performed;
-    }
-
     @Override
-    public String toString()
-    {
-        return key + (!performed ? "" : (value == null ? " miss" : " hit (" + value + ")"));
+    public String toString() {
+
+        return getKey() + "=" + getValue();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

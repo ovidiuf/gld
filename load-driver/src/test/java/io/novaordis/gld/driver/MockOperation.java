@@ -50,6 +50,16 @@ public class MockOperation implements Operation {
     }
 
     @Override
+    public boolean wasPerformed() {
+        throw new RuntimeException("wasPerformed() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public boolean wasSuccessful() {
+        throw new RuntimeException("wasSuccessful() NOT YET IMPLEMENTED");
+    }
+
+    @Override
     public LoadStrategy getLoadStrategy()
     {
         throw new RuntimeException("NOT YET IMPLEMENTED");

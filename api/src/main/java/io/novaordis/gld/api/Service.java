@@ -40,6 +40,8 @@ public interface Service {
      * Starting an already started service should throw IllegalStateException.
      *
      * @throws IllegalStateException on attempt to start an already started service instance.
+     * @throws IllegalStateException on attempt to start an incompletely configured service (for example, a service
+     * without a load strategy).
      * @throws UserErrorException contains a human readable message. Thrown on incomplete command line configuration.
      */
     void start() throws Exception;

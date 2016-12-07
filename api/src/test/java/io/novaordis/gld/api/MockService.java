@@ -16,18 +16,17 @@
 
 package io.novaordis.gld.api;
 
+import io.novaordis.gld.api.todiscard.*;
 import io.novaordis.gld.api.todiscard.Configuration;
-import io.novaordis.gld.api.todiscard.ContentType;
-import io.novaordis.gld.api.todiscard.Node;
 import io.novaordis.utilities.UserErrorException;
 
 import java.util.List;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 12/7/16
  */
-public abstract class ServiceBase implements Service {
+public class MockService implements Service {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -35,45 +34,39 @@ public abstract class ServiceBase implements Service {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private LoadDriver loadDriver;
-    private LoadStrategy loadStrategy;
-
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    /**
-     * @exception IllegalArgumentException on null load strategy.
-     */
-    protected ServiceBase(LoadStrategy s, LoadDriver d) {
-
-        if (s == null) {
-            throw new IllegalArgumentException("null load strategy");
-        }
-
-        this.loadStrategy = s;
-        this.loadDriver = d;
-    }
 
     // Service implementation ------------------------------------------------------------------------------------------
 
-    // topology --------------------------------------------------------------------------------------------------------
-
     @Override
     public LoadDriver getLoadDriver() {
-
-        return loadDriver;
+        throw new RuntimeException("getLoadDriver() NOT YET IMPLEMENTED");
     }
 
     @Override
     public LoadStrategy getLoadStrategy() {
-
-        return loadStrategy;
+        throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
     }
 
-    // lifecycle -------------------------------------------------------------------------------------------------------
+    @Override
+    public void start() throws Exception {
+        throw new RuntimeException("start() NOT YET IMPLEMENTED");
+    }
 
-    // execution -------------------------------------------------------------------------------------------------------
+    @Override
+    public void stop() throws Exception {
+        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
+    }
 
-    // to deplete ------------------------------------------------------------------------------------------------------
+    @Override
+    public boolean isStarted() {
+        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void perform(Operation o) throws Exception {
+        throw new RuntimeException("perform() NOT YET IMPLEMENTED");
+    }
 
     @Override
     public void setConfiguration(Configuration c) {
@@ -97,30 +90,9 @@ public abstract class ServiceBase implements Service {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public void setLoadStrategy(LoadStrategy s) {
-
-        this.loadStrategy = s;
-    }
-
-    // topology --------------------------------------------------------------------------------------------------------
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    /**
-     * Call from start() to insure instance state consistency.
-     *
-     * @throws IllegalStateException on inconsistent state.
-     */
-
-    protected void checkStateConsistency() throws IllegalStateException {
-
-        if (loadStrategy == null) {
-
-            throw new IllegalStateException("incompletely configured service instance: load strategy not installed");
-        }
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

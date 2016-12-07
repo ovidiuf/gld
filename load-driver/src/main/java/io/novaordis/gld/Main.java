@@ -64,15 +64,19 @@ public class Main {
      */
     static boolean lifecycle(String[] args) {
 
-        LoadDriver ld = new LoadDriverImpl();
+        LoadDriver ld = null;
 
         boolean success = false;
 
         try {
 
             List<String> arguments = new ArrayList<>(Arrays.asList(args));
+
+            boolean background = extractBackgroundSetting(arguments);
             File configurationFile = extractConfigurationFile(arguments);
             Configuration c = new YamlBasedConfiguration(configurationFile);
+
+            ld = new LoadDriverImpl(background);
 
             ld.init(c);
 
@@ -156,6 +160,79 @@ public class Main {
         log.debug("configuration file " + f.getAbsolutePath());
 
         return f;
+    }
+
+    /**
+     * Extracts the command line background execution configuration (--background|--foreground). If not specified,
+     * the default is assumed to be background (the method returns true)
+     *
+     * @exception UserErrorException on inconsistent configuration.
+     */
+    static boolean extractBackgroundSetting(List<String> arguments) throws UserErrorException {
+
+        Boolean background = null;
+
+        for(Iterator<String> i = arguments.iterator(); i.hasNext(); ) {
+
+            String crt = i.next();
+
+            if (crt.startsWith("--background") || crt.startsWith("--foreground")) {
+
+                i.remove();
+
+                boolean b = extractBoolean(crt.substring(0, 12), crt);
+
+                if (!crt.startsWith("--background")) {
+
+                    b = !b;
+                }
+
+                if (background != null && background != b) {
+                    throw new UserErrorException("conflicting background configuration settings");
+                }
+
+                background = b;
+            }
+        }
+
+        if (background == null) {
+
+            //
+            // default if nothing was specified is to run in background
+            //
+            return true;
+        }
+
+        return background;
+    }
+
+    static boolean extractBoolean(String optionLiteral, String s) throws UserErrorException {
+
+        if (!s.startsWith(optionLiteral)) {
+            throw new IllegalArgumentException(s + " does not start with " + optionLiteral);
+        }
+
+        s = s.substring(optionLiteral.length());
+
+        if (s.length() == 0) {
+            return true;
+        }
+
+        if (!s.startsWith("=")) {
+            throw new UserErrorException(optionLiteral + " missing =");
+        }
+
+        s = s.substring(1);
+
+        if ("true".equals(s.toLowerCase())) {
+            return true;
+        }
+
+        if ("false".equals(s.toLowerCase())) {
+            return false;
+        }
+
+        throw new UserErrorException("invalid " + optionLiteral + " value: \"" + s + "\"");
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------

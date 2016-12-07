@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -249,6 +250,115 @@ public class MainTest {
 
             System.clearProperty(EnvironmentVariableProvider.ENVIRONMENT_VARIABLE_PROVIDER_CLASS_NAME_SYSTEM_PROPERTY);
             EnvironmentVariableProvider.reset();
+        }
+    }
+
+    // extractBackgroundSetting() --------------------------------------------------------------------------------------
+
+    @Test
+    public void extractBackgroundSetting_Default() throws Exception {
+
+        List<String> args = new ArrayList<>();
+        boolean b =  Main.extractBackgroundSetting(args);
+        assertTrue(b);
+    }
+
+    @Test
+    public void extractBackgroundSetting_Default2() throws Exception {
+
+        List<String> args = new ArrayList<>(Arrays.asList("something", "something-else"));
+        boolean b =  Main.extractBackgroundSetting(args);
+        assertTrue(b);
+        assertEquals(2, args.size());
+    }
+
+    @Test
+    public void extractBackgroundSetting_ExplicitBackground() throws Exception {
+
+        List<String> args = new ArrayList<>(Collections.singletonList("--background"));
+        boolean b =  Main.extractBackgroundSetting(args);
+        assertTrue(b);
+        assertTrue(args.isEmpty());
+    }
+
+    @Test
+    public void extractBackgroundSetting_ExplicitBackground2() throws Exception {
+
+        List<String> args = new ArrayList<>(Collections.singletonList("--background=true"));
+        boolean b =  Main.extractBackgroundSetting(args);
+        assertTrue(b);
+        assertTrue(args.isEmpty());
+    }
+
+    @Test
+    public void extractBackgroundSetting_ExplicitBackground3() throws Exception {
+
+        List<String> args = new ArrayList<>(Collections.singletonList("--foreground=false"));
+        boolean b =  Main.extractBackgroundSetting(args);
+        assertTrue(b);
+        assertTrue(args.isEmpty());
+    }
+
+    @Test
+    public void extractBackgroundSetting_ExplicitForeground() throws Exception {
+
+        List<String> args = new ArrayList<>(Collections.singletonList("--foreground"));
+        boolean b =  Main.extractBackgroundSetting(args);
+        assertFalse(b);
+        assertTrue(args.isEmpty());
+    }
+
+    @Test
+    public void extractBackgroundSetting_ExplicitForeground2() throws Exception {
+
+        List<String> args = new ArrayList<>(Collections.singletonList("--foreground=true"));
+        boolean b =  Main.extractBackgroundSetting(args);
+        assertFalse(b);
+        assertTrue(args.isEmpty());
+    }
+
+    @Test
+    public void extractBackgroundSetting_ExplicitForeground3() throws Exception {
+
+        List<String> args = new ArrayList<>(Collections.singletonList("--foreground=false"));
+        boolean b =  Main.extractBackgroundSetting(args);
+        assertTrue(b);
+        assertTrue(args.isEmpty());
+    }
+
+    @Test
+    public void extractBackgroundSetting_Conflict() throws Exception {
+
+        List<String> args = new ArrayList<>(Arrays.asList("--foreground", "--background"));
+
+        try {
+
+            Main.extractBackgroundSetting(args);
+            fail("should throw exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("conflicting background configuration settings", msg);
+        }
+    }
+
+    @Test
+    public void extractBackgroundSetting_Invalid() throws Exception {
+
+        List<String> args = new ArrayList<>(Collections.singletonList("--background=blah"));
+
+        try {
+
+            Main.extractBackgroundSetting(args);
+            fail("should throw exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("invalid --background value: \"blah\"", msg);
         }
     }
 

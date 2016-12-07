@@ -21,9 +21,11 @@ import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
 import io.novaordis.gld.api.cache.CacheServiceConfiguration;
-import io.novaordis.gld.api.todiscard.Read;
-import io.novaordis.gld.api.todiscard.Write;
+import io.novaordis.gld.api.cache.operation.Read;
+import io.novaordis.gld.api.cache.operation.Write;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -42,6 +44,16 @@ import java.util.Set;
 public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Set<Class<? extends Operation>> OPERATION_TYPES;
+
+    static {
+
+        Set<Class<? extends Operation>> s = new HashSet<>();
+        s.add(Read.class);
+        s.add(Write.class);
+        OPERATION_TYPES = Collections.unmodifiableSet(s);
+    }
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -164,7 +176,8 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
 
     @Override
     public Set<Class<? extends Operation>> getOperationTypes() {
-        throw new RuntimeException("getOperationTypes() NOT YET IMPLEMENTED");
+
+        return OPERATION_TYPES;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

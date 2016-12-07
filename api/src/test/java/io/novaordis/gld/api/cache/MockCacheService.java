@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.cache;
 
-import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
-import io.novaordis.gld.api.cache.load.MockLoadStrategy;
-import io.novaordis.gld.api.cache.local.LocalCacheService;
-import org.junit.Test;
+import io.novaordis.gld.api.MockService;
 
-import static org.junit.Assert.assertEquals;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/5/16
+ * @since 12/7/16
  */
-public class ServiceFactoryTest {
+public class MockCacheService extends MockService implements CacheService {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -35,29 +33,30 @@ public class ServiceFactoryTest {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private Map<String, String> entries;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Public ----------------------------------------------------------------------------------------------------------
+    public MockCacheService() {
 
-    // Tests -----------------------------------------------------------------------------------------------------------
-
-    // buildInstance() -------------------------------------------------------------------------------------------------
-
-    @Test
-    public void buildInstance() throws Exception {
-
-        MockLoadDriver md = new MockLoadDriver();
-        MockLoadStrategy ms = new MockLoadStrategy();
-        MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
-        sc.setImplementation("local");
-
-        Service service = ServiceFactory.buildInstance(sc, ms, md);
-
-        LocalCacheService lcs = (LocalCacheService)service;
-
-        assertEquals(md, lcs.getLoadDriver());
-        assertEquals(ms, lcs.getLoadStrategy());
+        this.entries = new HashMap<>();
     }
+
+    // CacheService implementation -------------------------------------------------------------------------------------
+
+    @Override
+    public String get(String key) throws Exception {
+
+        return entries.get(key);
+    }
+
+    @Override
+    public void put(String key, String value) throws Exception {
+
+        entries.put(key, value);
+    }
+
+    // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 

@@ -102,30 +102,7 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
 
         try {
 
-            //
-            // initialization
-            //
-
-            if (service == null) {
-
-                throw new IllegalStateException("null service");
-            }
-
-            if (!service.isStarted()) {
-                service.start();
-            }
-
-            if (sampler != null) {
-
-                // initialize the sampler operations
-                Set<Class<? extends Operation>> operationTypes = loadStrategy.getOperationTypes();
-
-                for(Class<? extends Operation> ot: operationTypes) {
-                    sampler.registerOperation(ot);
-                }
-
-                sampler.start();
-            }
+            checkPreconditions();
 
             if (isBackground) {
 
@@ -276,6 +253,33 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private void checkPreconditions() throws IllegalStateException {
+
+        //
+        // check preconditions
+        //
+
+        if (service == null) {
+
+            throw new IllegalStateException("null service");
+        }
+
+        if (!service.isStarted()) {
+
+            throw new IllegalStateException("service " + service + " not started");
+        }
+
+        if (sampler == null) {
+
+            throw new IllegalStateException("null sampler");
+        }
+
+        if (!sampler.isStarted()) {
+
+            throw new IllegalStateException("sampler " + sampler + " not started");
+        }
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

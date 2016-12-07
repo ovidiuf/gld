@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2015 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,20 +14,12 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.cache.operation;
 
-import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
-import io.novaordis.gld.api.cache.load.MockLoadStrategy;
-import io.novaordis.gld.api.cache.local.LocalCacheService;
-import org.junit.Test;
+import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.cache.CacheService;
 
-import static org.junit.Assert.assertEquals;
-
-/**
- * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/5/16
- */
-public class ServiceFactoryTest {
+public class Read extends CacheOperationBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -37,26 +29,48 @@ public class ServiceFactoryTest {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public Read(String key) {
+
+        super(key);
+    }
+
+    // Operation implementation ----------------------------------------------------------------------------------------
+
+    @Override
+    public void perform(Service s) throws Exception {
+
+        CacheService cs = insureCacheService(s);
+
+        String key = getKey();
+
+        try {
+
+            setPerformed(true);
+
+            String value = cs.get(key);
+
+            setSuccessful(true);
+
+            setValue(value);
+        }
+        catch(Throwable t) {
+
+            throw new RuntimeException("NOT YET IMPLEMENTED: we did not decide yet how to handle service failures");
+        }
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // Tests -----------------------------------------------------------------------------------------------------------
+    public void setResult(String s) {
 
-    // buildInstance() -------------------------------------------------------------------------------------------------
+        setValue(s);
+    }
 
-    @Test
-    public void buildInstance() throws Exception {
+    @Override
+    public String toString() {
 
-        MockLoadDriver md = new MockLoadDriver();
-        MockLoadStrategy ms = new MockLoadStrategy();
-        MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
-        sc.setImplementation("local");
-
-        Service service = ServiceFactory.buildInstance(sc, ms, md);
-
-        LocalCacheService lcs = (LocalCacheService)service;
-
-        assertEquals(md, lcs.getLoadDriver());
-        assertEquals(ms, lcs.getLoadStrategy());
+        String value = getValue();
+        return getKey() + (!wasPerformed() ? "" : (value == null ? " miss" : " hit (" + value + ")"));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -16,18 +16,22 @@
 
 package io.novaordis.gld.api.cache;
 
-import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.Service;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/5/16
+ * @since 12/7/16
  */
-public interface CacheOperation extends Operation {
+public interface CacheService extends Service {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    String get(String key) throws Exception;
+
+    void put(String key, String value) throws Exception;
 
 }

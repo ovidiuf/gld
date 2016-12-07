@@ -43,8 +43,8 @@ public class MockLoadDriver implements LoadDriver {
     }
 
     @Override
-    public boolean isBackground() {
-        throw new RuntimeException("isBackground() NOT YET IMPLEMENTED");
+    public boolean background() {
+        throw new RuntimeException("background() NOT YET IMPLEMENTED");
     }
 
     @Override

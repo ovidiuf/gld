@@ -37,6 +37,13 @@ public interface LoadDriver {
     void init(Configuration c) throws Exception;
 
     /**
+     * @return true if the load driver is configured to run as a background process and does not interact directly
+     * with stdin/stdout/stderr. False if the load driver is configured to run in foreground and can be controlled
+     * directly from the console. The default behavior is to run in background.
+     */
+    boolean background();
+
+    /**
      * The main LoadDriver instance loop.
      */
     void run();
@@ -70,11 +77,4 @@ public interface LoadDriver {
      * The details debug logging must be done by the calling layer.
      */
     void error(String msg);
-
-    /**
-     * @return true if the load driver runs in background and cannot be controlled directly from stdin, false if it
-     * runs in foreground and can be controlled from stdin.
-     */
-    boolean isBackground();
-
 }

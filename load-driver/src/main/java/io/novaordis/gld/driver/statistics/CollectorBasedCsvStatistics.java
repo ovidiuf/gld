@@ -20,7 +20,7 @@ import com.novaordis.ac.Collector;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
-import io.novaordis.gld.api.todiscard.Read;
+import io.novaordis.gld.api.cache.operation.Read;
 import io.novaordis.gld.driver.RedisFailure;
 import io.novaordis.gld.driver.todeplete.SystemStatistics;
 
@@ -396,6 +396,16 @@ public class CollectorBasedCsvStatistics implements DeprecatedStatistics {
         @Override
         public void perform(Service s) throws Exception {
             // noop
+        }
+
+        @Override
+        public boolean wasPerformed() {
+            throw new RuntimeException("wasPerformed() NOT YET IMPLEMENTED");
+        }
+
+        @Override
+        public boolean wasSuccessful() {
+            throw new RuntimeException("wasSuccessful() NOT YET IMPLEMENTED");
         }
 
         @Override

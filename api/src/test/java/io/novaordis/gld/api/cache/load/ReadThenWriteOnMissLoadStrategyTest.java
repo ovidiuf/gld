@@ -17,11 +17,17 @@
 package io.novaordis.gld.api.cache.load;
 
 import io.novaordis.gld.api.LoadStrategyTest;
+import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.cache.operation.Read;
+import io.novaordis.gld.api.cache.operation.Write;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import java.util.Set;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
 
@@ -48,6 +54,11 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
 
         assertEquals("read-then-write-on-miss", s.getName());
         assertEquals(ServiceType.cache, s.getServiceType());
+
+        Set<Class<? extends Operation>> operations = s.getOperationTypes();
+        assertEquals(2, operations.size());
+        assertTrue(operations.contains(Read.class));
+        assertTrue(operations.contains(Write.class));
     }
 
 //    @Test

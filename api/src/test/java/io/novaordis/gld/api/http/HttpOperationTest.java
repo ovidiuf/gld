@@ -38,7 +38,7 @@ public abstract class HttpOperationTest extends OperationTest {
     // Package protected -----------------------------------------------------------------------------------------------
 
     @Override
-    protected abstract JmsOperation getOperationToTest() throws Exception;
+    protected abstract HttpOperation getOperationToTest(String url) throws Exception;
 
     // Protected -------------------------------------------------------------------------------------------------------
 

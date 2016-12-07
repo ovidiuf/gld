@@ -40,6 +40,18 @@ public interface Operation {
      */
     void perform(Service s) throws Exception;
 
+    /**
+     * @return true if this specific operation instance was performed against the target service, false otherwise.
+     */
+    boolean wasPerformed();
+
+    /**
+     * @return true if this specific operation instance was performed against the target service and it was successful,
+     * meaning it completed without errors. False otherwise. Note that if an operation is not "successful", it does not
+     * necessarily mean it failed; it is possible that it was not performed yet.
+     */
+    boolean wasSuccessful();
+
     LoadStrategy getLoadStrategy();
 
 }

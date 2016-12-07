@@ -31,6 +31,8 @@ import io.novaordis.gld.driver.sampler.SamplerImpl;
 import io.novaordis.gld.api.cache.local.LocalCacheKeyStore;
 import io.novaordis.utilities.UserErrorException;
 
+import java.util.Set;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/2/16
@@ -53,15 +55,17 @@ public class LoadDriverImpl implements LoadDriver {
 
     private MultiThreadedRunner multiThreadedRunner;
 
-    private Sampler sampler;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public LoadDriverImpl() {
+    /**
+     * @param background - if true, the load driver assumes the JVM runs as a background process and does not interact
+     *                   directly with stdin/stdout/stderr. If false, the load driver assumes the JVM runs in foreground
+     *                   and can be controlled directly from the console.
+     *
+     */
+    public LoadDriverImpl(boolean background) {
 
-        //
-        // noop constructor, all initialization takes place in init()
-        //
+        this.background = background;
     }
 
     // LoadDriver implementation ---------------------------------------------------------------------------------------
@@ -81,18 +85,21 @@ public class LoadDriverImpl implements LoadDriver {
     @Override
     public void init(Configuration c) throws Exception {
 
-        //
-        // service initialization and configuration
-        //
-
         ServiceConfiguration sc = c.getServiceConfiguration();
-        service = ServiceFactory.buildInstance(sc, this);
 
         //
         // load strategy instantiation and installation
         //
 
         LoadStrategy ls = LoadStrategyFactory.build(sc);
+
+
+        //
+        // service initialization and configuration
+        //
+
+        service = ServiceFactory.buildInstance(sc, ls, this);
+
 
         service.start();
 
@@ -105,22 +112,18 @@ public class LoadDriverImpl implements LoadDriver {
 
         LoadDriverConfiguration lc = c.getLoadDriverConfiguration();
 
-        sampler = new SamplerImpl();
+        Sampler sampler = new SamplerImpl();
 
         //
         // register operations
         //
 
-        for(Class<? extends Operation> ot : service.getLoadStrategy().getOperationTypes()) {
-
-            sampler.registerOperation(ot);
-        }
+        Set<Class<? extends Operation>> operations = ls.getOperationTypes();
+        operations.forEach(sampler::registerOperation);
 
         sampler.start();
 
         long singleThreadedRunnerSleepMs = -1L;
-
-        this.background = false;
 
         multiThreadedRunner = new MultiThreadedRunnerImpl(
                 service, lc.getThreadCount(), sampler, background, singleThreadedRunnerSleepMs);
@@ -148,7 +151,7 @@ public class LoadDriverImpl implements LoadDriver {
     }
 
     @Override
-    public boolean isBackground() {
+    public boolean background() {
 
         return background;
     }

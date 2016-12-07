@@ -14,22 +14,26 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.cache.operation;
 
-import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
-import io.novaordis.gld.api.cache.load.MockLoadStrategy;
-import io.novaordis.gld.api.cache.local.LocalCacheService;
+import io.novaordis.gld.api.MockService;
+import io.novaordis.gld.api.OperationTest;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/5/16
  */
-public class ServiceFactoryTest {
+public abstract class CacheOperationTest extends OperationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(CacheOperationTest.class);
+
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -39,27 +43,32 @@ public class ServiceFactoryTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // Tests -----------------------------------------------------------------------------------------------------------
-
-    // buildInstance() -------------------------------------------------------------------------------------------------
+    // perform() -------------------------------------------------------------------------------------------------------
 
     @Test
-    public void buildInstance() throws Exception {
+    public void perform_NotACacheService() throws Exception {
 
-        MockLoadDriver md = new MockLoadDriver();
-        MockLoadStrategy ms = new MockLoadStrategy();
-        MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
-        sc.setImplementation("local");
+        CacheOperation r = getOperationToTest("test");
 
-        Service service = ServiceFactory.buildInstance(sc, ms, md);
+        MockService ms = new MockService();
 
-        LocalCacheService lcs = (LocalCacheService)service;
+        try {
 
-        assertEquals(md, lcs.getLoadDriver());
-        assertEquals(ms, lcs.getLoadStrategy());
+            r.perform(ms);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+        }
     }
 
+
     // Package protected -----------------------------------------------------------------------------------------------
+
+    @Override
+    protected abstract CacheOperation getOperationToTest(String key) throws Exception;
 
     // Protected -------------------------------------------------------------------------------------------------------
 

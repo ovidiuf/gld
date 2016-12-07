@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.cache;
+package io.novaordis.gld.api.cache.operation;
 
-import io.novaordis.gld.api.OperationTest;
+import io.novaordis.gld.api.OperationBase;
+import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.cache.CacheService;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/5/16
+ * @since 12/7/16
  */
-public abstract class CacheOperationTest extends OperationTest {
+public abstract class CacheOperationBase extends OperationBase implements CacheOperation {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -30,16 +32,43 @@ public abstract class CacheOperationTest extends OperationTest {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String value;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    protected CacheOperationBase(String key) {
+
+        super(key);
+    }
+
+    // CacheOperation implementation -----------------------------------------------------------------------------------
+
+    @Override
+    public String getValue() {
+
+        return value;
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    @Override
-    protected abstract CacheOperation getOperationToTest() throws Exception;
-
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected void setValue(String s) {
+
+        this.value = s;
+    }
+
+    protected CacheService insureCacheService(Service s) {
+
+        if (!(s instanceof CacheService)) {
+
+            throw new IllegalArgumentException(s + " not a CacheService");
+        }
+
+        return (CacheService)s;
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 
