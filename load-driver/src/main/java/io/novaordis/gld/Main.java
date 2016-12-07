@@ -50,9 +50,11 @@ public class Main {
         boolean success = lifecycle(args);
 
         if (success) {
+
             System.exit(0);
         }
         else {
+
             System.exit(1);
         }
     }
@@ -91,7 +93,10 @@ public class Main {
         catch(Throwable t) {
 
             log.debug("load driver failure: " + t.getMessage(), t);
-            ld.error(t);
+
+            if (ld != null) {
+                ld.error(t);
+            }
         }
 
         return success;
