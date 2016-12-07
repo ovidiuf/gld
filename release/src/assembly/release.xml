@@ -40,6 +40,11 @@
             <source>./src/main/resources/log4j.xml</source>
             <outputDirectory>lib</outputDirectory>
         </file>
+        <file>
+            <source>./src/main/resources/VERSION</source>
+            <outputDirectory>lib</outputDirectory>
+            <filtered>true</filtered>
+        </file>
     </files>
 
     <dependencySets>

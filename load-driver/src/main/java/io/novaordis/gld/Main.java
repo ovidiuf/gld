@@ -20,8 +20,10 @@ import io.novaordis.gld.api.Configuration;
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.configuration.YamlBasedConfiguration;
 import io.novaordis.gld.driver.LoadDriverImpl;
+import io.novaordis.gld.driver.todeplete.command.Version;
 import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.env.EnvironmentVariableProvider;
+import io.novaordis.utilities.version.VersionUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -259,7 +261,12 @@ public class Main {
 
             if ("version".equals(s)) {
 
-                System.out.println("?");
+                String version = VersionUtilities.getVersion();
+                String releaseDate = VersionUtilities.getReleaseDate();
+
+                System.out.println("version " + version);
+                System.out.println("release date " + releaseDate);
+                
                 return 0;
             }
         }
