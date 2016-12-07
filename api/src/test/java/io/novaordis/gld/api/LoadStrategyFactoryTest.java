@@ -22,10 +22,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -45,14 +43,48 @@ public abstract class LoadStrategyFactoryTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
+    // inferFullyQualifiedLoadStrategyClassName() ----------------------------------------------------------------------
+
+    @Test
+    public void inferFullyQualifiedLoadStrategyClassName() throws Exception {
+
+        String s = LoadStrategyFactory.inferFullyQualifiedLoadStrategyClassName(ServiceType.mock, "kcom");
+        assertEquals("io.novaordis.gld.api.mock.load.KcomLoadStrategy", s);
+    }
+
+    // inferSimpleClassName() ------------------------------------------------------------------------------------------
+
+    @Test
+    public void inferSimpleClassName() throws Exception {
+
+        String s = LoadStrategyFactory.inferSimpleClassName("write");
+        assertEquals("WriteLoadStrategy", s);
+    }
+
+    @Test
+    public void inferSimpleClassName_Dashes() throws Exception {
+
+        String s = LoadStrategyFactory.inferSimpleClassName("read-then-write-on-miss");
+        assertEquals("ReadThenWriteOnMissLoadStrategy", s);
+    }
+
+    @Test
+    public void inferSimpleClassName_EndsInLoadStrategy() throws Exception {
+
+        String s = LoadStrategyFactory.inferSimpleClassName("some-load-strategy");
+        assertEquals("SomeLoadStrategy", s);
+    }
+
     // buildInstance() static wrapper ----------------------------------------------------------------------------------
 
     @Test
     public void buildInstance_NullServiceType() throws Exception {
 
+        MockServiceConfiguration msc = new MockServiceConfiguration();
+
         try {
 
-            LoadStrategyFactory.buildInstance(null, new HashMap<>());
+            LoadStrategyFactory.buildInstance(null, msc);
             fail("should throw exception");
         }
         catch(IllegalArgumentException e) {
@@ -64,15 +96,18 @@ public abstract class LoadStrategyFactoryTest {
     @Test
     public void buildInstance_KnownServiceType() throws Exception {
 
-        LoadStrategy s = LoadStrategyFactory.buildInstance(ServiceType.mock, new HashMap<>());
+        MockServiceConfiguration msc = new MockServiceConfiguration();
+        LoadStrategy s = LoadStrategyFactory.buildInstance(ServiceType.mock, msc);
         assertTrue(s instanceof MockLoadStrategy);
     }
 
     @Test
     public void buildInstance_UnknownServiceType() throws Exception {
 
+        MockServiceConfiguration msc = new MockServiceConfiguration();
+
         try {
-            LoadStrategyFactory.buildInstance(ServiceType.unknown, new HashMap<>());
+            LoadStrategyFactory.buildInstance(ServiceType.unknown, msc);
             fail("should have thrown exception");
         }
         catch(UserErrorException e) {
@@ -92,21 +127,23 @@ public abstract class LoadStrategyFactoryTest {
     public void buildInstance() throws Exception {
 
         LoadStrategyFactory f = getLoadStrategyFactoryToTest();
+
         ServiceType t = f.getServiceType();
 
-        Map<String, Object> c = getCorrespondingConfigurationToTest();
+        ServiceConfiguration c = getCorrespondingConfigurationToTest();
+        String loadStrategyName = c.getLoadStrategyName();
+        assertNotNull(loadStrategyName);
+
         LoadStrategy s = f.buildInstance(c);
         ServiceType t2 = s.getServiceType();
 
         assertEquals(t, t2);
-    }
 
-    // inferFullyQualifiedLoadStrategyClassName() ----------------------------------------------------------------------
+        //
+        // make sure the name of the strategy is configured
+        //
+        assertEquals(loadStrategyName, s.getName());
 
-    @Test
-    public void inferFullyQualifiedLoadStrategyClassName() throws Exception {
-
-        fail("return here");
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -114,7 +151,7 @@ public abstract class LoadStrategyFactoryTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     protected abstract LoadStrategyFactory getLoadStrategyFactoryToTest() throws Exception;
-    protected abstract Map<String, Object> getCorrespondingConfigurationToTest() throws Exception;
+    protected abstract ServiceConfiguration getCorrespondingConfigurationToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

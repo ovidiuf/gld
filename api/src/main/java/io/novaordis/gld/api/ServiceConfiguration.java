@@ -16,6 +16,8 @@
 
 package io.novaordis.gld.api;
 
+import io.novaordis.utilities.UserErrorException;
+
 import java.util.Map;
 
 /**
@@ -39,11 +41,11 @@ public interface ServiceConfiguration {
 
     // Typed Access ----------------------------------------------------------------------------------------------------
 
-    ServiceType getType();
+    ServiceType getType() throws UserErrorException;
 
-    String getImplementation();
+    String getImplementation() throws UserErrorException;
 
-    String getLoadStrategyName();
+    String getLoadStrategyName() throws UserErrorException;
 
     // Untyped Access --------------------------------------------------------------------------------------------------
 

@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.mock.load;
+package io.novaordis.gld.api.cache;
 
-import io.novaordis.gld.api.LoadStrategyFactory;
-import io.novaordis.gld.api.ServiceConfiguration;
-import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.configuration.RawConfigurationMapWrapper;
+import io.novaordis.utilities.UserErrorException;
+
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/5/16
+ * @since 12/6/16
  */
-public class MockLoadStrategyFactory implements LoadStrategyFactory {
+public class CacheServiceConfigurationImpl extends RawConfigurationMapWrapper implements CacheServiceConfiguration  {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,20 +35,35 @@ public class MockLoadStrategyFactory implements LoadStrategyFactory {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // LoadStrategyFactory implementation ------------------------------------------------------------------------------
+    public CacheServiceConfigurationImpl(Map<String, Object> rawConfiguration) throws Exception {
+
+        super(rawConfiguration);
+    }
+
+    // CacheServiceConfiguration implementation ------------------------------------------------------------------------
 
     @Override
-    public MockLoadStrategy buildInstance(ServiceConfiguration configuration) throws Exception {
+    public int getKeySize() throws UserErrorException {
 
-        MockLoadStrategy ms = new MockLoadStrategy();
-        ms.init(configuration);
-        return ms;
+        Map<String, Object> m = getRawConfigurationMap();
+
+        Object o = m.get(CacheServiceConfiguration.KEY_SIZE_LABEL);
+
+        consistencyCheck(CacheServiceConfiguration.KEY_SIZE_LABEL, o, Integer.class);
+
+        return (Integer)o;
     }
 
     @Override
-    public ServiceType getServiceType() {
+    public int getValueSize() throws UserErrorException {
 
-        return ServiceType.mock;
+        Map<String, Object> m = getRawConfigurationMap();
+
+        Object o = m.get(CacheServiceConfiguration.VALUE_SIZE_LABEL);
+
+        consistencyCheck(CacheServiceConfiguration.VALUE_SIZE_LABEL, o, Integer.class);
+
+        return (Integer)o;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -57,6 +73,21 @@ public class MockLoadStrategyFactory implements LoadStrategyFactory {
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private void consistencyCheck(String label, Object o, Class c) throws UserErrorException {
+
+        if (o == null) {
+
+            throw new UserErrorException("missing required configuration element '" +label + "'");
+        }
+
+        Class actualClass = o.getClass();
+
+        if (!actualClass.equals(c)) {
+            throw new UserErrorException(
+                    "'" + label + "' should be " + c.getSimpleName() + ", but it is " + actualClass.getSimpleName());
+        }
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

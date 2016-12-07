@@ -14,28 +14,33 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.extension.cache.strategy;
+package io.novaordis.gld.api.cache.load;
 
 import io.novaordis.gld.api.LoadStrategyBase;
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.cache.CacheServiceConfiguration;
 import io.novaordis.gld.api.todiscard.Read;
 import io.novaordis.gld.api.todiscard.Write;
 
-import java.util.List;
 import java.util.Set;
 
 /**
- * A load strategy that generates the following sequence: it first attempts a read. If it's a hit, it keeps reading.
+ * A load strategy that implements the following behavior:
+ *
+ * It first attempts a read.
+ *
+ * If it's a hit, it keeps reading.
+ *
  * If it's a miss, it writes the key and a random value. It gets the keys from the configured key store or it randomly
  * generates them if there is not key store.
  *
- * It is supposed to be thread-safe, the intention is to be accessed concurrently from different threads.
- *
- * This implies that the KeyStore implementation is also thread-safe.
+ * It is supposed to be thread-safe, the intention is to be accessed concurrently from different threads. This implies
+ * that the KeyStore implementation is also thread-safe.
  */
-public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase
-{
+public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
@@ -54,25 +59,35 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
 
-    /**
-     * @see io.novaordis.gld.api.LoadStrategy#configure(Configuration, java.util.List, int)
-     */
     @Override
-    public void configure(Configuration conf, List<String> arguments, int from) throws Exception
-    {
-        super.configure(conf, arguments, from);
+    public String getName() {
 
-        int keySize = conf.getKeySize();
-        int valueSize = conf.getValueSize();
-        boolean useDifferentValues = conf.isUseDifferentValues();
+        return "read-then-write-on-miss";
+    }
 
-        // TODO this is fishy, refactor both here and in JmsLoadStrategy
-        // Load load = (Load)getConfiguration().getCommand();
-        Object load = null;
+    @Override
+    public ServiceType getServiceType() {
 
-        if (load == null) {
-            throw new RuntimeException("RETURN HERE");
-        }
+        return ServiceType.cache;
+    }
+
+    @Override
+    public void init(ServiceConfiguration sc) throws Exception {
+
+        CacheServiceConfiguration csc = (CacheServiceConfiguration)sc;
+
+
+//        int keySize = conf.getKeySize();
+//        int valueSize = conf.getValueSize();
+//        boolean useDifferentValues = conf.isUseDifferentValues();
+//
+//        // TODO this is fishy, refactor both here and in JmsLoadStrategy
+//        // Load load = (Load)getConfiguration().getCommand();
+//        Object load = null;
+//
+//        if (load == null) {
+//            throw new RuntimeException("RETURN HERE");
+//        }
 
 //        Long maxOperations = null;
 //
@@ -153,6 +168,12 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+
+        return getName();
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

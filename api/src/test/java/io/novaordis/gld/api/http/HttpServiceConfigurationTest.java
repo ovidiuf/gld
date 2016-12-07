@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.mock.load;
+package io.novaordis.gld.api.http;
 
-import io.novaordis.gld.api.LoadStrategyFactory;
-import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.gld.api.ServiceConfigurationTest;
 import io.novaordis.gld.api.ServiceType;
+
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/5/16
+ * @since 12/6/16
  */
-public class MockLoadStrategyFactory implements LoadStrategyFactory {
+public class HttpServiceConfigurationTest extends ServiceConfigurationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,27 +35,25 @@ public class MockLoadStrategyFactory implements LoadStrategyFactory {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // LoadStrategyFactory implementation ------------------------------------------------------------------------------
-
-    @Override
-    public MockLoadStrategy buildInstance(ServiceConfiguration configuration) throws Exception {
-
-        MockLoadStrategy ms = new MockLoadStrategy();
-        ms.init(configuration);
-        return ms;
-    }
-
-    @Override
-    public ServiceType getServiceType() {
-
-        return ServiceType.mock;
-    }
+    // Tests -----------------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected HttpServiceConfiguration getServiceConfigurationToTest(Map<String, Object> map) throws Exception {
+
+        return new HttpServiceConfigurationImpl(map);
+    }
+
+    @Override
+    protected String getServiceTypeToTest() {
+
+        return ServiceType.http.name();
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

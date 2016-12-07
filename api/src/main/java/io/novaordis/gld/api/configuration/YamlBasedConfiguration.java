@@ -19,6 +19,9 @@ package io.novaordis.gld.api.configuration;
 import io.novaordis.gld.api.Configuration;
 import io.novaordis.gld.api.LoadDriverConfiguration;
 import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.cache.CacheServiceConfigurationImpl;
+import io.novaordis.gld.api.jms.JmsServiceConfigurationImpl;
 import io.novaordis.utilities.UserErrorException;
 import org.yaml.snakeyaml.Yaml;
 
@@ -112,7 +115,25 @@ public class YamlBasedConfiguration implements Configuration {
                         "'" + SERVICE_SECTION_LABEL + "' section empty or missing from configuration file " + file);
             }
 
-            serviceConfiguration = new ServiceConfigurationBase(serviceConfigurationMap);
+            String serviceType = (String)serviceConfigurationMap.get(ServiceConfiguration.TYPE_LABEL);
+
+            if (ServiceType.cache.name().equals(serviceType)) {
+
+                serviceConfiguration = new CacheServiceConfigurationImpl(serviceConfigurationMap);
+            }
+            else if (ServiceType.jms.name().equals(serviceType)) {
+
+                serviceConfiguration = new JmsServiceConfigurationImpl(serviceConfigurationMap);
+            }
+            else if (ServiceType.http.name().equals(serviceType)) {
+
+                serviceConfiguration = new JmsServiceConfigurationImpl(serviceConfigurationMap);
+            }
+            else {
+
+                throw new UserErrorException(
+                        "unknown service type '" + serviceType + "' in configuration file " + file);
+            }
 
             if (loadConfigurationMap == null) {
 

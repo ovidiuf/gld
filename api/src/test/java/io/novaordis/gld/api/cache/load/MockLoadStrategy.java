@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.mock.load;
+package io.novaordis.gld.api.cache.load;
 
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.cache.CacheServiceConfiguration;
+import io.novaordis.utilities.UserErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 12/6/16
  */
 public class MockLoadStrategy implements LoadStrategy {
 
@@ -37,6 +40,21 @@ public class MockLoadStrategy implements LoadStrategy {
     private static final Logger log = LoggerFactory.getLogger(MockLoadStrategy.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
+
+    private static String classLevelRequiredConfigurationElementName;
+
+    /**
+     * Resets static configuration.
+     */
+    public static void reset() {
+
+        classLevelRequiredConfigurationElementName = null;
+    }
+
+    public static void setRequiredConfigurationElement(String elementName) {
+
+        classLevelRequiredConfigurationElementName = elementName;
+    }
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
@@ -47,16 +65,40 @@ public class MockLoadStrategy implements LoadStrategy {
     @Override
     public ServiceType getServiceType() {
 
-        return ServiceType.mock;
+        return ServiceType.cache;
     }
 
     @Override
     public String getName() {
-        throw new RuntimeException("getName() NOT YET IMPLEMENTED");
+
+        return "mock";
     }
 
     @Override
-    public void init(ServiceConfiguration serviceConfiguration) throws Exception {
+    public void init(ServiceConfiguration sc) throws Exception {
+
+        //
+        // by default, we don't require any specific configuration
+        //
+
+        if (classLevelRequiredConfigurationElementName != null) {
+
+            //
+            // there is a required configuration element name, attempt to read it from the configuration
+            //
+
+            CacheServiceConfiguration csc = (CacheServiceConfiguration)sc;
+
+            Map<String, Object> rawConfig = csc.getMap("load-strategy");
+
+            String requiredValue = (String)rawConfig.get(classLevelRequiredConfigurationElementName);
+
+            if (requiredValue == null) {
+
+                throw new UserErrorException(
+                        "required configuration element '" + classLevelRequiredConfigurationElementName + "' not found");
+            }
+        }
 
         log.info(this + ".init()");
     }

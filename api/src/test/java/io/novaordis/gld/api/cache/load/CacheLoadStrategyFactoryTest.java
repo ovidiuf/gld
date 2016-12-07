@@ -16,16 +16,18 @@
 
 package io.novaordis.gld.api.cache.load;
 
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.LoadStrategyFactoryTest;
 import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.gld.api.cache.CacheServiceConfiguration;
+import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
+import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 /**
@@ -51,14 +53,17 @@ public class CacheLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
     @Test
     public void buildInstance_nullOrMissingLoadStrategyName() throws Exception {
 
-        CacheLoadStrategyFactory f = new CacheLoadStrategyFactory();
+        CacheLoadStrategyFactory f = getLoadStrategyFactoryToTest();
+
+        MockCacheServiceConfiguration mc = new MockCacheServiceConfiguration();
 
         try {
 
-            f.buildInstance(new HashMap<>());
+            f.buildInstance(mc);
             fail("should have failed");
         }
         catch(IllegalArgumentException e) {
+
             String msg = e.getMessage();
             log.info(msg);
             assertEquals("missing or null '" + ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL + "' map element", msg);
@@ -68,13 +73,45 @@ public class CacheLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
     @Test
     public void buildInstance_unknownCacheLoadStrategy() throws Exception {
 
-        fail("return here");
+        CacheLoadStrategyFactory f = getLoadStrategyFactoryToTest();
+
+        MockCacheServiceConfiguration mc = new MockCacheServiceConfiguration();
+
+        mc.setLoadStrategyName("surely-there-is-no-such-load-strategy");
+
+        try {
+
+            f.buildInstance(mc);
+            fail("should have failed");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("class io.novaordis.gld.api.cache.load.SurelyThereIsNoSuchLoadStrategy not found", msg);
+        }
     }
 
     @Test
-    public void buildInstance () throws Exception {
+    public void buildInstance_DoesNotRequireConfig() throws Exception {
 
-        fail("return here");
+        //
+        // we simulate a load strategy that does not require any special configuration
+        //
+
+        CacheLoadStrategyFactory f = getLoadStrategyFactoryToTest();
+
+        MockCacheServiceConfiguration mc = new MockCacheServiceConfiguration();
+
+        mc.setLoadStrategyName("mock");
+
+        LoadStrategy s = f.buildInstance(mc);
+
+        //
+        // make sure the load strategy was built without any incident
+        //
+
+        assertNotNull(s);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -88,11 +125,11 @@ public class CacheLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
     }
 
     @Override
-    protected Map<String, Object> getCorrespondingConfigurationToTest() throws Exception {
+    protected CacheServiceConfiguration getCorrespondingConfigurationToTest() throws Exception {
 
-        Map<String, Object> typicalConfiguration = new HashMap<>();
-        typicalConfiguration.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "mock");
-        return typicalConfiguration;
+        MockCacheServiceConfiguration c = new MockCacheServiceConfiguration();
+        c.setLoadStrategyName("mock");
+        return c;
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

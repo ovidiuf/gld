@@ -94,8 +94,7 @@ public class LoadDriverImpl implements LoadDriver {
         // load strategy instantiation and installation
         //
 
-        Map<String, Object> loadStrategyConfiguration = sc.getMap(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-        LoadStrategy ls = LoadStrategyFactory.buildInstance(sc.getType(), loadStrategyConfiguration);
+        LoadStrategy ls = LoadStrategyFactory.buildInstance(sc.getType(), sc);
 
         service.start();
 

@@ -63,15 +63,15 @@ public class StorageStrategyFactory
         // user friendliness - if the first letter of the strategy name is not capitalized,
         // capitalize it for her. This will allow the user to specify --storage-strategy stdout
 
-        if (Character.isLowerCase(strategyName.charAt(0)))
-        {
+        if (Character.isLowerCase(strategyName.charAt(0))) {
             strategyName = Character.toUpperCase(strategyName.charAt(0)) + strategyName.substring(1);
         }
 
-        try
-        {
-            result = ClassLoadingUtilities.getInstance(StorageStrategy.class,
-                    "com.novaordis.gld.strategy.storage", strategyName, "StorageStrategy");
+        String fqcn = "com.novaordis.gld.strategy.storage." + strategyName + "StorageStrategy";
+
+        try {
+
+            result = ClassLoadingUtilities.getInstance(StorageStrategy.class, fqcn);
         }
         catch(Exception e)
         {

@@ -24,20 +24,18 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
+ * Wraps around the raw map and provides typed access to it.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-public class ServiceConfigurationBase implements ServiceConfiguration {
+public class RawConfigurationMapWrapper implements ServiceConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
-
-    private ServiceType type;
-    private String implementation;
-    private String loadStrategyName;
 
     // the actual raw configuration map passed at construction
     private Map<String, Object> rawConfiguration;
@@ -47,30 +45,87 @@ public class ServiceConfigurationBase implements ServiceConfiguration {
     /**
      * @param map the map extracted from the YAML file from under the "service" section.
      */
-    public ServiceConfigurationBase(Map<String, Object> map) throws Exception {
+    public RawConfigurationMapWrapper(Map<String, Object> map) {
 
         this.rawConfiguration = map;
-        load(rawConfiguration);
     }
 
     // ServiceConfiguration implementation -----------------------------------------------------------------------------
 
     @Override
-    public ServiceType getType() {
+    public ServiceType getType() throws UserErrorException {
 
-        return type;
+        Object o = rawConfiguration.get(ServiceConfiguration.TYPE_LABEL);
+
+        if (o == null) {
+
+            throw new UserErrorException("missing service type");
+        }
+
+        if (!(o instanceof String)) {
+            throw new UserErrorException(
+                    "the service type should be a string, but it is a " + o.getClass().getSimpleName());
+        }
+
+        try {
+
+            return ServiceType.valueOf((String) o);
+        }
+        catch(Exception e) {
+
+            throw new UserErrorException("unknown service type '" + o + "'", e);
+        }
     }
 
     @Override
-    public String getImplementation() {
+    public String getImplementation() throws UserErrorException {
 
-        return implementation;
+        Object o = rawConfiguration.get(ServiceConfiguration.IMPLEMENTATION_LABEL);
+
+        if (o == null) {
+
+            throw new UserErrorException("missing implementation");
+        }
+
+        if (!(o instanceof String)) {
+            throw new UserErrorException(
+                    "the implementation should be a string, but it is a(n) " + o.getClass().getSimpleName());
+        }
+
+        return (String)o;
     }
 
     @Override
-    public String getLoadStrategyName() {
+    public String getLoadStrategyName() throws UserErrorException {
 
-        return loadStrategyName;
+        Object o = rawConfiguration.get(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+
+        if (o == null) {
+
+            throw new UserErrorException("missing load strategy configuration");
+        }
+
+        if (!(o instanceof Map)) {
+            throw new UserErrorException(
+                    "the load strategy configuration should be a map, but it is a(n) " + o.getClass().getSimpleName());
+        }
+
+        //noinspection unchecked
+        Map<String, Object> loadStrategyConfig = (Map<String, Object>)o;
+
+        o = loadStrategyConfig.get(LOAD_STRATEGY_NAME_LABEL);
+
+        if (o == null) {
+
+            throw new UserErrorException("missing load strategy name");
+        }
+
+        if (!(o instanceof String)) {
+            throw new UserErrorException(
+                    "the load strategy name should be a string, but it is a(n) " + o.getClass().getSimpleName());
+        }
+
+        return (String)o;
     }
 
     @Override
@@ -105,86 +160,12 @@ public class ServiceConfigurationBase implements ServiceConfiguration {
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    // Private ---------------------------------------------------------------------------------------------------------
+    protected Map<String, Object> getRawConfigurationMap() {
 
-    private void load(Map map) throws Exception {
-
-        //
-        // type
-        //
-
-        Object o = map.get(ServiceConfiguration.TYPE_LABEL);
-
-        if (o == null) {
-
-            throw new UserErrorException("missing service type");
-        }
-
-        if (!(o instanceof String)) {
-            throw new UserErrorException(
-                    "the service type should be a string, but it is a " + o.getClass().getSimpleName());
-        }
-
-        try {
-
-            type = ServiceType.valueOf((String) o);
-        }
-        catch(Exception e) {
-
-            throw new UserErrorException("unknown service type '" + o + "'", e);
-        }
-
-        //
-        // implementation
-        //
-
-        o = map.get(ServiceConfiguration.IMPLEMENTATION_LABEL);
-
-        if (o == null) {
-
-            throw new UserErrorException("missing implementation");
-        }
-
-        if (!(o instanceof String)) {
-            throw new UserErrorException(
-                    "the implementation should be a string, but it is a(n) " + o.getClass().getSimpleName());
-        }
-
-        implementation = (String)o;
-
-        //
-        // load strategy name
-        //
-
-        o = map.get(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-
-        if (o == null) {
-
-            throw new UserErrorException("missing load strategy configuration");
-        }
-
-        if (!(o instanceof Map)) {
-            throw new UserErrorException(
-                    "the load strategy configuration should be a map, but it is a(n) " + o.getClass().getSimpleName());
-        }
-
-        //noinspection unchecked
-        Map<String, Object> loadStrategyConfig = (Map<String, Object>)o;
-
-        o = loadStrategyConfig.get(LOAD_STRATEGY_NAME_LABEL);
-
-        if (o == null) {
-
-            throw new UserErrorException("missing load strategy name");
-        }
-
-        if (!(o instanceof String)) {
-            throw new UserErrorException(
-                    "the load strategy name should be a string, but it is a(n) " + o.getClass().getSimpleName());
-        }
-
-        loadStrategyName = (String)o;
+        return rawConfiguration;
     }
+
+    // Private ---------------------------------------------------------------------------------------------------------
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

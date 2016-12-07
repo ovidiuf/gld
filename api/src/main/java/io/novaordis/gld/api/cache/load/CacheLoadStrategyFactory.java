@@ -21,8 +21,7 @@ import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.LoadStrategyFactory;
 import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
-
-import java.util.Map;
+import io.novaordis.gld.api.cache.CacheServiceConfiguration;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -41,9 +40,11 @@ public class CacheLoadStrategyFactory implements LoadStrategyFactory {
     // LoadStrategyFactory implementation ------------------------------------------------------------------------------
 
     @Override
-    public LoadStrategy buildInstance(Map<String, Object> configuration) throws Exception {
+    public LoadStrategy buildInstance(ServiceConfiguration configuration) throws Exception {
 
-        String loadStrategyName = (String)configuration.get(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL);
+        CacheServiceConfiguration csc = (CacheServiceConfiguration)configuration;
+
+        String loadStrategyName = csc.getLoadStrategyName();
 
         //
         // loadStrategyName can't be null, because we parsed the configuration already and we would have detected
@@ -59,15 +60,15 @@ public class CacheLoadStrategyFactory implements LoadStrategyFactory {
         // infer the class name from the strategy name and attempt to instantiate
         //
 
-        String fqcn = LoadStrategyFactory.inferFullyQualifiedLoadStrategyClassName(loadStrategyName);
+        ServiceType ourServiceType = getServiceType();
+
+        String fqcn = LoadStrategyFactory.inferFullyQualifiedLoadStrategyClassName(ourServiceType, loadStrategyName);
 
         LoadStrategy s = ClassLoadingUtilities.getInstance(LoadStrategy.class, fqcn);
 
-        throw new RuntimeException("RETURN HERE");
+        s.init(configuration);
 
-//        s.configure(configuration);
-//
-//        return s;
+        return s;
     }
 
     @Override

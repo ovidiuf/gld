@@ -16,10 +16,8 @@
 
 package io.novaordis.gld.api;
 
-import java.util.List;
 import java.util.Set;
 
-import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.utilities.UserErrorException;
 
 public interface LoadStrategy {
@@ -29,22 +27,25 @@ public interface LoadStrategy {
      */
     ServiceType getServiceType();
 
-
+    /**
+     * The name this load strategy is known under, and which can be used in a configuration file.
+     *
+     * Example: "read-then-write-on-miss" will instruct the runtime to dynamically load ReadThenWriteOnMissLoadStrategy.
+     */
     String getName();
 
     /**
-     * A strategy must be generally configured before the first use. If the strategy requires configuration and it was
+     * A strategy must be generally initialized before the first use. If the strategy requires configuration and it was
      * not properly configured, the first next() invocation will throw IllegalStateException.
      *
-     * @param arguments - command line arguments. Relevant arguments will be used and removed from the list. null is
-     *                  fine, will be ignored/
+     * @param serviceConfiguration the service configuration. Subclasses may cast it to more specific types. It gives
+     *                             access to raw configuration sub-maps, if necessary.
      *
-     * @exception IllegalArgumentException on null configuration.
-     * @exception UserErrorException recommended on invalid configuration values or inconsistent state after
-     * configuration.
-     *
+     * @exception UserErrorException on initialization failure.
      */
-    void configure(Configuration configuration, List<String> arguments, int from) throws Exception;
+    void init(ServiceConfiguration serviceConfiguration) throws Exception;
+
+
 
     /**
      * @return the next operation to be sent into the service, factoring in the last operation that has been sent into

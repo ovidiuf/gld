@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.mock.load;
+package io.novaordis.gld.api;
 
-import io.novaordis.gld.api.LoadStrategyFactory;
-import io.novaordis.gld.api.ServiceConfiguration;
-import io.novaordis.gld.api.ServiceType;
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/5/16
+ * @since 12/6/16
  */
-public class MockLoadStrategyFactory implements LoadStrategyFactory {
+public class MockServiceConfiguration implements ServiceConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,25 +30,39 @@ public class MockLoadStrategyFactory implements LoadStrategyFactory {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String loadStrategyName;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // LoadStrategyFactory implementation ------------------------------------------------------------------------------
+    // ServiceConfiguration implementation -----------------------------------------------------------------------------
 
     @Override
-    public MockLoadStrategy buildInstance(ServiceConfiguration configuration) throws Exception {
-
-        MockLoadStrategy ms = new MockLoadStrategy();
-        ms.init(configuration);
-        return ms;
+    public ServiceType getType() {
+        throw new RuntimeException("getType() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public ServiceType getServiceType() {
+    public String getImplementation() {
+        throw new RuntimeException("getImplementation() NOT YET IMPLEMENTED");
+    }
 
-        return ServiceType.mock;
+    @Override
+    public String getLoadStrategyName() {
+
+        return loadStrategyName;
+    }
+
+    @Override
+    public Map<String, Object> getMap(String... path) {
+        throw new RuntimeException("getMap() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public void setLoadStrategyName(String s) {
+
+        this.loadStrategyName = s;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

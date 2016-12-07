@@ -19,11 +19,11 @@ package io.novaordis.gld.driver;
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadStrategyBase;
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.gld.api.ServiceType;
 import org.apache.log4j.Logger;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -72,23 +72,33 @@ public class MockLoadStrategy extends LoadStrategyBase {
     // LoadStrategy implementation -------------------------------------------------------------------------------------
 
     @Override
-    public void configure(Configuration config, List<String> arguments, int from) throws Exception {
+    public ServiceType getServiceType() {
+        throw new RuntimeException("getServiceType() NOT YET IMPLEMENTED");
+    }
 
-        super.configure(config, arguments, from);
+    @Override
+    public String getName() {
+        throw new RuntimeException("getName() NOT YET IMPLEMENTED");
+    }
 
-        for(int i = 0; i < arguments.size(); i ++) {
+    @Override
+    public void init(ServiceConfiguration serviceConfiguration) throws Exception {
 
-            if ("--mock-argument".equals(arguments.get(i))) {
+//        for(int i = 0; i < arguments.size(); i ++) {
+//
+//            if ("--mock-argument".equals(arguments.get(i))) {
+//
+//                arguments.remove(i);
+//                mockArgument = arguments.remove(i --);
+//            }
+//            else if ("--mock-load-argument".equals(arguments.get(i))) {
+//
+//                arguments.remove(i);
+//                mockLoadArgument = arguments.remove(i --);
+//            }
+//        }
 
-                arguments.remove(i);
-                mockArgument = arguments.remove(i --);
-            }
-            else if ("--mock-load-argument".equals(arguments.get(i))) {
-
-                arguments.remove(i);
-                mockLoadArgument = arguments.remove(i --);
-            }
-        }
+        throw new RuntimeException("init() NOT YET IMPLEMENTED");
     }
 
     @Override

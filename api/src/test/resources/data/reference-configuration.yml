@@ -2,11 +2,16 @@
 # reference configuration for a load driver instance
 #
 service:
-  # service types: cache, jms, http
-  type: cache
+
+  type: cache # options: cache, jms, http, etc.
   implementation: local
+
+  key-size: 1024
+  value-size: 1024
+
   load-strategy:
     name: read-then-write-on-miss
+    use-different-values: true
 
 load:
   threads: 10

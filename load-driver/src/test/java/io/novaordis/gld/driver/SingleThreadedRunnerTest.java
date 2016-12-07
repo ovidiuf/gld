@@ -21,6 +21,8 @@ import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.gld.api.ServiceType;
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.ContentType;
 import io.novaordis.gld.api.todiscard.Node;
@@ -245,12 +247,17 @@ public class SingleThreadedRunnerTest {
             private boolean cleanupOperationIssued = false;
 
             @Override
+            public ServiceType getServiceType() {
+                throw new RuntimeException("getServiceType() NOT YET IMPLEMENTED");
+            }
+
+            @Override
             public String getName() {
                 throw new RuntimeException("getName() NOT YET IMPLEMENTED");
             }
 
             @Override
-            public void configure(Configuration configuration, List<String> arguments, int from) throws Exception {
+            public void init(ServiceConfiguration serviceConfiguration) throws Exception {
                 throw new RuntimeException("init() NOT YET IMPLEMENTED");
             }
 

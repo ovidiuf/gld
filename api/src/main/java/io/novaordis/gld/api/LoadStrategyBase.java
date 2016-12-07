@@ -16,10 +16,6 @@
 
 package io.novaordis.gld.api;
 
-import io.novaordis.gld.api.todiscard.Configuration;
-
-import java.util.List;
-
 public abstract class LoadStrategyBase implements LoadStrategy {
 
     // Constants -------------------------------------------------------------------------------------------------------
@@ -28,7 +24,6 @@ public abstract class LoadStrategyBase implements LoadStrategy {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Configuration configuration;
     private KeyStore keyStore;
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -36,69 +31,19 @@ public abstract class LoadStrategyBase implements LoadStrategy {
     // LoadStrategy implementation -------------------------------------------------------------------------------------
 
     @Override
-    public void configure(Configuration configuration, List<String> arguments, int from) throws Exception {
+    public KeyStore getKeyStore() {
 
-        if (configuration == null) {
-
-            throw new IllegalArgumentException("null configuration");
-        }
-
-        this.configuration = configuration;
-
-        if (arguments == null) {
-
-            // null arguments list means there are no more arguments
-            return;
-        }
-
-        if (arguments.isEmpty()) {
-            return;
-        }
-
-        if (from < 0){
-
-            //
-            // this is an invalid situation
-            //
-            throw new ArrayIndexOutOfBoundsException("invalid array index: " + from);
-        }
-
-        //
-        // ignore from that goes beyond the array limit
-        //
-    }
-
-    @Override
-    public String getName() {
-
-        String s = getClass().getSimpleName();
-
-        if (s.endsWith("LoadStrategy")) {
-            s = s.substring(0, s.length() - "LoadStrategy".length());
-        }
-
-        return s;
-    }
-
-    @Override
-    public KeyStore getKeyStore()
-    {
         return keyStore;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public Configuration getConfiguration()
-    {
-        return configuration;
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected void setKeyStore(KeyStore keyStore)
-    {
+    protected void setKeyStore(KeyStore keyStore) {
+
         this.keyStore = keyStore;
     }
 

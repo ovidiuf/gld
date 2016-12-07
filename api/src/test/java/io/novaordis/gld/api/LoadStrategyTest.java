@@ -16,19 +16,14 @@
 
 package io.novaordis.gld.api;
 
-import io.novaordis.gld.api.todiscard.Configuration;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.List;
-
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
- * API call tests to be exported to the implementation modules.
- *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/2/16
  */
@@ -46,7 +41,7 @@ public abstract class LoadStrategyTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // Exported Tests --------------------------------------------------------------------------------------------------
+    // Tests -----------------------------------------------------------------------------------------------------------
 
     // constructors ----------------------------------------------------------------------------------------------------
 
@@ -119,18 +114,7 @@ public abstract class LoadStrategyTest {
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    /**
-     * @param config - configuration instance. Can be null.
-     * @param arguments - strategy-specific arguments. Can be null.
-     * @param from - the argument in the list of strategy-specific arguments.
-     * @return a strategy that can be fully configured or not configured, depending on the config, arguments and from
-     *     values.
-     */
-    protected abstract LoadStrategy getLoadStrategyToTest(Configuration config, List<String> arguments, int from)
-            throws Exception;
-
-    protected abstract Configuration getConfigurationToTestWith() throws Exception;
-
+    protected abstract LoadStrategy getLoadStrategyToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

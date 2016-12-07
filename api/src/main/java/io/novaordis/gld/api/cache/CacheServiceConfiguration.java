@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.mock.load;
+package io.novaordis.gld.api.cache;
 
-import io.novaordis.gld.api.LoadStrategyFactory;
 import io.novaordis.gld.api.ServiceConfiguration;
-import io.novaordis.gld.api.ServiceType;
+import io.novaordis.utilities.UserErrorException;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/5/16
+ * @since 12/6/16
  */
-public class MockLoadStrategyFactory implements LoadStrategyFactory {
+public interface CacheServiceConfiguration extends ServiceConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    String KEY_SIZE_LABEL = "key-size";
+    String VALUE_SIZE_LABEL = "value-size";
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -34,23 +36,19 @@ public class MockLoadStrategyFactory implements LoadStrategyFactory {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // LoadStrategyFactory implementation ------------------------------------------------------------------------------
-
-    @Override
-    public MockLoadStrategy buildInstance(ServiceConfiguration configuration) throws Exception {
-
-        MockLoadStrategy ms = new MockLoadStrategy();
-        ms.init(configuration);
-        return ms;
-    }
-
-    @Override
-    public ServiceType getServiceType() {
-
-        return ServiceType.mock;
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
+
+    /**
+     * @return the default key size, in bytes. A specific load strategy may override this default value with
+     * load-strategy specific defaults or variable values.
+     */
+    int getKeySize() throws UserErrorException;
+
+    /**
+     * @return the default value size, in bytes. A specific load strategy may override this default value with
+     * load-strategy specific defaults or variable values.
+     */
+    int getValueSize() throws UserErrorException;
 
     // Package protected -----------------------------------------------------------------------------------------------
 

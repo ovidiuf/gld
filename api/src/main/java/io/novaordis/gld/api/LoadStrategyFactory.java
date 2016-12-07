@@ -20,8 +20,6 @@ import io.novaordis.utilities.UserErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
 public interface LoadStrategyFactory {
 
     // Constants -------------------------------------------------------------------------------------------------------
@@ -36,7 +34,7 @@ public interface LoadStrategyFactory {
      * of the factory.
      *
      * @param serviceType a ServiceType instance.
-     * @param configuration map (typically extracted from the YAML configuration file)
+     * @param configuration the associated service configuration instance.
      *
      * @return a LoadStrategy instance
      *
@@ -45,7 +43,7 @@ public interface LoadStrategyFactory {
      *
      * @exception IllegalArgumentException on null service type
      */
-    static LoadStrategy buildInstance(ServiceType serviceType, Map<String, Object> configuration) throws Exception {
+    static LoadStrategy buildInstance(ServiceType serviceType, ServiceConfiguration configuration) throws Exception {
 
         if (serviceType == null) {
             throw new IllegalArgumentException("null service type");
@@ -79,6 +77,7 @@ public interface LoadStrategyFactory {
 
             Class c = Class.forName(className);
             f = (LoadStrategyFactory) c.newInstance();
+
         } catch (Exception e) {
 
             throw new UserErrorException(
@@ -86,10 +85,11 @@ public interface LoadStrategyFactory {
                     e);
         }
 
-        //noinspection UnnecessaryLocalVariable
         LoadStrategy ls = f.buildInstance(configuration);
-        return ls;
 
+        ls.init(configuration);
+
+        return ls;
     }
 
     /**
@@ -97,50 +97,73 @@ public interface LoadStrategyFactory {
      *
      * @exception UserErrorException with a human readable messages if encountering difficulties.
      */
-    static String inferFullyQualifiedLoadStrategyClassName(String loadStrategyName) throws Exception {
+    static String inferFullyQualifiedLoadStrategyClassName(ServiceType serviceType, String loadStrategyName)
+            throws UserErrorException {
 
-        throw new RuntimeException("NYE");
+        //
+        // we attempt to find the implementation in <this-package>.<service-type>.load.<load-strategy-name>LoadStrategy
+        //
 
-//        // user friendliness - if the first letter of the strategy name is not capitalized,
-//        // capitalize it for her. This will allow the user to specify --load-strategy read
-//
-//        if (Character.isLowerCase(strategyName.charAt(0))) {
-//            strategyName = Character.toUpperCase(strategyName.charAt(0)) + strategyName.substring(1);
-//        }
-//
-//        try {
-//            result = ClassLoadingUtilities.getInstance(LoadStrategy.class,
-//                    "io.novaordis.gld.strategy.load." + subPackage, strategyName, "LoadStrategy");
-//        }
-//        catch(Exception e) {
-//            // turn all load strategy loading exceptions into UserErrorExceptions and bubble them up
-//            String msg = "invalid load strategy \"" + originalStrategyName + "\": " + e.getMessage();
-//            Throwable cause = e.getCause();
-//            throw new UserErrorException(msg, cause);
-//        }
-//
+        String thisPackage = LoadStrategyFactory.class.getPackage().getName();
 
+        String fqcn = thisPackage + "." + serviceType.name() + ".load";
+
+        String className = inferSimpleClassName(loadStrategyName);
+
+        fqcn = fqcn + "." + className;
+
+        return fqcn;
     }
 
-        //    NOMBP2:gld ovidiu$ grep -r "extends *LoadStrategyBase" *
-//        TO-DISTRIBUTE-extensions/cache/cache-common/tmp-src/WriteThenReadLoadStrategy.java:public class WriteThenReadLoadStrategy extends LoadStrategyBase
-//    TO-DISTRIBUTE-extensions/cache/cache-common/src/main/java/io/novaordis/gld/extension/cache/strategy/ReadThenWriteOnMissLoadStrategy.java:public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase
-//            TO-DISTRIBUTE-extensions/cache/cache-common/tmp-src/DeleteLoadStrategy.java:public class DeleteLoadStrategy extends LoadStrategyBase
-//            TO-DISTRIBUTE-extensions/cache/cache-common/tmp-src/HttpSessionLoadStrategy.java:public class HttpSessionLoadStrategy extends LoadStrategyBase {
+    /**
+     * @param loadStrategyName the load strategy name, as read from the configuration file.
+     *
+     * @return a LoadStrategy implementation simple class name candidate. Most commonly, this is obtained by upping the
+     * case of the first character, turning into camel case and appending LoadStrategy.
+     *
+     * @exception UserErrorException with a human readable messages if encountering difficulties.
+     */
+    static String inferSimpleClassName(String loadStrategyName) throws UserErrorException {
 
-//                TO-DISTRIBUTE-extensions/cache/cache-common/tmp-src-test/FailureToInstantiateLoadStrategy.java:public class FailureToInstantiateLoadStrategy extends LoadStrategyBase
+        String result = "";
+        boolean up = true;
 
-//                TO-DISTRIBUTE-extensions/jms/jms-common/tmp-src/JmsLoadStrategy.java:public abstract class JmsLoadStrategy extends LoadStrategyBase
-//                load-driver/src/test/java/io/novaordis/gld/driver/MockLoadStrategy.java:public class MockLoadStrategy extends LoadStrategyBase {
+        for(int i = 0; i < loadStrategyName.length(); i ++) {
+
+            char c = loadStrategyName.charAt(i);
+
+            if (c == '-') {
+
+                up = true;
+                continue;
+            }
+
+            if (up) {
+
+                up = false;
+                result += Character.toUpperCase(c);
+            }
+            else {
+                result += c;
+            }
+        }
+
+        if (!result.endsWith("LoadStrategy")) {
+
+            result += "LoadStrategy";
+        }
+
+        return result;
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
     /**
-     * @param configuration map (typically extracted from the YAML configuration file)
+     * @param configuration the associated ServiceConfiguration instance.
      *
      * @exception UserErrorException with a human readable messages if encountering difficulties.
      */
-    LoadStrategy buildInstance(Map<String, Object> configuration) throws Exception;
+    LoadStrategy buildInstance(ServiceConfiguration configuration) throws Exception;
 
     /**
      * @return the service type the load strategies built by this factory are associated with.

@@ -119,6 +119,29 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
         }
     }
 
+    @Test
+    public void unknownServiceType() throws Exception {
+
+        File f = new File(scratchDirectory, "test.yml");
+        assertTrue(Files.write(f,
+                        "service:\n" +
+                        "  type: no-such-service-type\n" +
+                        "\n"));
+
+        try {
+
+            new YamlBasedConfiguration(f);
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches(
+                    "unknown service type 'no-such-service-type' in configuration file .*test.yml"));
+        }
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     @Override

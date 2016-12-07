@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.mock.load;
+package io.novaordis.gld.api.jms;
 
-import io.novaordis.gld.api.LoadStrategyFactory;
-import io.novaordis.gld.api.ServiceConfiguration;
-import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.configuration.RawConfigurationMapWrapper;
+
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/5/16
+ * @since 12/6/16
  */
-public class MockLoadStrategyFactory implements LoadStrategyFactory {
+public class JmsServiceConfigurationImpl extends RawConfigurationMapWrapper implements JmsServiceConfiguration   {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,21 +34,12 @@ public class MockLoadStrategyFactory implements LoadStrategyFactory {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // LoadStrategyFactory implementation ------------------------------------------------------------------------------
+    public JmsServiceConfigurationImpl(Map<String, Object> rawConfiguration) throws Exception {
 
-    @Override
-    public MockLoadStrategy buildInstance(ServiceConfiguration configuration) throws Exception {
-
-        MockLoadStrategy ms = new MockLoadStrategy();
-        ms.init(configuration);
-        return ms;
+        super(rawConfiguration);
     }
 
-    @Override
-    public ServiceType getServiceType() {
-
-        return ServiceType.mock;
-    }
+    // JmsServiceConfiguration implementation ------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
 
