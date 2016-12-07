@@ -75,16 +75,17 @@ public abstract class LoadStrategyFactoryTest {
         assertEquals("SomeLoadStrategy", s);
     }
 
-    // buildInstance() static wrapper ----------------------------------------------------------------------------------
+    // build() static wrapper ----------------------------------------------------------------------------------
 
     @Test
     public void buildInstance_NullServiceType() throws Exception {
 
         MockServiceConfiguration msc = new MockServiceConfiguration();
+        msc.setServiceType(null);
 
         try {
 
-            LoadStrategyFactory.buildInstance(null, msc);
+            LoadStrategyFactory.build(msc);
             fail("should throw exception");
         }
         catch(IllegalArgumentException e) {
@@ -97,7 +98,7 @@ public abstract class LoadStrategyFactoryTest {
     public void buildInstance_KnownServiceType() throws Exception {
 
         MockServiceConfiguration msc = new MockServiceConfiguration();
-        LoadStrategy s = LoadStrategyFactory.buildInstance(ServiceType.mock, msc);
+        LoadStrategy s = LoadStrategyFactory.build(msc);
         assertTrue(s instanceof MockLoadStrategy);
     }
 
@@ -105,9 +106,10 @@ public abstract class LoadStrategyFactoryTest {
     public void buildInstance_UnknownServiceType() throws Exception {
 
         MockServiceConfiguration msc = new MockServiceConfiguration();
+        msc.setServiceType(ServiceType.unknown);
 
         try {
-            LoadStrategyFactory.buildInstance(ServiceType.unknown, msc);
+            LoadStrategyFactory.build(msc);
             fail("should have thrown exception");
         }
         catch(UserErrorException e) {
@@ -121,7 +123,7 @@ public abstract class LoadStrategyFactoryTest {
         }
     }
 
-    // buildInstance() -------------------------------------------------------------------------------------------------
+    // build() -------------------------------------------------------------------------------------------------
 
     @Test
     public void buildInstance() throws Exception {

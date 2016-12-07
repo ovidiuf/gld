@@ -31,8 +31,6 @@ import io.novaordis.gld.driver.sampler.SamplerImpl;
 import io.novaordis.gld.api.cache.local.LocalCacheKeyStore;
 import io.novaordis.utilities.UserErrorException;
 
-import java.util.Map;
-
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/2/16
@@ -88,13 +86,13 @@ public class LoadDriverImpl implements LoadDriver {
         //
 
         ServiceConfiguration sc = c.getServiceConfiguration();
-        service = ServiceFactory.buildInstance(sc.getType(), sc.getImplementation(), this);
+        service = ServiceFactory.buildInstance(sc, this);
 
         //
         // load strategy instantiation and installation
         //
 
-        LoadStrategy ls = LoadStrategyFactory.buildInstance(sc.getType(), sc);
+        LoadStrategy ls = LoadStrategyFactory.build(sc);
 
         service.start();
 

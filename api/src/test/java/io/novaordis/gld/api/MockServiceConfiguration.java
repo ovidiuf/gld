@@ -31,19 +31,28 @@ public class MockServiceConfiguration implements ServiceConfiguration {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private String loadStrategyName;
+    private String implementation;
+    private ServiceType serviceType;
 
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public MockServiceConfiguration() {
+
+        this.serviceType = ServiceType.mock;
+    }
 
     // ServiceConfiguration implementation -----------------------------------------------------------------------------
 
     @Override
     public ServiceType getType() {
-        throw new RuntimeException("getType() NOT YET IMPLEMENTED");
+
+        return serviceType;
     }
 
     @Override
     public String getImplementation() {
-        throw new RuntimeException("getImplementation() NOT YET IMPLEMENTED");
+
+        return implementation;
     }
 
     @Override
@@ -62,6 +71,16 @@ public class MockServiceConfiguration implements ServiceConfiguration {
     public void setLoadStrategyName(String s) {
 
         this.loadStrategyName = s;
+    }
+
+    public void setImplementation(String s) {
+
+        this.implementation = s;
+    }
+
+    public void setServiceType(ServiceType t) {
+
+        this.serviceType = t;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

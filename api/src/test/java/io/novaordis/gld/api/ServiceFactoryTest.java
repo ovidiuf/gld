@@ -16,6 +16,8 @@
 
 package io.novaordis.gld.api;
 
+import io.novaordis.gld.api.cache.CacheServiceConfigurationImpl;
+import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
 import io.novaordis.gld.api.cache.local.LocalCacheService;
 import org.junit.Test;
 
@@ -39,14 +41,17 @@ public class ServiceFactoryTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
-    // buildInstance() -------------------------------------------------------------------------------------------------
+    // build() -------------------------------------------------------------------------------------------------
 
     @Test
     public void buildInstance() throws Exception {
 
         MockLoadDriver md = new MockLoadDriver();
 
-        Service service = ServiceFactory.buildInstance(ServiceType.cache, "local", md);
+        MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
+        sc.setImplementation("local");
+
+        Service service = ServiceFactory.buildInstance(sc, md);
 
         LocalCacheService lcs = (LocalCacheService)service;
 

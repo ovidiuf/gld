@@ -28,15 +28,17 @@ public class ServiceFactory {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    public static Service buildInstance(ServiceType type, String implementation, LoadDriver loadDriver)
-            throws Exception {
+    public static Service buildInstance(ServiceConfiguration c, LoadDriver loadDriver) throws Exception {
 
-        if (ServiceType.cache.equals(type) && "local".equals(implementation)) {
+        ServiceType t = c.getType();
+        String implementation = c.getImplementation();
+
+        if (ServiceType.cache.equals(t) && "local".equals(implementation)) {
 
             return new LocalCacheService(loadDriver);
         }
 
-        throw new RuntimeException("NOT YET IMPLEMENTED buildInstance(" + type + ", " + implementation + ")");
+        throw new RuntimeException("NOT YET IMPLEMENTED buildInstance(" + t + ", " + implementation + ")");
 
     }
 

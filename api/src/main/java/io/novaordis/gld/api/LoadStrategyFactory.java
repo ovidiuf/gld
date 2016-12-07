@@ -33,7 +33,6 @@ public interface LoadStrategyFactory {
      * because we want to be able to add arbitrary service types in the future without modifying the code of this layer
      * of the factory.
      *
-     * @param serviceType a ServiceType instance.
      * @param configuration the associated service configuration instance.
      *
      * @return a LoadStrategy instance
@@ -43,9 +42,11 @@ public interface LoadStrategyFactory {
      *
      * @exception IllegalArgumentException on null service type
      */
-    static LoadStrategy buildInstance(ServiceType serviceType, ServiceConfiguration configuration) throws Exception {
+    static LoadStrategy build(ServiceConfiguration configuration) throws Exception {
 
-        if (serviceType == null) {
+        ServiceType t = configuration.getType();
+
+        if (t == null) {
             throw new IllegalArgumentException("null service type");
         }
 
@@ -54,7 +55,7 @@ public interface LoadStrategyFactory {
         // is to allow adding new service types without changing this method.
         //
 
-        String serviceTypeName = serviceType.name();
+        String serviceTypeName = t.name();
 
         //
         // we expect the factory class name to match the following pattern:
@@ -81,8 +82,7 @@ public interface LoadStrategyFactory {
         } catch (Exception e) {
 
             throw new UserErrorException(
-                    "failed to instantiate a load strategy factory corresponding to a service of type " + serviceType,
-                    e);
+                    "failed to instantiate a load strategy factory corresponding to a service of type " + t, e);
         }
 
         LoadStrategy ls = f.buildInstance(configuration);

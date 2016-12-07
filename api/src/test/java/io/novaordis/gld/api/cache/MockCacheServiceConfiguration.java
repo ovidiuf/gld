@@ -19,8 +19,6 @@ package io.novaordis.gld.api.cache;
 import io.novaordis.gld.api.MockServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
 
-import java.util.Map;
-
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/6/16
@@ -34,6 +32,14 @@ public class MockCacheServiceConfiguration extends MockServiceConfiguration impl
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    // ServiceConfiguration implementation -----------------------------------------------------------------------------
+
+    @Override
+    public ServiceType getType() {
+
+        return ServiceType.cache;
+    }
 
     // CacheServiceConfiguration implementation ------------------------------------------------------------------------
 
