@@ -17,10 +17,14 @@
 package io.novaordis.gld.api;
 
 import io.novaordis.utilities.UserErrorException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ClassLoadingUtilities {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(ClassLoadingUtilities.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -35,6 +39,9 @@ public class ClassLoadingUtilities {
      * @exception io.novaordis.utilities.UserErrorException with a human readable message and embedded cause.
      */
     public static <T> T getInstance(Class<T> interfaceType, String fullyQualifiedClassName) throws Exception {
+
+        log.debug("attempting to create a " + interfaceType.getSimpleName() +
+                " instance named " + fullyQualifiedClassName);
 
         Class<T> c;
 
