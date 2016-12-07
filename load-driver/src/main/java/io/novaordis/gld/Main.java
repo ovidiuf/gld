@@ -266,7 +266,7 @@ public class Main {
 
                 System.out.println("version " + version);
                 System.out.println("release date " + releaseDate);
-                
+
                 return 0;
             }
         }
