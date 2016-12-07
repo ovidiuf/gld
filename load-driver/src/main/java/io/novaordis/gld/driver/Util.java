@@ -20,21 +20,18 @@ import io.novaordis.utilities.UserErrorException;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Random;
 import java.util.UUID;
 
-public class Util
-{
+public class Util {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = Logger.getLogger(Util.class);
@@ -44,6 +41,28 @@ public class Util
     // Static ----------------------------------------------------------------------------------------------------------
 
     private static final Map<Integer, String> VALUE_CACHE = new HashMap<>();
+
+    public static String formatErrorMessage(String msg) {
+
+        return "[error]: " + msg;
+    }
+
+    public static String formatErrorMessage(Throwable t) {
+
+        if (t instanceof UserErrorException) {
+
+            return t.getMessage();
+        }
+
+        String msg = "internal error: " + t.getClass().getSimpleName();
+        String m = t.getMessage();
+        if (m != null) {
+
+            msg += " (" + m + "), consult the log for more details";
+        }
+
+        return msg;
+    }
 
     /**
      * Naive implementation - come up with something smarter.
@@ -55,8 +74,7 @@ public class Util
      *       is smaller than totalLength, the final string consists in identical repeated sections; the section that
      *       will be repeated is 'randomSectionLength' long and it is randomly generated.
      */
-    public static String getRandomString(Random random, int totalLength, int randomSectionLength)
-    {
+    public static String getRandomString(Random random, int totalLength, int randomSectionLength) {
         String randomSection = "";
         int r;
 
@@ -115,16 +133,14 @@ public class Util
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
-    public static String getRandomKey(Random random, int keySize)
-    {
+    public static String getRandomKey(Random random, int keySize) {
         return getRandomString(random, keySize, keySize);
     }
 
     /**
      * Slower than getRandomString(keySize).
      */
-    public static String getRandomKeyUUID(int keySize)
-    {
+    public static String getRandomKeyUUID(int keySize) {
         String result = "";
 
         int uuids = keySize / UUID_STRING_SIZE;
@@ -145,9 +161,8 @@ public class Util
         return result;
     }
 
+    public static String getRandomValue(Random random, int valueSize, boolean useDifferentValues) {
 
-    public static String getRandomValue(Random random, int valueSize, boolean useDifferentValues)
-    {
         synchronized (Util.class)
         {
             String s;
@@ -172,8 +187,7 @@ public class Util
 
     }
 
-    public static Throwable getRoot(Throwable t)
-    {
+    public static Throwable getRoot(Throwable t) {
         if (t == null)
         {
             throw new IllegalArgumentException("null throwable");
@@ -188,8 +202,7 @@ public class Util
         return root;
     }
 
-    public static void displayContentFromClasspath(String fileName)
-    {
+    public static void displayContentFromClasspath(String fileName) {
         BufferedReader br = null;
 
         try
@@ -232,66 +245,10 @@ public class Util
     }
 
     /**
-     * @return null if the metadata file is not found or there was a read failure (also a log warning is generated).
-     */
-    public static String getVersion()
-    {
-        return getReleaseMetadata("version");
-    }
-
-    /**
-     * @return null if the metadata file is not found or there was a read failure (also a log warning is generated).
-     */
-    public static String getReleaseDate()
-    {
-        return getReleaseMetadata("release_date");
-    }
-
-    /**
-     * @return null if the metadata file is not found or there was a read failure (also a log warning is generated).
-     */
-    public static String getReleaseMetadata(String propertyName)
-    {
-        String releaseMetadataFileName = "VERSION";
-
-        ClassLoader cl = Util.class.getClassLoader();
-
-        InputStream is = cl.getResourceAsStream(releaseMetadataFileName);
-
-        if (is == null)
-        {
-            log.warn("release metadata file \"" + releaseMetadataFileName + "\" not found on the classpath");
-            return null;
-        }
-
-        Properties properties = new Properties();
-
-        try
-        {
-            properties.load(is);
-        }
-        catch(IOException e)
-        {
-            log.warn("failed to read the release metadata file \"" + releaseMetadataFileName + "\"", e);
-            return null;
-        }
-
-        String value = properties.getProperty(propertyName);
-
-        if (value == null)
-        {
-            log.warn("no '" + propertyName + "' property found in \"" + releaseMetadataFileName + "\"");
-            return null;
-        }
-
-        return value;
-    }
-
-    /**
      * TODO put this in NovaOrdis Utilities
      */
-    public static String threadDump()
-    {
+    public static String threadDump() {
+
         final StringBuilder sb = new StringBuilder();
 
         final ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
@@ -322,8 +279,7 @@ public class Util
     /**
      * TODO put this in NovaOrdis Utilities
      */
-    public static void nativeThreadDump()
-    {
+    public static void nativeThreadDump() {
         // get pid
 
         String s = ManagementFactory.getRuntimeMXBean().getName();
@@ -341,165 +297,6 @@ public class Util
         catch(Exception e)
         {
             log.error("failed to take thread dump", e);
-        }
-    }
-
-    // command line processing utilities -------------------------------------------------------------------------------
-
-    /**
-     * @param optionName - the name of the option (including --)
-     *
-     * @param isBoolean if true, the method return the option itself if present, or null if not present. Otherwise
-     *                  it returns the following string.
-     *
-     * @return null if the option is not found in list.
-     */
-    public static String extractOption(String optionName, boolean isBoolean, List<String> arguments, int from)
-        throws UserErrorException {
-
-        if (arguments == null) {
-            throw new IllegalArgumentException("null argument list");
-        }
-
-        if (optionName == null) {
-            throw new IllegalArgumentException("null option name");
-        }
-
-        if (arguments.isEmpty()) {
-            return null;
-        }
-
-        String result = null;
-
-        for(int i = from; i < arguments.size(); i ++) {
-
-            String crt = arguments.get(i);
-
-            if (optionName.equals(crt)) {
-
-                if (isBoolean) {
-                    result = arguments.remove(i);
-                    break;
-                }
-
-                if (i == arguments.size() - 1) {
-                    throw new UserErrorException("a string should follow '" + optionName + "'");
-                }
-
-                arguments.remove(i);
-                result = arguments.remove(i);
-                break;
-            }
-        }
-
-        if (!isBoolean && result != null && result.startsWith("--")) {
-            throw new UserErrorException("a string, and not another option should follow '" + optionName + "'");
-        }
-
-        return result;
-    }
-
-    /**
-     * @param optionName - the name of the option (including --)
-     *
-     * @return true or false if the option is found (or not) in the list.
-     */
-    public static boolean extractBoolean(String optionName, List<String> arguments, int from)
-        throws UserErrorException
-    {
-        String s = extractOption(optionName, true, arguments, from);
-        return s != null;
-    }
-
-    /**
-     * @param optionName - the name of the option (including --)
-     *
-     * @return null if the option is not found in list. If the option is found, both the option and the value
-     * are removed from the list.
-     */
-    public static String extractString(String optionName, List<String> arguments, int from) throws UserErrorException {
-
-        if (arguments == null) {
-            return null;
-        }
-
-        if (optionName == null) {
-            throw new IllegalArgumentException("null option name");
-        }
-
-        if (arguments.isEmpty()) {
-            return null;
-        }
-
-        String result = null;
-
-        for(int i = from; i < arguments.size(); i ++) {
-            String crt = arguments.get(i);
-
-            if (optionName.equals(crt)) {
-
-                if (i == arguments.size() - 1) {
-                    throw new UserErrorException("a string should follow '" + optionName + "'");
-                }
-
-                arguments.remove(i);
-                result = arguments.remove(i);
-                break;
-            }
-        }
-
-        if (result != null && result.startsWith("--")) {
-            throw new UserErrorException("a string, and not another option should follow '" + optionName + "'");
-        }
-
-        return result;
-    }
-
-    /**
-     * @param optionName - the name of the option (including --)
-     *
-     * @return null if the option is not found in list.
-     */
-    public static Long extractLong(String optionName, List<String> arguments, int from) throws UserErrorException {
-        String s = extractOption(optionName, false, arguments, from);
-
-        if (s == null)
-        {
-            return null;
-        }
-
-        try
-        {
-            return new Long(s);
-        }
-        catch(Exception e)
-        {
-            throw new UserErrorException("a long should follow '" + optionName + "' but we got \"" + s + "\"", e);
-        }
-    }
-
-    /**
-     * @param optionName - the name of the option (including --)
-     *
-     * @return null if the option is not found in list.
-     */
-    public static Integer extractInteger(String optionName, List<String> arguments, int from)
-            throws UserErrorException {
-
-        String s = extractOption(optionName, false, arguments, from);
-
-        if (s == null)
-        {
-            return null;
-        }
-
-        try
-        {
-            return new Integer(s);
-        }
-        catch(Exception e)
-        {
-            throw new UserErrorException("an integer should follow '" + optionName + "' but we got \"" + s + "\"", e);
         }
     }
 

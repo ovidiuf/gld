@@ -29,7 +29,6 @@ import io.novaordis.gld.api.ServiceFactory;
 import io.novaordis.gld.driver.sampler.Sampler;
 import io.novaordis.gld.driver.sampler.SamplerImpl;
 import io.novaordis.gld.api.cache.local.LocalCacheKeyStore;
-import io.novaordis.utilities.UserErrorException;
 
 import java.util.Set;
 
@@ -159,31 +158,13 @@ public class LoadDriverImpl implements LoadDriver {
     @Override
     public void error(Throwable t) {
 
-        if (t instanceof UserErrorException) {
-
-            String msg = t.getMessage();
-            error(msg);
-
-        }
-        else {
-
-            String msg = "internal error: " + t.getClass().getSimpleName();
-
-            String m = t.getMessage();
-
-            if (m != null) {
-
-                msg += " (" + m + "), consult the log for more details";
-            }
-
-            error(msg);
-        }
+        error(Util.formatErrorMessage(t));
     }
 
     @Override
     public void error(String msg) {
 
-        System.err.println("[error]: " + msg);
+        System.err.println(Util.formatErrorMessage(msg));
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

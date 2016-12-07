@@ -20,7 +20,7 @@ import io.novaordis.gld.api.Configuration;
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.configuration.YamlBasedConfiguration;
 import io.novaordis.gld.driver.LoadDriverImpl;
-import io.novaordis.gld.driver.todeplete.command.Version;
+import io.novaordis.gld.driver.Util;
 import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.env.EnvironmentVariableProvider;
 import io.novaordis.utilities.version.VersionUtilities;
@@ -106,7 +106,12 @@ public class Main {
             log.debug("load driver failure: " + t.getMessage(), t);
 
             if (ld != null) {
+
                 ld.error(t);
+            }
+            else {
+
+                System.out.println(Util.formatErrorMessage(t));
             }
         }
 
