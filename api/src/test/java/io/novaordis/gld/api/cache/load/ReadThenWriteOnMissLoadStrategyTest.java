@@ -20,8 +20,10 @@ import io.novaordis.gld.api.LoadStrategyTest;
 import io.novaordis.gld.api.MockLoadConfiguration;
 import io.novaordis.gld.api.MockServiceConfiguration;
 import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.RandomContentGenerator;
 import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
 import io.novaordis.gld.api.cache.operation.Read;
 import io.novaordis.gld.api.cache.operation.Write;
 import io.novaordis.utilities.UserErrorException;
@@ -33,6 +35,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
@@ -70,10 +74,11 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
     }
 
     @Test
-    public void reuseValue_InvalidValue() throws Exception {
+    public void init_reuseValue_InvalidValue() throws Exception {
 
         ReadThenWriteOnMissLoadStrategy s = getLoadStrategyToTest();
 
+        RandomContentGenerator cg = new RandomContentGenerator();
         MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockServiceConfiguration sc = new MockServiceConfiguration();
         Map<String, Object> m = new HashMap<>();
@@ -82,7 +87,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
         sc.setMap(m, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
         try {
-            s.init(sc, mlc);
+            s.init(sc, mlc, cg);
         }
         catch(UserErrorException e) {
 
@@ -393,6 +398,61 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
 //
 //        assertEquals(value, mcs.get(key));
 //    }
+
+
+    @Test
+    public void reuseValueBehavior_reuseValueIsSet() throws Exception {
+
+        ReadThenWriteOnMissLoadStrategy s = getLoadStrategyToTest();
+
+        RandomContentGenerator cg = new RandomContentGenerator();
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+        MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
+        Map<String, Object> m = new HashMap<>();
+        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        m.put(ReadThenWriteOnMissLoadStrategy.REUSE_VALUE_LABEL, true);
+        sc.setMap(m, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+
+        s.init(sc, mlc, cg);
+
+        assertTrue(s.isReuseValue());
+
+        Read read = (Read)s.next(null, null, false);
+        Write write = (Write)s.next(read, null, false);
+        String value = write.getValue();
+        Read read2 = (Read)s.next(write, null, false);
+        Write write2 = (Write)s.next(read2, null, false);
+        String value2 = write2.getValue();
+
+        assertEquals(value, value2);
+    }
+
+    @Test
+    public void reuseValueBehavior_reuseValueIsNotSet() throws Exception {
+
+        ReadThenWriteOnMissLoadStrategy s = getLoadStrategyToTest();
+
+        RandomContentGenerator cg = new RandomContentGenerator();
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+        MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
+        Map<String, Object> m = new HashMap<>();
+        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        m.put(ReadThenWriteOnMissLoadStrategy.REUSE_VALUE_LABEL, false);
+        sc.setMap(m, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+
+        s.init(sc, mlc, cg);
+
+        assertFalse(s.isReuseValue());
+
+        Read read = (Read)s.next(null, null, false);
+        Write write = (Write)s.next(read, null, false);
+        String value = write.getValue();
+        Read read2 = (Read)s.next(write, null, false);
+        Write write2 = (Write)s.next(read2, null, false);
+        String value2 = write2.getValue();
+
+        assertNotEquals(value, value2);
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

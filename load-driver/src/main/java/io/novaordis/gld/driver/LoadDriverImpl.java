@@ -90,13 +90,14 @@ public class LoadDriverImpl implements LoadDriver {
     public void init(Configuration c) throws Exception {
 
         LoadConfiguration lc = c.getLoadConfiguration();
+
         ServiceConfiguration sc = c.getServiceConfiguration();
 
         //
         // load strategy instantiation and installation
         //
 
-        LoadStrategy ls = LoadStrategyFactory.build(sc, lc);
+        LoadStrategy ls = LoadStrategyFactory.build(sc, lc, contentGenerator);
 
 
         //

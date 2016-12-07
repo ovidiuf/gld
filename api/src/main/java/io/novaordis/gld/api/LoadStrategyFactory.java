@@ -42,7 +42,8 @@ public interface LoadStrategyFactory {
      *
      * @exception IllegalArgumentException on null service type
      */
-    static LoadStrategy build(ServiceConfiguration sc, LoadConfiguration lc) throws Exception {
+    static LoadStrategy build(ServiceConfiguration sc, LoadConfiguration lc, RandomContentGenerator cg)
+            throws Exception {
 
         ServiceType t = sc.getType();
 
@@ -85,7 +86,7 @@ public interface LoadStrategyFactory {
                     "failed to instantiate a load strategy factory corresponding to a service of type " + t, e);
         }
 
-        LoadStrategy ls = f.buildInstance(sc, lc);
+        LoadStrategy ls = f.buildInstance(sc, lc, cg);
 
         //
         // don't init(), the factory instance is supposed to do it
@@ -165,7 +166,8 @@ public interface LoadStrategyFactory {
      *
      * @exception UserErrorException with a human readable messages if encountering difficulties.
      */
-    LoadStrategy buildInstance(ServiceConfiguration sc, LoadConfiguration lc) throws Exception;
+    LoadStrategy buildInstance(ServiceConfiguration sc, LoadConfiguration lc, RandomContentGenerator cg)
+            throws Exception;
 
     /**
      * @return the service type the load strategies built by this factory are associated with.

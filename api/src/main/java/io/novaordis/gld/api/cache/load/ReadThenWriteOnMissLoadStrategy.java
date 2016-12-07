@@ -68,11 +68,13 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String syntheticValue;
+    private volatile boolean initialized;
 
     private boolean reuseValue;
+    private String cachedValue;
 
-    private volatile boolean initialized;
+    private int keySize;
+    private int valueSize;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -104,33 +106,37 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
 
         Operation result;
 
-        if (lastOperation == null)
-        {
+        if (lastOperation == null) {
+
+            //
             // start with a read
+            //
             result = getNextRead();
         }
-        else if (lastOperation instanceof Read)
-        {
+        else if (lastOperation instanceof Read) {
+
             Read lastRead = (Read)lastOperation;
 
             // if the last read is a hit, generate another read
 
-            if (lastRead.getValue() != null)
-            {
+            if (lastRead.getValue() != null) {
+
                 result = getNextRead();
             }
-            else
-            {
-                result = new Write(lastRead.getKey(), syntheticValue);
+            else {
+
+                String lastReadKey = lastRead.getKey();
+                String value = computeValue();
+                result = new Write(lastReadKey, value);
             }
         }
-        else if (lastOperation instanceof Write)
-        {
+        else if (lastOperation instanceof Write) {
+
             // read follows a write
             result = getNextRead();
         }
-        else
-        {
+        else {
+
             throw new IllegalArgumentException("unknown last operation " + lastOperation);
         }
 
@@ -188,8 +194,8 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
         }
 
         CacheServiceConfiguration cc = (CacheServiceConfiguration)sc;
-        int keySize = cc.getKeySize();
-        int valueSize = cc.getValueSize();
+        this.keySize = cc.getKeySize();
+        this.valueSize = cc.getValueSize();
         Long operations = lc.getOperations();
 
 //        String keyStoreFile = conf.getKeyStoreFile();
@@ -209,10 +215,29 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
 //
 //        syntheticValue = Util.getRandomValue(
 //                new Random(System.currentTimeMillis() + 17L), valueSize, useDifferentValues);
-//
-//        configured = true;
 
         initialized = true;
+    }
+
+    String computeValue() {
+
+        String v;
+
+        if (reuseValue) {
+
+            if (cachedValue == null) {
+
+                cachedValue = getContentGenerator().getRandomString(null, valueSize);
+            }
+
+            v = cachedValue;
+        }
+        else {
+
+            v = getContentGenerator().getRandomString(null, valueSize);
+        }
+
+        return v;
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

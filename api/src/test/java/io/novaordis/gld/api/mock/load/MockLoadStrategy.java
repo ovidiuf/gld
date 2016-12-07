@@ -20,6 +20,7 @@ import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadConfiguration;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.RandomContentGenerator;
 import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
 import org.slf4j.Logger;
@@ -61,7 +62,7 @@ public class MockLoadStrategy implements LoadStrategy {
     }
 
     @Override
-    public void init(ServiceConfiguration sc, LoadConfiguration lc) throws Exception {
+    public void init(ServiceConfiguration sc, LoadConfiguration lc, RandomContentGenerator cg) throws Exception {
 
         //
         // because init() is usually NOT idempotent, fail this if we call it twice

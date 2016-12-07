@@ -29,6 +29,8 @@ public abstract class LoadStrategyBase implements LoadStrategy {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private RandomContentGenerator contentGenerator;
+
     private KeyStore keyStore;
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -48,7 +50,7 @@ public abstract class LoadStrategyBase implements LoadStrategy {
      * the map, and fails if those are found.
      */
     @Override
-    public final void init(ServiceConfiguration sc, LoadConfiguration lc) throws Exception {
+    public final void init(ServiceConfiguration sc, LoadConfiguration lc, RandomContentGenerator cg) throws Exception {
 
         Map<String, Object> loadStrategyRawConfig = sc.getMap(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
@@ -63,6 +65,8 @@ public abstract class LoadStrategyBase implements LoadStrategy {
             throw new IllegalStateException(
                     "inconsistent load strategy name, expected '" + getName() + "' but found '" + n + "'");
         }
+
+        this.contentGenerator = cg;
 
         init(sc, loadStrategyRawConfig, lc);
 
@@ -107,6 +111,11 @@ public abstract class LoadStrategyBase implements LoadStrategy {
     protected void setKeyStore(KeyStore keyStore) {
 
         this.keyStore = keyStore;
+    }
+
+    protected RandomContentGenerator getContentGenerator() {
+
+        return contentGenerator;
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

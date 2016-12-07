@@ -48,7 +48,9 @@ public interface LoadStrategy {
      *
      * @exception IllegalStateException on inconsistencies.
      */
-    void init(ServiceConfiguration serviceConfiguration, LoadConfiguration loadConfiguration) throws Exception;
+    void init(
+            ServiceConfiguration serviceConfiguration, LoadConfiguration loadConfiguration, RandomContentGenerator cg)
+            throws Exception;
 
     /**
      * @return the next operation to be sent into the service, factoring in the last operation that has been sent into

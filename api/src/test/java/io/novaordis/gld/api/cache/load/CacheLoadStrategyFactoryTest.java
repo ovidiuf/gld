@@ -19,6 +19,7 @@ package io.novaordis.gld.api.cache.load;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.LoadStrategyFactoryTest;
 import io.novaordis.gld.api.MockLoadConfiguration;
+import io.novaordis.gld.api.RandomContentGenerator;
 import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.cache.CacheServiceConfiguration;
 import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
@@ -56,12 +57,13 @@ public class CacheLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
 
         CacheLoadStrategyFactory f = getLoadStrategyFactoryToTest();
 
+        RandomContentGenerator cg = new RandomContentGenerator();
         MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockCacheServiceConfiguration mc = new MockCacheServiceConfiguration();
 
         try {
 
-            f.buildInstance(mc, mlc);
+            f.buildInstance(mc, mlc, cg);
             fail("should have failed");
         }
         catch(IllegalArgumentException e) {
@@ -77,6 +79,7 @@ public class CacheLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
 
         CacheLoadStrategyFactory f = getLoadStrategyFactoryToTest();
 
+        RandomContentGenerator cg = new RandomContentGenerator();
         MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockCacheServiceConfiguration mc = new MockCacheServiceConfiguration();
 
@@ -84,7 +87,7 @@ public class CacheLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
 
         try {
 
-            f.buildInstance(mc, mlc);
+            f.buildInstance(mc, mlc, cg);
             fail("should have failed");
         }
         catch(UserErrorException e) {
@@ -104,12 +107,13 @@ public class CacheLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
 
         CacheLoadStrategyFactory f = getLoadStrategyFactoryToTest();
 
+        RandomContentGenerator cg = new RandomContentGenerator();
         MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockCacheServiceConfiguration mc = new MockCacheServiceConfiguration();
 
         mc.setLoadStrategyName("mock");
 
-        LoadStrategy s = f.buildInstance(mc, mlc);
+        LoadStrategy s = f.buildInstance(mc, mlc, cg);
 
         //
         // make sure the load strategy was built without any incident
