@@ -64,11 +64,6 @@ public class MockService implements Service {
     }
 
     @Override
-    public void perform(Operation o) throws Exception {
-        throw new RuntimeException("perform() NOT YET IMPLEMENTED");
-    }
-
-    @Override
     public void setConfiguration(Configuration c) {
         throw new RuntimeException("setConfiguration() NOT YET IMPLEMENTED");
     }

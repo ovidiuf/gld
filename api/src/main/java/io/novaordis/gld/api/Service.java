@@ -53,10 +53,6 @@ public interface Service {
 
     boolean isStarted();
 
-    // execution -------------------------------------------------------------------------------------------------------
-
-    void perform(Operation o) throws Exception;
-
     // to deplete ------------------------------------------------------------------------------------------------------
 
     void setConfiguration(Configuration c);

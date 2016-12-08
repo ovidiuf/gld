@@ -348,11 +348,10 @@ public class SingleThreadedRunnerTest {
                 throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
             }
 
-            @Override
-            public void perform(Operation o) throws Exception {
-
-                operations.add(o);
-            }
+//            public void perform(Operation o) throws Exception {
+//
+//                operations.add(o);
+//            }
         };
 
         MockSampler ms = new MockSampler();

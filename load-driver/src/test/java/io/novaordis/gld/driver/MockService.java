@@ -18,7 +18,6 @@ package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.ContentType;
@@ -107,28 +106,6 @@ public class MockService implements Service {
         return started;
     }
 
-    @Override
-    public void perform(Operation o) throws Exception {
-
-        //
-        // may be executing concurrently on multiple threads
-        //
-        if (verbose) { log.info(this + " performing " + o); }
-
-        Thread currentThread = Thread.currentThread();
-
-        Integer invocationCountPerThread = perThreadInvocationCount.get(currentThread);
-        if (invocationCountPerThread == null) {
-
-            invocationCountPerThread = 1;
-            perThreadInvocationCount.put(currentThread, invocationCountPerThread);
-        }
-        else {
-
-            perThreadInvocationCount.put(currentThread, invocationCountPerThread + 1);
-        }
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
     /**
@@ -149,6 +126,27 @@ public class MockService implements Service {
      */
     public void setVerbose(boolean b) {
         this.verbose = b;
+    }
+
+    public void simulateMockOperationExecution(MockOperation o) throws Exception {
+
+        //
+        // may be executing concurrently on multiple threads
+        //
+        if (verbose) { log.info(this + " performing " + o); }
+
+        Thread currentThread = Thread.currentThread();
+
+        Integer invocationCountPerThread = perThreadInvocationCount.get(currentThread);
+        if (invocationCountPerThread == null) {
+
+            invocationCountPerThread = 1;
+            perThreadInvocationCount.put(currentThread, invocationCountPerThread);
+        }
+        else {
+
+            perThreadInvocationCount.put(currentThread, invocationCountPerThread + 1);
+        }
     }
 
     @Override

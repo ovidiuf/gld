@@ -17,7 +17,6 @@
 package io.novaordis.gld.api.cache.local;
 
 import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.ServiceBase;
 import io.novaordis.gld.api.cache.CacheService;
 import io.novaordis.gld.api.todiscard.Configuration;
@@ -87,12 +86,6 @@ public class LocalCacheService extends ServiceBase implements CacheService {
     }
 
     // execution -------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void perform(Operation o) throws Exception {
-        throw new RuntimeException("perform() NOT YET IMPLEMENTED");
-    }
-
 
     @Override
     public void setConfiguration(Configuration c) {
