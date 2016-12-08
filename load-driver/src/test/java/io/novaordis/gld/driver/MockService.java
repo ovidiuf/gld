@@ -18,6 +18,7 @@ package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
+import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.ContentType;
@@ -25,6 +26,7 @@ import io.novaordis.gld.api.todiscard.Node;
 import io.novaordis.utilities.UserErrorException;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,12 +46,14 @@ public class MockService implements Service {
     private boolean wasStarted;
 
     private Map<Thread, Integer> perThreadInvocationCount;
+    private List<Operation> executedOperations;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockService() {
 
         perThreadInvocationCount = new ConcurrentHashMap<>();
+        executedOperations = new ArrayList<>();
     }
 
     // Service implementation ------------------------------------------------------------------------------------------
@@ -128,12 +132,18 @@ public class MockService implements Service {
         this.verbose = b;
     }
 
-    public void simulateMockOperationExecution(MockOperation o) throws Exception {
+    public void simulateOperationExecutionOnThisService(MockOperation o) throws Exception {
+
+        if (verbose) { log.info(this + " performing " + o); }
 
         //
         // may be executing concurrently on multiple threads
         //
-        if (verbose) { log.info(this + " performing " + o); }
+
+        synchronized (this) {
+
+            executedOperations.add(o);
+        }
 
         Thread currentThread = Thread.currentThread();
 
@@ -147,6 +157,11 @@ public class MockService implements Service {
 
             perThreadInvocationCount.put(currentThread, invocationCountPerThread + 1);
         }
+    }
+
+    public List<Operation> getExecutedOperations() {
+
+        return executedOperations;
     }
 
     @Override

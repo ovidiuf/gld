@@ -18,23 +18,16 @@ package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.KeyProvider;
 import io.novaordis.gld.api.LoadConfiguration;
-import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
-import io.novaordis.gld.api.todiscard.Configuration;
-import io.novaordis.gld.api.todiscard.ContentType;
-import io.novaordis.gld.api.todiscard.Node;
 import io.novaordis.gld.driver.sampler.Sampler;
 import io.novaordis.gld.driver.sampler.SamplerImpl;
-import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CyclicBarrier;
@@ -299,65 +292,12 @@ public class SingleThreadedRunnerTest {
             }
         };
 
-        final List<Operation> operations = new ArrayList<>();
+        MockService ms = new MockService();
 
-        Service s = new Service() {
-
-            @Override
-            public void setConfiguration(Configuration c) {
-                throw new RuntimeException("setConfiguration() NOT YET IMPLEMENTED");
-            }
-
-            @Override
-            public void setTarget(List<Node> nodes) {
-                throw new RuntimeException("setTarget() NOT YET IMPLEMENTED");
-            }
-
-            @Override
-            public void configure(List<String> commandLineArguments) throws UserErrorException {
-                throw new RuntimeException("init() NOT YET IMPLEMENTED");
-            }
-
-            @Override
-            public ContentType getContentType() {
-                throw new RuntimeException("getContentType() NOT YET IMPLEMENTED");
-            }
-
-            @Override
-            public LoadDriver getLoadDriver() {
-                throw new RuntimeException("getLoadDriver() NOT YET IMPLEMENTED");
-            }
-
-            @Override
-            public LoadStrategy getLoadStrategy() {
-                throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
-            }
-
-            @Override
-            public void start() throws Exception {
-                throw new RuntimeException("start() NOT YET IMPLEMENTED");
-            }
-
-            @Override
-            public void stop() throws Exception {
-                throw new RuntimeException("stop() NOT YET IMPLEMENTED");
-            }
-
-            @Override
-            public boolean isStarted() {
-                throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
-            }
-
-//            public void perform(Operation o) throws Exception {
-//
-//                operations.add(o);
-//            }
-        };
-
-        MockSampler ms = new MockSampler();
+        MockSampler msp = new MockSampler();
         CyclicBarrier cb = new CyclicBarrier(1);
 
-        SingleThreadedRunner r = new SingleThreadedRunner("TEST", s, ls, ms, cb, durationExpired, -1L);
+        SingleThreadedRunner r = new SingleThreadedRunner("TEST", ms, ls, msp, cb, durationExpired, -1L);
 
         //
         // we simulate the running runner without actually have to start the internal thread
@@ -370,6 +310,8 @@ public class SingleThreadedRunnerTest {
         // the service accumulates exactly two operations, of which the first is a MockOperation and the second
         // is a MockCleanupOperation
         //
+
+        List<Operation> operations = ms.getExecutedOperations();
 
         assertEquals(2, operations.size());
 

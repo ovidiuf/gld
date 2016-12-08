@@ -46,7 +46,7 @@ public class MockOperation implements Operation {
     public void perform(Service cs) throws Exception
     {
         if (verbose) { log.info(this + " mock perform(" + cs + ")"); }
-        ((MockService)cs).simulateMockOperationExecution(this);
+        ((MockService)cs).simulateOperationExecutionOnThisService(this);
     }
 
     @Override
