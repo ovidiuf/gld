@@ -17,7 +17,7 @@
 package io.novaordis.gld.api.cache;
 
 import io.novaordis.gld.api.ServiceConfiguration;
-import io.novaordis.gld.api.configuration.RawConfigurationMapWrapper;
+import io.novaordis.gld.api.configuration.RawServiceConfigurationMapWrapper;
 import io.novaordis.utilities.UserErrorException;
 
 import java.util.Map;
@@ -26,7 +26,7 @@ import java.util.Map;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/6/16
  */
-public class CacheServiceConfigurationImpl extends RawConfigurationMapWrapper implements CacheServiceConfiguration  {
+public class CacheServiceConfigurationImpl extends RawServiceConfigurationMapWrapper implements CacheServiceConfiguration  {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

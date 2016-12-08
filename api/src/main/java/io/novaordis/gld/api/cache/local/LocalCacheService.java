@@ -27,6 +27,7 @@ import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.utilities.UserErrorException;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -40,14 +41,17 @@ public class LocalCacheService extends ServiceBase implements CacheService {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-
     private volatile boolean started;
+
+    private ConcurrentHashMap<String, String> cache;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public LocalCacheService(LoadStrategy loadStrategy, LoadDriver loadDriver) {
 
         super(loadStrategy, loadDriver);
+
+        this.cache = new ConcurrentHashMap<>();
     }
 
     // Service implementation ------------------------------------------------------------------------------------------
@@ -112,12 +116,14 @@ public class LocalCacheService extends ServiceBase implements CacheService {
 
     @Override
     public String get(String key) throws Exception {
-        throw new RuntimeException("get() NOT YET IMPLEMENTED");
+
+        return cache.get(key);
     }
 
     @Override
     public void put(String key, String value) throws Exception {
-        throw new RuntimeException("put() NOT YET IMPLEMENTED");
+
+        cache.put(key, value);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

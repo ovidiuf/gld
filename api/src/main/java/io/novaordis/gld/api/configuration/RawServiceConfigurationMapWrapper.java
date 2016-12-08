@@ -29,7 +29,7 @@ import java.util.Map;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-public class RawConfigurationMapWrapper implements ServiceConfiguration {
+public class RawServiceConfigurationMapWrapper implements ServiceConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -45,7 +45,7 @@ public class RawConfigurationMapWrapper implements ServiceConfiguration {
     /**
      * @param map the map extracted from the YAML file from under the "service" section.
      */
-    public RawConfigurationMapWrapper(Map<String, Object> map) {
+    public RawServiceConfigurationMapWrapper(Map<String, Object> map) {
 
         this.rawConfiguration = map;
     }

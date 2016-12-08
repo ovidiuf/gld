@@ -15,3 +15,4 @@ service:
 
 load:
   threads: 10
+  operations: 100

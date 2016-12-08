@@ -16,7 +16,7 @@
 
 package io.novaordis.gld.api.jms;
 
-import io.novaordis.gld.api.configuration.RawConfigurationMapWrapper;
+import io.novaordis.gld.api.configuration.RawServiceConfigurationMapWrapper;
 
 import java.util.Map;
 
@@ -24,7 +24,7 @@ import java.util.Map;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/6/16
  */
-public class JmsServiceConfigurationImpl extends RawConfigurationMapWrapper implements JmsServiceConfiguration   {
+public class JmsServiceConfigurationImpl extends RawServiceConfigurationMapWrapper implements JmsServiceConfiguration   {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

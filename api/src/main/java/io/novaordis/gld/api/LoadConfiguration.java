@@ -16,6 +16,8 @@
 
 package io.novaordis.gld.api;
 
+import io.novaordis.utilities.UserErrorException;
+
 /**
  * Typed access to the configuration that specifies the load characteristics (number of threads, duration, number
  * of requests/operations/messages), etc.
@@ -30,13 +32,17 @@ public interface LoadConfiguration {
     String THREAD_COUNT_LABEL = "threads";
     int DEFAULT_THREAD_COUNT = 1;
 
+    String OPERATION_COUNT_LABEL = "operations";
+    String REQUEST_COUNT_LABEL = "requests";
+    String MESSAGE_COUNT_LABEL = "messages";
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Typed Access ----------------------------------------------------------------------------------------------------
 
-    int getThreadCount();
+    int getThreadCount() throws UserErrorException;
 
     /**
      * @return the number of operations to be created and applied to the target service during the load run. null means
@@ -47,7 +53,7 @@ public interface LoadConfiguration {
      * @see LoadConfiguration#getRequests()
      * @see LoadConfiguration#getMessages()
      */
-    Long getOperations();
+    Long getOperations() throws UserErrorException;
 
     /**
      * @return the number of requests to be sent into the target service during the load run. null means "unlimited".
@@ -58,7 +64,7 @@ public interface LoadConfiguration {
      * @see LoadConfiguration#getRequests()
      * @see LoadConfiguration#getMessages()
      */
-    Long getRequests();
+    Long getRequests() throws UserErrorException;
 
     /**
      * @return the number of messages to be sent into the target service during the load run. null means "unlimited".
@@ -69,7 +75,7 @@ public interface LoadConfiguration {
      * @see LoadConfiguration#getRequests()
      * @see LoadConfiguration#getMessages()
      */
-    Long getMessages();
+    Long getMessages() throws UserErrorException;
 
     // Untyped Access --------------------------------------------------------------------------------------------------
 

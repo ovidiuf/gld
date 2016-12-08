@@ -25,7 +25,7 @@ import java.util.Map;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-public class LoadConfigurationImpl implements LoadConfiguration {
+public class RawLoadConfigurationMapWrapper implements LoadConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -33,41 +33,81 @@ public class LoadConfigurationImpl implements LoadConfiguration {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private int threadCount;
+    // the actual raw configuration map passed at construction
+    private Map<String, Object> rawConfiguration;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
      * @param map the map extracted from the YAML file from under the "load" section.
      */
-    public LoadConfigurationImpl(Map map) throws Exception {
+    public RawLoadConfigurationMapWrapper(Map<String, Object> map) throws Exception {
 
-        load(map);
+        this.rawConfiguration = map;
     }
 
     // LoadConfiguration implementation --------------------------------------------------------------------------
 
     @Override
-    public int getThreadCount() {
+    public int getThreadCount() throws UserErrorException {
 
-        return threadCount;
+        Object o = rawConfiguration.get(LoadConfiguration.THREAD_COUNT_LABEL);
+
+        if (o == null) {
+
+            return LoadConfiguration.DEFAULT_THREAD_COUNT;
+        }
+        else {
+
+            if (!(o instanceof Integer)) {
+                throw new UserErrorException(
+                        "'" + LoadConfiguration.THREAD_COUNT_LABEL + "' not an integer: \"" + o + "\"");
+            }
+
+            return ((Integer)o);
+        }
     }
 
     @Override
-    public Long getOperations() {
+    public Long getOperations() throws UserErrorException {
 
-        // default value is "unlimited"
-        return null;
+        String label = LoadConfiguration.OPERATION_COUNT_LABEL;
+        Object o = rawConfiguration.get(label);
+
+        if (o == null) {
+
+            label = LoadConfiguration.REQUEST_COUNT_LABEL;
+            o = rawConfiguration.get(label);
+
+            if (o == null) {
+
+                label = LoadConfiguration.MESSAGE_COUNT_LABEL;
+                o = rawConfiguration.get(label);
+
+                if (o == null) {
+
+                    // default value is "unlimited"
+                    return null;
+                }
+            }
+        }
+
+        if (!(o instanceof Integer)) {
+
+            throw new UserErrorException("'" + label + "' not a long: \"" + o + "\"");
+        }
+
+        return (long)(Integer)o;
     }
 
     @Override
-    public Long getRequests() {
+    public Long getRequests() throws UserErrorException {
 
         return getOperations();
     }
 
     @Override
-    public Long getMessages() {
+    public Long getMessages() throws UserErrorException {
 
         return getOperations();
     }
@@ -79,25 +119,6 @@ public class LoadConfigurationImpl implements LoadConfiguration {
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
-
-    private void load(Map map) throws Exception {
-
-        Object o = map.get(LoadConfiguration.THREAD_COUNT_LABEL);
-
-        if (o == null) {
-
-            threadCount = LoadConfiguration.DEFAULT_THREAD_COUNT;
-        }
-        else {
-
-            if (!(o instanceof Integer)) {
-                throw new UserErrorException(
-                        "'" + LoadConfiguration.THREAD_COUNT_LABEL + "' not an integer: \"" + o + "\"");
-            }
-
-            threadCount = ((Integer)o);
-        }
-    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

@@ -54,12 +54,13 @@ public abstract class LoadConfigurationTest {
     @Test
     public void threadCount_NotAnInteger() throws Exception {
 
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put(LoadConfiguration.THREAD_COUNT_LABEL, "blah");
+        LoadConfiguration c = getLoadConfigurationToTest(map);
 
         try {
 
-            getLoadConfigurationToTest(map);
+            c.getThreadCount();
             fail("should have thrown exception");
         }
         catch(UserErrorException e) {
@@ -73,7 +74,7 @@ public abstract class LoadConfigurationTest {
     @Test
     public void threadCountMissing_DefaultValue() throws Exception {
 
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         assertNull(map.get(LoadConfiguration.THREAD_COUNT_LABEL));
 
         LoadConfiguration c = getLoadConfigurationToTest(map);
@@ -89,7 +90,7 @@ public abstract class LoadConfigurationTest {
         // the default configuration allows for unlimited load
         //
 
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         LoadConfiguration c = getLoadConfigurationToTest(map);
 
         assertNull(c.getOperations());
@@ -97,9 +98,192 @@ public abstract class LoadConfigurationTest {
         assertNull(c.getMessages());
     }
 
+    @Test
+    public void getOperations_OperationsNotALong() throws Exception {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put(LoadConfiguration.OPERATION_COUNT_LABEL, "blah");
+        LoadConfiguration c = getLoadConfigurationToTest(map);
+
+        try {
+
+            c.getOperations();
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals(msg, "'" + LoadConfiguration.OPERATION_COUNT_LABEL + "' not a long: \"blah\"");
+        }
+
+        try {
+
+            c.getRequests();
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals(msg, "'" + LoadConfiguration.OPERATION_COUNT_LABEL + "' not a long: \"blah\"");
+        }
+
+        try {
+
+            c.getMessages();
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals(msg, "'" + LoadConfiguration.OPERATION_COUNT_LABEL + "' not a long: \"blah\"");
+        }
+    }
+
+    @Test
+    public void getOperations_RequestsNotALong() throws Exception {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put(LoadConfiguration.REQUEST_COUNT_LABEL, "blah");
+        LoadConfiguration c = getLoadConfigurationToTest(map);
+
+        try {
+
+            c.getOperations();
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals(msg, "'" + LoadConfiguration.REQUEST_COUNT_LABEL + "' not a long: \"blah\"");
+        }
+
+        try {
+
+            c.getRequests();
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals(msg, "'" + LoadConfiguration.REQUEST_COUNT_LABEL + "' not a long: \"blah\"");
+        }
+
+        try {
+
+            c.getMessages();
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals(msg, "'" + LoadConfiguration.REQUEST_COUNT_LABEL + "' not a long: \"blah\"");
+        }
+    }
+
+    @Test
+    public void getOperations_MessagesNotALong() throws Exception {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put(LoadConfiguration.MESSAGE_COUNT_LABEL, "blah");
+        LoadConfiguration c = getLoadConfigurationToTest(map);
+
+        try {
+
+            c.getOperations();
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals(msg, "'" + LoadConfiguration.MESSAGE_COUNT_LABEL + "' not a long: \"blah\"");
+        }
+
+        try {
+
+            c.getRequests();
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals(msg, "'" + LoadConfiguration.MESSAGE_COUNT_LABEL + "' not a long: \"blah\"");
+        }
+
+        try {
+
+            c.getMessages();
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals(msg, "'" + LoadConfiguration.MESSAGE_COUNT_LABEL + "' not a long: \"blah\"");
+        }
+    }
+
+    @Test
+    public void getOperations_OperationLabel() throws Exception {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put(LoadConfiguration.OPERATION_COUNT_LABEL, 10);
+        LoadConfiguration c = getLoadConfigurationToTest(map);
+
+        Long l = c.getOperations();
+        assertEquals(10, l.longValue());
+
+        Long l2 = c.getRequests();
+        assertEquals(10, l2.longValue());
+
+        Long l3 = c.getMessages();
+        assertEquals(10, l3.longValue());
+    }
+
+    @Test
+    public void getOperations_RequestLabel() throws Exception {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put(LoadConfiguration.REQUEST_COUNT_LABEL, 10);
+        LoadConfiguration c = getLoadConfigurationToTest(map);
+
+        Long l = c.getOperations();
+        assertEquals(10, l.longValue());
+
+        Long l2 = c.getRequests();
+        assertEquals(10, l2.longValue());
+
+        Long l3 = c.getMessages();
+        assertEquals(10, l3.longValue());
+    }
+
+    @Test
+    public void getOperations_MessageLabel() throws Exception {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put(LoadConfiguration.MESSAGE_COUNT_LABEL, 10);
+        LoadConfiguration c = getLoadConfigurationToTest(map);
+
+        Long l = c.getOperations();
+        assertEquals(10, l.longValue());
+
+        Long l2 = c.getRequests();
+        assertEquals(10, l2.longValue());
+
+        Long l3 = c.getMessages();
+        assertEquals(10, l3.longValue());
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
-    protected abstract LoadConfiguration getLoadConfigurationToTest(Map map) throws Exception;
+    protected abstract LoadConfiguration getLoadConfigurationToTest(Map<String, Object> map) throws Exception;
 
     // Protected -------------------------------------------------------------------------------------------------------
 

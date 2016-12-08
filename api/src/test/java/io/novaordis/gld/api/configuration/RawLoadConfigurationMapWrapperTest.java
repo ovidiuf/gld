@@ -24,7 +24,7 @@ import java.util.Map;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-public class LoadConfigurationImplTest extends LoadConfigurationTest {
+public class RawLoadConfigurationMapWrapperTest extends LoadConfigurationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -41,9 +41,9 @@ public class LoadConfigurationImplTest extends LoadConfigurationTest {
     // Package protected -----------------------------------------------------------------------------------------------
 
     @Override
-    protected LoadConfigurationImpl getLoadConfigurationToTest(Map map) throws Exception {
+    protected RawLoadConfigurationMapWrapper getLoadConfigurationToTest(Map<String, Object> map) throws Exception {
 
-        return new LoadConfigurationImpl(map);
+        return new RawLoadConfigurationMapWrapper(map);
     }
 
     // Protected -------------------------------------------------------------------------------------------------------
