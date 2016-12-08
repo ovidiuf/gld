@@ -44,6 +44,8 @@ public class LoadDriverImpl implements LoadDriver {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String id;
+
     private volatile boolean background;
 
     private Service service;
@@ -53,13 +55,16 @@ public class LoadDriverImpl implements LoadDriver {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
+     * @param id each member of a load driver cluster must have an unique ID.
+     *
      * @param background - if true, the load driver assumes the JVM runs as a background process and does not interact
      *                   directly with stdin/stdout/stderr. If false, the load driver assumes the JVM runs in foreground
      *                   and can be controlled directly from the console.
      *
      */
-    public LoadDriverImpl(boolean background) {
+    public LoadDriverImpl(String id, boolean background) {
 
+        this.id = id;
         this.background = background;
     }
 
@@ -69,6 +74,12 @@ public class LoadDriverImpl implements LoadDriver {
     public Service getService() {
 
         return service;
+    }
+
+    @Override
+    public String getID() {
+
+        return id;
     }
 
     @Override
@@ -154,6 +165,12 @@ public class LoadDriverImpl implements LoadDriver {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+
+        return getID() + (background ? " (background)" : " (foreground)");
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

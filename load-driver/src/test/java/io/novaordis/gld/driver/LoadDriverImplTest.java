@@ -39,7 +39,7 @@ public class LoadDriverImplTest extends LoadDriverTest {
     @Override
     protected LoadDriverImpl getLoadDriverToTest() throws Exception {
 
-        return new LoadDriverImpl(true);
+        return new LoadDriverImpl("test", true);
     }
     // Protected -------------------------------------------------------------------------------------------------------
 

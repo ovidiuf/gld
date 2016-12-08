@@ -33,6 +33,11 @@ public class MockLoadDriver implements LoadDriver {
     // LoadDriver implementation ---------------------------------------------------------------------------------------
 
     @Override
+    public String getID() {
+        throw new RuntimeException("getID() NOT YET IMPLEMENTED");
+    }
+
+    @Override
     public void init(Configuration c) throws Exception {
         throw new RuntimeException("init() NOT YET IMPLEMENTED");
     }

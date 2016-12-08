@@ -30,6 +30,15 @@ public interface LoadDriver {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    // identity --------------------------------------------------------------------------------------------------------
+
+    /**
+     * Each load driver member of a cluster must have an unique ID.
+     */
+    String getID();
+
+    // lifecycle -------------------------------------------------------------------------------------------------------
+
     /**
      * Initialize the load driver and dependencies (the service and auxiliary components), based on the Configuration
      * passed to it.

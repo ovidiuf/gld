@@ -89,7 +89,7 @@ public class Main {
             File configurationFile = extractConfigurationFile(arguments);
             Configuration c = new YamlBasedConfiguration(configurationFile);
 
-            ld = new LoadDriverImpl(background);
+            ld = new LoadDriverImpl("0", background);
 
             ld.init(c);
 
