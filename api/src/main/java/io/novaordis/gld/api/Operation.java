@@ -36,7 +36,7 @@ public interface Operation {
      * else, especially time consuming tasks that are irrelevant to what we measure, must be performed outside this
      * method.
      *
-     * @exception IllegalArgumentException if we get an invalid or inappropriate service instance.
+     * @exception IllegalArgumentException if we next an invalid or inappropriate service instance.
      */
     void perform(Service s) throws Exception;
 

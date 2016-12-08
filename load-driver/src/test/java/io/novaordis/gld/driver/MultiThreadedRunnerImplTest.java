@@ -60,7 +60,7 @@ public class MultiThreadedRunnerImplTest extends MultiThreadedRunnerTest
 //
 //        runner.run();
 //
-//        // we get here after all thread have have finished
+//        // we next here after all thread have have finished
 //
 //        Assert.assertEquals(0, mockLoadStrategy.getRemainingOperations());
 //

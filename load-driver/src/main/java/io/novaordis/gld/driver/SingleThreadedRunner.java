@@ -85,7 +85,7 @@ public class SingleThreadedRunner implements Runnable {
         this.singleThreadedRunnerSleepMs = singleThreadedRunnerSleepMs;
         this.loadStrategy = loadStrategy;
         this.service = service;
-        this.keyStore = loadStrategy.getKeyStore();
+        // this.keyStore = loadStrategy.getKeyProvider();
         this.allSingleThreadedRunnersBarrier = barrier;
         this.durationExpired = durationExpired;
 
@@ -211,7 +211,7 @@ public class SingleThreadedRunner implements Runnable {
 
                 t1 = System.nanoTime();
 
-                if (keyStore != null && !keyStore.isReadOnly()) {
+                if (keyStore != null /* && !keyStore.isReadOnly() */) {
 
                     //
                     // the operation was successful, which means the key was sent successfully into the service;

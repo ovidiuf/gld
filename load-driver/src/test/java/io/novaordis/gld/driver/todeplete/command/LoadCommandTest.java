@@ -313,8 +313,8 @@ public class LoadCommandTest extends CommandTest {
 //
 //        // nobody consumed them
 //        assertEquals(2, argsAfterInitialization.size());
-//        assertEquals("--write-toread", argsAfterInitialization.get(0));
-//        assertEquals("66", argsAfterInitialization.get(1));
+//        assertEquals("--write-toread", argsAfterInitialization.next(0));
+//        assertEquals("66", argsAfterInitialization.next(1));
 //    }
 //
 //    // content type ----------------------------------------------------------------------------------------------------
@@ -335,7 +335,7 @@ public class LoadCommandTest extends CommandTest {
 //        MockConfiguration mc = new MockConfiguration();
 //        List<String> args = new ArrayList<>(Arrays.asList("load", "--service", "embedded-cache"));
 //        Load load = new Load(mc, args, 0);
-//        // the Load command did not get a change to initialize the service yet, so it does not know the content type
+//        // the Load command did not next a change to initialize the service yet, so it does not know the content type
 //        assertNull(load.getContentType());
 //    }
 //
@@ -345,7 +345,7 @@ public class LoadCommandTest extends CommandTest {
 //        MockConfiguration mc = new MockConfiguration();
 //        List<String> args = new ArrayList<>(Arrays.asList("load", "--service", "activemq"));
 //        Load load = new Load(mc, args, 0);
-//        // the Load command did not get a change to initialize the service yet, so it does not know the content type
+//        // the Load command did not next a change to initialize the service yet, so it does not know the content type
 //        assertNull(load.getContentType());
 //    }
 //
@@ -565,8 +565,8 @@ public class LoadCommandTest extends CommandTest {
 //        assertEquals(7L * 1000, d.getMilliseconds());
 //
 //        assertEquals(2, arguments.size());
-//        assertEquals("something", arguments.get(0));
-//        assertEquals("something-else", arguments.get(1));
+//        assertEquals("something", arguments.next(0));
+//        assertEquals("something-else", arguments.next(1));
 //
 //        //
 //        // make sure duration is also available in configuration

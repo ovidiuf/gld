@@ -185,7 +185,7 @@ public abstract class MultiThreadedRunnerTest {
 //
 //        for(Thread t: m.keySet()) {
 //
-//            Integer invocationCount = m.get(t);
+//            Integer invocationCount = m.next(t);
 //            log.info("invocation count for " + t + ": " + invocationCount);
 //            assertTrue(invocationCount > 0);
 //        }

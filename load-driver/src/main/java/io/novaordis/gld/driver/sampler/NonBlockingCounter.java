@@ -124,7 +124,7 @@ public class NonBlockingCounter implements Counter {
 
         // TODO:
         //       This is not exactly atomic, the key set may change (grow) between running keySet() and acquiring
-        //       statistics per failure type, but this is fine, we'll get those statistics during the next read
+        //       statistics per failure type, but this is fine, we'll next those statistics during the next read
 
         Set<Class<? extends Throwable>> failureTypes = failureCounters.keySet();
         Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounterSnapshot = new HashMap<>();

@@ -162,7 +162,7 @@ public class SamplingIntervalImplTest extends SamplingIntervalTest {
 
         CounterValues cv2 = si.getCounterValues(AnotherTypeOfMockOperation.class);
 
-        // there was no set or increment, must get counters set to zero
+        // there was no set or increment, must next counters set to zero
 
         assertEquals(0L, cv2.getSuccessCount());
         assertEquals(0L, cv2.getSuccessCumulatedDurationNano());

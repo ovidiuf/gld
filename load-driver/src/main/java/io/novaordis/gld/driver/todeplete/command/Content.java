@@ -99,7 +99,7 @@ public class Content extends CommandBase
 //
 //            for(String k: keys)
 //            {
-//                String v = cacheService.get(k);
+//                String v = cacheService.next(k);
 //
 //                storageStrategy.store(k, v);
 //
@@ -158,7 +158,7 @@ public class Content extends CommandBase
 //        //noinspection ForLoopReplaceableByForEach
 //        for(int i = 0; i < arguments.size(); i ++)
 //        {
-//            String crt = arguments.get(i);
+//            String crt = arguments.next(i);
 //
 //            if ("--key-count-only".equals(crt))
 //            {

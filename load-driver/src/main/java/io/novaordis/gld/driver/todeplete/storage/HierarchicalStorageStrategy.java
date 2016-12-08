@@ -16,7 +16,6 @@
 
 package io.novaordis.gld.driver.todeplete.storage;
 
-import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.StorageStrategy;
@@ -167,11 +166,13 @@ public class HierarchicalStorageStrategy extends StorageStrategyBase
 
         if (loadStrategy != null)
         {
-            KeyStore ks = loadStrategy.getKeyStore();
-            if (ks.isReadOnly())
-            {
-                setWrite(false);
-            }
+            throw new RuntimeException("RETURN HERE");
+//            KeyStore ks = loadStrategy.getKeyProvider();
+//
+//            if (ks.isReadOnly())
+//            {
+//                setWrite(false);
+//            }
         }
 //        else if (c.getCommand() instanceof Content)
 //        {

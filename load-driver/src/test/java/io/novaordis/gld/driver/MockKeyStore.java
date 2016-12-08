@@ -59,22 +59,9 @@ public class MockKeyStore implements KeyStore {
     }
 
     @Override
-    public String get()
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
     public LoadDriver getLoadDriver() {
         throw new RuntimeException("getLoadDriver() NOT YET IMPLEMENTED");
     }
-
-    @Override
-    public boolean isReadOnly()
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
 
     // Public ----------------------------------------------------------------------------------------------------------
 

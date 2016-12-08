@@ -88,7 +88,7 @@ public class MockServiceConfiguration implements ServiceConfiguration {
             if (i == path.length - 1) {
 
                 //
-                // the last path element, attempt to get the content
+                // the last path element, attempt to next the content
                 //
 
                 //noinspection unchecked

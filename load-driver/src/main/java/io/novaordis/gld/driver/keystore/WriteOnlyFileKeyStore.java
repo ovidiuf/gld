@@ -20,7 +20,6 @@ import com.novaordis.ac.Collector;
 import com.novaordis.ac.CollectorFactory;
 import com.novaordis.ac.Handler;
 import io.novaordis.gld.api.KeyStore;
-import io.novaordis.gld.api.LoadDriver;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -52,15 +51,6 @@ public class WriteOnlyFileKeyStore implements KeyStore
     // Configuration implementation ------------------------------------------------------------------------------------
 
     @Override
-    public boolean isReadOnly()
-    {
-        return false;
-    }
-
-    /**
-     * @see KeyStore#store(String)
-     */
-    @Override
     public void store(String key) throws Exception
     {
         if (!started)
@@ -71,15 +61,10 @@ public class WriteOnlyFileKeyStore implements KeyStore
         asyncWriter.handOver(key);
     }
 
-    @Override
+//    @Override
     public String get()
     {
         throw new IllegalStateException("this is a write-only keystore, cannot get");
-    }
-
-    @Override
-    public LoadDriver getLoadDriver() {
-        throw new RuntimeException("getLoadDriver() NOT YET IMPLEMENTED");
     }
 
     @Override

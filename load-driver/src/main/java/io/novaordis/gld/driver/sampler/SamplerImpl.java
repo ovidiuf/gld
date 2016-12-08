@@ -149,7 +149,7 @@ public class SamplerImpl extends TimerTask implements Sampler {
         // cancel all tasks, less the one that is currently executing.
         samplingTimer.cancel();
 
-        // get into "stopping", this will tell the last task to cancel the timer
+        // next into "stopping", this will tell the last task to cancel the timer
         stopping = true;
 
         // do the final run that will collect leftover statistics

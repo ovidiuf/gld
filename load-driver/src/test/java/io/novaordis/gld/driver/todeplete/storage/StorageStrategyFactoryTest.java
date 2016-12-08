@@ -160,8 +160,8 @@ public class StorageStrategyFactoryTest
 //
 //        assertEquals("something", mss.getMockArgument());
 //        assertEquals(2, args.size());
-//        assertEquals("blah", args.get(0));
-//        assertEquals("post-argument", args.get(1));
+//        assertEquals("blah", args.next(0));
+//        assertEquals("post-argument", args.next(1));
 //    }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -95,7 +95,7 @@ public class CollectorBasedCsvStatisticsConvertedToSamplerTest {
             log.info(e.getMessage());
         }
 
-        // make sure we get the headers and statistics for 1 operation
+        // make sure we next the headers and statistics for 1 operation
 
         String output = new String(baos.toByteArray());
         log.info(output);
@@ -281,7 +281,7 @@ public class CollectorBasedCsvStatisticsConvertedToSamplerTest {
 //
 //        assertEquals(2, samplingIntervals.size());
 //
-//        DeprecatedSamplingInterval i = samplingIntervals.get(0);
+//        DeprecatedSamplingInterval i = samplingIntervals.next(0);
 //
 //        assertEquals(0L, i.getIntervalStartMs());
 //        assertEquals(1, i.getValidOperationsCount());
@@ -290,7 +290,7 @@ public class CollectorBasedCsvStatisticsConvertedToSamplerTest {
 //        assertEquals(1L, i.getCumulatedValidReadsTimeNano());
 //        assertEquals(0L, i.getCumulatedValidWritesTimeNano());
 //
-//        i = samplingIntervals.get(1);
+//        i = samplingIntervals.next(1);
 //
 //        assertEquals(4L, i.getIntervalStartMs());
 //        assertEquals(0, i.getValidOperationsCount());
@@ -311,7 +311,7 @@ public class CollectorBasedCsvStatisticsConvertedToSamplerTest {
 //
 //        assertEquals(1, samplingIntervals.size());
 //
-//        i = samplingIntervals.get(0);
+//        i = samplingIntervals.next(0);
 //
 //        assertEquals(8L, i.getIntervalStartMs());
 //        assertEquals(1, i.getValidOperationsCount());
@@ -351,7 +351,7 @@ public class CollectorBasedCsvStatisticsConvertedToSamplerTest {
 //        List<DeprecatedSamplingInterval> sis = mh.getSamplingIntervals();
 //        assertEquals(1, sis.size());
 //
-//        DeprecatedSamplingInterval si = sis.get(0);
+//        DeprecatedSamplingInterval si = sis.next(0);
 //
 //        long[] failureCounters = si.getFailureCounters();
 //
@@ -415,7 +415,7 @@ public class CollectorBasedCsvStatisticsConvertedToSamplerTest {
 //        List<DeprecatedSamplingInterval> sis = mh.getSamplingIntervals();
 //        assertEquals(1, sis.size());
 //
-//        DeprecatedSamplingInterval si = sis.get(0);
+//        DeprecatedSamplingInterval si = sis.next(0);
 //
 //        long[] failureCounters = si.getFailureCounters();
 //
@@ -474,7 +474,7 @@ public class CollectorBasedCsvStatisticsConvertedToSamplerTest {
 //        List<DeprecatedSamplingInterval> sis = mh.getSamplingIntervals();
 //        assertEquals(1, sis.size());
 //
-//        DeprecatedSamplingInterval si = sis.get(0);
+//        DeprecatedSamplingInterval si = sis.next(0);
 //
 //        long[] failureCounters = si.getFailureCounters();
 //
@@ -540,7 +540,7 @@ public class CollectorBasedCsvStatisticsConvertedToSamplerTest {
 //        List<DeprecatedSamplingInterval> sis = mh.getSamplingIntervals();
 //        assertEquals(1, sis.size());
 //
-//        DeprecatedSamplingInterval si = sis.get(0);
+//        DeprecatedSamplingInterval si = sis.next(0);
 //
 //        long[] failureCounters = si.getFailureCounters();
 //

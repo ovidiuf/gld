@@ -77,7 +77,7 @@ public class Load extends CommandBase
 //            storageStrategy.start();
 //        }
 //
-//        KeyStore keyStore = loadStrategy.getKeyStore();
+//        KeyStore keyStore = loadStrategy.getKeyProvider();
 //
 //        if (keyStore != null) {
 //            keyStore.start();
@@ -209,7 +209,7 @@ public class Load extends CommandBase
 //
 //        for(int i = from; i < arguments.size(); i ++) {
 //
-//            String crt = arguments.get(i);
+//            String crt = arguments.next(i);
 //
 //            // "--strategy" is deprecated, use "--load-strategy" instead
 //            if ("--load-strategy".equals(crt) || "--strategy".equals(crt)) {
@@ -222,7 +222,7 @@ public class Load extends CommandBase
 //        }
 //
 //        if (loadStrategy == null) {
-//            // try to get it from configuration file, if one is available
+//            // try to next it from configuration file, if one is available
 //            loadStrategy = configuration.getLoadStrategy();
 //        }
 //

@@ -16,7 +16,6 @@
 
 package io.novaordis.gld.driver;
 
-import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadConfiguration;
 import io.novaordis.gld.api.LoadStrategyBase;
 import io.novaordis.gld.api.Operation;
@@ -89,12 +88,12 @@ public class MockLoadStrategy extends LoadStrategyBase {
 
         //        for(int i = 0; i < arguments.size(); i ++) {
 //
-//            if ("--mock-argument".equals(arguments.get(i))) {
+//            if ("--mock-argument".equals(arguments.next(i))) {
 //
 //                arguments.remove(i);
 //                mockArgument = arguments.remove(i --);
 //            }
-//            else if ("--mock-load-argument".equals(arguments.get(i))) {
+//            else if ("--mock-load-argument".equals(arguments.next(i))) {
 //
 //                arguments.remove(i);
 //                mockLoadArgument = arguments.remove(i --);
@@ -143,11 +142,6 @@ public class MockLoadStrategy extends LoadStrategyBase {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public void setKeyStore(KeyStore ks)
-    {
-        super.setKeyStore(ks);
-    }
-
     public String toString()
     {
         return "MockLoadStrategy[" + Integer.toHexString(System.identityHashCode(this)) + "]";
@@ -178,7 +172,7 @@ public class MockLoadStrategy extends LoadStrategyBase {
     }
 
     /**
-     * We need to explicitly set the instance as verbose in order to get log.info(), otherwise the high concurrency
+     * We need to explicitly set the instance as verbose in order to next log.info(), otherwise the high concurrency
      * tests are too noisy. If this load strategy is verbose, then the MockOperations it builds will be verbose.
      */
     public void setVerbose(boolean b) {

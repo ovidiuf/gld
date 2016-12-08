@@ -66,9 +66,9 @@ public class ConfigurationImplTest {
 //        List<Node> nodes = c.getNodes();
 //
 //        assertEquals(2, nodes.size());
-//        assertTrue(nodes.get(0) instanceof EmbeddedNode);
-//        assertEquals("localhost2", nodes.get(1).getHost());
-//        assertEquals(10002, nodes.get(1).getPort());
+//        assertTrue(nodes.next(0) instanceof EmbeddedNode);
+//        assertEquals("localhost2", nodes.next(1).getHost());
+//        assertEquals(10002, nodes.next(1).getPort());
 //    }
 //
 //    @Test
@@ -85,9 +85,9 @@ public class ConfigurationImplTest {
 //        List<Node> nodes = c.getNodes();
 //
 //        assertEquals(2, nodes.size());
-//        assertTrue(nodes.get(0) instanceof EmbeddedNode);
-//        assertEquals("localhost2", nodes.get(1).getHost());
-//        assertEquals(10002, nodes.get(1).getPort());
+//        assertTrue(nodes.next(0) instanceof EmbeddedNode);
+//        assertEquals("localhost2", nodes.next(1).getHost());
+//        assertEquals(10002, nodes.next(1).getPort());
 //    }
 //
 //    // nodes -----------------------------------------------------------------------------------------------------------
@@ -109,7 +109,7 @@ public class ConfigurationImplTest {
 //        List<Node> nodes = c.getNodes();
 //
 //        assertEquals(1, nodes.size());
-//        Node n = nodes.get(0);
+//        Node n = nodes.next(0);
 //        assertEquals("localhost", n.getHost());
 //        assertEquals(10001, n.getPort());
 //    }
@@ -131,10 +131,10 @@ public class ConfigurationImplTest {
 //        List<Node> nodes = c.getNodes();
 //
 //        assertEquals(2, nodes.size());
-//        Node n = nodes.get(0);
+//        Node n = nodes.next(0);
 //        assertEquals("localhost", n.getHost());
 //        assertEquals(10001, n.getPort());
-//        Node n2 = nodes.get(1);
+//        Node n2 = nodes.next(1);
 //        assertEquals("example.com", n2.getHost());
 //        assertEquals(10002, n2.getPort());
 //    }
@@ -248,7 +248,7 @@ public class ConfigurationImplTest {
 //
 //        assertEquals(1, nodes.size());
 //
-//        Node n = nodes.get(0);
+//        Node n = nodes.next(0);
 //
 //        assertTrue(n instanceof EmbeddedNode);
 //    }
@@ -277,7 +277,7 @@ public class ConfigurationImplTest {
 //
 //        assertEquals(1, nodes.size());
 //
-//        Node n = nodes.get(0);
+//        Node n = nodes.next(0);
 //
 //        assertTrue(n instanceof EmbeddedNode);
 //

@@ -53,11 +53,6 @@ public class MockLoadDriver implements LoadDriver {
     }
 
     @Override
-    public KeyStore getKeyStore() {
-        throw new RuntimeException("getKeyStore() NOT YET IMPLEMENTED");
-    }
-
-    @Override
     public void error(Throwable t) {
         throw new RuntimeException("error() NOT YET IMPLEMENTED");
     }
@@ -66,7 +61,6 @@ public class MockLoadDriver implements LoadDriver {
     public void error(String msg) {
         throw new RuntimeException("error() NOT YET IMPLEMENTED");
     }
-
 
     // Public ----------------------------------------------------------------------------------------------------------
 

@@ -113,7 +113,7 @@ public class Connect extends CommandBase
 //                String value = st.nextToken();
 //                cache.put(key, value);
 //            }
-//            else if ("get".equals(command))
+//            else if ("next".equals(command))
 //            {
 //                if (!st.hasMoreTokens())
 //                {
@@ -121,7 +121,7 @@ public class Connect extends CommandBase
 //                    continue;
 //                }
 //                String key = st.nextToken();
-//                String value = cache.get(key);
+//                String value = cache.next(key);
 //
 //                System.out.println("> " + value);
 //            }

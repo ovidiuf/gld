@@ -14,87 +14,92 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.cache.local;
+package io.novaordis.gld.api;
 
-import io.novaordis.gld.api.KeyStore;
-import io.novaordis.gld.api.LoadDriver;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/2/16
+ * @since 12/7/16
  */
-public class LocalCacheKeyStore implements KeyStore {
+public abstract class KeyProviderTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(KeyProviderTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private LoadDriver loadDriver;
-    private boolean started;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public LocalCacheKeyStore(LoadDriver loadDriver) {
-
-        this.loadDriver = loadDriver;
-    }
-
-    // KeyStore implementation -----------------------------------------------------------------------------------------
-
-    @Override
-    public void start() throws Exception {
-
-        if (started) {
-            return;
-        }
-
-        started = true;
-    }
-
-    @Override
-    public void stop() throws Exception {
-
-        if (!started) {
-            return;
-        }
-
-        started = false;
-    }
-
-    @Override
-    public boolean isStarted() {
-
-        return started;
-    }
-
-    @Override
-    public boolean isReadOnly() {
-        throw new RuntimeException("isReadOnly() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void store(String key) throws Exception {
-        throw new RuntimeException("store() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public String get() {
-        throw new RuntimeException("get() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public LoadDriver getLoadDriver() {
-
-        return loadDriver;
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // Tests -----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void lifecycle() throws Exception {
+
+        KeyProvider p = getKeyProviderToTest();
+
+        assertFalse(p.isStarted());
+
+        p.start();
+
+        assertTrue(p.isStarted());
+
+        //
+        // start() should be idempotent
+        //
+
+        p.start();
+
+        assertTrue(p.isStarted());
+
+        p.stop();
+
+        assertFalse(p.isStarted());
+
+        //
+        // stop() should be idempotent
+        //
+
+        p.stop();
+
+        assertFalse(p.isStarted());
+    }
+
+    @Test
+    public void instanceNotStarted() throws Exception {
+
+        KeyProvider p = getKeyProviderToTest();
+
+        assertFalse(p.isStarted());
+
+        try {
+
+            p.next();
+            fail("should throw exception");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+        }
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected abstract KeyProvider getKeyProviderToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

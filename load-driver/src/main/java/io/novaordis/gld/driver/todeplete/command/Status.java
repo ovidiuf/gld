@@ -20,7 +20,7 @@ import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.utilities.UserErrorException;
 
 /**
- * Use this command to get the status of a gld instance running in "background" mode.
+ * Use this command to next the status of a gld instance running in "background" mode.
  *
  * @see Start
  * @see Stop

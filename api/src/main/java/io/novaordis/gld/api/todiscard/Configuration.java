@@ -131,7 +131,7 @@ public interface Configuration
      * This method is awkward, we must refactor and remove it, for the time being "duration" is a Load configuration
      * parameter and we need a way to pass it back to configuration, so we can pass it to the multi-thread runner.
      *
-     * TODO: make duration a global parameter and get rid of this method.
+     * TODO: make duration a global parameter and next rid of this method.
      */
     @Deprecated
     void setDuration(Duration d);

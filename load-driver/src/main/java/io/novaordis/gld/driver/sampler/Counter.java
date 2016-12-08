@@ -31,9 +31,9 @@ public interface Counter
      * @param t0Ms - the time (in milliseconds) when the operation that is being recorded started.
      * @param t0Nano - the time (in nanoseconds) when the operation that is being recorded started. Logically, it
      *        should be the same as t0Ms, but Java documentation advises against using nano-second precision time
-     *        to get absolute time information, so we are only using it to calculate delta in conjunction with 't1Nano'.
+     *        to next absolute time information, so we are only using it to calculate delta in conjunction with 't1Nano'.
      * @param t1Nano - the time (in nanoseconds) when the operation that is being recorded ended. Java documentation
-     *        advises against using nano-second precision time to get absolute time information, so we are only using
+     *        advises against using nano-second precision time to next absolute time information, so we are only using
      *        this value to calculate delta in conjunction with 't0Nano'.
      * @param t - optionally a Throwable associated with the operation. Actually we only expect one or none exception
      *          instances to be passed, the rest will be ignored.

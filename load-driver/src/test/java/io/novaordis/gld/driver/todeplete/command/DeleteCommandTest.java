@@ -96,7 +96,7 @@ public class DeleteCommandTest extends CommandTest
 //        DeleteLoadStrategy dk = (DeleteLoadStrategy)ls;
 //
 //        // make sure we installed a SetKeyStore
-//        SetKeyStore sks = (SetKeyStore)dk.getKeyStore();
+//        SetKeyStore sks = (SetKeyStore)dk.getKeyProvider();
 //
 //        // make sure the key store is loaded with keys based on the given criteria - by default
 //        // DeleteKeys.DEFAULT_KEY_COUNT
@@ -108,9 +108,9 @@ public class DeleteCommandTest extends CommandTest
 //
 //        assertEquals(1, sks.size());
 //
-//        String key = sks.get();
+//        String key = sks.next();
 //
-//        assertNull(sks.get());
+//        assertNull(sks.next());
 //
 //        assertEquals(0, sks.size());
 //

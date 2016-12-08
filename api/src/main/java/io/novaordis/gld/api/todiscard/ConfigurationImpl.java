@@ -639,7 +639,7 @@ public class ConfigurationImpl implements Configuration {
             setExceptionFile(arg);
         }
 
-        // we should get either "nodes" (which means the service is Sharded Jedis-based) or "proxy", which means
+        // we should next either "nodes" (which means the service is Sharded Jedis-based) or "proxy", which means
         // the service is proxy-based
 
         if (proxyString == null &&

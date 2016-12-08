@@ -19,11 +19,13 @@ package io.novaordis.gld.api.cache.load;
 import io.novaordis.gld.api.LoadConfiguration;
 import io.novaordis.gld.api.LoadStrategyBase;
 import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.RandomContentGenerator;
 import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
 import io.novaordis.gld.api.cache.CacheServiceConfiguration;
 import io.novaordis.gld.api.cache.operation.Read;
 import io.novaordis.gld.api.cache.operation.Write;
+import io.novaordis.gld.api.provider.RandomKeyProvider;
 import io.novaordis.utilities.UserErrorException;
 
 import java.util.Collections;
@@ -73,7 +75,6 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
     private boolean reuseValue;
     private String cachedValue;
 
-    private int keySize;
     private int valueSize;
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -194,32 +195,38 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
         }
 
         CacheServiceConfiguration cc = (CacheServiceConfiguration)sc;
-        this.keySize = cc.getKeySize();
-        this.valueSize = cc.getValueSize();
-        Long operations = lc.getOperations();
 
-//        String keyStoreFile = conf.getKeyStoreFile();
-//        KeyStore keyStore;
-//
-//        if (keyStoreFile == null)
-//        {
-//            keyStore = new RandomKeyGenerator(keySize, maxOperations);
-//        }
-//        else
-//        {
-//            keyStore = new ReadOnlyFileKeyStore(keyStoreFile);
-//            keyStore.start();
-//        }
-//
-//        setKeyStore(keyStore);
-//
-//        syntheticValue = Util.getRandomValue(
-//                new Random(System.currentTimeMillis() + 17L), valueSize, useDifferentValues);
+        //
+        // create and configure the key provider
+        //
+
+        RandomKeyProvider keyProvider = new RandomKeyProvider();
+
+        int keySize = cc.getKeySize();
+        keyProvider.setKeySize(keySize);
+
+        Long keyCount = lc.getOperations();
+        keyProvider.setKeyCount(keyCount);
+
+        //
+        // install the provider ...
+        //
+        setKeyProvider(keyProvider);
+
+        //
+        // ... and start it
+        //
+
+        keyProvider.start();
+
+        this.valueSize = cc.getValueSize();
 
         initialized = true;
     }
 
     String computeValue() {
+
+        RandomContentGenerator valueGenerator = getValueGenerator();
 
         String v;
 
@@ -227,14 +234,14 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
 
             if (cachedValue == null) {
 
-                cachedValue = getContentGenerator().getRandomString(null, valueSize);
+                cachedValue = valueGenerator.getRandomString(null, valueSize);
             }
 
             v = cachedValue;
         }
         else {
 
-            v = getContentGenerator().getRandomString(null, valueSize);
+            v = valueGenerator.getRandomString(null, valueSize);
         }
 
         return v;
@@ -247,9 +254,10 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
      */
     private Read getNextRead() {
 
-        String key =  getKeyStore().get();
+        String key =  getKeyProvider().next();
 
         if (key == null) {
+
             // the key store ran out of keys, so we ran out of operations, return null
 
             return null;

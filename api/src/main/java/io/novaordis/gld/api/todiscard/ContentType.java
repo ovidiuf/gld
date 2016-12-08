@@ -37,7 +37,7 @@ public enum ContentType {
 
         String ucs = s.toUpperCase();
 
-        // get rid of dashes (to allow for 'key-value')
+        // next rid of dashes (to allow for 'key-value')
 
         ucs = ucs.replace("-", "");
 

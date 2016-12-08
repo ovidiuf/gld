@@ -57,11 +57,6 @@ public interface LoadDriver {
      */
     Service getService();
 
-    /**
-     * A LoadDriver instance can only be associated with a service at a time.
-     */
-    KeyStore getKeyStore();
-
     //
     // logging ---------------------------------------------------------------------------------------------------------
     //

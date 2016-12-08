@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -58,7 +58,6 @@ public abstract class LoadStrategyTest {
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockCacheServiceConfiguration msc = new MockCacheServiceConfiguration();
-        RandomContentGenerator cg = new RandomContentGenerator();
 
         Map<String, Object> mockRawConfig = new HashMap<>();
         mockRawConfig.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
@@ -67,7 +66,7 @@ public abstract class LoadStrategyTest {
 
         try {
 
-            s.init(msc, mlc, cg);
+            s.init(msc, mlc);
             fail("should have thrown exception");
         }
         catch(UserErrorException e) {
@@ -85,7 +84,6 @@ public abstract class LoadStrategyTest {
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockServiceConfiguration msc = new MockServiceConfiguration();
-        RandomContentGenerator cg = new RandomContentGenerator();
 
         Map<String, Object> mockRawConfigu = new HashMap<>();
         mockRawConfigu.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "wrong-name");
@@ -93,7 +91,7 @@ public abstract class LoadStrategyTest {
 
         try {
 
-            s.init(msc, mlc, cg);
+            s.init(msc, mlc);
             fail("should have thrown exception");
         }
         catch(IllegalStateException e) {
@@ -111,16 +109,22 @@ public abstract class LoadStrategyTest {
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockCacheServiceConfiguration msc = new MockCacheServiceConfiguration();
-        RandomContentGenerator cg = new RandomContentGenerator();
 
         Map<String, Object> mockRawConfig = new HashMap<>();
         mockRawConfig.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
         msc.setMap(mockRawConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
-        s.init(msc, mlc, cg);
+        s.init(msc, mlc);
 
         LoadStrategyBase lsb = (LoadStrategyBase)s;
-        assertEquals(cg, lsb.getContentGenerator());
+
+        //
+        // make sure the key provider is installed and started
+        //
+
+        KeyProvider p = lsb.getKeyProvider();
+        assertNotNull(p);
+        assertTrue(p.isStarted());
     }
 
     // constructors ----------------------------------------------------------------------------------------------------

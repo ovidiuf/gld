@@ -399,7 +399,7 @@ public abstract class SamplerTest
 
         sampler.record(0L, 1L, 2L, new MockOperation());
 
-        // wait to get some samples
+        // wait to next some samples
         Thread.sleep(2 * samplingInterval);
 
         sampler.stop(); // this will populate the sampler interval

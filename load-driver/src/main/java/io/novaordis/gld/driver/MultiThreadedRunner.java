@@ -34,17 +34,9 @@ public interface MultiThreadedRunner {
      */
     ExitGuard getExitGuard();
 
-
-
-
-
-
-
     Duration getDuration();
 
     void setDuration(Duration d);
-
-
 
     boolean isWaitForConsoleQuit();
 

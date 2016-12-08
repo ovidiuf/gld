@@ -164,7 +164,7 @@ public class SamplerImplStressTest {
 //        }
 //
 //        double sampledAverage = ((double)totalScd)/totalSc;
-//        double directlyReadAverage = ((double)totalTimeAcrossThreadsNs.get())/successful;
+//        double directlyReadAverage = ((double)totalTimeAcrossThreadsNs.next())/successful;
 //
 //        log.info("average operation time in nanoseconds (without sampling): " + DECIMAL_FORMAT.format(directlyReadAverage));
 //        log.info("average operation time in nanoseconds (with sampling):    " + DECIMAL_FORMAT.format(sampledAverage));

@@ -48,9 +48,7 @@ public interface LoadStrategy {
      *
      * @exception IllegalStateException on inconsistencies.
      */
-    void init(
-            ServiceConfiguration serviceConfiguration, LoadConfiguration loadConfiguration, RandomContentGenerator cg)
-            throws Exception;
+    void init(ServiceConfiguration serviceConfiguration, LoadConfiguration loadConfiguration) throws Exception;
 
     /**
      * @return the next operation to be sent into the service, factoring in the last operation that has been sent into
@@ -77,9 +75,9 @@ public interface LoadStrategy {
     Set<Class<? extends Operation>> getOperationTypes();
 
     /**
-     * @return the key store used by this load strategy. May return null.
+     * @return the key provider used by this load strategy. May return null.
      */
-    KeyStore getKeyStore();
+    KeyProvider getKeyProvider();
 
 
 }

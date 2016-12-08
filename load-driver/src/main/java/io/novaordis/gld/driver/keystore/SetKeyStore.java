@@ -17,7 +17,6 @@
 package io.novaordis.gld.driver.keystore;
 
 import io.novaordis.gld.api.KeyStore;
-import io.novaordis.gld.api.LoadDriver;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -55,24 +54,12 @@ public class SetKeyStore implements KeyStore
     // KeyStore implementation -----------------------------------------------------------------------------------------
 
     @Override
-    public boolean isReadOnly()
-    {
-        return true;
-    }
-
-    /**
-     * @see KeyStore#store(String)
-     */
-    @Override
     public void store(String key) throws Exception
     {
         throw new IllegalStateException("this is a read-only keystore, cannot store");
     }
 
-    /**
-     * @see KeyStore#get()
-     */
-    @Override
+//    @Override
     public synchronized String get()
     {
         if (!iterator.hasNext())
@@ -82,11 +69,6 @@ public class SetKeyStore implements KeyStore
 
         size --;
         return iterator.next();
-    }
-
-    @Override
-    public LoadDriver getLoadDriver() {
-        throw new RuntimeException("getLoadDriver() NOT YET IMPLEMENTED");
     }
 
     @Override

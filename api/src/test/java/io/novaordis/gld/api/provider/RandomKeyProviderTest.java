@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver.keystore;
+package io.novaordis.gld.api.provider;
 
+import io.novaordis.gld.api.KeyProviderTest;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
-public class RandomKeyGeneratorTest
-{
+public class RandomKeyProviderTest extends KeyProviderTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(RandomKeyGeneratorTest.class);
+    private static final Logger log = Logger.getLogger(RandomKeyProviderTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -38,61 +38,73 @@ public class RandomKeyGeneratorTest
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Test
-    public void store() throws Exception
-    {
-        RandomKeyGenerator rkg = new RandomKeyGenerator(10);
+    // Tests -----------------------------------------------------------------------------------------------------------
 
-        try
-        {
-            rkg.store("doesnotmatter");
-            fail("should fail with IllegalStateException");
-        }
-        catch(IllegalStateException e)
-        {
-            log.info(e.getMessage());
-        }
+    @Test
+    public void next_UnlimitedKeys() throws Exception {
+
+        RandomKeyProvider p = getKeyProviderToTest();
+
+        p.start();
+
+        String key = p.next();
+        assertNotNull(key);
+        assertNull(p.getRemainingKeyCount());
     }
 
     @Test
-    public void get() throws Exception
-    {
-        int keySize = 10;
-        RandomKeyGenerator rkg = new RandomKeyGenerator(keySize);
+    public void next_KeyLimit() throws Exception {
 
-        String s = rkg.get();
+        RandomKeyProvider p = getKeyProviderToTest();
+
+        p.setKeyCount(3);
+
+        p.start();
+
+        String key = p.next();
+        assertEquals(2, p.getRemainingKeyCount().longValue());
+        assertNotNull(key);
+
+        key = p.next();
+        assertEquals(1, p.getRemainingKeyCount().longValue());
+        assertNotNull(key);
+
+        key = p.next();
+        assertEquals(0, p.getRemainingKeyCount().longValue());
+        assertNotNull(key);
+
+        key = p.next();
+        assertNull(key);
+        assertEquals(0, p.getRemainingKeyCount().longValue());
+
+        key = p.next();
+        assertNull(key);
+        assertEquals(0, p.getRemainingKeyCount().longValue());
+    }
+
+    @Test
+    public void next_KeySize() throws Exception {
+
+        int keySize = 10;
+        RandomKeyProvider p = new RandomKeyProvider();
+        p.setKeySize(keySize);
+
+        p.start();
+
+        String s = p.next();
         log.info(s);
         assertEquals(keySize, s.length());
     }
 
-    @Test
-    public void get_maxKeys() throws Exception
-    {
-        int keySize = 10;
-        long maxKeys = 3;
-        RandomKeyGenerator rkg = new RandomKeyGenerator(keySize, maxKeys);
-
-        String s = rkg.get();
-        assertNotNull(s);
-        assertEquals(keySize, s.length());
-
-        s = rkg.get();
-        assertNotNull(s);
-
-        s = rkg.get();
-        assertNotNull(s);
-
-        s = rkg.get();
-        assertNull(s);
-
-        s = rkg.get();
-        assertNull(s);
-    }
-
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected RandomKeyProvider getKeyProviderToTest() throws Exception {
+
+        return new RandomKeyProvider();
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

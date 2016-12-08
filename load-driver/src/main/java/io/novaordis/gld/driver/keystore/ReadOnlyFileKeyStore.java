@@ -29,8 +29,8 @@ import java.util.List;
  * This implementation reads the entire key space in memory on startup and then keeps cycling through it.
  */
 
-public class ReadOnlyFileKeyStore implements KeyStore
-{
+public class ReadOnlyFileKeyStore implements KeyStore {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ public class ReadOnlyFileKeyStore implements KeyStore
 
     public ReadOnlyFileKeyStore(String fileName) throws Exception
     {
-        this(fileName, new ArrayList<String>());
+        this(fileName, new ArrayList<>());
     }
 
     /**
@@ -69,24 +69,12 @@ public class ReadOnlyFileKeyStore implements KeyStore
     // KeyStore implementation -----------------------------------------------------------------------------------------
 
     @Override
-    public boolean isReadOnly()
-    {
-        return true;
-    }
-
-    /**
-     * @see KeyStore#store(String)
-     */
-    @Override
     public void store(String key) throws Exception
     {
         throw new IllegalStateException("this is a read-only keystore, cannot store");
     }
 
-    /**
-     * @see KeyStore#get()
-     */
-    @Override
+//    @Override
     public String get()
     {
         if (keys.isEmpty())
@@ -102,11 +90,6 @@ public class ReadOnlyFileKeyStore implements KeyStore
 
             return s;
         }
-    }
-
-    @Override
-    public LoadDriver getLoadDriver() {
-        throw new RuntimeException("getLoadDriver() NOT YET IMPLEMENTED");
     }
 
     @Override

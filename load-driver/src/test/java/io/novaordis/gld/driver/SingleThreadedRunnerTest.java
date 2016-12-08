@@ -181,7 +181,7 @@ public class SingleThreadedRunnerTest {
 
         MockKeyStore mks = new MockKeyStore();
         MockLoadStrategy mockLoadStrategy = new MockLoadStrategy(1);
-        mockLoadStrategy.setKeyStore(mks);
+        mockLoadStrategy.getKeyProvider(mks);
 
         Sampler s = new SamplerImpl(0L, 1000L);
         s.registerOperation(MockOperation.class);
@@ -193,7 +193,7 @@ public class SingleThreadedRunnerTest {
         SingleThreadedRunner st =
                 new SingleThreadedRunner("TEST", ms, mockLoadStrategy, s, cb, new AtomicBoolean(false), -1L);
 
-        KeyStore ks = mockLoadStrategy.getKeyStore();
+        KeyStore ks = mockLoadStrategy.getKeyProvider();
         ks.start();
 
         assertTrue(ks.isStarted());
@@ -293,7 +293,7 @@ public class SingleThreadedRunnerTest {
             }
 
             @Override
-            public KeyStore getKeyStore() {
+            public KeyStore getKeyProvider() {
 
                 return null;
             }

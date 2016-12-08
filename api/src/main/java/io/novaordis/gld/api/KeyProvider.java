@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,26 +17,30 @@
 package io.novaordis.gld.api;
 
 /**
- * A key store - a repository to store keys that were sent into the service, in case we want to retrieve them later.
- *
- * Implementations must be thread-safe.
+ * A key provider. Implementations must be thread-safe as it will accessed concurrently from multiple single-threaded
+ * runners and possibly other threads.
  */
-public interface KeyStore {
+public interface KeyProvider {
 
     // lifecycle -------------------------------------------------------------------------------------------------------
 
+    /**
+     * All configuration must be applied to the instance before it starts. If there is a re-configuration attempt after
+     * the instance has started, the corresponding method may throw IllegalStateException.
+     *
+     * The implementations must be idempotent.
+     */
     void start() throws Exception;
 
+    /**
+     * The implementations must be idempotent.
+     */
     void stop() throws Exception;
 
     boolean isStarted();
 
     /**
-     * Implementations are encouraged to store asynchronously, if at all possible, in order to interfere with the
-     * writing thread as little as possible.
-     *
-     * @exception java.lang.IllegalStateException if we're a read-only key store.
+     * @return the next key from the store, or null if there are no keys.
      */
-    void store(String key) throws Exception;
-
+    String next();
 }

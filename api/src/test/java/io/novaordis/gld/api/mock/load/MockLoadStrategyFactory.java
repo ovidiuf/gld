@@ -18,7 +18,6 @@ package io.novaordis.gld.api.mock.load;
 
 import io.novaordis.gld.api.LoadConfiguration;
 import io.novaordis.gld.api.LoadStrategyFactory;
-import io.novaordis.gld.api.RandomContentGenerator;
 import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
 
@@ -39,11 +38,11 @@ public class MockLoadStrategyFactory implements LoadStrategyFactory {
     // LoadStrategyFactory implementation ------------------------------------------------------------------------------
 
     @Override
-    public MockLoadStrategy buildInstance(ServiceConfiguration sc, LoadConfiguration lc, RandomContentGenerator cg)
+    public MockLoadStrategy buildInstance(ServiceConfiguration sc, LoadConfiguration lc)
             throws Exception {
 
         MockLoadStrategy ms = new MockLoadStrategy();
-        ms.init(sc, lc, cg);
+        ms.init(sc, lc);
         return ms;
     }
 

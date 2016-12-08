@@ -187,7 +187,7 @@ public class Util {
      * TODO put this in NovaOrdis Utilities
      */
     public static void nativeThreadDump() {
-        // get pid
+        // next pid
 
         String s = ManagementFactory.getRuntimeMXBean().getName();
 

@@ -58,7 +58,7 @@ public class WriteOnlyFileKeyStoreTest
         try
         {
             wofs.get();
-            fail("should fail because we cannot get from a write-only keystore");
+            fail("should fail because we cannot next from a write-only keystore");
         }
         catch(IllegalStateException e)
         {

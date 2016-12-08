@@ -68,7 +68,7 @@ public class MockOperation implements Operation {
     // Public ----------------------------------------------------------------------------------------------------------
 
     /**
-     * We need to explicitly set the instance as verbose in order to get log.info(), otherwise the high concurrency
+     * We need to explicitly set the instance as verbose in order to next log.info(), otherwise the high concurrency
      * tests are too noisy.
      */
     public void setVerbose(boolean b) {

@@ -16,9 +16,7 @@
 
 package io.novaordis.gld.driver;
 
-import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.driver.console.CommandLineConsole;
 import io.novaordis.gld.driver.sampler.Sampler;
@@ -28,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CyclicBarrier;
@@ -189,17 +186,19 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
                 service.stop();
             }
 
-            KeyStore keyStore = loadStrategy.getKeyStore();
+//            KeyStore keyStore = loadStrategy.getKeyProvider();
+//
+//            if (keyStore != null) {
+//                keyStore.stop();
+//            }
 
-            if (keyStore != null) {
-                keyStore.stop();
-            }
+            throw new RuntimeException("RETURN HERE");
 
-            if (sampler != null) {
-                sampler.stop();
-            }
-
-            running = false;
+//            if (sampler != null) {
+//                sampler.stop();
+//            }
+//
+//            running = false;
         }
     }
 

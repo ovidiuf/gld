@@ -17,19 +17,16 @@
 package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.Configuration;
-import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadConfiguration;
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.LoadStrategyFactory;
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.RandomContentGenerator;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceFactory;
 import io.novaordis.gld.driver.sampler.Sampler;
 import io.novaordis.gld.driver.sampler.SamplerImpl;
-import io.novaordis.gld.api.cache.local.LocalCacheKeyStore;
 
 import java.util.Set;
 
@@ -49,11 +46,7 @@ public class LoadDriverImpl implements LoadDriver {
 
     private volatile boolean background;
 
-    private RandomContentGenerator contentGenerator;
-
     private Service service;
-
-    private KeyStore keyStore;
 
     private MultiThreadedRunner multiThreadedRunner;
 
@@ -68,17 +61,9 @@ public class LoadDriverImpl implements LoadDriver {
     public LoadDriverImpl(boolean background) {
 
         this.background = background;
-
-        this.contentGenerator = new RandomContentGenerator();
     }
 
     // LoadDriver implementation ---------------------------------------------------------------------------------------
-
-    @Override
-    public KeyStore getKeyStore() {
-
-        return keyStore;
-    }
 
     @Override
     public Service getService() {
@@ -94,11 +79,11 @@ public class LoadDriverImpl implements LoadDriver {
         ServiceConfiguration sc = c.getServiceConfiguration();
 
         //
-        // load strategy instantiation and installation
+        // load strategy instantiation and installation; the load strategy usually initializes the key provider,
+        // which is accessible with LoadStrategy.getKeyProvider()
         //
 
-        LoadStrategy ls = LoadStrategyFactory.build(sc, lc, contentGenerator);
-
+        LoadStrategy ls = LoadStrategyFactory.build(sc, lc);
 
         //
         // service initialization and configuration
@@ -106,11 +91,7 @@ public class LoadDriverImpl implements LoadDriver {
 
         service = ServiceFactory.buildInstance(sc, ls, this);
 
-
         service.start();
-
-        keyStore = new LocalCacheKeyStore(this);
-        keyStore.start();
 
         //
         // load configuration

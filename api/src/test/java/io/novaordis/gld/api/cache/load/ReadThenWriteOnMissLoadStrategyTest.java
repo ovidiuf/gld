@@ -20,7 +20,6 @@ import io.novaordis.gld.api.LoadStrategyTest;
 import io.novaordis.gld.api.MockLoadConfiguration;
 import io.novaordis.gld.api.MockServiceConfiguration;
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.RandomContentGenerator;
 import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
 import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
@@ -78,7 +77,6 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
 
         ReadThenWriteOnMissLoadStrategy s = getLoadStrategyToTest();
 
-        RandomContentGenerator cg = new RandomContentGenerator();
         MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockServiceConfiguration sc = new MockServiceConfiguration();
         Map<String, Object> m = new HashMap<>();
@@ -87,7 +85,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
         sc.setMap(m, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
         try {
-            s.init(sc, mlc, cg);
+            s.init(sc, mlc);
         }
         catch(UserErrorException e) {
 
@@ -316,9 +314,9 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
 //        MockCacheService mcs = new MockCacheService()
 //        {
 //            @Override
-//            public String get(String key)
+//            public String next(String key)
 //            {
-//                // we override get() to return a hit for any key
+//                // we override next() to return a hit for any key
 //                return "SYNTHETIC-HIT";
 //            }
 //        };
@@ -332,7 +330,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
 //
 //        ReadThenWriteOnMissLoadStrategy rtwom = new ReadThenWriteOnMissLoadStrategy();
 //        rtwom.configure(mc, Collections.<String>emptyList(), 0);
-//        assertTrue(rtwom.getKeyStore() instanceof RandomKeyGenerator);
+//        assertTrue(rtwom.getKeyProvider() instanceof RandomKeyProvider);
 //
 //        MockSampler ms = new MockSampler();
 //        CyclicBarrier barrier = new CyclicBarrier(1);
@@ -346,8 +344,8 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
 //        // we should record a read and a write
 //        assertEquals(1, recorded.size());
 //
-//        Read r = (Read)recorded.get(0).operation;
-//        assertNull(recorded.get(0).throwable);
+//        Read r = (Read)recorded.next(0).operation;
+//        assertNull(recorded.next(0).throwable);
 //        assertTrue(r.hasBeenPerformed());
 //        assertNotNull(r.getKey());
 //        assertEquals("SYNTHETIC-HIT", r.getValue());
@@ -366,7 +364,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
 //
 //        ReadThenWriteOnMissLoadStrategy rtwom = new ReadThenWriteOnMissLoadStrategy();
 //        rtwom.configure(mc, Collections.<String>emptyList(), 0);
-//        assertTrue(rtwom.getKeyStore() instanceof RandomKeyGenerator);
+//        assertTrue(rtwom.getKeyProvider() instanceof RandomKeyProvider);
 //
 //        MockSampler ms = new MockSampler();
 //        CyclicBarrier barrier = new CyclicBarrier(1);
@@ -380,15 +378,15 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
 //        // we should record a read and a write
 //        assertEquals(2, recorded.size());
 //
-//        Read r = (Read)recorded.get(0).operation;
-//        assertNull(recorded.get(0).throwable);
+//        Read r = (Read)recorded.next(0).operation;
+//        assertNull(recorded.next(0).throwable);
 //        assertTrue(r.hasBeenPerformed());
 //        String key = r.getKey();
 //        assertNotNull(key);
 //        assertNull(r.getValue());
 //
-//        Write w = (Write)recorded.get(1).operation;
-//        assertNull(recorded.get(1).throwable);
+//        Write w = (Write)recorded.next(1).operation;
+//        assertNull(recorded.next(1).throwable);
 //        assertTrue(w.isSuccessful());
 //        String value = w.getValue();
 //
@@ -396,7 +394,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
 //        // make sure the key was written in cache
 //        //
 //
-//        assertEquals(value, mcs.get(key));
+//        assertEquals(value, mcs.next(key));
 //    }
 
 
@@ -405,7 +403,6 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
 
         ReadThenWriteOnMissLoadStrategy s = getLoadStrategyToTest();
 
-        RandomContentGenerator cg = new RandomContentGenerator();
         MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
         Map<String, Object> m = new HashMap<>();
@@ -413,7 +410,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
         m.put(ReadThenWriteOnMissLoadStrategy.REUSE_VALUE_LABEL, true);
         sc.setMap(m, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
-        s.init(sc, mlc, cg);
+        s.init(sc, mlc);
 
         assertTrue(s.isReuseValue());
 
@@ -432,7 +429,6 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
 
         ReadThenWriteOnMissLoadStrategy s = getLoadStrategyToTest();
 
-        RandomContentGenerator cg = new RandomContentGenerator();
         MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
         Map<String, Object> m = new HashMap<>();
@@ -440,7 +436,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
         m.put(ReadThenWriteOnMissLoadStrategy.REUSE_VALUE_LABEL, false);
         sc.setMap(m, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
-        s.init(sc, mlc, cg);
+        s.init(sc, mlc);
 
         assertFalse(s.isReuseValue());
 
