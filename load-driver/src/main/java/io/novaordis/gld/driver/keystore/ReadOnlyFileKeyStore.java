@@ -17,7 +17,6 @@
 package io.novaordis.gld.driver.keystore;
 
 import io.novaordis.gld.api.KeyStore;
-import io.novaordis.gld.api.LoadDriver;
 
 import java.io.BufferedReader;
 import java.io.File;

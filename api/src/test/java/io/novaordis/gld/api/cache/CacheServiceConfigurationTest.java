@@ -62,7 +62,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
         CacheServiceConfiguration c =  getServiceConfigurationToTest(map);
 
         int s = c.getKeySize();
-        assertEquals(CacheServiceConfiguration.DEFAULT_KEY_SIZE, s);
+        assertEquals(ServiceConfiguration.DEFAULT_KEY_SIZE, s);
     }
 
     @Test

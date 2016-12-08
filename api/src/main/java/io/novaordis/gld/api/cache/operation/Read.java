@@ -52,6 +52,7 @@ public class Read extends CacheOperationBase {
             setSuccessful(true);
 
             setValue(value);
+
         }
         catch(Throwable t) {
 

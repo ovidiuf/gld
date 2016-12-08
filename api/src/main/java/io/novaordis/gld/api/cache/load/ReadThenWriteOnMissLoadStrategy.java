@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A load strategy that implements the following behavior:
@@ -234,14 +235,14 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
 
             if (cachedValue == null) {
 
-                cachedValue = valueGenerator.getRandomString(null, valueSize);
+                cachedValue = valueGenerator.getRandomString(ThreadLocalRandom.current(), valueSize);
             }
 
             v = cachedValue;
         }
         else {
 
-            v = valueGenerator.getRandomString(null, valueSize);
+            v = valueGenerator.getRandomString(ThreadLocalRandom.current(), valueSize);
         }
 
         return v;

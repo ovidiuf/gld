@@ -42,8 +42,8 @@ public class SetKeyStoreTest
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void lifeCycle() throws Exception
-    {
+    public void lifeCycle() throws Exception {
+
         Set<String> keys = new HashSet<>();
         keys.add("KEY1");
         keys.add("KEY2");
@@ -53,7 +53,9 @@ public class SetKeyStoreTest
 
         SetKeyStore sks = new SetKeyStore(keys);
 
-        assertTrue(sks.isReadOnly());
+        // assertTrue(sks.isReadOnly());
+        fail("return here");
+
         assertTrue(sks.isStarted());
 
         assertEquals(3, sks.size());

@@ -19,6 +19,7 @@ package io.novaordis.gld.api.cache.local;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.ServiceBase;
+import io.novaordis.gld.api.cache.CacheService;
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.ContentType;
 import io.novaordis.gld.api.todiscard.Node;
@@ -31,7 +32,7 @@ import java.util.List;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/2/16
  */
-public class LocalCacheService extends ServiceBase {
+public class LocalCacheService extends ServiceBase implements CacheService {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -109,6 +110,15 @@ public class LocalCacheService extends ServiceBase {
         throw new RuntimeException("getContentType() NOT YET IMPLEMENTED");
     }
 
+    @Override
+    public String get(String key) throws Exception {
+        throw new RuntimeException("get() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void put(String key, String value) throws Exception {
+        throw new RuntimeException("put() NOT YET IMPLEMENTED");
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 

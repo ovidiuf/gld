@@ -16,7 +16,7 @@
 
 package io.novaordis.gld.driver;
 
-import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.api.KeyProvider;
 import io.novaordis.gld.api.LoadConfiguration;
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
@@ -30,7 +30,6 @@ import io.novaordis.gld.api.todiscard.Node;
 import io.novaordis.gld.driver.sampler.Sampler;
 import io.novaordis.gld.driver.sampler.SamplerImpl;
 import io.novaordis.utilities.UserErrorException;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -179,33 +178,35 @@ public class SingleThreadedRunnerTest {
     @Test
     public void insureThatKeyStoreIsClosedOnExit() throws Exception {
 
-        MockKeyStore mks = new MockKeyStore();
-        MockLoadStrategy mockLoadStrategy = new MockLoadStrategy(1);
-        mockLoadStrategy.getKeyProvider(mks);
+        fail("return here");
 
-        Sampler s = new SamplerImpl(0L, 1000L);
-        s.registerOperation(MockOperation.class);
-
-        CyclicBarrier cb = new CyclicBarrier(1);
-
-        MockService ms = new MockService();
-
-        SingleThreadedRunner st =
-                new SingleThreadedRunner("TEST", ms, mockLoadStrategy, s, cb, new AtomicBoolean(false), -1L);
-
-        KeyStore ks = mockLoadStrategy.getKeyProvider();
-        ks.start();
-
-        assertTrue(ks.isStarted());
-
-        // we simulate the running runner
-        setRunning(st);
-
-        s.start();
-
-        st.run();
-
-        TestCase.assertFalse(ks.isStarted());
+//        MockKeyStore mks = new MockKeyStore();
+//        MockLoadStrategy mockLoadStrategy = new MockLoadStrategy(1);
+//        mockLoadStrategy.getKeyProvider(mks);
+//
+//        Sampler s = new SamplerImpl(0L, 1000L);
+//        s.registerOperation(MockOperation.class);
+//
+//        CyclicBarrier cb = new CyclicBarrier(1);
+//
+//        MockService ms = new MockService();
+//
+//        SingleThreadedRunner st =
+//                new SingleThreadedRunner("TEST", ms, mockLoadStrategy, s, cb, new AtomicBoolean(false), -1L);
+//
+//        KeyStore ks = mockLoadStrategy.getKeyProvider();
+//        ks.start();
+//
+//        assertTrue(ks.isStarted());
+//
+//        // we simulate the running runner
+//        setRunning(st);
+//
+//        s.start();
+//
+//        st.run();
+//
+//        TestCase.assertFalse(ks.isStarted());
     }
 
     @Test
@@ -293,9 +294,8 @@ public class SingleThreadedRunnerTest {
             }
 
             @Override
-            public KeyStore getKeyProvider() {
-
-                return null;
+            public KeyProvider getKeyProvider() {
+                throw new RuntimeException("getKeyProvider() NOT YET IMPLEMENTED");
             }
         };
 

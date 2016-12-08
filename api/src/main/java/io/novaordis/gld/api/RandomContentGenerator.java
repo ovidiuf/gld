@@ -106,12 +106,17 @@ public class RandomContentGenerator {
 
     /**
      * @param random - the Random instance to use while generated the content. We are exposing it externally to give
-     *        the caller a chance to provide an efficient Random (such as ThreadLocalRandom, which should be used in
-     *               order to reduce thread contention).
+     *        the caller a chance to provide an efficient Random (such as ThreadLocalRandom.current(), which should be
+     *               used in order to reduce thread contention).
      *
      * @param length the length of the string, in characters.
      */
     public String getRandomString(Random random, int length) {
+
+        if (length <= 0) {
+
+            throw new IllegalArgumentException("invalid length " + length);
+        }
 
         if (length <= 10) {
 

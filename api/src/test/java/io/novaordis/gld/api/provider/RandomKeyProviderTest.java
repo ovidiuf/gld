@@ -40,6 +40,11 @@ public class RandomKeyProviderTest extends KeyProviderTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
+    // next ------------------------------------------------------------------------------------------------------------
+
+
+    // next ------------------------------------------------------------------------------------------------------------
+
     @Test
     public void next_UnlimitedKeys() throws Exception {
 
@@ -57,7 +62,7 @@ public class RandomKeyProviderTest extends KeyProviderTest {
 
         RandomKeyProvider p = getKeyProviderToTest();
 
-        p.setKeyCount(3);
+        p.setKeyCount(3L);
 
         p.start();
 

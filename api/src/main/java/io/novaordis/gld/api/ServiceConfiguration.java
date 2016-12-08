@@ -30,6 +30,8 @@ public interface ServiceConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    int DEFAULT_KEY_SIZE = 12; // in characters
+
     String TYPE_LABEL = "type";
     String IMPLEMENTATION_LABEL = "implementation";
     String LOAD_STRATEGY_CONFIGURATION_LABEL = "load-strategy";

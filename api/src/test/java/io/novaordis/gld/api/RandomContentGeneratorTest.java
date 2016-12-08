@@ -169,6 +169,42 @@ public class RandomContentGeneratorTest {
     // getRandomString() -----------------------------------------------------------------------------------------------
 
     @Test
+    public void getRandomString_InvalidKeyValue() throws Exception {
+
+        RandomContentGenerator g = new RandomContentGenerator();
+        Random r = new Random();
+
+        try {
+
+            g.getRandomString(r, 0);
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("invalid length .*"));
+        }
+    }
+
+    @Test
+    public void getRandomString_InvalidKeyValue2() throws Exception {
+
+        RandomContentGenerator g = new RandomContentGenerator();
+        Random r = new Random();
+
+        try {
+
+            g.getRandomString(r, -1);
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("invalid length .*"));
+        }
+    }
+
+    @Test
     public void getRandomString() throws Exception {
 
         RandomContentGenerator g = new RandomContentGenerator();

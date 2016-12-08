@@ -17,7 +17,6 @@
 package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.KeyStore;
-import io.novaordis.gld.api.LoadDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +38,10 @@ public class MockKeyStore implements KeyStore {
 
     @Override
     public void start() throws Exception {
+
         this.started = true;
+
+        log.info(this + " started");
     }
 
     @Override
@@ -56,11 +58,6 @@ public class MockKeyStore implements KeyStore {
     @Override
     public void store(String key) throws Exception {
         throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public LoadDriver getLoadDriver() {
-        throw new RuntimeException("getLoadDriver() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

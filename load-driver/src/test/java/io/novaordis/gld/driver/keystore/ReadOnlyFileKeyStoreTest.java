@@ -24,7 +24,6 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
 
@@ -101,9 +100,10 @@ public class ReadOnlyFileKeyStoreTest
     @Test
     public void isReadOnly() throws Exception
     {
-        File keyFile = new File(Tests.getScratchDir(), "test-keys.txt");
-        ReadOnlyFileKeyStore rofs = new ReadOnlyFileKeyStore(keyFile.getPath());
-        assertTrue(rofs.isReadOnly());
+        fail("return here");
+//        File keyFile = new File(Tests.getScratchDir(), "test-keys.txt");
+//        ReadOnlyFileKeyStore rofs = new ReadOnlyFileKeyStore(keyFile.getPath());
+//        assertTrue(rofs.isReadOnly());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
