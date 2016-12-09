@@ -46,29 +46,29 @@ public class WriteOnlyFileKeyStoreTest
         Tests.cleanup();
     }
 
-    @Test
-    public void getShouldFail() throws Exception
-    {
-        File keyFile = new File(Tests.getScratchDir(), "test-keys.txt");
-
-        WriteOnlyFileKeyStore wofs = new WriteOnlyFileKeyStore(keyFile.getPath());
-
-        wofs.start();
-
-        try
-        {
-            wofs.get();
-            fail("should fail because we cannot next from a write-only keystore");
-        }
-        catch(IllegalStateException e)
-        {
-            log.info(e.getMessage());
-        }
-        finally
-        {
-            wofs.stop();
-        }
-    }
+//    @Test
+//    public void getShouldFail() throws Exception
+//    {
+//        File keyFile = new File(Tests.getScratchDir(), "test-keys.txt");
+//
+//        WriteOnlyFileKeyStore wofs = new WriteOnlyFileKeyStore(keyFile.getPath());
+//
+//        wofs.start();
+//
+//        try
+//        {
+//            wofs.get();
+//            fail("should fail because we cannot next from a write-only keystore");
+//        }
+//        catch(IllegalStateException e)
+//        {
+//            log.info(e.getMessage());
+//        }
+//        finally
+//        {
+//            wofs.stop();
+//        }
+//    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

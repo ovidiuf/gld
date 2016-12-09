@@ -18,7 +18,7 @@ package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.store.KeyStoreException;
-import io.novaordis.gld.api.store.Value;
+import io.novaordis.gld.api.store.StoredValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +65,7 @@ public class MockKeyStore implements KeyStore {
     }
 
     @Override
-    public Value retrieve(String key) throws KeyStoreException {
+    public StoredValue retrieve(String key) throws KeyStoreException {
         throw new RuntimeException("retrieve() NOT YET IMPLEMENTED");
     }
 

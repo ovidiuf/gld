@@ -48,54 +48,54 @@ public class ReadOnlyFileKeyStoreTest
         Tests.cleanup();
     }
 
-    @Test
-    public void writeShouldFail() throws Exception
-    {
-        File keyFile = new File(Tests.getScratchDir(), "test-keys.txt");
+//    @Test
+//    public void writeShouldFail() throws Exception
+//    {
+//        File keyFile = new File(Tests.getScratchDir(), "test-keys.txt");
+//
+//        ReadOnlyFileKeyStore rofs = new ReadOnlyFileKeyStore(keyFile.getPath());
+//
+//        Files.write(keyFile, "something");
+//
+//        rofs.start();
+//
+//        try
+//        {
+//            rofs.store("something");
+//            fail("should fail because we cannot store into a write-only keystore");
+//        }
+//        catch(IllegalStateException e)
+//        {
+//            log.info(e.getMessage());
+//        }
+//        finally
+//        {
+//            rofs.stop();
+//        }
+//    }
 
-        ReadOnlyFileKeyStore rofs = new ReadOnlyFileKeyStore(keyFile.getPath());
-
-        Files.write(keyFile, "something");
-
-        rofs.start();
-
-        try
-        {
-            rofs.store("something");
-            fail("should fail because we cannot store into a write-only keystore");
-        }
-        catch(IllegalStateException e)
-        {
-            log.info(e.getMessage());
-        }
-        finally
-        {
-            rofs.stop();
-        }
-    }
-
-    @Test
-    public void get() throws Exception
-    {
-        File keyFile = new File(Tests.getScratchDir(), "test-keys.txt");
-
-        Files.write(keyFile,
-            "key-01\n" +
-            "key-02\n" +
-                "key-03"
-        );
-
-        ReadOnlyFileKeyStore rofs = new ReadOnlyFileKeyStore(keyFile.getPath());
-
-        rofs.start();
-
-        assertEquals("key-01", rofs.get());
-        assertEquals("key-02", rofs.get());
-        assertEquals("key-03", rofs.get());
-        assertEquals("key-01", rofs.get());
-        assertEquals("key-02", rofs.get());
-        assertEquals("key-03", rofs.get());
-    }
+//    @Test
+//    public void get() throws Exception
+//    {
+//        File keyFile = new File(Tests.getScratchDir(), "test-keys.txt");
+//
+//        Files.write(keyFile,
+//            "key-01\n" +
+//            "key-02\n" +
+//                "key-03"
+//        );
+//
+//        ReadOnlyFileKeyStore rofs = new ReadOnlyFileKeyStore(keyFile.getPath());
+//
+//        rofs.start();
+//
+//        assertEquals("key-01", rofs.get());
+//        assertEquals("key-02", rofs.get());
+//        assertEquals("key-03", rofs.get());
+//        assertEquals("key-01", rofs.get());
+//        assertEquals("key-02", rofs.get());
+//        assertEquals("key-03", rofs.get());
+//    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

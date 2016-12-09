@@ -18,11 +18,8 @@ package io.novaordis.gld.driver.keystore;
 
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.store.KeyStoreException;
-import io.novaordis.gld.api.store.Value;
+import io.novaordis.gld.api.store.StoredValue;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -158,7 +155,7 @@ public class ReadOnlyFileKeyStore implements KeyStore {
     }
 
     @Override
-    public Value retrieve(String key) throws KeyStoreException {
+    public StoredValue retrieve(String key) throws KeyStoreException {
         throw new RuntimeException("retrieve() NOT YET IMPLEMENTED");
     }
 
