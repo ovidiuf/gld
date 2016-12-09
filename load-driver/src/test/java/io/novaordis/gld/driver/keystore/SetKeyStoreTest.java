@@ -53,9 +53,6 @@ public class SetKeyStoreTest
 
         SetKeyStore sks = new SetKeyStore(keys);
 
-        // assertTrue(sks.isReadOnly());
-        fail("return here");
-
         assertTrue(sks.isStarted());
 
         assertEquals(3, sks.size());

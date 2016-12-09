@@ -70,15 +70,6 @@ public class WriteOnlyFileKeyStoreTest
         }
     }
 
-    @Test
-    public void isReadOnly() throws Exception
-    {
-        fail("return here");
-//        File keyFile = new File(Tests.getScratchDir(), "test-keys.txt");
-//        WriteOnlyFileKeyStore wofs = new WriteOnlyFileKeyStore(keyFile.getPath());
-//        assertFalse(wofs.isReadOnly());
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

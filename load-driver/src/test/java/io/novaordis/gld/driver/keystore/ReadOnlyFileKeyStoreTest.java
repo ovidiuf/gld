@@ -97,15 +97,6 @@ public class ReadOnlyFileKeyStoreTest
         assertEquals("key-03", rofs.get());
     }
 
-    @Test
-    public void isReadOnly() throws Exception
-    {
-        fail("return here");
-//        File keyFile = new File(Tests.getScratchDir(), "test-keys.txt");
-//        ReadOnlyFileKeyStore rofs = new ReadOnlyFileKeyStore(keyFile.getPath());
-//        assertTrue(rofs.isReadOnly());
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
