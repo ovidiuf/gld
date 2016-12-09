@@ -42,6 +42,24 @@ public abstract class LoadStrategyBase implements LoadStrategy {
     // LoadStrategy implementation -------------------------------------------------------------------------------------
 
     @Override
+    public void start() throws Exception {
+
+        throw new RuntimeException("NOT YET IMPLEMENTED start()");
+    }
+
+    @Override
+    public boolean isStarted() {
+
+        throw new RuntimeException("NOT YET IMPLEMENTED isStarted()");
+    }
+
+    @Override
+    public void stop() {
+
+        throw new RuntimeException("NOT YET IMPLEMENTED stop()");
+    }
+
+    @Override
     public KeyProvider getKeyProvider() {
 
         return keyProvider;

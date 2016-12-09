@@ -16,6 +16,14 @@
 
 package io.novaordis.gld.driver;
 
+import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.api.Service;
+import io.novaordis.gld.driver.sampler.Sampler;
+import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/2/16
@@ -30,9 +38,46 @@ public class LoadDriverImplTest extends LoadDriverTest {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    // Public ----------------------------------------------------------------------------------------------------------
+
     // Tests -----------------------------------------------------------------------------------------------------------
 
-    // Public ----------------------------------------------------------------------------------------------------------
+    @Test
+    public void init_turnOff_cycle() throws Exception {
+
+        LoadDriverImpl ld = new LoadDriverImpl("test", true);
+
+        MockConfiguration mc = new MockConfiguration();
+
+        ld.init(mc);
+
+        Service service = ld.getService();
+        Sampler sampler = ld.getSampler();
+        KeyStore keyStore = ld.getKeyStore();
+        MultiThreadedRunner runner = ld.getRunner();
+
+        assertTrue(service.isStarted());
+        assertTrue(sampler.isStarted());
+        assertTrue(keyStore.isStarted());
+
+        //
+        // we did not start the runner
+        //
+
+        assertFalse(runner.isRunning());
+
+        ld.turnOff();
+
+        //
+        // make sure all lifecycle-enabled components are off
+        //
+
+        assertFalse(runner.isRunning());
+
+        assertFalse(keyStore.isStarted());
+        assertFalse(sampler.isStarted());
+        assertFalse(service.isStarted());
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

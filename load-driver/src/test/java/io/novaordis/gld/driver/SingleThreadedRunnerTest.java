@@ -256,6 +256,21 @@ public class SingleThreadedRunnerTest {
             }
 
             @Override
+            public void start() throws Exception {
+                throw new RuntimeException("start() NOT YET IMPLEMENTED");
+            }
+
+            @Override
+            public boolean isStarted() {
+                throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
+            }
+
+            @Override
+            public void stop() {
+                throw new RuntimeException("stop() NOT YET IMPLEMENTED");
+            }
+
+            @Override
             public Operation next(Operation last, String lastWrittenKey, boolean runtimeShuttingDown) throws Exception {
 
                 if (runtimeShuttingDown) {

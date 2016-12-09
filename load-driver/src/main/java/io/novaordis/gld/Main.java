@@ -114,6 +114,18 @@ public class Main {
                 System.out.println(Util.formatErrorMessage(t));
             }
         }
+        finally {
+
+            //
+            // if we're exiting because of an exception, turn the load driver off property; if the driver exited
+            // cleanly, the operation should be idempotent
+            //
+
+            if (ld != null) {
+
+                ld.turnOff();
+            }
+        }
 
         return exitCode;
     }

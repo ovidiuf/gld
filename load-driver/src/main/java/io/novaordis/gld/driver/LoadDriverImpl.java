@@ -30,6 +30,8 @@ import io.novaordis.gld.api.StoreConfiguration;
 import io.novaordis.gld.api.store.KeyStoreFactory;
 import io.novaordis.gld.driver.sampler.Sampler;
 import io.novaordis.gld.driver.sampler.SamplerImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
@@ -41,6 +43,8 @@ public class LoadDriverImpl implements LoadDriver {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    private static final Logger log = LoggerFactory.getLogger(LoadDriverImpl.class);
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Package protected static ----------------------------------------------------------------------------------------
@@ -51,7 +55,15 @@ public class LoadDriverImpl implements LoadDriver {
 
     private volatile boolean background;
 
+    //
+    // lifecycle enabled components
+    //
+
     private Service service;
+
+    private Sampler sampler;
+
+    private KeyStore keyStore;
 
     private MultiThreadedRunner multiThreadedRunner;
 
@@ -111,7 +123,7 @@ public class LoadDriverImpl implements LoadDriver {
         // load configuration
         //
 
-        Sampler sampler = new SamplerImpl();
+        sampler = new SamplerImpl();
 
         //
         // register operations
@@ -124,15 +136,72 @@ public class LoadDriverImpl implements LoadDriver {
 
         long singleThreadedRunnerSleepMs = -1L;
 
-        KeyStore keyStore = null;
-
         if (stc != null) {
 
             keyStore = KeyStoreFactory.build(stc);
+            keyStore.start();
         }
 
         multiThreadedRunner = new MultiThreadedRunnerImpl(
                 service, ldc.getThreadCount(), sampler, background, singleThreadedRunnerSleepMs, keyStore);
+    }
+
+    @Override
+    public void turnOff() {
+
+        //
+        // execute the init() operations in reverse order
+        //
+
+        if (multiThreadedRunner != null) {
+
+            try {
+
+                multiThreadedRunner.stop();
+
+            } catch (Exception e) {
+
+                log.warn("failed to stop the runner: " + e.getMessage());
+            }
+        }
+
+        if (keyStore != null) {
+
+            try {
+
+                keyStore.stop();
+
+            } catch (Exception e) {
+
+                log.warn("failed to stop the key store: " + e.getMessage());
+            }
+        }
+
+        if (sampler != null) {
+
+            try {
+
+                sampler.stop();
+
+            } catch (Exception e) {
+
+                log.warn("failed to stop the sampler: " + e.getMessage());
+            }
+        }
+
+        if (service != null) {
+
+            try {
+
+                // this will also stop the associated load strategy
+                service.stop();
+
+            }
+            catch(Exception e) {
+
+                log.warn("failed to stop service: " + e.getMessage());
+            }
+        }
     }
 
     @Override
@@ -153,6 +222,10 @@ public class LoadDriverImpl implements LoadDriver {
 
         //
         // the main control loop
+        //
+
+        //
+        // turnOff() will be invoked in a finally block by the upper layer
         //
     }
 
@@ -183,6 +256,21 @@ public class LoadDriverImpl implements LoadDriver {
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
+
+    Sampler getSampler() {
+
+        return sampler;
+    }
+
+    KeyStore getKeyStore() {
+
+        return keyStore;
+    }
+
+    MultiThreadedRunner getRunner() {
+
+        return multiThreadedRunner;
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

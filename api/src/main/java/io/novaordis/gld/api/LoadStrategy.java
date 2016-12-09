@@ -22,17 +22,7 @@ import io.novaordis.utilities.UserErrorException;
 
 public interface LoadStrategy {
 
-    /**
-     * @return the service type this load strategy is associated with.
-     */
-    ServiceType getServiceType();
-
-    /**
-     * The name this load strategy is known under, and which can be used in a configuration file.
-     *
-     * Example: "read-then-write-on-miss" will instruct the runtime to dynamically load ReadThenWriteOnMissLoadStrategy.
-     */
-    String getName();
+    // lifecycle -------------------------------------------------------------------------------------------------------
 
     /**
      * A strategy must be generally initialized before the first use. If the strategy requires configuration and it was
@@ -49,6 +39,26 @@ public interface LoadStrategy {
      * @exception IllegalStateException on inconsistencies.
      */
     void init(ServiceConfiguration serviceConfiguration, LoadConfiguration loadConfiguration) throws Exception;
+
+    void start() throws Exception;
+
+    boolean isStarted();
+
+    void stop();
+
+    // accessors -------------------------------------------------------------------------------------------------------
+
+    /**
+     * @return the service type this load strategy is associated with.
+     */
+    ServiceType getServiceType();
+
+    /**
+     * The name this load strategy is known under, and which can be used in a configuration file.
+     *
+     * Example: "read-then-write-on-miss" will instruct the runtime to dynamically load ReadThenWriteOnMissLoadStrategy.
+     */
+    String getName();
 
     /**
      * @return the next operation to be sent into the service, factoring in the last operation that has been sent into

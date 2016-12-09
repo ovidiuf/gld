@@ -47,6 +47,8 @@ public interface Service {
     void start() throws Exception;
 
     /**
+     * It stops the service and the associated load strategy.
+     *
      * Stopping an already stopped service instance should be a noop.
      */
     void stop() throws Exception;

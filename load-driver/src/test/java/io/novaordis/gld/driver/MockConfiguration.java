@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.driver;
+
+import io.novaordis.gld.api.Configuration;
+import io.novaordis.gld.api.LoadConfiguration;
+import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.gld.api.StoreConfiguration;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 12/9/16
  */
-public class MockLoadDriver implements LoadDriver {
+public class MockConfiguration implements Configuration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -30,47 +35,23 @@ public class MockLoadDriver implements LoadDriver {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // LoadDriver implementation ---------------------------------------------------------------------------------------
+    // Configuration implementation ------------------------------------------------------------------------------------
 
     @Override
-    public String getID() {
-        throw new RuntimeException("getID() NOT YET IMPLEMENTED");
+    public ServiceConfiguration getServiceConfiguration() {
+        throw new RuntimeException("getServiceConfiguration() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void init(Configuration c) throws Exception {
-        throw new RuntimeException("init() NOT YET IMPLEMENTED");
+    public LoadConfiguration getLoadConfiguration() {
+        throw new RuntimeException("getLoadConfiguration() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void run() {
-        throw new RuntimeException("run() NOT YET IMPLEMENTED");
+    public StoreConfiguration getStoreConfiguration() {
+        throw new RuntimeException("getStoreConfiguration() NOT YET IMPLEMENTED");
     }
 
-    @Override
-    public void turnOff() {
-        throw new RuntimeException("turnOff() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public boolean background() {
-        throw new RuntimeException("background() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Service getService() {
-        throw new RuntimeException("getService() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void error(Throwable t) {
-        throw new RuntimeException("error() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void error(String msg) {
-        throw new RuntimeException("error() NOT YET IMPLEMENTED");
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 

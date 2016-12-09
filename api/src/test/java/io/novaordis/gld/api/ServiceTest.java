@@ -22,7 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public abstract class ServiceTest {
@@ -173,6 +175,28 @@ public abstract class ServiceTest {
 //        // make sure no arguments were removed from list
 //        assertEquals(4, arguments.size());
 //    }
+
+    @Test
+    public void loadStrategyLifecycleIsCorrelatedToTheServiceLifecycle() throws Exception {
+
+        MockLoadStrategy ms = new MockLoadStrategy();
+        MockLoadDriver md = new MockLoadDriver();
+
+        Service s = getServiceToTest(ms, md);
+
+        s.start();
+
+        assertTrue(s.isStarted());
+
+        assertEquals(ms, s.getLoadStrategy());
+
+        assertTrue(ms.isStarted());
+
+        s.stop();
+
+        assertFalse(ms.isStarted());
+        assertFalse(s.isStarted());
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
