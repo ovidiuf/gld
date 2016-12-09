@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,85 +14,83 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver.keystore;
+package io.novaordis.gld.api.store;
 
 import io.novaordis.gld.api.KeyStore;
-import io.novaordis.gld.api.store.HierarchicalStorageStrategy;
 
-import java.util.Iterator;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Experimental - interacting with a HierarchicalStorageStrategy. Must refactor.
-
+ * An in-memory, thread-safe Set. Does not have memory protection, so it can potentially cause OutOfMemoryError.
+ *
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 12/8/16
  */
-@Deprecated
-public class ExperimentalKeyStore implements KeyStore
-{
+public class InMemoryStore implements KeyStore {
+
     // Constants -------------------------------------------------------------------------------------------------------
+
+    public static final String STORY_TYPE_LABEL = "in-memory";
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private HierarchicalStorageStrategy hss;
-    private Iterator<String> keyIterator;
+    private final Set store;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public ExperimentalKeyStore(HierarchicalStorageStrategy hss) throws Exception
-    {
-        this.hss = hss;
+    public InMemoryStore() {
+
+        this.store = new HashSet<>();
     }
 
     // KeyStore implementation -----------------------------------------------------------------------------------------
 
     @Override
-    public void store(String key) throws Exception
-    {
-        throw new IllegalStateException("this is a read-only keystore, cannot store");
+    public void start() throws KeyStoreException {
+        throw new RuntimeException("start() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void stop() throws KeyStoreException {
+        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public boolean isStarted() {
+        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void store(String key, byte[] ... value) throws KeyStoreException {
+
+        synchronized (store) {
+            throw new RuntimeException("store() NOT YET IMPLEMENTED");
+        }
+    }
+
+    @Override
+    public Value retrieve(String key) throws KeyStoreException {
+        throw new RuntimeException("retrieve() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Set<String> getKeys() throws KeyStoreException {
+        throw new RuntimeException("getKeys() NOT YET IMPLEMENTED");
     }
 
     @Override
     public long getKeyCount() {
-        throw new RuntimeException("getKeyCount() NOT YET IMPLEMENTED");
-    }
 
-    //    @Override
-    public synchronized String get()
-    {
-        if (keyIterator.hasNext())
-        {
-            return keyIterator.next();
+        synchronized (store) {
+
+            return store.size();
         }
-
-        return null;
-    }
-
-    @Override
-    public void start() throws Exception
-    {
-        // read all the keys from storage
-        keyIterator = hss.getKeys().iterator();
-    }
-
-    @Override
-    public void stop() throws Exception
-    {
-        keyIterator = null;
-    }
-
-    @Override
-    public boolean isStarted()
-    {
-        return keyIterator != null;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public String getValue(String key) throws Exception
-    {
-        return hss.retrieve(key);
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

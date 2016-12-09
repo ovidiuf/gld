@@ -17,6 +17,7 @@
 package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.Configuration;
+import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadConfiguration;
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
@@ -25,6 +26,8 @@ import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceFactory;
+import io.novaordis.gld.api.StoreConfiguration;
+import io.novaordis.gld.api.store.KeyStoreFactory;
 import io.novaordis.gld.driver.sampler.Sampler;
 import io.novaordis.gld.driver.sampler.SamplerImpl;
 
@@ -85,22 +88,22 @@ public class LoadDriverImpl implements LoadDriver {
     @Override
     public void init(Configuration c) throws Exception {
 
-        LoadConfiguration lc = c.getLoadConfiguration();
-
-        ServiceConfiguration sc = c.getServiceConfiguration();
+        ServiceConfiguration svc = c.getServiceConfiguration();
+        LoadConfiguration ldc = c.getLoadConfiguration();
+        StoreConfiguration stc = c.getStoreConfiguration();
 
         //
         // load strategy instantiation and installation; the load strategy usually initializes the key provider,
         // which is accessible with LoadStrategy.getKeyProvider()
         //
 
-        LoadStrategy ls = LoadStrategyFactory.build(sc, lc);
+        LoadStrategy ls = LoadStrategyFactory.build(svc, ldc);
 
         //
         // service initialization and configuration
         //
 
-        service = ServiceFactory.buildInstance(sc, ls, this);
+        service = ServiceFactory.buildInstance(svc, ls, this);
 
         service.start();
 
@@ -121,8 +124,15 @@ public class LoadDriverImpl implements LoadDriver {
 
         long singleThreadedRunnerSleepMs = -1L;
 
+        KeyStore keyStore = null;
+
+        if (stc != null) {
+
+            keyStore = KeyStoreFactory.build(stc);
+        }
+
         multiThreadedRunner = new MultiThreadedRunnerImpl(
-                service, lc.getThreadCount(), sampler, background, singleThreadedRunnerSleepMs);
+                service, ldc.getThreadCount(), sampler, background, singleThreadedRunnerSleepMs, keyStore);
     }
 
     @Override

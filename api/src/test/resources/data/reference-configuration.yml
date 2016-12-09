@@ -30,4 +30,4 @@ load:
 store:
 
   type: hierarchical
-  directory: ../../../../target/test-hierarchical-store # if relative, is relative to the position of the configuration file
+  directory: ../../../../target/test-scratch/test-hierarchical-store # if relative, is relative to the position of the configuration file

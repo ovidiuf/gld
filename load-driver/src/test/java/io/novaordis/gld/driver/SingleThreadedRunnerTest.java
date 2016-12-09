@@ -66,7 +66,7 @@ public class SingleThreadedRunnerTest {
 
             new SingleThreadedRunner(
                     "TEST", null, new MockLoadStrategy(), new SamplerImpl(), new CyclicBarrier(1),
-                    new AtomicBoolean(false), -1L);
+                    new AtomicBoolean(false), -1L, new MockKeyStore());
 
             fail("should fail with IllegalArgumentException, null config");
         }
@@ -82,7 +82,7 @@ public class SingleThreadedRunnerTest {
 
             new SingleThreadedRunner(
                     "TEST", new MockService(), new MockLoadStrategy(), null, new CyclicBarrier(1),
-                    new AtomicBoolean(false), -1L);
+                    new AtomicBoolean(false), -1L, new MockKeyStore());
 
             fail("should fail with IllegalArgumentException, null sampler");
         }
@@ -99,7 +99,7 @@ public class SingleThreadedRunnerTest {
 
             new SingleThreadedRunner(
                 "TEST", new MockService(), new MockLoadStrategy(), new SamplerImpl(), null,
-                    new AtomicBoolean(false), -1L);
+                    new AtomicBoolean(false), -1L, new MockKeyStore());
 
             fail("should fail with IllegalArgumentException, null barrier");
         }
@@ -133,7 +133,7 @@ public class SingleThreadedRunnerTest {
 
             new SingleThreadedRunner(
                     "TEST", new MockService(), new MockLoadStrategy(), new SamplerImpl(),
-                    new CyclicBarrier(1), null, -1L);
+                    new CyclicBarrier(1), null, -1L, new MockKeyStore());
 
             fail("should fail with IllegalArgumentException, null duration expired");
         }
@@ -154,7 +154,7 @@ public class SingleThreadedRunnerTest {
         CyclicBarrier cb = new CyclicBarrier(1);
 
         SingleThreadedRunner st = new SingleThreadedRunner(
-                "TEST", new MockService(), mls, s, cb, new AtomicBoolean(false), -1L);
+                "TEST", new MockService(), mls, s, cb, new AtomicBoolean(false), -1L, new MockKeyStore());
 
         assertEquals("TEST", st.getName());
 
@@ -213,7 +213,8 @@ public class SingleThreadedRunnerTest {
         CyclicBarrier barrier = new CyclicBarrier(1);
 
         SingleThreadedRunner st = new SingleThreadedRunner(
-                "TEST", ms, mockLoadStrategy, mockSampler, barrier, new AtomicBoolean(false), sleepMs);
+                "TEST", ms, mockLoadStrategy, mockSampler, barrier, new AtomicBoolean(false),
+                sleepMs, new MockKeyStore());
 
         setRunning(st);
 
@@ -295,7 +296,8 @@ public class SingleThreadedRunnerTest {
         MockSampler msp = new MockSampler();
         CyclicBarrier cb = new CyclicBarrier(1);
 
-        SingleThreadedRunner r = new SingleThreadedRunner("TEST", ms, ls, msp, cb, durationExpired, -1L);
+        SingleThreadedRunner r = new SingleThreadedRunner(
+                "TEST", ms, ls, msp, cb, durationExpired, -1L, new MockKeyStore());
 
         //
         // we simulate the running runner without actually have to start the internal thread

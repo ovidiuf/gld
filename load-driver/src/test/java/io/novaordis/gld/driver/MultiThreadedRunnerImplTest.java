@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.driver;
 
+import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.driver.sampler.Sampler;
@@ -79,10 +80,10 @@ public class MultiThreadedRunnerImplTest extends MultiThreadedRunnerTest
 
     @Override
     protected MultiThreadedRunnerImpl getMultiThreadedRunnerToTest(
-            Service service, LoadStrategy loadStrategy, Sampler sampler, boolean background, int threadCount)
-            throws Exception {
+            Service service, LoadStrategy loadStrategy, Sampler sampler,
+            boolean background, int threadCount, KeyStore keyStore) throws Exception {
 
-        return new MultiThreadedRunnerImpl(service, threadCount, sampler, background, -1L);
+        return new MultiThreadedRunnerImpl(service, threadCount, sampler, background, -1L, keyStore);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

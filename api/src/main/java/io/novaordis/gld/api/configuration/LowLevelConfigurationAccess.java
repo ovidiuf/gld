@@ -43,7 +43,56 @@ public class LowLevelConfigurationAccess implements LowLevelConfiguration {
 
     @Override
     public <T> T get(Class<? extends T> type, String... path) {
-        throw new RuntimeException("get() NOT YET IMPLEMENTED");
+
+        String pathAsString = "";
+
+        Map<String, Object> current = rawConfiguration;
+
+        for(int i = 0; i < path.length; i ++) {
+
+            String element = path[i];
+
+            pathAsString = pathAsString.isEmpty() ? element : pathAsString + "." + element;
+
+            Object o = current.get(element);
+
+            if (o == null) {
+
+                return null;
+            }
+
+            if (i < path.length - 1) {
+
+                //
+                // we expect a map, if we get anything else, it means the path did not match, return null
+                //
+
+                if (!(o instanceof Map)) {
+
+                    return null;
+                }
+
+                //noinspection unchecked
+                current = (Map<String, Object>)o;
+                continue;
+            }
+
+            //
+            // at the end of the path
+            //
+
+            if (type.isAssignableFrom(o.getClass())) {
+
+                //noinspection unchecked
+                return (T) o;
+            }
+
+            throw new IllegalStateException(
+                    "expected " + pathAsString + " to be a " + type.getSimpleName() + " but it is a(n) " +
+                            o.getClass().getSimpleName());
+        }
+
+        return null;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

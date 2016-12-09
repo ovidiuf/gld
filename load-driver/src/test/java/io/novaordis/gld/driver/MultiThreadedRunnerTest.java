@@ -16,22 +16,12 @@
 
 package io.novaordis.gld.driver;
 
+import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.driver.sampler.Sampler;
-import io.novaordis.utilities.time.Duration;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public abstract class MultiThreadedRunnerTest {
 
@@ -244,13 +234,73 @@ public abstract class MultiThreadedRunnerTest {
 //        }
 //    }
 
+//    @Test
+//    public void insureComponentsAreStoppedOnGracefulExit() throws Exception {
+//
+//        //
+//        // make sure the components such as the Service, Sampler and KeyStore are stopped on graceful exit
+//        //
+//
+//        Service ms = new MockService();
+//        Sampler msp = new MockSampler();
+//        KeyStore mks = new MockKeyStore();
+//
+//        ms.start();
+//        assertTrue(ms.isStarted());
+//
+//        msp.start();
+//        assertTrue(msp.isStarted());
+//
+//        mks.start();
+//        assertTrue(mks.isStarted());
+//
+//
+//        // ...
+//
+//
+//        assertFalse(mks.isStarted());
+//        assertFalse(msp.isStarted());
+//        assertFalse(ms.isStarted());
+//
+//    }
+//
+//    @Test
+//    public void insureComponentsAreStoppedOnFailure() throws Exception {
+//
+//        //
+//        // make sure the components such as the Service, Sampler and KeyStore are stopped on failure
+//        //
+//
+//        Service ms = new MockService();
+//        Sampler msp = new MockSampler();
+//        KeyStore mks = new MockKeyStore();
+//
+//        ms.start();
+//        assertTrue(ms.isStarted());
+//
+//        msp.start();
+//        assertTrue(msp.isStarted());
+//
+//        mks.start();
+//        assertTrue(mks.isStarted());
+//
+//
+//        // ...
+//
+//
+//        assertFalse(mks.isStarted());
+//        assertFalse(msp.isStarted());
+//        assertFalse(ms.isStarted());
+//    }
+
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
     protected abstract MultiThreadedRunner getMultiThreadedRunnerToTest(
-            Service service, LoadStrategy loadStrategy, Sampler sampler, boolean background, int threadCount)
-            throws Exception;
+            Service service, LoadStrategy loadStrategy, Sampler sampler,
+            boolean background, int threadCount, KeyStore keyStore) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

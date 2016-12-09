@@ -17,6 +17,7 @@
 package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.KeyProvider;
+import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.driver.console.CommandLineConsole;
@@ -60,10 +61,16 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
 
     private volatile boolean running;
 
+    // may be null
+    private KeyStore keyStore;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    /**
+     * @param keyStore may be null, if the configuration did not specify one.
+     */
     public MultiThreadedRunnerImpl(Service service, int threadCount, Sampler sampler,
-                                   boolean isBackground, long singleThreadedRunnerSleepMs) {
+                                   boolean isBackground, long singleThreadedRunnerSleepMs, KeyStore keyStore) {
 
         this.service = service;
         this.loadStrategy = service.getLoadStrategy();
@@ -71,6 +78,7 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
         this.sampler = sampler;
         this.isBackground = isBackground;
         this.singleThreadedRunnerSleepMs = singleThreadedRunnerSleepMs;
+        this.keyStore = keyStore;
 
         this.singleThreadedRunners = new ArrayList<>(threadCount);
         this.exitGuard = new ExitGuard();
@@ -151,7 +159,8 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
                 String name = "GLD Runner " + i;
 
                 SingleThreadedRunner r = new SingleThreadedRunner(
-                        name, service, loadStrategy, sampler, barrier, durationExpired, singleThreadedRunnerSleepMs);
+                        name, service, loadStrategy, sampler, barrier, durationExpired,
+                        singleThreadedRunnerSleepMs, keyStore);
 
                 singleThreadedRunners.add(r);
 
@@ -199,6 +208,12 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
 
                 sampler.stop();
             }
+
+            if (keyStore != null) {
+
+                keyStore.stop();
+            }
+
 
             running = false;
         }

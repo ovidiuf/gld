@@ -14,27 +14,38 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.configuration;
+package io.novaordis.gld.api.store;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/8/16
  */
-public interface LowLevelConfiguration {
+public class KeyStoreException extends Exception {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
+    // Attributes ------------------------------------------------------------------------------------------------------
+
+    // Constructors ----------------------------------------------------------------------------------------------------
+
+    public KeyStoreException(String msg) {
+        super(msg);
+    }
+
+    public KeyStoreException(Throwable cause) {
+        super(cause);
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
-    /**
-     * Walks the internal storage following the specified path and returns the value found in the map entry that
-     * matches the path. If there is no path match, returns null. If the value is not null and does not match the
-     * requested type, the method throws IllegalStateException.
-     *
-     * @exception IllegalStateException if the value is not null and does not match the requested type.
-     */
-    <T> T get(Class<? extends T> type, String ... path);
+    // Package protected -----------------------------------------------------------------------------------------------
+
+    // Protected -------------------------------------------------------------------------------------------------------
+
+    // Private ---------------------------------------------------------------------------------------------------------
+
+    // Inner classes ---------------------------------------------------------------------------------------------------
 
 }

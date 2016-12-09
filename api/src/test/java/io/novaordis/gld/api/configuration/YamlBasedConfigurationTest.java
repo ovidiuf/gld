@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -150,7 +151,7 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
         File f = new File(scratchDirectory, "test.yml");
         assertTrue(Files.write(f,
                 "service:\n" +
-                        "  type: mock\n" +
+                        "  type: cache\n" +
                         "\n"));
 
         try {
@@ -174,7 +175,7 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
         File f = new File(scratchDirectory, "test.yml");
         assertTrue(Files.write(f,
                 "service:\n" +
-                        "  type: mock\n" +
+                        "  type: cache\n" +
                         "load:\n" +
                         "  threads: 1\n" +
                         "\n"));
@@ -185,6 +186,25 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
         YamlBasedConfiguration c = new YamlBasedConfiguration(f);
         StoreConfiguration sc = c.getStoreConfiguration();
         assertNull(sc);
+    }
+
+    @Test
+    public void storeConfiguration() throws Exception {
+
+        File f = new File(scratchDirectory, "test.yml");
+        assertTrue(Files.write(f,
+                "service:\n" +
+                        "  type: cache\n" +
+                        "load:\n" +
+                        "  threads: 1\n" +
+                        "store:\n" +
+                        "  type: mock\n" +
+                        "  directory: .\n" +
+                        "\n"));
+
+        YamlBasedConfiguration c = new YamlBasedConfiguration(f);
+        StoreConfiguration sc = c.getStoreConfiguration();
+        assertEquals("mock", sc.getStoreType());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -17,8 +17,12 @@
 package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.api.store.KeyStoreException;
+import io.novaordis.gld.api.store.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Set;
 
 public class MockKeyStore implements KeyStore {
 
@@ -37,7 +41,7 @@ public class MockKeyStore implements KeyStore {
     // KeyStore implementation -----------------------------------------------------------------------------------------
 
     @Override
-    public void start() throws Exception {
+    public void start() throws KeyStoreException {
 
         this.started = true;
 
@@ -45,7 +49,7 @@ public class MockKeyStore implements KeyStore {
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() throws KeyStoreException {
         this.started = false;
     }
 
@@ -56,8 +60,18 @@ public class MockKeyStore implements KeyStore {
     }
 
     @Override
-    public void store(String key) throws Exception {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+    public void store(String key, byte[]... value) throws IllegalArgumentException, KeyStoreException {
+        throw new RuntimeException("store() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Value retrieve(String key) throws KeyStoreException {
+        throw new RuntimeException("retrieve() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Set<String> getKeys() throws KeyStoreException {
+        throw new RuntimeException("getKeys() NOT YET IMPLEMENTED");
     }
 
     @Override

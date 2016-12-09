@@ -19,13 +19,14 @@ package io.novaordis.gld.api.configuration;
 import io.novaordis.gld.api.StoreConfiguration;
 import io.novaordis.utilities.UserErrorException;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 12/8/16
  */
-public class StoreConfigurationImpl implements StoreConfiguration, LowLevelConfiguration {
+public class MockStoreConfiguration implements StoreConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -33,57 +34,50 @@ public class StoreConfigurationImpl implements StoreConfiguration, LowLevelConfi
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    // the actual raw configuration map passed at construction
-    private Map<String, Object> rawConfiguration;
+    private String storeType;
 
-    private LowLevelConfigurationAccess configurationAccess;
+    private Map<String, Object> pathContent;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    /**
-     * @param map the map extracted from the YAML file from under the "load" section.
-     */
-    public StoreConfigurationImpl(Map<String, Object> map) throws Exception {
+    public MockStoreConfiguration() {
 
-        this.rawConfiguration = map;
-        this.configurationAccess = new LowLevelConfigurationAccess(rawConfiguration);
+        this.pathContent = new HashMap<>();
     }
 
-    // LowLevelConfiguration implementation ----------------------------------------------------------------------------
-
-    @Override
-    public <T> T get(Class<? extends T> type, String... path) {
-
-        //
-        // we delegate to a generic low-level configuration resolver
-        //
-
-        return configurationAccess.get(type, path);
-    }
-
-    // StoreConfiguration implementation -------------------------------------------------------------------------------
+    // StoreConfiguration ----------------------------------------------------------------------------------------------
 
     @Override
     public String getStoreType() throws UserErrorException {
 
-        Object o = rawConfiguration.get(StoreConfiguration.STORE_TYPE_LABEL);
+        return storeType;
+    }
 
-        if (o == null) {
+    @Override
+    public <T> T get(Class<? extends T> type, String... path) {
 
-            throw new UserErrorException("missing store type");
+        String s = "";
+
+        for (String aPath : path) {
+
+            s += s.isEmpty() ? aPath : s + "." + aPath;
         }
-        else {
 
-            if (!(o instanceof String)) {
-                throw new UserErrorException(
-                        "'" + StoreConfiguration.STORE_TYPE_LABEL + "' not a string: \"" + o + "\"");
-            }
-
-            return ((String)o);
-        }
+        //noinspection unchecked
+        return (T)pathContent.get(s);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public void setStoreType(String s) {
+
+        this.storeType = s;
+    }
+
+    public void setPath(String dotSeparatedPath, Object o) {
+
+        pathContent.put(dotSeparatedPath, o);
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

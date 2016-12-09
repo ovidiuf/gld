@@ -42,6 +42,7 @@ public class YamlBasedConfiguration implements Configuration {
 
     public static final String SERVICE_SECTION_LABEL = "service";
     public static final String LOAD_SECTION_LABEL = "load";
+    public static final String STORE_SECTION_LABEL = "store";
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -108,13 +109,17 @@ public class YamlBasedConfiguration implements Configuration {
 
             Map topLevelConfigurationMap = (Map)yaml.load(is);
             Map<String, Object> serviceConfigurationMap = null;
-            Map loadConfigurationMap = null;
+            Map<String, Object> loadConfigurationMap = null;
+            Map<String, Object> storeConfigurationMap = null;
 
             if (topLevelConfigurationMap != null) {
 
                 //noinspection unchecked
                 serviceConfigurationMap = (Map<String, Object>)topLevelConfigurationMap.get(SERVICE_SECTION_LABEL);
-                loadConfigurationMap = (Map) topLevelConfigurationMap.get(LOAD_SECTION_LABEL);
+                //noinspection unchecked
+                loadConfigurationMap = (Map<String, Object>) topLevelConfigurationMap.get(LOAD_SECTION_LABEL);
+                //noinspection unchecked
+                storeConfigurationMap = (Map<String, Object>) topLevelConfigurationMap.get(STORE_SECTION_LABEL);
             }
 
             if (serviceConfigurationMap == null) {
@@ -150,6 +155,11 @@ public class YamlBasedConfiguration implements Configuration {
             }
 
             loadConfiguration = new RawLoadConfigurationMapWrapper(loadConfigurationMap);
+
+            if (storeConfigurationMap != null) {
+
+                storeConfiguration = new StoreConfigurationImpl(storeConfigurationMap);
+            }
         }
         finally {
 

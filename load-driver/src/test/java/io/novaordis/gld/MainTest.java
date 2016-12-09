@@ -384,8 +384,11 @@ public class MainTest {
         //
 
         Configuration c = new YamlBasedConfiguration(f);
-        String storageDir = c.getStoreConfiguration().get(String.class, "directory");
-        HierarchicalStore hs = new HierarchicalStore(new File(storageDir));
+        String storageDirAsString = c.getStoreConfiguration().get(String.class, "directory");
+        File storageDir = new File(storageDirAsString);
+        assertTrue(storageDir.isDirectory());
+
+        HierarchicalStore hs = new HierarchicalStore(storageDir);
 
         long expected = c.getLoadConfiguration().getOperations();
         long actual = hs.getKeyCount();

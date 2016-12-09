@@ -17,12 +17,15 @@
 package io.novaordis.gld.driver.keystore;
 
 import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.api.store.KeyStoreException;
+import io.novaordis.gld.api.store.Value;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This implementation reads the entire key space in memory on startup and then keeps cycling through it.
@@ -68,12 +71,6 @@ public class ReadOnlyFileKeyStore implements KeyStore {
     // KeyStore implementation -----------------------------------------------------------------------------------------
 
     @Override
-    public void store(String key) throws Exception
-    {
-        throw new IllegalStateException("this is a read-only keystore, cannot store");
-    }
-
-    @Override
     public long getKeyCount() {
         throw new RuntimeException("getKeyCount() NOT YET IMPLEMENTED");
     }
@@ -97,48 +94,49 @@ public class ReadOnlyFileKeyStore implements KeyStore {
     }
 
     @Override
-    public void start() throws Exception
+    public void start() throws KeyStoreException
     {
-        if (fileName == null && keys.size() > 0)
-        {
-            // already preloaded
-            started = true;
-        }
-        else
-        {
-            File keyFile = new File(fileName);
-
-            BufferedReader br = null;
-
-            try
-            {
-                br = new BufferedReader(new FileReader(keyFile));
-
-                String line;
-
-                while ((line = br.readLine()) != null)
-                {
-                    keys.add(line);
-                }
-
-                currentKey = 0;
-
-                System.out.println(keys.size() + " keys loaded in memory");
-
-                started = true;
-            }
-            finally
-            {
-                if (br != null)
-                {
-                    br.close();
-                }
-            }
-        }
+        throw new RuntimeException("RETURN HERE");
+//        if (fileName == null && keys.size() > 0)
+//        {
+//            // already preloaded
+//            started = true;
+//        }
+//        else
+//        {
+//            File keyFile = new File(fileName);
+//
+//            BufferedReader br = null;
+//
+//            try
+//            {
+//                br = new BufferedReader(new FileReader(keyFile));
+//
+//                String line;
+//
+//                while ((line = br.readLine()) != null)
+//                {
+//                    keys.add(line);
+//                }
+//
+//                currentKey = 0;
+//
+//                System.out.println(keys.size() + " keys loaded in memory");
+//
+//                started = true;
+//            }
+//            finally
+//            {
+//                if (br != null)
+//                {
+//                    br.close();
+//                }
+//            }
+//        }
     }
 
     @Override
-    public void stop() throws Exception
+    public void stop() throws KeyStoreException
     {
         if (started)
         {
@@ -152,6 +150,21 @@ public class ReadOnlyFileKeyStore implements KeyStore {
     public boolean isStarted()
     {
         return started;
+    }
+
+    @Override
+    public void store(String key, byte[]... value) throws IllegalArgumentException, KeyStoreException {
+        throw new RuntimeException("store() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Value retrieve(String key) throws KeyStoreException {
+        throw new RuntimeException("retrieve() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Set<String> getKeys() throws KeyStoreException {
+        throw new RuntimeException("getKeys() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

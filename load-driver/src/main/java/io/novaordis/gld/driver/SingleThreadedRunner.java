@@ -55,14 +55,14 @@ public class SingleThreadedRunner implements Runnable {
 
     /**
      * @param sampler may be null.
-     *
+     * @param keyStore may be null, if the configuration did not specify one.
      * @param durationExpired an AtomicBoolean that will externally set to "true" if the overall time allocated to the
      *                        run expired. If the run is not time-limited, the boolean will never become "true".
      *                        Cannot be null.
      */
     public SingleThreadedRunner(String name, Service service, LoadStrategy loadStrategy,
                                 Sampler sampler, CyclicBarrier barrier, AtomicBoolean durationExpired,
-                                long singleThreadedRunnerSleepMs) {
+                                long singleThreadedRunnerSleepMs, KeyStore keyStore) {
 
         if (service == null) {
             throw new IllegalArgumentException("null service");
@@ -85,10 +85,9 @@ public class SingleThreadedRunner implements Runnable {
         this.singleThreadedRunnerSleepMs = singleThreadedRunnerSleepMs;
         this.loadStrategy = loadStrategy;
         this.service = service;
-        // this.keyStore = loadStrategy.getKeyProvider();
+        this.keyStore = keyStore;
         this.allSingleThreadedRunnersBarrier = barrier;
         this.durationExpired = durationExpired;
-
 
         thread = new Thread(this, name + " Thread");
     }
@@ -116,6 +115,11 @@ public class SingleThreadedRunner implements Runnable {
                 e.printStackTrace();
             }
 
+            //
+            // TODO 34f2G do we really want to stop the key store? What if just one thread fails but the others keep going?
+            // It's not our job to stop it ....
+            //
+
             if (keyStore != null)  {
 
                 try {
@@ -123,6 +127,7 @@ public class SingleThreadedRunner implements Runnable {
                     keyStore.stop();
                 }
                 catch(Exception e) {
+
                     e.printStackTrace();
 
                 }

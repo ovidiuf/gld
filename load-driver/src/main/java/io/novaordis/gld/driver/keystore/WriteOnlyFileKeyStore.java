@@ -20,10 +20,13 @@ import com.novaordis.ac.Collector;
 import com.novaordis.ac.CollectorFactory;
 import com.novaordis.ac.Handler;
 import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.api.store.KeyStoreException;
+import io.novaordis.gld.api.store.Value;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.Set;
 
 public class WriteOnlyFileKeyStore implements KeyStore
 {
@@ -51,17 +54,6 @@ public class WriteOnlyFileKeyStore implements KeyStore
     // Configuration implementation ------------------------------------------------------------------------------------
 
     @Override
-    public void store(String key) throws Exception
-    {
-        if (!started)
-        {
-            throw new IllegalArgumentException(this + " not started");
-        }
-
-        asyncWriter.handOver(key);
-    }
-
-    @Override
     public long getKeyCount() {
         throw new RuntimeException("getKeyCount() NOT YET IMPLEMENTED");
     }
@@ -73,33 +65,57 @@ public class WriteOnlyFileKeyStore implements KeyStore
     }
 
     @Override
-    public void start() throws Exception
+    public void start() throws KeyStoreException
     {
-        started = true;
-
-        File keyFile = new File(fileName);
-
-        bw = new BufferedWriter(new FileWriter(keyFile));
-
-        asyncWriter = CollectorFactory.getInstance("KEY STORAGE", Thread.NORM_PRIORITY + 1);
-        asyncWriter.registerHandler(new WritingHandler());
+        throw new RuntimeException("RETURN HERE");
+//        started = true;
+//
+//        File keyFile = new File(fileName);
+//
+//        bw = new BufferedWriter(new FileWriter(keyFile));
+//
+//        asyncWriter = CollectorFactory.getInstance("KEY STORAGE", Thread.NORM_PRIORITY + 1);
+//        asyncWriter.registerHandler(new WritingHandler());
     }
 
     @Override
-    public void stop() throws Exception
+    public void stop() throws KeyStoreException
     {
-        if (started)
-        {
-            bw.close();
-            asyncWriter.dispose();
-            started = false;
-        }
+        throw new RuntimeException("RETURN HERE");
+//        if (started)
+//        {
+//            bw.close();
+//            asyncWriter.dispose();
+//            started = false;
+//        }
     }
 
     @Override
     public boolean isStarted()
     {
         return started;
+    }
+
+    @Override
+    public void store(String key, byte[]... value) throws IllegalArgumentException, KeyStoreException {
+
+        if (!started)
+        {
+            throw new IllegalArgumentException(this + " not started");
+        }
+
+        asyncWriter.handOver(key);
+
+    }
+
+    @Override
+    public Value retrieve(String key) throws KeyStoreException {
+        throw new RuntimeException("retrieve() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Set<String> getKeys() throws KeyStoreException {
+        throw new RuntimeException("getKeys() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
