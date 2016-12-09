@@ -17,6 +17,7 @@
 package io.novaordis.gld.api.configuration;
 
 import io.novaordis.gld.api.ConfigurationTest;
+import io.novaordis.gld.api.StoreConfiguration;
 import io.novaordis.utilities.Files;
 import io.novaordis.utilities.UserErrorException;
 import org.junit.After;
@@ -27,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -140,6 +142,49 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
             assertTrue(msg.matches(
                     "unknown service type 'no-such-service-type' in configuration file .*test.yml"));
         }
+    }
+
+    @Test
+    public void missingLoadSection() throws Exception {
+
+        File f = new File(scratchDirectory, "test.yml");
+        assertTrue(Files.write(f,
+                "service:\n" +
+                        "  type: mock\n" +
+                        "\n"));
+
+        try {
+
+            new YamlBasedConfiguration(f);
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches(
+                    "'" + YamlBasedConfiguration.LOAD_SECTION_LABEL +
+                            "' section empty or missing from configuration file .*test.yml"));
+        }
+    }
+
+    @Test
+    public void missingStoreSection() throws Exception {
+
+        File f = new File(scratchDirectory, "test.yml");
+        assertTrue(Files.write(f,
+                "service:\n" +
+                        "  type: mock\n" +
+                        "load:\n" +
+                        "  threads: 1\n" +
+                        "\n"));
+
+        //
+        // we should be fine, if no store section is found, it means we don't store keys
+        //
+        YamlBasedConfiguration c = new YamlBasedConfiguration(f);
+        StoreConfiguration sc = c.getStoreConfiguration();
+        assertNull(sc);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

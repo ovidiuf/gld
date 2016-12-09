@@ -73,7 +73,12 @@ public class ReadOnlyFileKeyStore implements KeyStore {
         throw new IllegalStateException("this is a read-only keystore, cannot store");
     }
 
-//    @Override
+    @Override
+    public long getKeyCount() {
+        throw new RuntimeException("getKeyCount() NOT YET IMPLEMENTED");
+    }
+
+    //    @Override
     public String get()
     {
         if (keys.isEmpty())

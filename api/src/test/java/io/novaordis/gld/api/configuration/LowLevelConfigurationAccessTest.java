@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.configuration;
+
+import java.util.Map;
 
 /**
- * Typed access to underlying configuration.
- *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 12/8/16
  */
-public interface Configuration {
+public class LowLevelConfigurationAccessTest extends LowLevelConfigurationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,26 +34,15 @@ public interface Configuration {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // Typed Access ----------------------------------------------------------------------------------------------------
-
-    /**
-     * Never returns null, if the service configuration is missing, configuration parsing section will throw exception.
-     */
-    ServiceConfiguration getServiceConfiguration();
-
-    /**
-     * Never returns null, if the load configuration is missing, configuration parsing section will throw exception.
-     */
-    LoadConfiguration getLoadConfiguration();
-
-    /**
-     * May return null, it means there's no key store, we simply discard the keys used in testing.
-     */
-    StoreConfiguration getStoreConfiguration();
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected LowLevelConfigurationAccess getLowLevelConfigurationToTest(Map<String, Object> raw) throws Exception {
+
+        return new LowLevelConfigurationAccess(raw);
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -1,6 +1,10 @@
 #
 # reference configuration for a load driver instance
 #
+
+#
+# the target service
+#
 service:
 
   type: cache # options: cache, jms, http, etc.
@@ -13,6 +17,17 @@ service:
     name: read-then-write-on-miss
     reuse-value: false
 
+#
+# load characteristics
+#
 load:
   threads: 10
-  operations: 100
+  operations: 17
+
+#
+# key store configuration
+#
+store:
+
+  type: hierarchical
+  directory: ../../../../target/test-hierarchical-store # if relative, is relative to the position of the configuration file

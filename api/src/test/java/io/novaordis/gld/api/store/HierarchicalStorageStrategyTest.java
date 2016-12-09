@@ -14,27 +14,18 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver.todeplete.storage;
+package io.novaordis.gld.api.store;
 
-import io.novaordis.gld.api.todiscard.Configuration;
-import io.novaordis.utilities.Files;
-import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.testing.Tests;
 import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.Test;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringTokenizer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+@Deprecated
 public class HierarchicalStorageStrategyTest extends StorageStrategyTest
 {
     // Constants -------------------------------------------------------------------------------------------------------

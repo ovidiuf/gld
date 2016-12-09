@@ -16,6 +16,17 @@
 
 package io.novaordis.gld.api;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/1/16
@@ -24,13 +35,83 @@ public abstract class KeyStoreTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    private static final Logger log = LoggerFactory.getLogger(KeyStoreTest.class);
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    protected File scratchDirectory;
+    private File baseDirectory;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Before
+    public void before() throws Exception {
+
+        String projectBaseDirName = System.getProperty("basedir");
+        scratchDirectory = new File(projectBaseDirName, "target/test-scratch");
+        assertTrue(scratchDirectory.isDirectory());
+
+        baseDirectory = new File(System.getProperty("basedir"));
+        assertTrue(baseDirectory.isDirectory());
+    }
+
+    @After
+    public void after() throws Exception {
+
+        //
+        // scratch directory cleanup
+        //
+
+        assertTrue(io.novaordis.utilities.Files.rmdir(scratchDirectory, false));
+    }
+
+    // Tests -----------------------------------------------------------------------------------------------------------
+
+    // lifecycle -------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void lifecycle() throws Exception {
+
+        KeyStore s = getKeyStoreToTest();
+
+        assertFalse(s.isStarted());
+
+        s.start();
+
+        assertTrue(s.isStarted());
+
+        // idempotence
+
+        s.start();
+
+        assertTrue(s.isStarted());
+
+        s.stop();
+
+        assertFalse(s.isStarted());
+
+        // idempotence
+
+        s.stop();
+
+        assertFalse(s.isStarted());
+    }
+
+    // getKeyCount() ---------------------------------------------------------------------------------------------------
+
+//    @Test
+//    public void getKeyCount() throws Exception {
+//
+//        KeyStore s = getKeyStoreToTest();
+//
+//        long value = s.getKeyCount();
+//
+//        log.info("" + value);
+//    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

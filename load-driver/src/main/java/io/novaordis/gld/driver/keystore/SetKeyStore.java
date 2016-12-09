@@ -24,9 +24,8 @@ import java.util.Set;
 /**
  * This implementation reads the entire key space in memory on startup and then keeps cycling through it.
  */
+public class SetKeyStore implements KeyStore {
 
-public class SetKeyStore implements KeyStore
-{
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
@@ -59,7 +58,12 @@ public class SetKeyStore implements KeyStore
         throw new IllegalStateException("this is a read-only keystore, cannot store");
     }
 
-//    @Override
+    @Override
+    public long getKeyCount() {
+        throw new RuntimeException("getKeyCount() NOT YET IMPLEMENTED");
+    }
+
+    //    @Override
     public synchronized String get()
     {
         if (!iterator.hasNext())

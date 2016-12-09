@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver.todeplete.storage;
+package io.novaordis.gld.api.store;
 
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.StorageStrategy;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
-abstract class StorageStrategyBase implements StorageStrategy
+@Deprecated
+public class StdoutStorageStrategy implements StorageStrategy
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -29,17 +32,7 @@ abstract class StorageStrategyBase implements StorageStrategy
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Configuration configuration;
-    private boolean canRead;
-    private boolean canWrite;
-
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    protected StorageStrategyBase()
-    {
-        this.canRead = true;
-        this.canWrite = true;
-    }
 
     // StorageStrategy implementation ----------------------------------------------------------------------------------
 
@@ -47,62 +40,85 @@ abstract class StorageStrategyBase implements StorageStrategy
      * @see StorageStrategy#configure(Configuration, List, int)
      */
     @Override
-    public void configure(Configuration configuration, List<String> arguments, int from) throws Exception
+    public void configure(Configuration conf, List arguments, int from) throws Exception
     {
-        if (configuration == null)
-        {
-            throw new IllegalArgumentException("null configuration");
-        }
+        // nothing to do, noop
+    }
 
-        if (arguments == null)
-        {
-            throw new IllegalArgumentException("null argument list");
-        }
+    @Override
+    public boolean isConfigured()
+    {
+        return true;
+    }
 
-        if (!arguments.isEmpty() && (from < 0 || from >= arguments.size()))
-        {
-            throw new ArrayIndexOutOfBoundsException("invalid array index: " + from);
-        }
+    @Override
+    public void start() throws Exception
+    {
+        // noop
+    }
 
-        this.configuration = configuration;
+    @Override
+    public void stop() throws Exception
+    {
+        // noop
+    }
+
+    @Override
+    public boolean isStarted()
+    {
+        return true;
+    }
+
+    /**
+     * @see StorageStrategy#store(String, String)
+     */
+    @Override
+    public void store(String key, String value) throws Exception
+    {
+        System.out.println(key + "=" + value);
+    }
+
+    /**
+     * @see StorageStrategy#retrieve(String)
+     */
+    @Override
+    public String retrieve(String key) throws Exception
+    {
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Set<String> getKeys() throws Exception
+    {
+        return Collections.emptySet();
     }
 
     @Override
     public boolean isRead()
     {
-        return canRead;
+        return false;
     }
 
     @Override
     public boolean isWrite()
     {
-        return canWrite;
+        return true;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public void setRead(boolean b)
+    @Override
+    public String toString()
     {
-        this.canRead = b;
-    }
-
-    public void setWrite(boolean b)
-    {
-        this.canWrite = b;
+        return "StdoutStorageStrategy[" + Integer.toHexString(System.identityHashCode(this)) + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected Configuration getConfiguration()
-    {
-        return configuration;
-    }
-
     // Private ---------------------------------------------------------------------------------------------------------
 
     // Inner classes ---------------------------------------------------------------------------------------------------
-
 
 }

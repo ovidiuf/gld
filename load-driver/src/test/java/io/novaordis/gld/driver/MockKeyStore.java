@@ -60,6 +60,11 @@ public class MockKeyStore implements KeyStore {
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
+    @Override
+    public long getKeyCount() {
+        throw new RuntimeException("getKeyCount() NOT YET IMPLEMENTED");
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------

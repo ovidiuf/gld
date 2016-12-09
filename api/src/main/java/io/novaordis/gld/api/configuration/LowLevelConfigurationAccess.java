@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.configuration;
+
+import java.util.Map;
 
 /**
- * Typed access to underlying configuration.
- *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 12/8/16
  */
-public interface Configuration {
+public class LowLevelConfigurationAccess implements LowLevelConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -30,26 +30,23 @@ public interface Configuration {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private Map<String, Object> rawConfiguration;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public LowLevelConfigurationAccess(Map<String, Object> raw) {
+
+        this.rawConfiguration = raw;
+    }
+
+    // LowLevelConfiguration implementation ----------------------------------------------------------------------------
+
+    @Override
+    public <T> T get(Class<? extends T> type, String... path) {
+        throw new RuntimeException("get() NOT YET IMPLEMENTED");
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
-
-    // Typed Access ----------------------------------------------------------------------------------------------------
-
-    /**
-     * Never returns null, if the service configuration is missing, configuration parsing section will throw exception.
-     */
-    ServiceConfiguration getServiceConfiguration();
-
-    /**
-     * Never returns null, if the load configuration is missing, configuration parsing section will throw exception.
-     */
-    LoadConfiguration getLoadConfiguration();
-
-    /**
-     * May return null, it means there's no key store, we simply discard the keys used in testing.
-     */
-    StoreConfiguration getStoreConfiguration();
 
     // Package protected -----------------------------------------------------------------------------------------------
 

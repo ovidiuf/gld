@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver.todeplete.storage;
+package io.novaordis.gld.api.store;
 
+import io.novaordis.gld.api.store.StorageStrategyBase;
 import io.novaordis.gld.api.todiscard.Configuration;
 
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.Set;
  * com.novaordis.gld.mock because, among other things, we test reflection-based instantiation, and for that we need
  * to be in certain packages.
  */
+@Deprecated
 public class MockStorageStrategy extends StorageStrategyBase
 {
     // Constants -------------------------------------------------------------------------------------------------------

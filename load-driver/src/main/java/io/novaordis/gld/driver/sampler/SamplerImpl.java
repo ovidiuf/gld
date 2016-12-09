@@ -137,10 +137,10 @@ public class SamplerImpl extends TimerTask implements Sampler {
     }
 
     @Override
-    public synchronized void stop()
-    {
-        if (!started)
-        {
+    public synchronized void stop() {
+
+        if (!started) {
+
             return;
         }
 
@@ -162,10 +162,10 @@ public class SamplerImpl extends TimerTask implements Sampler {
     }
 
     @Override
-    public void setSamplingIntervalMs(long samplingIntervalMs)
-    {
-        if (isStarted())
-        {
+    public void setSamplingIntervalMs(long samplingIntervalMs) {
+
+        if (isStarted()) {
+
             throw new IllegalStateException("can't modify the sampling interval after the sampler was started");
         }
 

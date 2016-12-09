@@ -16,7 +16,6 @@
 
 package io.novaordis.gld.api.provider;
 
-import io.novaordis.gld.api.KeyProvider;
 import io.novaordis.gld.api.KeyProviderTest;
 import io.novaordis.gld.api.ServiceConfiguration;
 import org.apache.log4j.Logger;

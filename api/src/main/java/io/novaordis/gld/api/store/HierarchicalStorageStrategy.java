@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver.todeplete.storage;
+package io.novaordis.gld.api.store;
 
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.todiscard.Configuration;
@@ -36,6 +36,7 @@ import java.util.Set;
  * A strategy that stores each key/value pair in its own separated file. The files are maintained in a hierarchical
  * directory structure to avoid overloading the file table of a single flat directory in case of a large number of keys.
  */
+@Deprecated
 public class HierarchicalStorageStrategy extends StorageStrategyBase
 {
     // Constants -------------------------------------------------------------------------------------------------------

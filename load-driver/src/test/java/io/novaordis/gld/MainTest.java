@@ -16,6 +16,9 @@
 
 package io.novaordis.gld;
 
+import io.novaordis.gld.api.Configuration;
+import io.novaordis.gld.api.configuration.YamlBasedConfiguration;
+import io.novaordis.gld.api.store.HierarchicalStore;
 import io.novaordis.utilities.Files;
 import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.env.EnvironmentVariableProvider;
@@ -375,6 +378,18 @@ public class MainTest {
         int exitCode = Main.loadDriverLifeCycle(args);
 
         assertEquals(0, exitCode);
+
+        //
+        // make sure the all the keys are on disk
+        //
+
+        Configuration c = new YamlBasedConfiguration(f);
+        String storageDir = c.getStoreConfiguration().get(String.class, "directory");
+        HierarchicalStore hs = new HierarchicalStore(new File(storageDir));
+
+        long expected = c.getLoadConfiguration().getOperations();
+        long actual = hs.getKeyCount();
+        assertEquals(expected, actual);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

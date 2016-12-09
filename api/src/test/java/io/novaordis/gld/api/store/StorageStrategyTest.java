@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver.todeplete.storage;
+package io.novaordis.gld.api.store;
 
-import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.StorageStrategy;
 import org.apache.log4j.Logger;
-import org.junit.Test;
-
-import java.util.ArrayList;
 
 import static junit.framework.TestCase.fail;
 
+@Deprecated
 public abstract class StorageStrategyTest
 {
     // Constants -------------------------------------------------------------------------------------------------------

@@ -39,4 +39,6 @@ public interface KeyStore {
      */
     void store(String key) throws Exception;
 
+    long getKeyCount();
+
 }

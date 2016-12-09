@@ -17,7 +17,7 @@
 package io.novaordis.gld.driver.keystore;
 
 import io.novaordis.gld.api.KeyStore;
-import io.novaordis.gld.driver.todeplete.storage.HierarchicalStorageStrategy;
+import io.novaordis.gld.api.store.HierarchicalStorageStrategy;
 
 import java.util.Iterator;
 
@@ -25,6 +25,7 @@ import java.util.Iterator;
  * Experimental - interacting with a HierarchicalStorageStrategy. Must refactor.
 
  */
+@Deprecated
 public class ExperimentalKeyStore implements KeyStore
 {
     // Constants -------------------------------------------------------------------------------------------------------
@@ -51,7 +52,12 @@ public class ExperimentalKeyStore implements KeyStore
         throw new IllegalStateException("this is a read-only keystore, cannot store");
     }
 
-//    @Override
+    @Override
+    public long getKeyCount() {
+        throw new RuntimeException("getKeyCount() NOT YET IMPLEMENTED");
+    }
+
+    //    @Override
     public synchronized String get()
     {
         if (keyIterator.hasNext())

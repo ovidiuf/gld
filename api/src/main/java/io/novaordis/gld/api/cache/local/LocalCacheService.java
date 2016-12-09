@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * A very simple cache service collocated with the load driver.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/2/16
  */
@@ -77,6 +79,8 @@ public class LocalCacheService extends ServiceBase implements CacheService {
         }
 
         started = false;
+
+        cache.clear();
     }
 
     @Override

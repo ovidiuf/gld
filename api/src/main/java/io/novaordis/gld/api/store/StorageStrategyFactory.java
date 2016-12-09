@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver.todeplete.storage;
+package io.novaordis.gld.api.store;
 
 import io.novaordis.gld.api.ClassLoadingUtilities;
 import io.novaordis.gld.api.todiscard.Configuration;
@@ -23,6 +23,7 @@ import io.novaordis.utilities.UserErrorException;
 
 import java.util.List;
 
+@Deprecated
 public class StorageStrategyFactory
 {
     // Constants -------------------------------------------------------------------------------------------------------

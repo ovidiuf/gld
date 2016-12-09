@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver.todeplete.storage;
+package io.novaordis.gld.api.store;
 
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.StorageStrategy;
@@ -26,6 +26,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Set;
 
+@Deprecated
 public class TextFileStorageStrategy extends StorageStrategyBase
 {
     // Constants -------------------------------------------------------------------------------------------------------

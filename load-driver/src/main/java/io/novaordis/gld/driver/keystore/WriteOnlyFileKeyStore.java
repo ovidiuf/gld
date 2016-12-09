@@ -61,7 +61,12 @@ public class WriteOnlyFileKeyStore implements KeyStore
         asyncWriter.handOver(key);
     }
 
-//    @Override
+    @Override
+    public long getKeyCount() {
+        throw new RuntimeException("getKeyCount() NOT YET IMPLEMENTED");
+    }
+
+    //    @Override
     public String get()
     {
         throw new IllegalStateException("this is a write-only keystore, cannot get");

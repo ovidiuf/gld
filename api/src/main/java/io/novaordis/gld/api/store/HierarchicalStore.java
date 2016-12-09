@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.store;
+
+import io.novaordis.gld.api.KeyStore;
+
+import java.io.File;
 
 /**
- * Typed access to underlying configuration.
- *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 12/8/16
  */
-public interface Configuration {
+public class HierarchicalStore implements KeyStore {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,24 +34,37 @@ public interface Configuration {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public HierarchicalStore(File directory) {
+    }
+
+    // KeyStore implementation -----------------------------------------------------------------------------------------
+
+    @Override
+    public void start() throws Exception {
+        throw new RuntimeException("start() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void stop() throws Exception {
+        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public boolean isStarted() {
+        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void store(String key) throws Exception {
+        throw new RuntimeException("store() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public long getKeyCount() {
+        throw new RuntimeException("getKeyCount() NOT YET IMPLEMENTED");
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
-
-    // Typed Access ----------------------------------------------------------------------------------------------------
-
-    /**
-     * Never returns null, if the service configuration is missing, configuration parsing section will throw exception.
-     */
-    ServiceConfiguration getServiceConfiguration();
-
-    /**
-     * Never returns null, if the load configuration is missing, configuration parsing section will throw exception.
-     */
-    LoadConfiguration getLoadConfiguration();
-
-    /**
-     * May return null, it means there's no key store, we simply discard the keys used in testing.
-     */
-    StoreConfiguration getStoreConfiguration();
 
     // Package protected -----------------------------------------------------------------------------------------------
 

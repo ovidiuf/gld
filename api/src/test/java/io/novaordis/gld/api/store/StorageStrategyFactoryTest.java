@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver.todeplete.storage;
+package io.novaordis.gld.api.store;
 
-import io.novaordis.gld.api.todiscard.Configuration;
-import io.novaordis.utilities.UserErrorException;
 import org.apache.log4j.Logger;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+@Deprecated
 public class StorageStrategyFactoryTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
