@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.driver;
 
+import io.novaordis.gld.api.KeyProvider;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.driver.console.CommandLineConsole;
@@ -183,22 +184,23 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
         finally {
 
             if (service != null) {
+
                 service.stop();
             }
 
-//            KeyStore keyStore = loadStrategy.getKeyProvider();
-//
-//            if (keyStore != null) {
-//                keyStore.stop();
-//            }
+            KeyProvider keyProvider = loadStrategy.getKeyProvider();
 
-            throw new RuntimeException("RETURN HERE");
+            if (keyProvider != null) {
 
-//            if (sampler != null) {
-//                sampler.stop();
-//            }
-//
-//            running = false;
+                keyProvider.stop();
+            }
+
+            if (sampler != null) {
+
+                sampler.stop();
+            }
+
+            running = false;
         }
     }
 
