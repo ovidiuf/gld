@@ -25,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.util.HashSet;
 import java.util.Set;
@@ -42,6 +43,10 @@ public class HierarchicalStore implements KeyStore {
 
     public static final String STORY_TYPE_LABEL = "hierarchical";
     public static final String DIRECTORY_CONFIGURATION_LABEL = "directory";
+
+    public static final byte[] NOT_STORED_MARKER =
+            ((char)2 + "" + (char)3 + "NOT_STORED (do not edit this manually as it contains special characters)").
+                    getBytes();
 
     private static final Logger log = LoggerFactory.getLogger(HierarchicalStore.class);
 
@@ -90,6 +95,107 @@ public class HierarchicalStore implements KeyStore {
     public static String getSecondLevelDirectory(String fortyDigitKeyHexSha1) {
 
         return fortyDigitKeyHexSha1.substring(2, 4);
+    }
+
+    static byte[] toFileContent(String key, StoredValue value) throws KeyStoreException {
+
+        byte[] keyBytes;
+
+        try {
+
+            keyBytes = key.getBytes("utf8");
+        }
+        catch(UnsupportedEncodingException e) {
+
+            throw new KeyStoreException(e);
+        }
+
+        byte[] valueBytes = value.getBytes();
+
+        int length = keyBytes.length;
+
+        if (value.notStored()) {
+
+            length += 1 + NOT_STORED_MARKER.length; // '\n' between key and value
+            valueBytes = NOT_STORED_MARKER;
+        }
+        else if (!value.isNull()) {
+
+            length += 1 + valueBytes.length; // '\n' between key and value
+        }
+
+        byte[] content = new byte[length];
+
+        System.arraycopy(keyBytes, 0, content, 0, keyBytes.length);
+
+        if (!value.isNull()) {
+
+            content[keyBytes.length] = (byte) '\n';
+            System.arraycopy(valueBytes, 0, content, keyBytes.length + 1, valueBytes.length);
+        }
+
+        return content;
+    }
+
+    /**
+     * The reverse of toFileContent().
+     *
+     * @see HierarchicalStore#toFileContent(String, StoredValue)
+     */
+    static KeyValuePair fromFileContent(byte[] content) {
+
+        int i = 0;
+
+        for(; i < content.length; i ++) {
+
+            if ((byte)'\n' == content[i]) {
+                break;
+            }
+        }
+
+        KeyValuePair p = new KeyValuePair();
+
+        if (i == content.length) {
+
+            //
+            // '\n' not found, that is a null value stored
+            //
+
+            p.setKey(new String(content));
+            return p;
+        }
+
+        String key = new String(content, 0, i);
+        p.setKey(key);
+
+        outer: if (content.length == i + 1 + NOT_STORED_MARKER.length) {
+
+            int offset = i + 1;
+            for(int j = 0; j < content.length - offset; j ++) {
+
+                if (NOT_STORED_MARKER[j] != content[j + offset]) {
+
+                    break outer;
+                }
+            }
+
+            //
+            // NOT_STORED marker
+            //
+
+            p.setValue(NotStored.INSTANCE);
+            return p;
+        }
+
+        //
+        // normal value
+        //
+
+        byte[] value = new byte[content.length - i - 1];
+        System.arraycopy(content, i + 1, value, 0, value.length);
+        StoredValue v =  StoredValue.getInstance(value);
+        p.setValue(v);
+        return p;
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------
@@ -154,8 +260,23 @@ public class HierarchicalStore implements KeyStore {
 
             log.debug(directory + " created");
         }
+        else {
+
+            //
+            // the directory exists and starting and operating this store will most likely overwrite the content,
+            // so protect against that
+            //
+
+            if (!isOverwrite()) {
+
+                throw new KeyStoreException(
+                        "directory " + directory + " already exists and the store is not configured to overwrite it");
+            }
+        }
 
         started = true;
+
+        log.debug(this + " started");
     }
 
     @Override
@@ -167,6 +288,8 @@ public class HierarchicalStore implements KeyStore {
         }
 
         started = false;
+
+        log.debug(this + " stopped");
     }
 
     @Override
@@ -179,17 +302,17 @@ public class HierarchicalStore implements KeyStore {
     public void store(String key, byte[]... v) throws KeyStoreException {
 
         File keyFile = getKeyLocation(key);
-        writeKeyValue(keyFile, key, new Value(v));
+        writeKeyValue(keyFile, key, StoredValue.getInstance(v));
     }
 
     @Override
-    public Value retrieve(String key) throws KeyStoreException {
+    public StoredValue retrieve(String key) throws KeyStoreException {
 
         File keyFile = getKeyLocation(key);
 
         if (!keyFile.isFile()) {
 
-            return NullValue.INSTANCE;
+            return Null.INSTANCE;
         }
 
         byte[] content;
@@ -203,30 +326,14 @@ public class HierarchicalStore implements KeyStore {
             throw new KeyStoreException(e);
         }
 
-        int i = 0;
+        KeyValuePair p = fromFileContent(content);
 
-        for(; i < content.length; i ++) {
-
-            if ((byte)'\n' == content[i]) {
-                break;
-            }
-        }
-
-        if (i == content.length) {
-
-            throw new IllegalStateException("key file format error - no new line: " + keyFile);
-        }
-
-        String storedKey = new String(content, 0, i);
-
-        if (!key.equals(storedKey)) {
+        if (!key.equals(p.getKey())) {
 
             throw new IllegalArgumentException("key file format error - key value mismatch: " + keyFile);
         }
 
-        byte[] value = new byte[content.length - i - 1];
-        System.arraycopy(content, i + 1, value, 0, value.length);
-        return new Value(value);
+        return p.getValue();
     }
 
     @Override
@@ -299,10 +406,13 @@ public class HierarchicalStore implements KeyStore {
         return keys;
     }
 
+    /**
+     * Inefficient implementation, we call getKeys() underneath. We should implement something better.
+     */
     @Override
-    public long getKeyCount() {
+    public long getKeyCount() throws KeyStoreException {
 
-        throw new RuntimeException("getKeyCount() NOT YET IMPLEMENTED");
+        return getKeys().size();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -335,7 +445,7 @@ public class HierarchicalStore implements KeyStore {
     @Override
     public String toString() {
 
-        return directory == null ? "null" : directory.toString();
+        return directory == null ? "null" : "hierarchical store " + directory.toString();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -376,7 +486,7 @@ public class HierarchicalStore implements KeyStore {
      * @exception IllegalArgumentException on null key, invalid key (see above) or null value.
      *
      */
-    static File writeKeyValue(File keyFile, String key, Value value) throws KeyStoreException {
+    static File writeKeyValue(File keyFile, String key, StoredValue value) throws KeyStoreException {
 
         if (key == null) {
 
@@ -414,16 +524,9 @@ public class HierarchicalStore implements KeyStore {
 
         try {
 
-            byte[] keyBytes = key.getBytes("utf8");
-            byte[] valueBytes = value.getBytes();
-            byte[] buffer = new byte[keyBytes.length + valueBytes.length + 1]; // '\n' between key and value
-
-            System.arraycopy(keyBytes, 0, buffer, 0, keyBytes.length);
-            System.arraycopy(valueBytes, 0, buffer, keyBytes.length + 1, valueBytes.length);
-            buffer[keyBytes.length] = (byte) '\n';
-
+            byte[] content = toFileContent(key, value);
             FileOutputStream fos = new FileOutputStream(keyFile);
-            fos.write(buffer);
+            fos.write(content);
             fos.close();
         }
         catch(Exception e) {

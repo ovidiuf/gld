@@ -16,81 +16,82 @@
 
 package io.novaordis.gld.api.store;
 
-import io.novaordis.gld.api.KeyStore;
-
-import java.util.HashSet;
-import java.util.Set;
-
 /**
- * An in-memory, thread-safe Set. Does not have memory protection, so it can potentially cause OutOfMemoryError.
- *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/8/16
+ * @since 12/9/16
  */
-public class InMemoryStore implements KeyStore {
+public class KeyValuePair {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    public static final String STORY_TYPE_LABEL = "in-memory";
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private final Set store;
+    private String key;
+    private StoredValue value;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public InMemoryStore() {
+    public KeyValuePair(String key, StoredValue value) {
 
-        this.store = new HashSet<>();
+        this.key = key;
+        this.value = value;
     }
 
-    // KeyStore implementation -----------------------------------------------------------------------------------------
+    public KeyValuePair(String key) {
 
-    @Override
-    public void start() throws KeyStoreException {
-        throw new RuntimeException("start() NOT YET IMPLEMENTED");
+        this(key, Null.INSTANCE);
     }
 
-    @Override
-    public void stop() throws KeyStoreException {
-        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
-    }
+    public KeyValuePair() {
 
-    @Override
-    public boolean isStarted() {
-        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void store(String key, byte[] ... value) throws KeyStoreException {
-
-        synchronized (store) {
-            throw new RuntimeException("store() NOT YET IMPLEMENTED");
-        }
-    }
-
-    @Override
-    public Value retrieve(String key) throws KeyStoreException {
-        throw new RuntimeException("retrieve() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Set<String> getKeys() throws KeyStoreException {
-        throw new RuntimeException("getKeys() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public long getKeyCount() {
-
-        synchronized (store) {
-
-            return store.size();
-        }
+        this(null, Null.INSTANCE);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public String getKey() {
+
+        return key;
+    }
+
+    /**
+     * @exception IllegalArgumentException if the key is null
+     */
+    public void setKey(String key) {
+
+        if (key == null) {
+
+            throw new IllegalArgumentException("null key");
+        }
+
+        this.key = key;
+    }
+
+    /**
+     * Never returns null.
+     */
+    public StoredValue getValue() {
+
+        return value;
+    }
+
+    public void setValue(StoredValue v) {
+
+        if (v == null) {
+
+            throw new IllegalArgumentException("null StoredValue instance");
+        }
+
+        this.value = v;
+    }
+
+    @Override
+    public String toString() {
+
+        return "" + key + ", " + value;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

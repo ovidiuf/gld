@@ -50,15 +50,7 @@ public class KeyStoreFactory {
         // manual look up - we may want to replace with reflection-based initialization
         //
 
-        if (InMemoryStore.STORY_TYPE_LABEL.equals(type)) {
-
-            //
-            // 'in-memory'
-            //
-
-            return new InMemoryStore();
-        }
-        else if (HierarchicalStore.STORY_TYPE_LABEL.equals(type)) {
+        if (HierarchicalStore.STORY_TYPE_LABEL.equals(type)) {
 
             //
             // 'hierarchical'

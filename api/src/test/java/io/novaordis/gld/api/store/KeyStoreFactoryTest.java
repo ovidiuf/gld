@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 /**
@@ -104,10 +105,12 @@ public class KeyStoreFactoryTest {
 
         MockStoreConfiguration mc = new MockStoreConfiguration();
 
-        mc.setStoreType(InMemoryStore.STORY_TYPE_LABEL);
+        mc.setStoreType(HierarchicalStore.STORY_TYPE_LABEL);
+        mc.setPath(HierarchicalStore.DIRECTORY_CONFIGURATION_LABEL, ".");
 
-        InMemoryStore s = (InMemoryStore)KeyStoreFactory.build(mc);
-        assertEquals(0, s.getKeyCount());
+        HierarchicalStore s = (HierarchicalStore)KeyStoreFactory.build(mc);
+
+        assertFalse(s.isStarted());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -217,7 +217,9 @@ public class HierarchicalStoreTest extends KeyStoreTest {
         }
         catch(KeyStoreException e) {
 
-            throw new RuntimeException("RETURN HERE, come up with a log message");
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("directory .* already exists and the store is not configured to overwrite it"));
         }
     }
 
@@ -309,12 +311,31 @@ public class HierarchicalStoreTest extends KeyStoreTest {
 
         try {
 
-            HierarchicalStore.writeKeyValue(target, null, new Value("test"));
+            HierarchicalStore.writeKeyValue(target, null, StoredValue.getInstance("test".getBytes()));
             fail("should have failed with IllegalArgumentException, null key");
         }
         catch(IllegalArgumentException e) {
 
             log.info(e.getMessage());
+        }
+    }
+
+    @Test
+    public void writeKeyValue_NullValue() throws Exception {
+
+        File target  = new File(scratchDirectory, "test-dir");
+        assertTrue(Files.mkdir(target));
+
+        try {
+
+            HierarchicalStore.writeKeyValue(target, "test-key", null);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("null value", msg);
         }
     }
 
@@ -328,7 +349,7 @@ public class HierarchicalStoreTest extends KeyStoreTest {
 
         try {
 
-            HierarchicalStore.writeKeyValue(target, key, new Value("test"));
+            HierarchicalStore.writeKeyValue(target, key, StoredValue.getInstance("test".getBytes()));
             fail("should have failed with IllegalArgumentException, new line in key");
         }
         catch(IllegalArgumentException e) {
@@ -347,7 +368,7 @@ public class HierarchicalStoreTest extends KeyStoreTest {
 
         try {
 
-            HierarchicalStore.writeKeyValue(target, key, new Value("test"));
+            HierarchicalStore.writeKeyValue(target, key, StoredValue.getInstance("test".getBytes()));
             fail("should have failed with IllegalArgumentException, new line in key");
         }
         catch(IllegalArgumentException e) {
@@ -367,7 +388,7 @@ public class HierarchicalStoreTest extends KeyStoreTest {
 
         try {
 
-            HierarchicalStore.writeKeyValue(keyFile, key, new Value("test"));
+            HierarchicalStore.writeKeyValue(keyFile, key, StoredValue.getInstance("test".getBytes()));
             fail("should have failed with IllegalArgumentException, parent not a directory");
         }
         catch(IllegalArgumentException e) {
@@ -391,7 +412,7 @@ public class HierarchicalStoreTest extends KeyStoreTest {
         assertTrue(Files.write(file, "something"));
         assertEquals("something", Files.read(file));
 
-        HierarchicalStore.writeKeyValue(file, key, new Value(value));
+        HierarchicalStore.writeKeyValue(file, key, StoredValue.getInstance(value.getBytes()));
 
         // make sure the file was overwritten
 
@@ -421,7 +442,7 @@ public class HierarchicalStoreTest extends KeyStoreTest {
 
         File candidate = new File(targetDir, hexSha1 + ".txt");
 
-        File file = HierarchicalStore.writeKeyValue(candidate, key, new Value(value));
+        File file = HierarchicalStore.writeKeyValue(candidate, key, StoredValue.getInstance(value.getBytes()));
 
         assertEquals(candidate, file);
 
@@ -438,13 +459,86 @@ public class HierarchicalStoreTest extends KeyStoreTest {
         assertEquals(value, valueFromFile);
     }
 
+    // toFileContent()/fromFileContent() -------------------------------------------------------------------------------
+
+    @Test
+    public void toFileContent_fromFileContent_NullValue() throws Exception {
+
+        byte[] content = HierarchicalStore.toFileContent("test", Null.INSTANCE);
+
+        KeyValuePair p = HierarchicalStore.fromFileContent(content);
+        assertEquals("test", p.getKey());
+        assertEquals(Null.INSTANCE, p.getValue());
+    }
+
+    @Test
+    public void toFileContent_fromFileContent_NotStored() throws Exception {
+
+        byte[] content = HierarchicalStore.toFileContent("test", NotStored.INSTANCE);
+
+        log.info(new String(content));
+
+        KeyValuePair p = HierarchicalStore.fromFileContent(content);
+        assertEquals("test", p.getKey());
+        assertEquals(NotStored.INSTANCE, p.getValue());
+    }
+
+    @Test
+    public void toFileContent_fromFileContent_RegularValue() throws Exception {
+
+        StoredValue v = StoredValue.getInstance("something".getBytes());
+        byte[] content = HierarchicalStore.toFileContent("test", v);
+
+        KeyValuePair p = HierarchicalStore.fromFileContent(content);
+        assertEquals("test", p.getKey());
+
+        StoredValue v2 = p.getValue();
+        assertEquals("something", new String(v2.getBytes()));
+    }
+
+    @Test
+    public void toFileContent_fromFileContent_RegularValue_SameLengthAsNotStoredMarker() throws Exception {
+
+        byte[] content = new byte[HierarchicalStore.NOT_STORED_MARKER.length];
+        for(int i = 0; i < content.length; i ++) {
+            content[i] = (byte)'a';
+        }
+
+        StoredValue v = StoredValue.getInstance(content);
+
+        byte[] content2 = HierarchicalStore.toFileContent("test", v);
+
+        KeyValuePair p = HierarchicalStore.fromFileContent(content2);
+        assertEquals("test", p.getKey());
+
+        StoredValue v2 = p.getValue();
+        assertEquals(new String(content), new String(v2.getBytes()));
+    }
+
+    @Test
+    public void toFileContent_fromFileContent_EmptyValue() throws Exception {
+
+        StoredValue v = StoredValue.getInstance("".getBytes());
+        byte[] content = HierarchicalStore.toFileContent("test", v);
+
+        KeyValuePair p = HierarchicalStore.fromFileContent(content);
+        assertEquals("test", p.getKey());
+
+        StoredValue v2 = p.getValue();
+        assertEquals("", new String(v2.getBytes()));
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     @Override
     protected KeyStore getKeyStoreToTest() throws Exception {
 
         File dir = new File(scratchDirectory, "test-hierarchical-store");
-        assertTrue(dir.mkdir());
+
+        //
+        // the implementation will create the directory
+        //
+        assertFalse(dir.isDirectory());
 
         return new HierarchicalStore(dir);
     }

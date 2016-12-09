@@ -17,7 +17,7 @@
 package io.novaordis.gld.api;
 
 import io.novaordis.gld.api.store.KeyStoreException;
-import io.novaordis.gld.api.store.Value;
+import io.novaordis.gld.api.store.StoredValue;
 
 import java.util.Set;
 
@@ -50,7 +50,7 @@ public interface KeyStore {
      */
     void store(String key, byte[] ... value) throws IllegalArgumentException, KeyStoreException;
 
-    Value retrieve(String key) throws KeyStoreException;
+    StoredValue retrieve(String key) throws KeyStoreException;
 
     /**
      * This operation is potentially expensive (in processing time and memory), if the underlying storage contains
@@ -58,6 +58,6 @@ public interface KeyStore {
      */
     Set<String> getKeys() throws KeyStoreException;
 
-    long getKeyCount();
+    long getKeyCount() throws KeyStoreException;
 
 }

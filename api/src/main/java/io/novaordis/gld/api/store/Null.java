@@ -17,67 +17,44 @@
 package io.novaordis.gld.api.store;
 
 /**
+ * This value indicates that the corresponding key/value pair value is null.
+ *
+ * To get an instance:
+ *
+ * StoredValue.getInstance(null);
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/9/16
  */
-public class Value {
+public class Null extends StoredValue {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    public static final Null INSTANCE = new Null();
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private byte[] content;
-    private boolean notStored;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    /**
-     * Use when storing and when having to handle variable length argument lists.
-     */
-    public Value(byte[][] args) {
+    private Null() {
 
-        if (args.length == 0) {
-
-            //
-            // the API user does not want to store values
-            //
-            notStored = true;
-        }
-    }
-
-    /**
-     * Use when retrieving content from storage.
-     */
-    public Value(byte[] content) {
-
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    /**
-     * Use for testing
-     */
-    Value(String content) {
-
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        super(null);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    @Override
     public boolean isNull() {
 
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        return true;
     }
 
+    @Override
     public boolean notStored() {
 
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    public byte[] getBytes() {
-
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        return false;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

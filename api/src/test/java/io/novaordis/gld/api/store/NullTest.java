@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver.keystore;
+package io.novaordis.gld.api.store;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
-public class SetKeyStoreTest
-{
+/**
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 12/9/16
+ */
+public class NullTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = Logger.getLogger(SetKeyStoreTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -41,53 +39,18 @@ public class SetKeyStoreTest
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    // Tests -----------------------------------------------------------------------------------------------------------
+
     @Test
-    public void lifeCycle() throws Exception {
+    public void factoryCreatedInstance() {
 
-        Set<String> keys = new HashSet<>();
-        keys.add("KEY1");
-        keys.add("KEY2");
-        keys.add("KEY3");
+        //noinspection NullArgumentToVariableArgMethod
+        StoredValue nullValue = StoredValue.getInstance(null);
 
-        Set<String> expected = new HashSet<>(keys);
-
-        SetKeyStore sks = new SetKeyStore(keys);
-
-        assertTrue(sks.isStarted());
-
-        assertEquals(3, sks.size());
-
-        try
-        {
-            sks.store("blah");
-            fail("should throw IllegalStateException, we're a read only key store");
-        }
-        catch(IllegalStateException e)
-        {
-            log.info(e.getMessage());
-        }
-
-        String key = sks.get();
-
-        assertTrue(expected.contains(key));
-        expected.remove(key);
-        assertEquals(2, sks.size());
-
-        key = sks.get();
-
-        assertTrue(expected.contains(key));
-        expected.remove(key);
-        assertEquals(1, sks.size());
-
-        key = sks.get();
-
-        assertTrue(expected.contains(key));
-        expected.remove(key);
-        assertEquals(0, sks.size());
-
-        assertNull(sks.get());
-
-        assertEquals(0, sks.size());
+        assertEquals(Null.INSTANCE, nullValue);
+        assertTrue(nullValue.isNull());
+        assertFalse(nullValue.notStored());
+        assertNull(nullValue.getBytes());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

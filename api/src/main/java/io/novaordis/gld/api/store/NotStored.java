@@ -16,19 +16,21 @@
 
 package io.novaordis.gld.api.store;
 
-import io.novaordis.gld.api.KeyStoreTest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
+ * This value indicates that the corresponding key/value pair value was NOT stored in the key store.
+ *
+ * To get an instance:
+ *
+ * StoredValue.getInstance();
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/8/16
+ * @since 12/9/16
  */
-public class InMemoryStoreTest extends KeyStoreTest {
+public class NotStored extends StoredValue {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = LoggerFactory.getLogger(InMemoryStoreTest.class);
+    public static final NotStored INSTANCE = new NotStored();
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -36,19 +38,26 @@ public class InMemoryStoreTest extends KeyStoreTest {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    private NotStored() {
+
+        super(null);
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // Tests -----------------------------------------------------------------------------------------------------------
+    @Override
+    public boolean isNull() {
 
-    // Package protected -----------------------------------------------------------------------------------------------
+        return false;
+    }
 
     @Override
-    protected InMemoryStore getKeyStoreToTest() throws Exception {
+    public boolean notStored() {
 
-        log.debug(".");
-
-        return new InMemoryStore();
+        return true;
     }
+
+    // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 

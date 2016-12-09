@@ -18,13 +18,16 @@ package io.novaordis.gld.api.store;
 
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/9/16
  */
-public class NullValueTest {
+public class NotStoredTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -39,9 +42,15 @@ public class NullValueTest {
     // Tests -----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void returnHere() {
+    public void factoryCreatedInstance() {
 
-        fail("Return here");
+        StoredValue nullValue = StoredValue.getInstance();
+
+        assertEquals(NotStored.INSTANCE, nullValue);
+        assertFalse(nullValue.isNull());
+        assertTrue(nullValue.notStored());
+        assertNull(nullValue.getBytes());
+
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -16,7 +16,7 @@
 
 package io.novaordis.gld.api;
 
-import io.novaordis.gld.api.store.Value;
+import io.novaordis.gld.api.store.StoredValue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -140,7 +140,7 @@ public abstract class KeyStoreTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("attempt to store of more than one value", msg);
+            assertEquals("invalid multiple arguments", msg);
         }
         finally {
 
@@ -163,7 +163,7 @@ public abstract class KeyStoreTest {
 
         assertEquals(1, s.getKeyCount());
 
-        Value value = s.retrieve("test-key");
+        StoredValue value = s.retrieve("test-key");
 
         assertFalse(value.isNull());
         assertFalse(value.notStored());
@@ -190,7 +190,7 @@ public abstract class KeyStoreTest {
 
         assertEquals(1, s.getKeyCount());
 
-        Value value = s.retrieve("test-key");
+        StoredValue value = s.retrieve("test-key");
 
         assertTrue(value.isNull());
         assertFalse(value.notStored());
@@ -214,7 +214,7 @@ public abstract class KeyStoreTest {
 
         assertEquals(1, s.getKeyCount());
 
-        Value value = s.retrieve("test-key");
+        StoredValue value = s.retrieve("test-key");
 
         assertFalse(value.isNull());
         assertTrue(value.notStored());
