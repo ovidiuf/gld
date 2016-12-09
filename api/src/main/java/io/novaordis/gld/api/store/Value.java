@@ -55,6 +55,14 @@ public class Value {
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
+    /**
+     * Use for testing
+     */
+    Value(String content) {
+
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     public boolean isNull() {

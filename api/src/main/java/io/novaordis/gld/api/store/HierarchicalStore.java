@@ -98,6 +98,8 @@ public class HierarchicalStore implements KeyStore {
 
     private volatile boolean started;
 
+    private boolean overwrite;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
@@ -113,6 +115,7 @@ public class HierarchicalStore implements KeyStore {
         }
 
         this.directory = directory;
+        this.overwrite = false;
     }
 
     // KeyStore implementation -----------------------------------------------------------------------------------------
@@ -310,6 +313,23 @@ public class HierarchicalStore implements KeyStore {
     public File getDirectory() {
 
         return directory;
+    }
+
+    /**
+     * @return true if the store will overwrite the content of an existing directory, at startup. If this method
+     * return false, and the directory exists, start() will fail.
+     */
+    public boolean isOverwrite() {
+
+        return overwrite;
+    }
+
+    /**
+     * @see HierarchicalStore#isOverwrite()
+     */
+    public void setOverwrite(boolean b) {
+
+        this.overwrite = b;
     }
 
     @Override

@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.StringTokenizer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -56,7 +57,7 @@ public class HierarchicalStoreTest extends KeyStoreTest {
     // KeyStoreFactory.build() -----------------------------------------------------------------------------------------
 
     @Test
-    public void KeyStoreFactory_build_MissingDirectory() throws Exception {
+    public void KeyStoreFactory_build_NoDirectoryInConfiguration() throws Exception {
 
         //
         // we test it here, and not in KeyStoreFactoryTest, because the logic is HierarchicalStore-specific
@@ -184,7 +185,22 @@ public class HierarchicalStoreTest extends KeyStoreTest {
     }
 
     @Test
-    public void start_DirectoryExists() throws Exception {
+    public void start_DirectoryExists_OverwriteForced() throws Exception {
+
+        File d  = new File(scratchDirectory, "parent/test-hierarchical-store");
+        assertTrue(d.mkdirs());
+        assertTrue(d.isDirectory());
+
+        HierarchicalStore s = new HierarchicalStore(d);
+        s.setOverwrite(true);
+
+        s.start();
+
+        assertTrue(d.isDirectory());
+    }
+
+    @Test
+    public void start_DirectoryExists_OverwriteNotForced() throws Exception {
 
         File d  = new File(scratchDirectory, "parent/test-hierarchical-store");
         assertTrue(d.mkdirs());
@@ -192,398 +208,235 @@ public class HierarchicalStoreTest extends KeyStoreTest {
 
         HierarchicalStore s = new HierarchicalStore(d);
 
+        assertFalse(s.isOverwrite());
+
+        try {
+
+            s.start();
+            fail("should throw exception");
+        }
+        catch(KeyStoreException e) {
+
+            throw new RuntimeException("RETURN HERE, come up with a log message");
+        }
+    }
+
+    @Test
+    public void start_createDirectory_Stop() throws Exception {
+
+        File d  = new File(scratchDirectory, "parent/test-hierarchical-store");
+        assertTrue(d.getParentFile().mkdir());
+        assertFalse(d.isDirectory());
+
+        HierarchicalStore s = new HierarchicalStore(d);
+
+        assertFalse(d.isDirectory());
+
         s.start();
 
         assertTrue(d.isDirectory());
+
+        s.stop();
+
+        assertTrue(d.exists());
+        assertTrue(d.isDirectory());
     }
 
+    // lifecycle -------------------------------------------------------------------------------------------------------
 
-    //
-    // TO SORT OUT
-    //
+    @Test
+    public void startStoreStop() throws Exception {
 
-    // init() -----------------------------------------------------------------------------------------------------
+        File d  = new File(scratchDirectory, "parent/test-hierarchical-store");
+        assertTrue(d.getParentFile().mkdir());
+        assertFalse(d.isDirectory());
 
-//    @Test
-//    public void configure_NoRootDirectoryName() throws Exception
-//    {
-//        HierarchicalStorageStrategy s = getStorageStrategyToTest();
-//
-//        List<String> emptyArgumentList = new ArrayList<>();
-//
-//        try
-//        {
-////            Configuration c = new MockConfiguration();
-//            Configuration c = null;
-//
-//            s.configure(c, emptyArgumentList, 0);
-//            fail("should fail with UserErrorException, no root directory name");
-//        }
-//        catch(UserErrorException e)
-//        {
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void configure_rootIsTheLastArgument() throws Exception
-//    {
-//        HierarchicalStorageStrategy s = getStorageStrategyToTest();
-//
-//        List<String> arguments = new ArrayList<>(Arrays.asList("something", "something-else", "--root"));
-//
-//        try
-//        {
-//
-//            //            Configuration c = new MockConfiguration();
-//            Configuration c = null;
-//
-//            s.configure(c, arguments, 2);
-//            fail("should fail with UserErrorException, --root last in list");
-//        }
-//        catch(UserErrorException e)
-//        {
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void configure() throws Exception
-//    {
-//        HierarchicalStorageStrategy s = getStorageStrategyToTest();
-//
-//        List<String> arguments = new ArrayList<>(Arrays.asList(
-//            "something", "something-else", "--root", "./test-root"));
-//
-//        //            Configuration c = new MockConfiguration();
-//        Configuration c = null;
-//
-//        s.configure(c, arguments, 2);
-//
-//        assertEquals("./test-root", s.getRootDirectoryName());
-//    }
-//
-//    // start -----------------------------------------------------------------------------------------------------------
-//
-//    @Test
-//    public void start_rootIsAFile() throws Exception
-//    {
-//        File root = new File(Tests.getScratchDir(), "test-root");
-//
-//        assertFalse(root.exists());
-//
-//        assertTrue(Files.write(root, "something"));
-//
-//        assertTrue(root.exists());
-//        assertTrue(root.isFile());
-//
-//        HierarchicalStorageStrategy s = getStorageStrategyToTest();
-//
-//        List<String> arguments = new ArrayList<>();
-//        arguments.add("--root");
-//        arguments.add(root.getPath());
-//
-//        //            Configuration c = new MockConfiguration();
-//        Configuration c = null;
-//
-//        s.configure(c, arguments, 0);
-//
-//        try
-//        {
-//            s.start();
-//            fail("should fail with UserErrorException, root is a file");
-//        }
-//        catch(UserErrorException e)
-//        {
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void start_rootIsAnExistingDirectory_FailToStartUnlessForced() throws Exception
-//    {
-//        File root = new File(Tests.getScratchDir(), "test-root");
-//
-//        assertTrue(Files.mkdir(root));
-//        assertTrue(root.exists());
-//        assertTrue(root.isDirectory());
-//
-//        HierarchicalStorageStrategy s = getStorageStrategyToTest();
-//
-//        List<String> arguments = new ArrayList<>();
-//        arguments.add("--root");
-//        arguments.add(root.getPath());
-//
-//        //            Configuration c = new MockConfiguration();
-//        Configuration c = null;
-//
-//        s.configure(c, arguments, 0);
-//
-//        try
-//        {
-//            s.start();
-//            fail("should fail with UserErrorException, root is an existing directory and we're not forcing");
-//        }
-//        catch(UserErrorException e)
-//        {
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void start_createRootIfItDoesNotExist() throws Exception
-//    {
-//        File root = new File(Tests.getScratchDir(), "test-root");
-//
-//        assertFalse(root.exists());
-//
-//        HierarchicalStorageStrategy s = getStorageStrategyToTest();
-//
-//        List<String> arguments = new ArrayList<>();
-//        arguments.add("--root");
-//        arguments.add(root.getPath());
-//
-//        //            Configuration c = new MockConfiguration();
-//        Configuration c = null;
-//
-//        s.configure(c, arguments, 0);
-//
-//        assertFalse(root.exists());
-//
-//        //
-//        // simulate a load strategy that writes only
-//        //
-//        s.setWrite(true);
-//        s.setRead(false);
-//
-//        s.start();
-//
-//        assertTrue(root.exists());
-//        assertTrue(root.isDirectory());
-//
-//        s.stop();
-//
-//        // make sure the directory was not deleted
-//
-//        assertTrue(root.exists());
-//        assertTrue(root.isDirectory());
-//    }
-//
-//    // lifecycle -------------------------------------------------------------------------------------------------------
-//
-//    @Test
-//    public void startStoreStop() throws Exception
-//    {
-//        File root = new File(Tests.getScratchDir(), "test-root");
-//
-//        assertFalse(root.exists());
-//
-//        HierarchicalStorageStrategy s = getStorageStrategyToTest();
-//
-//        List<String> arguments = new ArrayList<>();
-//        arguments.add("--root");
-//        arguments.add(root.getPath());
-//
-//        //            Configuration c = new MockConfiguration();
-//        Configuration c = null;
-//
-//        s.configure(c, arguments, 0);
-//
-//        assertFalse(root.exists());
-//
-//        //
-//        // simulate a load strategy that writes only
-//        //
-//        s.setWrite(true);
-//        s.setRead(false);
-//
-//        s.start();
-//
-//        assertTrue(root.exists());
-//        assertTrue(root.isDirectory());
-//
-//        s.store("KEY-01", "VALUE-01");
-//        s.store("KEY-02", "VALUE-02");
-//        s.store("KEY-03", "VALUE-03");
-//
-//        s.stop();
-//
-//        // make sure the directory was not deleted
-//
-//        assertTrue(root.exists());
-//        assertTrue(root.isDirectory());
-//
-//        // make sure all the content is there
-//
-//        String key = "KEY-01";
-//        String value = "VALUE-01";
-//        String fileName = HierarchicalStorageStrategy.toHex(HierarchicalStorageStrategy.toSha1(key)) + ".txt";
-//        String firstLevelDir = fileName.substring(0, 2);
-//        String secondLevelDir = fileName.substring(2, 4);
-//        String fileContent = Files.read(new File(root, firstLevelDir + "/" + secondLevelDir + "/" + fileName));
-//        StringTokenizer st = new StringTokenizer(fileContent, "\n");
-//        assertEquals(key, st.nextToken());
-//        assertEquals(value, st.nextToken());
-//
-//        key = "KEY-02";
-//        value = "VALUE-02";
-//        fileName = HierarchicalStorageStrategy.toHex(HierarchicalStorageStrategy.toSha1(key)) + ".txt";
-//        firstLevelDir = fileName.substring(0, 2);
-//        secondLevelDir = fileName.substring(2, 4);
-//        fileContent = Files.read(new File(root, firstLevelDir + "/" + secondLevelDir + "/" + fileName));
-//        st = new StringTokenizer(fileContent, "\n");
-//        assertEquals(key, st.nextToken());
-//        assertEquals(value, st.nextToken());
-//
-//        key = "KEY-03";
-//        value = "VALUE-03";
-//        fileName = HierarchicalStorageStrategy.toHex(HierarchicalStorageStrategy.toSha1(key)) + ".txt";
-//        firstLevelDir = fileName.substring(0, 2);
-//        secondLevelDir = fileName.substring(2, 4);
-//        fileContent = Files.read(new File(root, firstLevelDir + "/" + secondLevelDir + "/" + fileName));
-//        st = new StringTokenizer(fileContent, "\n");
-//        assertEquals(key, st.nextToken());
-//        assertEquals(value, st.nextToken());
-//    }
-//
-//    // writeKeyValue ---------------------------------------------------------------------------------------------------
-//
-//    @Test
-//    public void writeKeyValue_NullKey() throws Exception
-//    {
-//        File target = new File(Tests.getScratchDir(), "test-dir");
-//        assertTrue(Files.mkdir(target));
-//
-//        try
-//        {
-//            HierarchicalStorageStrategy.writeKeyValue(target, null, "");
-//            fail("should have failed with IllegalArgumentException, null key");
-//        }
-//        catch(IllegalArgumentException e)
-//        {
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void writeKeyValue_NewLineInTheMiddle() throws Exception
-//    {
-//        String key = "blah\nblah";
-//
-//        File target = new File(Tests.getScratchDir(), "test-dir");
-//        assertTrue(Files.mkdir(target));
-//
-//        try
-//        {
-//            HierarchicalStorageStrategy.writeKeyValue(target, key, "");
-//            fail("should have failed with IllegalArgumentException, new line in key");
-//        }
-//        catch(IllegalArgumentException e)
-//        {
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void writeKeyValue_NewLineAtTheEnd() throws Exception
-//    {
-//        String key = "blah\n";
-//
-//        File target = new File(Tests.getScratchDir(), "test-dir");
-//        assertTrue(Files.mkdir(target));
-//
-//        try
-//        {
-//            HierarchicalStorageStrategy.writeKeyValue(target, key, "");
-//            fail("should have failed with IllegalArgumentException, new line in key");
-//        }
-//        catch(IllegalArgumentException e)
-//        {
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void writeKeyValue_ParentNotADirectory() throws Exception
-//    {
-//        String key = "blah";
-//
-//        File notADir = new File(Tests.getScratchDir(), "not-a-dir");
-//        assertTrue(Files.write(notADir, "something"));
-//        File keyFile = new File(notADir, "a.txt");
-//
-//        try
-//        {
-//            HierarchicalStorageStrategy.writeKeyValue(keyFile, key, "");
-//            fail("should have failed with IllegalArgumentException, parent not a directory");
-//        }
-//        catch(IllegalArgumentException e)
-//        {
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void writeKeyValue_KeyValueFileAlreadyExist() throws Exception
-//    {
-//        String key = "blah";
-//        String value = "halbhalb";
-//
-//        File targetDir = new File(Tests.getScratchDir(), "test-dir");
-//        assertTrue(Files.mkdir(targetDir));
-//
-//        String hexSha1 = HierarchicalStorageStrategy.toHex(HierarchicalStorageStrategy.toSha1(key));
-//
-//        File file = new File(targetDir, hexSha1 + ".txt");
-//        assertTrue(Files.write(file, "something"));
-//        assertEquals("something", Files.read(file));
-//
-//        HierarchicalStorageStrategy.writeKeyValue(file, key, value);
-//
-//        // make sure the file was overwritten
-//
-//        String content = Files.read(file);
-//
-//        StringTokenizer st = new StringTokenizer(content, "\n");
-//
-//        String keyFromFile = st.nextToken();
-//
-//        assertEquals(key, keyFromFile);
-//
-//        String valueFromFile = st.nextToken();
-//
-//        assertEquals(value, valueFromFile);
-//    }
-//
-//    @Test
-//    public void writeKeyValue_FileDoesNotExist() throws Exception
-//    {
-//        String key = "blah";
-//        String value = "halbhalb";
-//
-//        File targetDir = new File(Tests.getScratchDir(), "test-dir");
-//        assertTrue(Files.mkdir(targetDir));
-//
-//        String hexSha1 = HierarchicalStorageStrategy.toHex(HierarchicalStorageStrategy.toSha1(key));
-//
-//        File candidate = new File(targetDir, hexSha1 + ".txt");
-//
-//        File file = HierarchicalStorageStrategy.writeKeyValue(candidate, key, value);
-//
-//        assertEquals(candidate, file);
-//
-//        String content = Files.read(file);
-//
-//        StringTokenizer st = new StringTokenizer(content, "\n");
-//
-//        String keyFromFile = st.nextToken();
-//
-//        assertEquals(key, keyFromFile);
-//
-//        String valueFromFile = st.nextToken();
-//
-//        assertEquals(value, valueFromFile);
-//    }
+        HierarchicalStore s = new HierarchicalStore(d);
+
+        s.start();
+
+        s.store("KEY-01", "VALUE-01".getBytes());
+        s.store("KEY-02", "VALUE-02".getBytes());
+        s.store("KEY-03", "VALUE-03".getBytes());
+
+        s.stop();
+
+        // make sure the directory was not deleted
+
+        assertTrue(d.exists());
+        assertTrue(d.isDirectory());
+
+        // make sure all the content is there
+
+        String key = "KEY-01";
+        String value = "VALUE-01";
+        String fileName = HierarchicalStore.toHex(HierarchicalStore.toSha1(key)) + ".txt";
+        String firstLevelDir = fileName.substring(0, 2);
+        String secondLevelDir = fileName.substring(2, 4);
+        String fileContent = Files.read(new File(d, firstLevelDir + "/" + secondLevelDir + "/" + fileName));
+        StringTokenizer st = new StringTokenizer(fileContent, "\n");
+        assertEquals(key, st.nextToken());
+        assertEquals(value, st.nextToken());
+
+        key = "KEY-02";
+        value = "VALUE-02";
+        fileName = HierarchicalStore.toHex(HierarchicalStore.toSha1(key)) + ".txt";
+        firstLevelDir = fileName.substring(0, 2);
+        secondLevelDir = fileName.substring(2, 4);
+        fileContent = Files.read(new File(d, firstLevelDir + "/" + secondLevelDir + "/" + fileName));
+        st = new StringTokenizer(fileContent, "\n");
+        assertEquals(key, st.nextToken());
+        assertEquals(value, st.nextToken());
+
+        key = "KEY-03";
+        value = "VALUE-03";
+        fileName = HierarchicalStore.toHex(HierarchicalStore.toSha1(key)) + ".txt";
+        firstLevelDir = fileName.substring(0, 2);
+        secondLevelDir = fileName.substring(2, 4);
+        fileContent = Files.read(new File(d, firstLevelDir + "/" + secondLevelDir + "/" + fileName));
+        st = new StringTokenizer(fileContent, "\n");
+        assertEquals(key, st.nextToken());
+        assertEquals(value, st.nextToken());
+    }
+
+    // writeKeyValue ---------------------------------------------------------------------------------------------------
+
+    @Test
+    public void writeKeyValue_NullKey() throws Exception {
+
+        File target  = new File(scratchDirectory, "test-dir");
+        assertTrue(Files.mkdir(target));
+
+        try {
+
+            HierarchicalStore.writeKeyValue(target, null, new Value("test"));
+            fail("should have failed with IllegalArgumentException, null key");
+        }
+        catch(IllegalArgumentException e) {
+
+            log.info(e.getMessage());
+        }
+    }
+
+    @Test
+    public void writeKeyValue_NewLineInTheMiddle() throws Exception {
+
+        String key = "blah\nblah";
+
+        File target  = new File(scratchDirectory, "test-dir");
+        assertTrue(Files.mkdir(target));
+
+        try {
+
+            HierarchicalStore.writeKeyValue(target, key, new Value("test"));
+            fail("should have failed with IllegalArgumentException, new line in key");
+        }
+        catch(IllegalArgumentException e) {
+
+            log.info(e.getMessage());
+        }
+    }
+
+    @Test
+    public void writeKeyValue_NewLineAtTheEnd() throws Exception {
+
+        String key = "blah\n";
+
+        File target  = new File(scratchDirectory, "test-dir");
+        assertTrue(Files.mkdir(target));
+
+        try {
+
+            HierarchicalStore.writeKeyValue(target, key, new Value("test"));
+            fail("should have failed with IllegalArgumentException, new line in key");
+        }
+        catch(IllegalArgumentException e) {
+
+            log.info(e.getMessage());
+        }
+    }
+
+    @Test
+    public void writeKeyValue_ParentNotADirectory() throws Exception {
+
+        String key = "blah";
+
+        File notADir = new File(scratchDirectory, "not-a-dir");
+        assertTrue(Files.write(notADir, "something"));
+        File keyFile = new File(notADir, "a.txt");
+
+        try {
+
+            HierarchicalStore.writeKeyValue(keyFile, key, new Value("test"));
+            fail("should have failed with IllegalArgumentException, parent not a directory");
+        }
+        catch(IllegalArgumentException e) {
+
+            log.info(e.getMessage());
+        }
+    }
+
+    @Test
+    public void writeKeyValue_KeyValueFileAlreadyExist() throws Exception {
+
+        String key = "blah";
+        String value = "halbhalb";
+
+        File targetDir = new File(scratchDirectory, "test-dir");
+        assertTrue(Files.mkdir(targetDir));
+
+        String hexSha1 = HierarchicalStore.toHex(HierarchicalStore.toSha1(key));
+
+        File file = new File(targetDir, hexSha1 + ".txt");
+        assertTrue(Files.write(file, "something"));
+        assertEquals("something", Files.read(file));
+
+        HierarchicalStore.writeKeyValue(file, key, new Value(value));
+
+        // make sure the file was overwritten
+
+        String content = Files.read(file);
+
+        StringTokenizer st = new StringTokenizer(content, "\n");
+
+        String keyFromFile = st.nextToken();
+
+        assertEquals(key, keyFromFile);
+
+        String valueFromFile = st.nextToken();
+
+        assertEquals(value, valueFromFile);
+    }
+
+    @Test
+    public void writeKeyValue_FileDoesNotExist() throws Exception {
+
+        String key = "blah";
+        String value = "halbhalb";
+
+        File targetDir = new File(scratchDirectory, "test-dir");
+        assertTrue(Files.mkdir(targetDir));
+
+        String hexSha1 = HierarchicalStore.toHex(HierarchicalStore.toSha1(key));
+
+        File candidate = new File(targetDir, hexSha1 + ".txt");
+
+        File file = HierarchicalStore.writeKeyValue(candidate, key, new Value(value));
+
+        assertEquals(candidate, file);
+
+        String content = Files.read(file);
+
+        StringTokenizer st = new StringTokenizer(content, "\n");
+
+        String keyFromFile = st.nextToken();
+
+        assertEquals(key, keyFromFile);
+
+        String valueFromFile = st.nextToken();
+
+        assertEquals(value, valueFromFile);
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
