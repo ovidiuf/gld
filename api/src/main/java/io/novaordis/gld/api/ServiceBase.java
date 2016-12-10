@@ -38,6 +38,8 @@ public abstract class ServiceBase implements Service {
     private LoadDriver loadDriver;
     private LoadStrategy loadStrategy;
 
+    private static boolean started;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
@@ -70,6 +72,54 @@ public abstract class ServiceBase implements Service {
     }
 
     // lifecycle -------------------------------------------------------------------------------------------------------
+
+    /**
+     * @throws IllegalStateException on inconsistent state.
+     */
+    @Override
+    public void start() throws Exception {
+
+        if (started) {
+
+            return;
+        }
+
+        if (loadStrategy == null) {
+
+            throw new IllegalStateException("incompletely configured service instance: load strategy not installed");
+        }
+
+        //
+        // start dependencies
+        //
+
+        loadStrategy.start();
+
+        started = true;
+    }
+
+    @Override
+    public void stop() {
+
+        if (!started) {
+
+            return;
+        }
+
+        //
+        // stop dependencies
+        //
+
+        loadStrategy.stop();
+
+        started = false;
+    }
+
+    @Override
+    public boolean isStarted() {
+
+        return started;
+    }
 
     // execution -------------------------------------------------------------------------------------------------------
 
@@ -107,20 +157,6 @@ public abstract class ServiceBase implements Service {
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    /**
-     * Call from start() to insure instance state consistency.
-     *
-     * @throws IllegalStateException on inconsistent state.
-     */
-
-    protected void checkStateConsistency() throws IllegalStateException {
-
-        if (loadStrategy == null) {
-
-            throw new IllegalStateException("incompletely configured service instance: load strategy not installed");
-        }
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

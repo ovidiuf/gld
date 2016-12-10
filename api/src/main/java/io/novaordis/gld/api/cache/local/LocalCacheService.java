@@ -42,8 +42,6 @@ public class LocalCacheService extends ServiceBase implements CacheService {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private volatile boolean started;
-
     private ConcurrentHashMap<String, String> cache;
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -60,33 +58,20 @@ public class LocalCacheService extends ServiceBase implements CacheService {
     @Override
     public void start() throws Exception {
 
-        if (started) {
-
-            return;
-        }
-
-        checkStateConsistency();
-
-        started = true;
+        super.start();
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
 
-        if (!started) {
+        if (!isStarted()) {
 
             return;
         }
 
-        started = false;
+        super.stop();
 
         cache.clear();
-    }
-
-    @Override
-    public boolean isStarted() {
-
-        return started;
     }
 
     // execution -------------------------------------------------------------------------------------------------------
