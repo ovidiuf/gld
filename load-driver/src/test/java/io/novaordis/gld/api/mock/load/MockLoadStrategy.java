@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.cache.load;
+package io.novaordis.gld.api.mock.load;
 
 import io.novaordis.gld.api.KeyProvider;
 import io.novaordis.gld.api.LoadConfiguration;
@@ -22,17 +22,18 @@ import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
-import io.novaordis.gld.api.cache.CacheServiceConfiguration;
-import io.novaordis.utilities.UserErrorException;
+import io.novaordis.gld.driver.MockOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Set;
+
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/6/16
+ * @since 12/4/16
  */
 public class MockLoadStrategy implements LoadStrategy {
 
@@ -42,22 +43,10 @@ public class MockLoadStrategy implements LoadStrategy {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    private static String classLevelRequiredConfigurationElementName;
-
-    /**
-     * Resets static configuration.
-     */
-    public static void reset() {
-
-        classLevelRequiredConfigurationElementName = null;
-    }
-
-    public static void setRequiredConfigurationElement(String elementName) {
-
-        classLevelRequiredConfigurationElementName = elementName;
-    }
-
     // Attributes ------------------------------------------------------------------------------------------------------
+
+    private volatile boolean initialized;
+    private volatile boolean started;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -66,57 +55,47 @@ public class MockLoadStrategy implements LoadStrategy {
     @Override
     public ServiceType getServiceType() {
 
-        return ServiceType.cache;
+        return ServiceType.mock;
     }
 
     @Override
     public String getName() {
-
-        return "mock";
+        throw new RuntimeException("getName() NOT YET IMPLEMENTED");
     }
 
     @Override
     public void init(ServiceConfiguration sc, LoadConfiguration lc) throws Exception {
 
         //
-        // by default, we don't require any specific configuration
+        // because init() is usually NOT idempotent, fail this if we call it twice
         //
 
-        if (classLevelRequiredConfigurationElementName != null) {
+        if (initialized) {
 
-            //
-            // there is a required configuration element name, attempt to read it from the configuration
-            //
-
-            CacheServiceConfiguration csc = (CacheServiceConfiguration)sc;
-
-            Map<String, Object> rawConfig = csc.getMap("load-strategy");
-
-            String requiredValue = (String)rawConfig.get(classLevelRequiredConfigurationElementName);
-
-            if (requiredValue == null) {
-
-                throw new UserErrorException(
-                        "required configuration element '" + classLevelRequiredConfigurationElementName + "' not found");
-            }
+            fail(this + ".init(...) called twice");
         }
+
+        this.initialized = true;
 
         log.info(this + ".init()");
     }
 
     @Override
     public void start() throws Exception {
-        throw new RuntimeException("start() NOT YET IMPLEMENTED");
+
+        started = true;
     }
 
     @Override
     public boolean isStarted() {
-        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
+
+        return started;
     }
 
     @Override
     public void stop() {
-        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
+
+        started = false;
     }
 
     @Override
@@ -126,7 +105,10 @@ public class MockLoadStrategy implements LoadStrategy {
 
     @Override
     public Set<Class<? extends Operation>> getOperationTypes() {
-        throw new RuntimeException("getOperationTypes() NOT YET IMPLEMENTED");
+
+        HashSet<Class<? extends Operation>> result = new HashSet<>();
+        result.add(MockOperation.class);
+        return result;
     }
 
     @Override
@@ -139,7 +121,7 @@ public class MockLoadStrategy implements LoadStrategy {
     @Override
     public String toString() {
 
-        return "api cache MockLoadStrategy";
+        return "load-driver MockLoadStrategy";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

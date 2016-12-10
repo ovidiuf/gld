@@ -20,6 +20,7 @@ import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.ServiceType;
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.ContentType;
 import io.novaordis.gld.api.todiscard.Node;
@@ -47,6 +48,9 @@ public class MockService implements Service {
 
     private Map<Thread, Integer> perThreadInvocationCount;
     private List<Operation> executedOperations;
+
+    private LoadStrategy loadStrategy;
+    private LoadDriver loadDriver;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -84,16 +88,31 @@ public class MockService implements Service {
 
     @Override
     public LoadDriver getLoadDriver() {
-        throw new RuntimeException("getLoadDriver() NOT YET IMPLEMENTED");
+
+        return loadDriver;
+    }
+
+    @Override
+    public void setLoadDriver(LoadDriver d) {
+
+        loadDriver = d;
     }
 
     @Override
     public LoadStrategy getLoadStrategy() {
-        throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
+
+        return loadStrategy;
+    }
+
+    @Override
+    public void setLoadStrategy(LoadStrategy s) {
+
+        this.loadStrategy  = s;
     }
 
     @Override
     public void start() throws Exception {
+
         started = true;
         wasStarted = true;
         log.info(this + " started");
@@ -108,6 +127,12 @@ public class MockService implements Service {
     @Override
     public boolean isStarted() {
         return started;
+    }
+
+    @Override
+    public ServiceType getType() {
+
+        return ServiceType.mock;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

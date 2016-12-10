@@ -31,6 +31,7 @@ public abstract class LoadStrategyBase implements LoadStrategy {
 
     private KeyProvider keyProvider;
     private RandomContentGenerator valueGenerator;
+    private volatile boolean started;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -44,19 +45,29 @@ public abstract class LoadStrategyBase implements LoadStrategy {
     @Override
     public void start() throws Exception {
 
-        throw new RuntimeException("NOT YET IMPLEMENTED start()");
+        if (started) {
+
+            return;
+        }
+
+        started = true;
     }
 
     @Override
     public boolean isStarted() {
 
-        throw new RuntimeException("NOT YET IMPLEMENTED isStarted()");
+        return started;
     }
 
     @Override
     public void stop() {
 
-        throw new RuntimeException("NOT YET IMPLEMENTED stop()");
+        if (!started) {
+
+            return;
+        }
+
+        started = false;
     }
 
     @Override

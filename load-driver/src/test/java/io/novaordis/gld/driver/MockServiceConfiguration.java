@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.cache;
+package io.novaordis.gld.driver;
 
-import io.novaordis.gld.api.MockService;
+import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
+import io.novaordis.utilities.UserErrorException;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/7/16
+ * @since 12/9/16
  */
-public class MockCacheService extends MockService implements CacheService {
+public class MockServiceConfiguration implements ServiceConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,33 +34,30 @@ public class MockCacheService extends MockService implements CacheService {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Map<String, String> entries;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockCacheService() {
-
-        this.entries = new HashMap<>();
-    }
-
-    // CacheService implementation -------------------------------------------------------------------------------------
+    // ServiceConfiguration implementation -----------------------------------------------------------------------------
 
     @Override
-    public ServiceType getType() {
+    public ServiceType getType() throws UserErrorException {
 
-        return ServiceType.cache;
+        return ServiceType.mock;
     }
 
     @Override
-    public String get(String key) throws Exception {
+    public String getImplementation() throws UserErrorException {
 
-        return entries.get(key);
+        return MockService.class.getName();
     }
 
     @Override
-    public void put(String key, String value) throws Exception {
+    public String getLoadStrategyName() throws UserErrorException {
+        throw new RuntimeException("getLoadStrategyName() NOT YET IMPLEMENTED");
+    }
 
-        entries.put(key, value);
+    @Override
+    public Map<String, Object> getMap(String... path) {
+        throw new RuntimeException("getMap() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

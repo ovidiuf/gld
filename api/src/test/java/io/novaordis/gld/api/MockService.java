@@ -34,18 +34,35 @@ public class MockService implements Service {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private LoadStrategy loadStrategy;
+    private LoadDriver loadDriver;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Service implementation ------------------------------------------------------------------------------------------
 
     @Override
     public LoadDriver getLoadDriver() {
-        throw new RuntimeException("getLoadDriver() NOT YET IMPLEMENTED");
+
+        return loadDriver;
+    }
+
+    @Override
+    public void setLoadDriver(LoadDriver d) {
+
+        this.loadDriver = d;
     }
 
     @Override
     public LoadStrategy getLoadStrategy() {
-        throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
+
+        return loadStrategy;
+    }
+
+    @Override
+    public void setLoadStrategy(LoadStrategy s) {
+
+        this.loadStrategy = s;
     }
 
     @Override
@@ -61,6 +78,12 @@ public class MockService implements Service {
     @Override
     public boolean isStarted() {
         throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public ServiceType getType() {
+
+        return ServiceType.mock;
     }
 
     @Override

@@ -18,6 +18,7 @@ package io.novaordis.gld.api.cache.local;
 
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.ServiceBase;
+import io.novaordis.gld.api.ServiceType;
 import io.novaordis.gld.api.cache.CacheService;
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.ContentType;
@@ -72,6 +73,12 @@ public class LocalCacheService extends ServiceBase implements CacheService {
         super.stop();
 
         cache.clear();
+    }
+
+    @Override
+    public ServiceType getType() {
+
+        return ServiceType.cache;
     }
 
     // execution -------------------------------------------------------------------------------------------------------

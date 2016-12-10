@@ -17,6 +17,7 @@
 package io.novaordis.gld.api;
 
 import io.novaordis.gld.api.cache.local.LocalCacheService;
+import io.novaordis.utilities.UserErrorException;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -28,19 +29,50 @@ public class ServiceFactory {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    public static Service buildInstance(ServiceConfiguration c, LoadStrategy loadStrategy, LoadDriver loadDriver)
+    public static Service buildInstance(ServiceConfiguration sc, LoadStrategy loadStrategy, LoadDriver loadDriver)
             throws Exception {
 
-        ServiceType t = c.getType();
-        String implementation = c.getImplementation();
+        ServiceType t = sc.getType();
+        String implementation = sc.getImplementation();
+
+        if (implementation == null) {
+
+            throw new IllegalArgumentException("null implementation");
+        }
 
         if (ServiceType.cache.equals(t) && "local".equals(implementation)) {
 
             return new LocalCacheService(loadStrategy, loadDriver);
         }
 
-        throw new RuntimeException("NOT YET IMPLEMENTED buildInstance(" + t + ", " + implementation + ")");
+        //
+        // attempt to instantiate the fully qualified class name
+        //
 
+
+        Class c = Class.forName(implementation);
+
+        if (!Service.class.isAssignableFrom(c)) {
+
+            throw new UserErrorException(implementation + " is not a Service implementation");
+        }
+
+        Object o = c.newInstance();
+        Service s = (Service)o;
+
+        if (!t.equals(s.getType())) {
+
+            throw new UserErrorException(implementation + " is not a " + t + " Service");
+        }
+
+        //
+        // install dependencies
+        //
+
+        s.setLoadStrategy(loadStrategy);
+        s.setLoadDriver(loadDriver);
+
+        return s;
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------

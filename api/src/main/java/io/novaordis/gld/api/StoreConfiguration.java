@@ -39,6 +39,10 @@ public interface StoreConfiguration extends LowLevelConfiguration {
 
     // Typed Access ----------------------------------------------------------------------------------------------------
 
+    /**
+     * A well-known store type ("in-memory", "hierarchical", etc.) or a fully qualified class name that can be
+     * instantiated by reflection.
+     */
     String getStoreType() throws UserErrorException;
 
     // Untyped Access --------------------------------------------------------------------------------------------------

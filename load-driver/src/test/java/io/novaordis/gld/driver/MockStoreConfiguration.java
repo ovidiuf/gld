@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.cache;
+package io.novaordis.gld.driver;
 
-import io.novaordis.gld.api.MockService;
-import io.novaordis.gld.api.ServiceType;
-
-import java.util.HashMap;
-import java.util.Map;
+import io.novaordis.gld.api.StoreConfiguration;
+import io.novaordis.utilities.UserErrorException;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/7/16
+ * @since 12/9/16
  */
-public class MockCacheService extends MockService implements CacheService {
+public class MockStoreConfiguration implements StoreConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,33 +31,19 @@ public class MockCacheService extends MockService implements CacheService {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Map<String, String> entries;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockCacheService() {
-
-        this.entries = new HashMap<>();
-    }
-
-    // CacheService implementation -------------------------------------------------------------------------------------
+    // MockStoreConfiguration implementation ---------------------------------------------------------------------------
 
     @Override
-    public ServiceType getType() {
+    public String getStoreType() throws UserErrorException {
 
-        return ServiceType.cache;
+        return MockKeyStore.class.getName();
     }
 
     @Override
-    public String get(String key) throws Exception {
-
-        return entries.get(key);
-    }
-
-    @Override
-    public void put(String key, String value) throws Exception {
-
-        entries.put(key, value);
+    public <T> T get(Class<? extends T> type, String... path) {
+        throw new RuntimeException("get() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

@@ -76,7 +76,32 @@ public class KeyStoreFactory {
         }
         else {
 
-            throw new UserErrorException("unknown key store type \"" + type + "\"");
+            //
+            // we interpret the store type as the fully qualified class name of the implementation and we attempt
+            // to instantiate it via reflection
+            //
+
+            Object keyStore;
+
+            try {
+
+                Class c = Class.forName(type);
+
+                keyStore = c.newInstance();
+
+            }
+            catch(Exception e) {
+
+                throw new UserErrorException("unknown key store type \"" + type + "\"", e);
+            }
+
+            if (!(keyStore instanceof KeyStore)) {
+
+                throw new UserErrorException("\"" + type + "\" cannot be used to instantiate a KeyStore");
+
+            }
+
+            return (KeyStore)keyStore;
         }
     }
 

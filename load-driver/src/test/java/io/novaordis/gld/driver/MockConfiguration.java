@@ -39,17 +39,20 @@ public class MockConfiguration implements Configuration {
 
     @Override
     public ServiceConfiguration getServiceConfiguration() {
-        throw new RuntimeException("getServiceConfiguration() NOT YET IMPLEMENTED");
+
+        return new MockServiceConfiguration();
     }
 
     @Override
     public LoadConfiguration getLoadConfiguration() {
-        throw new RuntimeException("getLoadConfiguration() NOT YET IMPLEMENTED");
+
+        return new MockLoadConfiguration();
     }
 
     @Override
     public StoreConfiguration getStoreConfiguration() {
-        throw new RuntimeException("getStoreConfiguration() NOT YET IMPLEMENTED");
+
+        return new MockStoreConfiguration();
     }
 
 

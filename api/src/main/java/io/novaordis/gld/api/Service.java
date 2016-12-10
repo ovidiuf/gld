@@ -32,7 +32,17 @@ public interface Service {
 
     LoadDriver getLoadDriver();
 
+    /**
+     * Needed to configure instances created via the no-argument constructor.
+     */
+    void setLoadDriver(LoadDriver d);
+
     LoadStrategy getLoadStrategy();
+
+    /**
+     * Needed to configure instances created via the no-argument constructor.
+     */
+    void setLoadStrategy(LoadStrategy s);
 
     // lifecycle -------------------------------------------------------------------------------------------------------
 
@@ -54,6 +64,10 @@ public interface Service {
     void stop() throws Exception;
 
     boolean isStarted();
+
+    // accessors -------------------------------------------------------------------------------------------------------
+
+    ServiceType getType();
 
     // to deplete ------------------------------------------------------------------------------------------------------
 

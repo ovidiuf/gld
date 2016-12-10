@@ -66,9 +66,21 @@ public abstract class ServiceBase implements Service {
     }
 
     @Override
+    public void setLoadDriver(LoadDriver d) {
+
+        this.loadDriver = d;
+    }
+
+    @Override
     public LoadStrategy getLoadStrategy() {
 
         return loadStrategy;
+    }
+
+    @Override
+    public void setLoadStrategy(LoadStrategy s) {
+
+        this.loadStrategy = s;
     }
 
     // lifecycle -------------------------------------------------------------------------------------------------------
@@ -146,11 +158,6 @@ public abstract class ServiceBase implements Service {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public void setLoadStrategy(LoadStrategy s) {
-
-        this.loadStrategy = s;
-    }
 
     // topology --------------------------------------------------------------------------------------------------------
 

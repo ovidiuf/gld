@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.cache;
+package io.novaordis.gld.driver;
 
-import io.novaordis.gld.api.MockService;
-import io.novaordis.gld.api.ServiceType;
-
-import java.util.HashMap;
-import java.util.Map;
+import io.novaordis.gld.api.LoadConfiguration;
+import io.novaordis.utilities.UserErrorException;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/7/16
+ * @since 12/9/16
  */
-public class MockCacheService extends MockService implements CacheService {
+public class MockLoadConfiguration implements LoadConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,33 +31,28 @@ public class MockCacheService extends MockService implements CacheService {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Map<String, String> entries;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockCacheService() {
-
-        this.entries = new HashMap<>();
-    }
-
-    // CacheService implementation -------------------------------------------------------------------------------------
+    // MockLoadConfiguration implementation ----------------------------------------------------------------------------
 
     @Override
-    public ServiceType getType() {
-
-        return ServiceType.cache;
+    public int getThreadCount() throws UserErrorException {
+        throw new RuntimeException("getThreadCount() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public String get(String key) throws Exception {
-
-        return entries.get(key);
+    public Long getOperations() throws UserErrorException {
+        throw new RuntimeException("getOperations() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void put(String key, String value) throws Exception {
+    public Long getRequests() throws UserErrorException {
+        throw new RuntimeException("getRequests() NOT YET IMPLEMENTED");
+    }
 
-        entries.put(key, value);
+    @Override
+    public Long getMessages() throws UserErrorException {
+        throw new RuntimeException("getMessages() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

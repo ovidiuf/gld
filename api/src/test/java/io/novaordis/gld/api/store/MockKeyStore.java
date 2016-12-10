@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.cache;
+package io.novaordis.gld.api.store;
 
-import io.novaordis.gld.api.MockService;
-import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.KeyStore;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/7/16
+ * @since 12/10/16
  */
-public class MockCacheService extends MockService implements CacheService {
+public class MockKeyStore implements KeyStore {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,36 +32,57 @@ public class MockCacheService extends MockService implements CacheService {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Map<String, String> entries;
+    private boolean started;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockCacheService() {
-
-        this.entries = new HashMap<>();
-    }
-
-    // CacheService implementation -------------------------------------------------------------------------------------
+    // KeyStore implementation -----------------------------------------------------------------------------------------
 
     @Override
-    public ServiceType getType() {
+    public void start() throws KeyStoreException {
 
-        return ServiceType.cache;
+        started = true;
     }
 
     @Override
-    public String get(String key) throws Exception {
+    public void stop() throws KeyStoreException {
 
-        return entries.get(key);
+        started = false;
     }
 
     @Override
-    public void put(String key, String value) throws Exception {
+    public boolean isStarted() {
 
-        entries.put(key, value);
+        return started;
+    }
+
+    @Override
+    public void store(String key, byte[]... value) throws IllegalArgumentException, KeyStoreException {
+        throw new RuntimeException("store() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public StoredValue retrieve(String key) throws KeyStoreException {
+        throw new RuntimeException("retrieve() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Set<String> getKeys() throws KeyStoreException {
+        throw new RuntimeException("getKeys() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public long getKeyCount() throws KeyStoreException {
+        throw new RuntimeException("getKeyCount() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+
+        return "api MockKeyStore";
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

@@ -19,12 +19,14 @@ package io.novaordis.gld.api.mock.load;
 import io.novaordis.gld.api.KeyProvider;
 import io.novaordis.gld.api.LoadConfiguration;
 import io.novaordis.gld.api.LoadStrategy;
+import io.novaordis.gld.api.MockOperation;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.Assert.fail;
@@ -103,7 +105,10 @@ public class MockLoadStrategy implements LoadStrategy {
 
     @Override
     public Set<Class<? extends Operation>> getOperationTypes() {
-        throw new RuntimeException("getOperationTypes() NOT YET IMPLEMENTED");
+
+        Set<Class<? extends Operation>> result = new HashSet<>();
+        result.add(MockOperation.class);
+        return result;
     }
 
     @Override
@@ -112,6 +117,12 @@ public class MockLoadStrategy implements LoadStrategy {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+
+        return "api (main) MockLoadStrategy";
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

@@ -54,6 +54,12 @@ public class MockLoadStrategyFactory implements LoadStrategyFactory {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    @Override
+    public String toString() {
+
+        return "api (main) MockLoadStrategyFactory";
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

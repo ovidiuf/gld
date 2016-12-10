@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.cache;
+package io.novaordis.gld.api.mock.load;
 
-import io.novaordis.gld.api.MockService;
+import io.novaordis.gld.api.LoadConfiguration;
+import io.novaordis.gld.api.LoadStrategyFactory;
+import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/7/16
+ * @since 12/5/16
  */
-public class MockCacheService extends MockService implements CacheService {
+public class MockLoadStrategyFactory implements LoadStrategyFactory {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,36 +33,32 @@ public class MockCacheService extends MockService implements CacheService {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Map<String, String> entries;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockCacheService() {
-
-        this.entries = new HashMap<>();
-    }
-
-    // CacheService implementation -------------------------------------------------------------------------------------
+    // LoadStrategyFactory implementation ------------------------------------------------------------------------------
 
     @Override
-    public ServiceType getType() {
+    public MockLoadStrategy buildInstance(ServiceConfiguration sc, LoadConfiguration lc)
+            throws Exception {
 
-        return ServiceType.cache;
-    }
-
-    @Override
-    public String get(String key) throws Exception {
-
-        return entries.get(key);
+        MockLoadStrategy ms = new MockLoadStrategy();
+        ms.init(sc, lc);
+        return ms;
     }
 
     @Override
-    public void put(String key, String value) throws Exception {
+    public ServiceType getServiceType() {
 
-        entries.put(key, value);
+        return ServiceType.mock;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+
+        return "load-driver MockLoadStrategyFactory";
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

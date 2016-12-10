@@ -24,6 +24,8 @@ import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 /**
@@ -97,11 +99,14 @@ public class KeyStoreFactoryTest {
             String msg = e.getMessage();
             log.info(msg);
             assertEquals("unknown key store type \"i-am-sure-there-is-no-such-store-type\"", msg);
+
+            ClassNotFoundException cause = (ClassNotFoundException)e.getCause();
+            assertNotNull(cause);
         }
     }
 
     @Test
-    public void build() throws Exception {
+    public void build_KnownStoryType() throws Exception {
 
         MockStoreConfiguration mc = new MockStoreConfiguration();
 
@@ -109,6 +114,39 @@ public class KeyStoreFactoryTest {
         mc.setPath(HierarchicalStore.DIRECTORY_CONFIGURATION_LABEL, ".");
 
         HierarchicalStore s = (HierarchicalStore)KeyStoreFactory.build(mc);
+
+        assertFalse(s.isStarted());
+    }
+
+    @Test
+    public void build_StoryInstanceSpecifiedByClassName_NotAKeyStore() throws Exception {
+
+        MockStoreConfiguration mc = new MockStoreConfiguration();
+
+        mc.setStoreType(Object.class.getName());
+
+
+        try {
+
+            KeyStoreFactory.build(mc);
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals( "\"" + Object.class.getName() + "\" cannot be used to instantiate a KeyStore", msg);
+        }
+    }
+
+    @Test
+    public void build_StoryInstanceSpecifiedByClassName() throws Exception {
+
+        MockStoreConfiguration mc = new MockStoreConfiguration();
+
+        mc.setStoreType(MockKeyStore.class.getName());
+
+        MockKeyStore s = (MockKeyStore)KeyStoreFactory.build(mc);
 
         assertFalse(s.isStarted());
     }

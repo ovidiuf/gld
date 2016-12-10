@@ -133,8 +133,8 @@ public class MockLoadStrategy extends LoadStrategyBase {
     }
 
     @Override
-    public Set<Class<? extends Operation>> getOperationTypes()
-    {
+    public Set<Class<? extends Operation>> getOperationTypes() {
+
         HashSet<Class<? extends Operation>> result = new HashSet<>();
         result.add(MockOperation.class);
         return result;
@@ -142,9 +142,10 @@ public class MockLoadStrategy extends LoadStrategyBase {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public String toString()
-    {
-        return "MockLoadStrategy[" + Integer.toHexString(System.identityHashCode(this)) + "]";
+    @Override
+    public String toString() {
+
+        return "load-driver MockLoadStrategy[" + Integer.toHexString(System.identityHashCode(this)) + "]";
     }
 
     public String getMockArgument()
