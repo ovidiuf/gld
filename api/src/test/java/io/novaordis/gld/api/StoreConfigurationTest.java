@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -36,7 +37,8 @@ public abstract class StoreConfigurationTest {
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    protected abstract StoreConfiguration getStoreConfigurationToTest(Map<String, Object> map) throws Exception;
+    protected abstract StoreConfiguration getStoreConfigurationToTest(
+            Map<String, Object> map, File configurationDirectory) throws Exception;
 
     // Protected -------------------------------------------------------------------------------------------------------
 

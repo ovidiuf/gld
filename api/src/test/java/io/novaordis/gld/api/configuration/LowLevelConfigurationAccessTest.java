@@ -20,11 +20,12 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -48,83 +49,55 @@ public class LowLevelConfigurationAccessTest extends LowLevelConfigurationTest {
     // Tests -----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void get_NoMatch_FirstElement() throws Exception {
-
-        Map<String, Object> m = new HashMap<>();
-        LowLevelConfiguration c = getLowLevelConfigurationToTest(m);
-
-        String s = c.get(String.class, "no-such-top-element");
-        assertNull(s);
-    }
-
-    @Test
-    public void get_NoMatch_PartialMatch() throws Exception {
-
-        Map<String, Object> m = new HashMap<>();
-        //noinspection MismatchedQueryAndUpdateOfCollection
-        Map<String, Object> m2 = new HashMap<>();
-
-        m.put("token1", m2);
-
-        LowLevelConfiguration c = getLowLevelConfigurationToTest(m);
-
-        String s = c.get(String.class, "token1", "token2");
-        assertNull(s);
-    }
-
-    @Test
-    public void get_NoMatch_IntermediateElementNotAMap() throws Exception {
-
-        Map<String, Object> m = new HashMap<>();
-        Map<String, Object> m2 = new HashMap<>();
-        m.put("token1", m2);
-        m2.put("token2", "a-string-not-a-map");
-
-        LowLevelConfiguration c = getLowLevelConfigurationToTest(m);
-
-        String s = c.get(String.class, "token1", "token2", "token3");
-        assertNull(s);
-    }
-
-    @Test
-    public void get_Match_NotTheExpectedType() throws Exception {
-
-        Map<String, Object> m = new HashMap<>();
-        Map<String, Object> m2 = new HashMap<>();
-        Map<String, Object> m3 = new HashMap<>();
-        m.put("token1", m2);
-        m2.put("token2", m3);
-        m3.put("token3", 10);
-
-        LowLevelConfiguration c = getLowLevelConfigurationToTest(m);
+    public void nullConfigurationFileDirectory() throws Exception {
 
         try {
-            c.get(String.class, "token1", "token2", "token3");
+
+            new LowLevelConfigurationAccess(new HashMap<>(), null);
             fail("should have thrown exception");
         }
-        catch(IllegalStateException e) {
+        catch(IllegalArgumentException e) {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("expected token1.token2.token3 to be a String but it is a(n) Integer", msg);
+            assertEquals("null configuration directory", msg);
         }
     }
 
     @Test
-    public void get() throws Exception {
+    public void configurationFileDirectoryDoesNotExist() throws Exception {
 
-        Map<String, Object> m = new HashMap<>();
-        Map<String, Object> m2 = new HashMap<>();
-        Map<String, Object> m3 = new HashMap<>();
-        m.put("token1", m2);
-        m2.put("token2", m3);
-        m3.put("token3", "test-value");
+        try {
 
-        LowLevelConfiguration c = getLowLevelConfigurationToTest(m);
+            new LowLevelConfigurationAccess(new HashMap<>(), new File("/I/am/sure/this/directory/does/not/exist"));
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
 
-        String s = c.get(String.class, "token1", "token2", "token3");
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("configuration directory /I/am/sure/this/directory/does/not/exist does not exist", msg);
+        }
+    }
 
-        assertEquals("test-value", s);
+    @Test
+    public void configurationFileDirectoryIsAFile() throws Exception {
+
+        File existingFile = new File(System.getProperty("basedir"), "pom.xml");
+        assertTrue(existingFile.isFile());
+        assertTrue(existingFile.exists());
+
+        try {
+
+            new LowLevelConfigurationAccess(new HashMap<>(), existingFile);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("the path " + existingFile.getPath() + " does not represent a directory", msg);
+        }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -132,9 +105,10 @@ public class LowLevelConfigurationAccessTest extends LowLevelConfigurationTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected LowLevelConfigurationAccess getLowLevelConfigurationToTest(Map<String, Object> raw) throws Exception {
+    protected LowLevelConfigurationAccess getLowLevelConfigurationToTest(
+            Map<String, Object> raw, File configurationDirectory) throws Exception {
 
-        return new LowLevelConfigurationAccess(raw);
+        return new LowLevelConfigurationAccess(raw, configurationDirectory);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

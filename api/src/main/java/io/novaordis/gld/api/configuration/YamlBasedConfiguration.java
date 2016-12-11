@@ -107,7 +107,10 @@ public class YamlBasedConfiguration implements Configuration {
 
             Yaml yaml = new Yaml();
 
+            File configurationDirectory = file.getParentFile();
+
             Map topLevelConfigurationMap = (Map)yaml.load(is);
+
             Map<String, Object> serviceConfigurationMap = null;
             Map<String, Object> loadConfigurationMap = null;
             Map<String, Object> storeConfigurationMap = null;
@@ -158,7 +161,7 @@ public class YamlBasedConfiguration implements Configuration {
 
             if (storeConfigurationMap != null) {
 
-                storeConfiguration = new StoreConfigurationImpl(storeConfigurationMap);
+                storeConfiguration = new StoreConfigurationImpl(storeConfigurationMap, configurationDirectory);
             }
         }
         finally {

@@ -19,6 +19,7 @@ package io.novaordis.gld.api.configuration;
 import io.novaordis.gld.api.StoreConfiguration;
 import io.novaordis.utilities.UserErrorException;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,6 +66,12 @@ public class MockStoreConfiguration implements StoreConfiguration {
 
         //noinspection unchecked
         return (T)pathContent.get(s);
+    }
+
+    @Override
+    public File getFile(String... path) {
+
+        throw new RuntimeException("getFile() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

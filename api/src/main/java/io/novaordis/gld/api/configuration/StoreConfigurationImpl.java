@@ -19,6 +19,7 @@ package io.novaordis.gld.api.configuration;
 import io.novaordis.gld.api.StoreConfiguration;
 import io.novaordis.utilities.UserErrorException;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -42,11 +43,17 @@ public class StoreConfigurationImpl implements StoreConfiguration, LowLevelConfi
 
     /**
      * @param map the map extracted from the YAML file from under the "load" section.
+     *
+     * @param configurationDirectory represents the directory the configuration file the map was extracted from lives
+     *                               in. It is needed to resolve the configuration elements that are relative file
+     *                               paths. All relative file paths will be resolved relatively to the directory that
+     *                               contains the configuration file. The directory must exist, otherwise the
+     *                               constructor will fail with IllegalArgumentException.
      */
-    public StoreConfigurationImpl(Map<String, Object> map) throws Exception {
+    public StoreConfigurationImpl(Map<String, Object> map, File configurationDirectory) throws Exception {
 
         this.rawConfiguration = map;
-        this.configurationAccess = new LowLevelConfigurationAccess(rawConfiguration);
+        this.configurationAccess = new LowLevelConfigurationAccess(rawConfiguration, configurationDirectory);
     }
 
     // LowLevelConfiguration implementation ----------------------------------------------------------------------------
@@ -59,6 +66,16 @@ public class StoreConfigurationImpl implements StoreConfiguration, LowLevelConfi
         //
 
         return configurationAccess.get(type, path);
+    }
+
+    @Override
+    public File getFile(String... path) {
+
+        //
+        // we delegate to a generic low-level configuration resolver
+        //
+
+        return configurationAccess.getFile(path);
     }
 
     // StoreConfiguration implementation -------------------------------------------------------------------------------

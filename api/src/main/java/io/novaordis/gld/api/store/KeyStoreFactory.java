@@ -61,7 +61,7 @@ public class KeyStoreFactory {
             // store instance itself
             //
 
-            String directory = sc.get(String.class, HierarchicalStore.DIRECTORY_CONFIGURATION_LABEL);
+            File directory = sc.getFile(HierarchicalStore.DIRECTORY_CONFIGURATION_LABEL);
 
             if (directory == null) {
 
@@ -70,9 +70,7 @@ public class KeyStoreFactory {
                                 "\" hierarchical key store configuration element");
             }
 
-            File d = new File(directory);
-
-            return new HierarchicalStore(d);
+            return new HierarchicalStore(directory);
         }
         else {
 

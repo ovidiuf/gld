@@ -18,6 +18,7 @@ package io.novaordis.gld.api.configuration;
 
 import io.novaordis.gld.api.StoreConfigurationTest;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -41,9 +42,10 @@ public class StoreConfigurationImplTest extends StoreConfigurationTest {
     // Package protected -----------------------------------------------------------------------------------------------
 
     @Override
-    protected StoreConfigurationImpl getStoreConfigurationToTest(Map<String, Object> map) throws Exception {
+    protected StoreConfigurationImpl getStoreConfigurationToTest(Map<String, Object> map, File configurationDirectory)
+            throws Exception {
 
-        return new StoreConfigurationImpl(map);
+        return new StoreConfigurationImpl(map, configurationDirectory);
     }
 
     // Protected -------------------------------------------------------------------------------------------------------

@@ -16,6 +16,9 @@
 
 package io.novaordis.gld.api.configuration;
 
+import io.novaordis.utilities.Files;
+
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -32,10 +35,41 @@ public class LowLevelConfigurationAccess implements LowLevelConfiguration {
 
     private Map<String, Object> rawConfiguration;
 
+    // verified to exist and be a directory
+    private File configurationDirectory;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public LowLevelConfigurationAccess(Map<String, Object> raw) {
+    /**
+     * @param configurationDirectory represents the directory the configuration file the map was extracted from lives
+     *                               in. It is needed to resolve the configuration elements that are relative file
+     *                               paths. All relative file paths will be resolved relatively to the directory that
+     *                               contains the configuration file. The directory must exist, otherwise the
+     *                               constructor will fail with IllegalArgumentException.
+     *
+     * @exception IllegalArgumentException if the configuration file directory is not null, it does not exist or
+     * it is not a directory.
+     */
+    public LowLevelConfigurationAccess(Map<String, Object> raw, File configurationDirectory) {
 
+        if (configurationDirectory == null) {
+
+            throw new IllegalArgumentException("null configuration directory");
+        }
+
+        if (!configurationDirectory.exists()) {
+
+            throw new IllegalArgumentException(
+                    "configuration directory " + configurationDirectory.getPath() + " does not exist");
+        }
+
+        if (!configurationDirectory.isDirectory()) {
+
+            throw new IllegalArgumentException(
+                    "the path " + configurationDirectory.getPath() + " does not represent a directory");
+        }
+
+        this.configurationDirectory = configurationDirectory;
         this.rawConfiguration = raw;
     }
 
@@ -93,6 +127,35 @@ public class LowLevelConfigurationAccess implements LowLevelConfiguration {
         }
 
         return null;
+    }
+
+    @Override
+    public File getFile(String... path) {
+
+        // this throws IllegalArgumentException if we don't match a String
+        String s = get(String.class, path);
+
+        if (s == null) {
+
+            return null;
+        }
+
+        if (s.startsWith(File.separator)) {
+
+            //
+            // absolute path, do not resolve
+            //
+
+            return new File(s);
+        }
+
+        //
+        // resolve to configuration directory, which is guaranteed to be an existing directory
+        //
+
+        s = configurationDirectory.getPath() + "/" + s;
+        s = Files.normalizePath(s);
+        return new File(s);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
