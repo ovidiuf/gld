@@ -37,6 +37,7 @@
         <release_date>${maven.build.timestamp}</release_date>
 
         <slf4j.version>1.7.6</slf4j.version>
+        <novaordis.utilities.version>4.3.0-SNAPSHOT-4</novaordis.utilities.version>
     </properties>
 
     <modules>
@@ -55,7 +56,7 @@
             <dependency>
                 <groupId>io.novaordis.utilities</groupId>
                 <artifactId>novaordis-utilities</artifactId>
-                <version>4.3.0-SNAPSHOT-3</version>
+                <version>${novaordis.utilities.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>

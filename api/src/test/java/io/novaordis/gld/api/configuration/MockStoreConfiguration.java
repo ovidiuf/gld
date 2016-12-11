@@ -57,12 +57,7 @@ public class MockStoreConfiguration implements StoreConfiguration {
     @Override
     public <T> T get(Class<? extends T> type, String... path) {
 
-        String s = "";
-
-        for (String aPath : path) {
-
-            s += s.isEmpty() ? aPath : s + "." + aPath;
-        }
+        String s = toDotSeparatedString(path);
 
         //noinspection unchecked
         return (T)pathContent.get(s);
@@ -71,7 +66,7 @@ public class MockStoreConfiguration implements StoreConfiguration {
     @Override
     public File getFile(String... path) {
 
-        throw new RuntimeException("getFile() NOT YET IMPLEMENTED");
+        return get(File.class, path);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -81,6 +76,13 @@ public class MockStoreConfiguration implements StoreConfiguration {
         this.storeType = s;
     }
 
+    /**
+     * Works both for Files and other objects.
+     *
+     * To set "configuration" that would be returned with getFile(), use:
+     *
+     *  setPath(..., new File(...))
+     */
     public void setPath(String dotSeparatedPath, Object o) {
 
         pathContent.put(dotSeparatedPath, o);
@@ -91,6 +93,18 @@ public class MockStoreConfiguration implements StoreConfiguration {
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private String toDotSeparatedString(String ... path) {
+
+        String s = "";
+
+        for (String aPath : path) {
+
+            s += s.isEmpty() ? aPath : s + "." + aPath;
+        }
+
+        return s;
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

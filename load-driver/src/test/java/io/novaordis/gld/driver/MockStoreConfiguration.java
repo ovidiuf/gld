@@ -19,6 +19,8 @@ package io.novaordis.gld.driver;
 import io.novaordis.gld.api.StoreConfiguration;
 import io.novaordis.utilities.UserErrorException;
 
+import java.io.File;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/9/16
@@ -44,6 +46,11 @@ public class MockStoreConfiguration implements StoreConfiguration {
     @Override
     public <T> T get(Class<? extends T> type, String... path) {
         throw new RuntimeException("get() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public File getFile(String... path) {
+        throw new RuntimeException("getFile() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

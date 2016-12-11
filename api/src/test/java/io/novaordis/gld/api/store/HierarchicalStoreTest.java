@@ -90,7 +90,7 @@ public class HierarchicalStoreTest extends KeyStoreTest {
 
         MockStoreConfiguration mc = new MockStoreConfiguration();
         mc.setStoreType(HierarchicalStore.STORY_TYPE_LABEL);
-        mc.setPath(HierarchicalStore.DIRECTORY_CONFIGURATION_LABEL, "a/directory/that/does/not/exist");
+        mc.setPath(HierarchicalStore.DIRECTORY_CONFIGURATION_LABEL, new File("a/directory/that/does/not/exist"));
 
         //
         // it is OK if the directory does not exist, the instance will deal with that at start() time

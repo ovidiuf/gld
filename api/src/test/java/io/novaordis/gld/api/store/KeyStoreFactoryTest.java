@@ -22,6 +22,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -111,7 +113,7 @@ public class KeyStoreFactoryTest {
         MockStoreConfiguration mc = new MockStoreConfiguration();
 
         mc.setStoreType(HierarchicalStore.STORY_TYPE_LABEL);
-        mc.setPath(HierarchicalStore.DIRECTORY_CONFIGURATION_LABEL, ".");
+        mc.setPath(HierarchicalStore.DIRECTORY_CONFIGURATION_LABEL, new File("."));
 
         HierarchicalStore s = (HierarchicalStore)KeyStoreFactory.build(mc);
 
