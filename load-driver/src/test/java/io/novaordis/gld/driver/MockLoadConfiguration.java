@@ -37,7 +37,8 @@ public class MockLoadConfiguration implements LoadConfiguration {
 
     @Override
     public int getThreadCount() throws UserErrorException {
-        throw new RuntimeException("getThreadCount() NOT YET IMPLEMENTED");
+
+        return 1;
     }
 
     @Override
