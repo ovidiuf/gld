@@ -370,7 +370,7 @@ public class MainTest {
     @Test
     public void lifecycle() throws Exception {
 
-        File f = new File(baseDirectory, "../api/src/test/resources/data/reference-configuration.yml");
+        File f = new File(baseDirectory, "src/test/resources/data/end-to-end-configuration.yml");
         assertTrue(f.isFile());
 
         List<String> args = new ArrayList<>(Arrays.asList("-c", f.getPath()));
@@ -384,11 +384,10 @@ public class MainTest {
         //
 
         Configuration c = new YamlBasedConfiguration(f);
-        String storageDirAsString = c.getStoreConfiguration().get(String.class, "directory");
-        File storageDir = new File(storageDirAsString);
-        assertTrue(storageDir.isDirectory());
+        File storageDirectory = c.getStoreConfiguration().getFile("directory");
+        assertTrue(storageDirectory.isDirectory());
 
-        HierarchicalStore hs = new HierarchicalStore(storageDir);
+        HierarchicalStore hs = new HierarchicalStore(storageDirectory);
 
         long expected = c.getLoadConfiguration().getOperations();
         long actual = hs.getKeyCount();
