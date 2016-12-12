@@ -18,8 +18,8 @@ package io.novaordis.gld.driver.statistics;
 
 
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.driver.AnotherTypeOfMockOperation;
-import io.novaordis.gld.driver.MockOperation;
+import io.novaordis.gld.api.mock.AnotherTypeOfMockOperation;
+import io.novaordis.gld.api.mock.MockOperation;
 import io.novaordis.gld.driver.sampler.metrics.FreePhysicalMemorySize;
 import io.novaordis.gld.driver.sampler.metrics.MeasureUnit;
 import io.novaordis.gld.driver.sampler.metrics.Metric;

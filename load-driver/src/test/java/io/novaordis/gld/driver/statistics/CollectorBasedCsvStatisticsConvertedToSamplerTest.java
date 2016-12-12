@@ -18,7 +18,7 @@ package io.novaordis.gld.driver.statistics;
 
 import io.novaordis.gld.api.cache.operation.Read;
 import io.novaordis.gld.api.cache.operation.Write;
-import io.novaordis.gld.driver.MockOperation;
+import io.novaordis.gld.api.mock.MockOperation;
 import io.novaordis.gld.driver.sampler.CounterValues;
 import io.novaordis.gld.driver.sampler.MockSamplingConsumer;
 import io.novaordis.gld.driver.sampler.Sampler;

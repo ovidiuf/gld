@@ -17,8 +17,8 @@
 package io.novaordis.gld.driver.sampler;
 
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.driver.AnotherTypeOfMockOperation;
-import io.novaordis.gld.driver.MockOperation;
+import io.novaordis.gld.api.mock.AnotherTypeOfMockOperation;
+import io.novaordis.gld.api.mock.MockOperation;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

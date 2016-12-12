@@ -16,17 +16,7 @@
 
 package io.novaordis.gld.driver.sampler;
 
-import io.novaordis.gld.driver.MockOperation;
-import io.novaordis.gld.driver.sampler.metrics.MeasureUnit;
-import io.novaordis.gld.driver.statistics.Statistics;
 import org.apache.log4j.Logger;
-import org.junit.Test;
-
-import java.text.DecimalFormat;
-import java.text.Format;
-import java.util.List;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.Assert.assertEquals;
 

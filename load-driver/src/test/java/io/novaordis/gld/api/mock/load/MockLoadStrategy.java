@@ -22,7 +22,7 @@ import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
-import io.novaordis.gld.driver.MockOperation;
+import io.novaordis.gld.api.mock.MockOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

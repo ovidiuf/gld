@@ -17,7 +17,7 @@
 package io.novaordis.gld.driver.sampler;
 
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.driver.MockOperation;
+import io.novaordis.gld.api.mock.MockOperation;
 import io.novaordis.gld.driver.sampler.metrics.Metric;
 import io.novaordis.gld.driver.sampler.metrics.SystemLoadAverage;
 import org.apache.log4j.Logger;

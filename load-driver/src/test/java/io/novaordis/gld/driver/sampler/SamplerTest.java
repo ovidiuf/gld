@@ -16,8 +16,8 @@
 
 package io.novaordis.gld.driver.sampler;
 
-import io.novaordis.gld.driver.AnotherTypeOfMockOperation;
-import io.novaordis.gld.driver.MockOperation;
+import io.novaordis.gld.api.mock.AnotherTypeOfMockOperation;
+import io.novaordis.gld.api.mock.MockOperation;
 import io.novaordis.gld.driver.sampler.metrics.FreePhysicalMemorySize;
 import io.novaordis.gld.driver.sampler.metrics.Metric;
 import io.novaordis.gld.driver.sampler.metrics.SystemCpuLoad;

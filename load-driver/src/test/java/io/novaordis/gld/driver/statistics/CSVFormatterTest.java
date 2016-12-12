@@ -17,8 +17,8 @@
 package io.novaordis.gld.driver.statistics;
 
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.driver.AnotherTypeOfMockOperation;
-import io.novaordis.gld.driver.MockOperation;
+import io.novaordis.gld.api.mock.AnotherTypeOfMockOperation;
+import io.novaordis.gld.api.mock.MockOperation;
 import io.novaordis.gld.driver.sampler.CounterValuesImpl;
 import io.novaordis.gld.driver.sampler.SamplingIntervalImpl;
 import io.novaordis.gld.driver.sampler.metrics.FreePhysicalMemorySize;

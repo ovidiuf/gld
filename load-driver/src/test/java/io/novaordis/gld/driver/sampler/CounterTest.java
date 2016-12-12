@@ -17,7 +17,7 @@
 package io.novaordis.gld.driver.sampler;
 
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.driver.MockOperation;
+import io.novaordis.gld.api.mock.MockOperation;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
