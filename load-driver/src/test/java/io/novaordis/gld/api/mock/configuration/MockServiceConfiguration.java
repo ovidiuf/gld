@@ -21,6 +21,7 @@ import io.novaordis.gld.api.ServiceType;
 import io.novaordis.gld.api.mock.MockService;
 import io.novaordis.utilities.UserErrorException;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -57,8 +58,18 @@ public class MockServiceConfiguration implements ServiceConfiguration {
     }
 
     @Override
-    public Map<String, Object> getMap(String... path) {
-        throw new RuntimeException("getMap() NOT YET IMPLEMENTED");
+    public <T> T get(Class<? extends T> type, String... path) {
+        throw new RuntimeException("get() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public File getFile(String... path) {
+        throw new RuntimeException("getFile() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Map<String, Object> get(String... path) {
+        throw new RuntimeException("get() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

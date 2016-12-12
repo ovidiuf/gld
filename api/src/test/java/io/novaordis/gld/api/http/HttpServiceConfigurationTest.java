@@ -19,6 +19,7 @@ package io.novaordis.gld.api.http;
 import io.novaordis.gld.api.configuration.ServiceConfigurationTest;
 import io.novaordis.gld.api.ServiceType;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -44,9 +45,9 @@ public class HttpServiceConfigurationTest extends ServiceConfigurationTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected HttpServiceConfiguration getServiceConfigurationToTest(Map<String, Object> map) throws Exception {
+    protected HttpServiceConfiguration getConfigurationToTest(Map<String, Object> map, File cd) throws Exception {
 
-        return new HttpServiceConfigurationImpl(map);
+        return new HttpServiceConfigurationImpl(map, cd);
     }
 
     @Override

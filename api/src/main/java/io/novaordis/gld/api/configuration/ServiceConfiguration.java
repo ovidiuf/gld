@@ -24,10 +24,13 @@ import java.util.Map;
 /**
  * Typed and untyped access to underlying service configuration.
  *
+ * The implementations of this interface also allow low-level typed access (typed access to specific points into the
+ * configuration structure) via LowLevelConfiguration.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-public interface ServiceConfiguration {
+public interface ServiceConfiguration extends LowLevelConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -49,18 +52,5 @@ public interface ServiceConfiguration {
     String getImplementation() throws UserErrorException;
 
     String getLoadStrategyName() throws UserErrorException;
-
-    // Untyped Access --------------------------------------------------------------------------------------------------
-
-    /**
-     * @return the underlying raw configuration map corresponding to the given path, or an empty map if the path does
-     * not match anything in the underlying configuration structure. The path is relative to the root of the service
-     * configuration section.
-     *
-     * If the path does not contain elements, the top level raw configuration map is returned.
-     *
-     * Never return null.
-     */
-    Map<String, Object> getMap(String ... path);
 
 }

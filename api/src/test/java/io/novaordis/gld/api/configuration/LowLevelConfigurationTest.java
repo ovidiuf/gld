@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -334,6 +335,162 @@ public abstract class LowLevelConfigurationTest {
         File f = c.getFile("token1", "token2");
 
         assertEquals(new File(configurationFileDirectory.getParentFile(), "something"), f);
+    }
+
+    // get() Map -------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void get_Map_NoMatch_FirstElement() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        Map<String, Object> m2 = c.get("no-such-top-element");
+        assertNotNull(m2);
+        assertTrue(m2.isEmpty());
+    }
+
+    @Test
+    public void get_Map_NoMatch_PartialMatch() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        //noinspection MismatchedQueryAndUpdateOfCollection
+        Map<String, Object> m2 = new HashMap<>();
+
+        m.put("token1", m2);
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        Map<String, Object> m3 = c.get("token1", "token2");
+        assertNotNull(m3);
+        assertTrue(m3.isEmpty());
+    }
+
+    @Test
+    public void get_Map_NoMatch_IntermediateElementNotAMap() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m2 = new HashMap<>();
+        m.put("token1", m2);
+        m2.put("token2", "a-string-not-a-map");
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        Map<String, Object> m3 = c.get("token1", "token2", "token3");
+        assertNotNull(m3);
+        assertTrue(m3.isEmpty());
+    }
+
+    @Test
+    public void get_Map_Match_NotTheExpectedType() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m2 = new HashMap<>();
+        Map<String, Object> m3 = new HashMap<>();
+        m.put("token1", m2);
+        m2.put("token2", m3);
+        m3.put("token3", 10);
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        try {
+            c.get("token1", "token2", "token3");
+            fail("should have thrown exception");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("expected token1.token2.token3 to be a Map but it is a(n) Integer: \"10\"", msg);
+        }
+    }
+
+    @Test
+    public void get_Map_NoSuchMap() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        m.put("token1", m1);
+        m1.put("token2", new HashMap<>());
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        Map<String, Object> nm = c.get("token1", "token2", "token3");
+
+        assertNotNull(nm);
+        assertTrue(nm.isEmpty());
+    }
+
+    @Test
+    public void get_Map_NoSuchMap2() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        Map<String, Object> m2 = new HashMap<>();
+        m.put("token1", m1);
+        m1.put("token2", m2);
+        m2.put("token3", null);
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        Map<String, Object> nm = c.get("token1", "token2", "token3");
+
+        assertNotNull(nm);
+        assertTrue(nm.isEmpty());
+    }
+
+    @Test
+    public void get_Map_Empty() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        Map<String, Object> m2 = new HashMap<>();
+        m.put("token1", m1);
+        m1.put("token2", m2);
+        m2.put("token3", new HashMap<>());
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        Map<String, Object> nm = c.get("token1", "token2", "token3");
+
+        assertNotNull(nm);
+        assertTrue(nm.isEmpty());
+    }
+
+    @Test
+    public void get_Map_NotEmpty() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        Map<String, Object> m2 = new HashMap<>();
+        Map<String, Object> m3 = new HashMap<>();
+        m.put("token1", m1);
+        m1.put("token2", m2);
+        m2.put("token3", m3);
+        m3.put("something", "something else");
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        Map<String, Object> nm = c.get("token1", "token2", "token3");
+
+        assertNotNull(nm);
+        assertEquals(1, nm.size());
+        assertEquals("something else", nm.get("something"));
+    }
+
+    @Test
+    public void get_Map_Root() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        m.put("token1", "something");
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        Map<String, Object> nm = c.get();
+
+        assertNotNull(nm);
+        assertEquals(1, nm.size());
+        assertEquals("something", nm.get("token1"));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

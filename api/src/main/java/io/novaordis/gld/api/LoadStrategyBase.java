@@ -87,7 +87,7 @@ public abstract class LoadStrategyBase implements LoadStrategy {
     @Override
     public final void init(ServiceConfiguration sc, LoadConfiguration lc) throws Exception {
 
-        Map<String, Object> loadStrategyRawConfig = sc.getMap(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        Map<String, Object> loadStrategyRawConfig = sc.get(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
         //
         // check name consistency

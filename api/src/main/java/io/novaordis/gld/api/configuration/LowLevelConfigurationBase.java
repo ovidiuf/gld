@@ -19,6 +19,7 @@ package io.novaordis.gld.api.configuration;
 import io.novaordis.utilities.Files;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -156,6 +157,30 @@ public class LowLevelConfigurationBase implements LowLevelConfiguration {
         s = configurationDirectory.getPath() + "/" + s;
         s = Files.normalizePath(s);
         return new File(s);
+    }
+
+    @Override
+    public Map<String, Object> get(String... path) {
+
+        //noinspection unchecked
+        Map<String, Object> m = get(Map.class, path);
+
+        if (m == null) {
+
+            //
+            // special case when we call it with a no arguments, it means we want the underlying raw configuration
+            // map
+            //
+
+            if (path.length == 0) {
+
+                return rawConfiguration;
+            }
+
+            return Collections.emptyMap();
+        }
+
+        return m;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

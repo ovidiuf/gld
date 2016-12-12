@@ -17,8 +17,8 @@
 package io.novaordis.gld.api.configuration;
 
 import io.novaordis.gld.api.ServiceType;
-import io.novaordis.gld.api.configuration.ServiceConfiguration;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,7 +72,7 @@ public class MockServiceConfiguration implements ServiceConfiguration {
     }
 
     @Override
-    public Map<String, Object> getMap(String... path) {
+    public Map<String, Object> get(String... path) {
 
         Map<String, Object> current = rawConfigurationMaps;
 
@@ -160,6 +160,16 @@ public class MockServiceConfiguration implements ServiceConfiguration {
                 current = m;
             }
         }
+    }
+
+    @Override
+    public <T> T get(Class<? extends T> type, String... path) {
+        throw new RuntimeException("get() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public File getFile(String... path) {
+        throw new RuntimeException("getFile() NOT YET IMPLEMENTED");
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

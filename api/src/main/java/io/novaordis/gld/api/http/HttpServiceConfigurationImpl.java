@@ -16,15 +16,16 @@
 
 package io.novaordis.gld.api.http;
 
-import io.novaordis.gld.api.configuration.RawServiceConfigurationMapWrapper;
+import io.novaordis.gld.api.configuration.ServiceConfigurationImpl;
 
+import java.io.File;
 import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/6/16
  */
-public class HttpServiceConfigurationImpl extends RawServiceConfigurationMapWrapper implements HttpServiceConfiguration   {
+public class HttpServiceConfigurationImpl extends ServiceConfigurationImpl implements HttpServiceConfiguration   {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,9 +35,10 @@ public class HttpServiceConfigurationImpl extends RawServiceConfigurationMapWrap
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public HttpServiceConfigurationImpl(Map<String, Object> rawConfiguration) throws Exception {
+    public HttpServiceConfigurationImpl(Map<String, Object> rawConfiguration, File configurationDirectory)
+            throws Exception {
 
-        super(rawConfiguration);
+        super(rawConfiguration, configurationDirectory);
     }
 
     // JmsServiceConfiguration implementation ------------------------------------------------------------------------

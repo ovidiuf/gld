@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,7 +60,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
         map.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, loadStrategy);
         loadStrategy.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
 
-        CacheServiceConfiguration c =  getServiceConfigurationToTest(map);
+        CacheServiceConfiguration c = getConfigurationToTest(map, new File(System.getProperty("basedir")));
 
         int s = c.getKeySize();
         assertEquals(ServiceConfiguration.DEFAULT_KEY_SIZE, s);
@@ -77,7 +78,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
 
         map.put(CacheServiceConfiguration.KEY_SIZE_LABEL, "1024");
 
-        CacheServiceConfiguration c =  getServiceConfigurationToTest(map);
+        CacheServiceConfiguration c = getConfigurationToTest(map, new File(System.getProperty("basedir")));
 
         try {
 
@@ -88,7 +89,11 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
 
             String msg = e.getMessage();
             log.info(e.getMessage());
-            assertTrue(msg.matches("'key-size' should be Integer, but it is String"));
+            assertTrue(msg.matches("'key-size' is not an integer"));
+
+            IllegalStateException e2 = (IllegalStateException)e.getCause();
+            String msg2 = e2.getMessage();
+            assertTrue(msg2.contains("\"1024\""));
         }
     }
 
@@ -104,7 +109,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
 
         map.put(CacheServiceConfiguration.KEY_SIZE_LABEL, 1024);
 
-        CacheServiceConfiguration c = getServiceConfigurationToTest(map);
+        CacheServiceConfiguration c = getConfigurationToTest(map, new File(System.getProperty("basedir")));
         assertEquals(1024, c.getKeySize());
     }
 
@@ -118,7 +123,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
         map.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, loadStrategy);
         loadStrategy.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
 
-        CacheServiceConfiguration c =  getServiceConfigurationToTest(map);
+        CacheServiceConfiguration c = getConfigurationToTest(map, new File(System.getProperty("basedir")));
 
         int s = c.getValueSize();
         assertEquals(CacheServiceConfiguration.DEFAULT_VALUE_SIZE, s);
@@ -136,7 +141,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
 
         map.put(CacheServiceConfiguration.VALUE_SIZE_LABEL, "1025");
 
-        CacheServiceConfiguration c =  getServiceConfigurationToTest(map);
+        CacheServiceConfiguration c = getConfigurationToTest(map, new File(System.getProperty("basedir")));
 
         try {
 
@@ -147,7 +152,11 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
 
             String msg = e.getMessage();
             log.info(e.getMessage());
-            assertTrue(msg.matches("'value-size' should be Integer, but it is String"));
+            assertTrue(msg.matches("'value-size' is not an integer"));
+
+            IllegalStateException e2 = (IllegalStateException)e.getCause();
+            String msg2 = e2.getMessage();
+            assertTrue(msg2.contains("\"1025\""));
         }
     }
 
@@ -163,7 +172,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
 
         map.put(CacheServiceConfiguration.VALUE_SIZE_LABEL, 1025);
 
-        CacheServiceConfiguration c = getServiceConfigurationToTest(map);
+        CacheServiceConfiguration c = getConfigurationToTest(map, new File(System.getProperty("basedir")));
 
         assertEquals(1025, c.getValueSize());
     }
@@ -175,9 +184,9 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected CacheServiceConfiguration getServiceConfigurationToTest(Map<String, Object> map) throws Exception {
+    protected CacheServiceConfiguration getConfigurationToTest(Map<String, Object> map, File cd) throws Exception {
 
-        return new CacheServiceConfigurationImpl(map);
+        return new CacheServiceConfigurationImpl(map, cd);
     }
 
     @Override

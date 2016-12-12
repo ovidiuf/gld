@@ -17,6 +17,7 @@
 package io.novaordis.gld.api.configuration;
 
 import java.io.File;
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -54,5 +55,15 @@ public interface LowLevelConfiguration {
      * it cannot be converted to a File path)
      */
     File getFile(String ... path);
+
+    /**
+     * Walks the internal storage following the specified path and returns raw configuration map fragment found at the
+     * end of the path. May return an empty map, but never null.
+     *
+     * @exception IllegalStateException if the value at the end of the path is not a raw sub-map, but a value of a
+     * specific type.
+     */
+    Map<String, Object> get(String ... path);
+
 
 }

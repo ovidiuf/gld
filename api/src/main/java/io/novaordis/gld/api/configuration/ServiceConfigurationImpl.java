@@ -19,16 +19,15 @@ package io.novaordis.gld.api.configuration;
 import io.novaordis.gld.api.ServiceType;
 import io.novaordis.utilities.UserErrorException;
 
-import java.util.Collections;
+import java.io.File;
 import java.util.Map;
 
 /**
- * Wraps around the raw map and provides typed access to it.
- *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-public class RawServiceConfigurationMapWrapper implements ServiceConfiguration {
+public class ServiceConfigurationImpl extends LowLevelConfigurationBase
+        implements ServiceConfiguration, LowLevelConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -36,17 +35,21 @@ public class RawServiceConfigurationMapWrapper implements ServiceConfiguration {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    // the actual raw configuration map passed at construction
-    private Map<String, Object> rawConfiguration;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
-     * @param map the map extracted from the YAML file from under the "service" section.
+     * @param rawMap the raw map as extracted from the YAML file from the section corresponding to this type of
+     *            configuration.
+     * @param configurationDirectory represents the directory the configuration file the map was extracted from lives
+     *                               in. It is needed to resolve the configuration elements that are relative file
+     *                               paths. All relative file paths will be resolved relatively to the directory that
+     *                               contains the configuration file. The directory must exist, otherwise the
+     *                               constructor will fail with IllegalArgumentException.
      */
-    public RawServiceConfigurationMapWrapper(Map<String, Object> map) {
+    public ServiceConfigurationImpl(Map<String, Object> rawMap, File configurationDirectory) throws Exception {
 
-        this.rawConfiguration = map;
+        super(rawMap, configurationDirectory);
     }
 
     // ServiceConfiguration implementation -----------------------------------------------------------------------------
@@ -54,65 +57,76 @@ public class RawServiceConfigurationMapWrapper implements ServiceConfiguration {
     @Override
     public ServiceType getType() throws UserErrorException {
 
-        Object o = rawConfiguration.get(ServiceConfiguration.TYPE_LABEL);
+        String s;
 
-        if (o == null) {
+        try {
+
+            s = get(String.class, ServiceConfiguration.TYPE_LABEL);
+        }
+        catch(IllegalStateException e) {
+
+            throw new UserErrorException("'" + ServiceConfiguration.TYPE_LABEL + "' not a string", e);
+        }
+
+        if (s == null) {
 
             throw new UserErrorException("missing service type");
         }
 
-        if (!(o instanceof String)) {
-            throw new UserErrorException(
-                    "the service type should be a string, but it is a " + o.getClass().getSimpleName());
-        }
-
         try {
 
-            return ServiceType.valueOf((String) o);
+            return ServiceType.valueOf(s);
         }
         catch(Exception e) {
 
-            throw new UserErrorException("unknown service type '" + o + "'", e);
+            throw new UserErrorException("unknown service type '" + s + "'", e);
         }
     }
 
     @Override
     public String getImplementation() throws UserErrorException {
 
-        Object o = rawConfiguration.get(ServiceConfiguration.IMPLEMENTATION_LABEL);
+        String s;
 
-        if (o == null) {
+        try {
+
+            s = get(String.class, ServiceConfiguration.IMPLEMENTATION_LABEL);
+        }
+        catch(IllegalStateException e) {
+
+            throw new UserErrorException("'" + ServiceConfiguration.IMPLEMENTATION_LABEL + "' not a string", e);
+        }
+
+        if (s == null) {
 
             throw new UserErrorException("missing implementation");
         }
 
-        if (!(o instanceof String)) {
-            throw new UserErrorException(
-                    "the implementation should be a string, but it is a(n) " + o.getClass().getSimpleName());
-        }
-
-        return (String)o;
+        return s;
     }
 
     @Override
     public String getLoadStrategyName() throws UserErrorException {
 
-        Object o = rawConfiguration.get(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        Map<String, Object> loadStrategyConfig;
 
-        if (o == null) {
+        try {
+
+            //noinspection unchecked
+            loadStrategyConfig = get(Map.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        }
+        catch(IllegalStateException e) {
+
+            throw new UserErrorException(
+                    "'" + ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL + "' not a map", e);
+        }
+
+        if (loadStrategyConfig == null) {
 
             throw new UserErrorException("missing load strategy configuration");
         }
 
-        if (!(o instanceof Map)) {
-            throw new UserErrorException(
-                    "the load strategy configuration should be a map, but it is a(n) " + o.getClass().getSimpleName());
-        }
-
-        //noinspection unchecked
-        Map<String, Object> loadStrategyConfig = (Map<String, Object>)o;
-
-        o = loadStrategyConfig.get(LOAD_STRATEGY_NAME_LABEL);
+        Object o = loadStrategyConfig.get(LOAD_STRATEGY_NAME_LABEL);
 
         if (o == null) {
 
@@ -127,42 +141,11 @@ public class RawServiceConfigurationMapWrapper implements ServiceConfiguration {
         return (String)o;
     }
 
-    @Override
-    public Map<String, Object> getMap(String... path) {
-
-        Map<String, Object> crtMap = rawConfiguration;
-
-        for(String pathElement: path) {
-
-            Object o = crtMap.get(pathElement);
-
-            if (o == null) {
-                return Collections.emptyMap();
-            }
-
-            if (o instanceof Map) {
-
-                //noinspection unchecked
-                crtMap = (Map<String, Object>)o;
-                continue;
-            }
-
-            throw new RuntimeException("NOT YET IMPLEMENTED: don't know how to handle this");
-        }
-
-        return crtMap;
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    protected Map<String, Object> getRawConfigurationMap() {
-
-        return rawConfiguration;
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

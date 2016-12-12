@@ -17,16 +17,17 @@
 package io.novaordis.gld.api.cache;
 
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.gld.api.configuration.RawServiceConfigurationMapWrapper;
+import io.novaordis.gld.api.configuration.ServiceConfigurationImpl;
 import io.novaordis.utilities.UserErrorException;
 
+import java.io.File;
 import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/6/16
  */
-public class CacheServiceConfigurationImpl extends RawServiceConfigurationMapWrapper implements CacheServiceConfiguration  {
+public class CacheServiceConfigurationImpl extends ServiceConfigurationImpl implements CacheServiceConfiguration  {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -36,9 +37,10 @@ public class CacheServiceConfigurationImpl extends RawServiceConfigurationMapWra
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public CacheServiceConfigurationImpl(Map<String, Object> rawConfiguration) throws Exception {
+    public CacheServiceConfigurationImpl(Map<String, Object> rawConfiguration, File configurationDirectory)
+            throws Exception {
 
-        super(rawConfiguration);
+        super(rawConfiguration, configurationDirectory);
     }
 
     // CacheServiceConfiguration implementation ------------------------------------------------------------------------
@@ -46,25 +48,35 @@ public class CacheServiceConfigurationImpl extends RawServiceConfigurationMapWra
     @Override
     public int getKeySize() throws UserErrorException {
 
-        Map<String, Object> m = getRawConfigurationMap();
+        Integer i;
 
-        Object o = m.get(CacheServiceConfiguration.KEY_SIZE_LABEL);
+        try {
 
-        consistencyCheck(CacheServiceConfiguration.KEY_SIZE_LABEL, o, Integer.class);
+            i = get(Integer.class, CacheServiceConfiguration.KEY_SIZE_LABEL);
+        }
+        catch(IllegalStateException e) {
 
-        return o == null ? DEFAULT_KEY_SIZE : (Integer)o;
+            throw new UserErrorException("'" + CacheServiceConfiguration.KEY_SIZE_LABEL + "' is not an integer", e);
+        }
+
+        return i == null ? DEFAULT_KEY_SIZE : i;
     }
 
     @Override
     public int getValueSize() throws UserErrorException {
 
-        Map<String, Object> m = getRawConfigurationMap();
+        Integer i;
 
-        Object o = m.get(CacheServiceConfiguration.VALUE_SIZE_LABEL);
+        try {
 
-        consistencyCheck(CacheServiceConfiguration.VALUE_SIZE_LABEL, o, Integer.class);
+            i = get(Integer.class, CacheServiceConfiguration.VALUE_SIZE_LABEL);
+        }
+        catch(IllegalStateException e) {
 
-        return o == null ? DEFAULT_VALUE_SIZE : (Integer)o;
+            throw new UserErrorException("'" + CacheServiceConfiguration.VALUE_SIZE_LABEL + "' is not an integer", e);
+        }
+
+        return i == null ? DEFAULT_VALUE_SIZE : i;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -72,7 +84,7 @@ public class CacheServiceConfigurationImpl extends RawServiceConfigurationMapWra
     @Override
     public String toString() {
 
-        Object o = getRawConfigurationMap().get(ServiceConfiguration.IMPLEMENTATION_LABEL);
+        Object o = get(Object.class, ServiceConfiguration.IMPLEMENTATION_LABEL);
 
         if (o == null) {
             return "null";
@@ -86,22 +98,6 @@ public class CacheServiceConfigurationImpl extends RawServiceConfigurationMapWra
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
-
-    private void consistencyCheck(String label, Object o, Class c) throws UserErrorException {
-
-        if (o == null) {
-
-            // will use the default value
-            return;
-        }
-
-        Class actualClass = o.getClass();
-
-        if (!actualClass.equals(c)) {
-            throw new UserErrorException(
-                    "'" + label + "' should be " + c.getSimpleName() + ", but it is " + actualClass.getSimpleName());
-        }
-    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

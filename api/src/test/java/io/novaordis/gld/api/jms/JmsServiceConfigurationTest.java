@@ -19,6 +19,7 @@ package io.novaordis.gld.api.jms;
 import io.novaordis.gld.api.configuration.ServiceConfigurationTest;
 import io.novaordis.gld.api.ServiceType;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -44,9 +45,9 @@ public class JmsServiceConfigurationTest extends ServiceConfigurationTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected JmsServiceConfiguration getServiceConfigurationToTest(Map<String, Object> map) throws Exception {
+    protected JmsServiceConfiguration getConfigurationToTest(Map<String, Object> map, File cd) throws Exception {
 
-        return new JmsServiceConfigurationImpl(map);
+        return new JmsServiceConfigurationImpl(map, cd);
     }
 
     @Override

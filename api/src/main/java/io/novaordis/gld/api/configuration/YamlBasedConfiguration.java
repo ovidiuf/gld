@@ -131,15 +131,18 @@ public class YamlBasedConfiguration implements Configuration {
 
             if (ServiceType.cache.name().equals(serviceType)) {
 
-                serviceConfiguration = new CacheServiceConfigurationImpl(serviceConfigurationMap);
+                serviceConfiguration =
+                        new CacheServiceConfigurationImpl(serviceConfigurationMap, configurationDirectory);
             }
             else if (ServiceType.jms.name().equals(serviceType)) {
 
-                serviceConfiguration = new JmsServiceConfigurationImpl(serviceConfigurationMap);
+                serviceConfiguration =
+                        new JmsServiceConfigurationImpl(serviceConfigurationMap, configurationDirectory);
             }
             else if (ServiceType.http.name().equals(serviceType)) {
 
-                serviceConfiguration = new JmsServiceConfigurationImpl(serviceConfigurationMap);
+                serviceConfiguration =
+                        new JmsServiceConfigurationImpl(serviceConfigurationMap, configurationDirectory);
             }
             else {
 

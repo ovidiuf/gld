@@ -68,6 +68,11 @@ public class MockStoreConfiguration implements StoreConfiguration {
         return get(File.class, path);
     }
 
+    @Override
+    public Map<String, Object> get(String... path) {
+        throw new RuntimeException("get() NOT YET IMPLEMENTED");
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     public void setStoreType(String s) {

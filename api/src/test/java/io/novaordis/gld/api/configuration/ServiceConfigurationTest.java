@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +37,7 @@ import static org.junit.Assert.fail;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-public abstract class ServiceConfigurationTest {
+public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -52,7 +53,7 @@ public abstract class ServiceConfigurationTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
-    // untyped access --------------------------------------------------------------------------------------------------
+    // Untyped Access --------------------------------------------------------------------------------------------------
 
     @Test
     public void untypedAccess_AllRawConfiguration() throws Exception {
@@ -65,9 +66,9 @@ public abstract class ServiceConfigurationTest {
         lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
 
-        ServiceConfiguration c = getServiceConfigurationToTest(m);
+        ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
 
-        Map<String, Object> uam = c.getMap();
+        Map<String, Object> uam = c.get();
 
         assertEquals(3, uam.size());
         assertEquals(ServiceType.cache.toString(), uam.get(ServiceConfiguration.TYPE_LABEL));
@@ -90,9 +91,9 @@ public abstract class ServiceConfigurationTest {
         lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
 
-        ServiceConfiguration c = getServiceConfigurationToTest(m);
+        ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
 
-        Map<String, Object> uam = c.getMap("no-such-key");
+        Map<String, Object> uam = c.get("no-such-key");
         assertTrue(uam.isEmpty());
     }
 
@@ -102,7 +103,7 @@ public abstract class ServiceConfigurationTest {
     public void missingType() throws Exception {
 
         Map<String, Object> m = new HashMap<>();
-        ServiceConfiguration c = getServiceConfigurationToTest(m);
+        ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
 
         try {
 
@@ -122,7 +123,7 @@ public abstract class ServiceConfigurationTest {
 
         Map<String, Object> m = new HashMap<>();
         m.put(ServiceConfiguration.TYPE_LABEL, "no-such-type");
-        ServiceConfiguration c = getServiceConfigurationToTest(m);
+        ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
 
         try {
 
@@ -149,7 +150,7 @@ public abstract class ServiceConfigurationTest {
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
         lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
 
-        ServiceConfiguration c = getServiceConfigurationToTest(m);
+        ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
         ServiceType type = c.getType();
         assertEquals(type.name(), getServiceTypeToTest());
     }
@@ -162,7 +163,7 @@ public abstract class ServiceConfigurationTest {
         Map<String, Object> m = new HashMap<>();
 
         m.put(ServiceConfiguration.TYPE_LABEL, getServiceTypeToTest());
-        ServiceConfiguration c = getServiceConfigurationToTest(m);
+        ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
 
         try {
 
@@ -183,7 +184,7 @@ public abstract class ServiceConfigurationTest {
 
         m.put(ServiceConfiguration.TYPE_LABEL, getServiceTypeToTest());
         m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, 1);
-        ServiceConfiguration c = getServiceConfigurationToTest(m);
+        ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
 
         try {
 
@@ -194,7 +195,11 @@ public abstract class ServiceConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            Assert.assertTrue(msg.matches("the implementation should be a string, but it is a\\(n\\) .*"));
+            Assert.assertTrue(msg.matches("'implementation' not a string"));
+
+            IllegalStateException e2 = (IllegalStateException)e.getCause();
+            String msg2 = e2.getMessage();
+            Assert.assertTrue(msg2.contains("\"1\""));
         }
     }
 
@@ -209,7 +214,7 @@ public abstract class ServiceConfigurationTest {
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
         lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
 
-        ServiceConfiguration c = getServiceConfigurationToTest(m);
+        ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
         Assert.assertEquals(ServiceType.valueOf(getServiceTypeToTest()), c.getType());
         Assert.assertEquals("local", c.getImplementation());
     }
@@ -223,7 +228,7 @@ public abstract class ServiceConfigurationTest {
 
         m.put(ServiceConfiguration.TYPE_LABEL, getServiceTypeToTest());
         m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
-        ServiceConfiguration c = getServiceConfigurationToTest(m);
+        ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
 
         try {
 
@@ -246,7 +251,7 @@ public abstract class ServiceConfigurationTest {
         m.put(ServiceConfiguration.TYPE_LABEL, getServiceTypeToTest());
         m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, "something");
-        ServiceConfiguration c = getServiceConfigurationToTest(m);
+        ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
 
         try {
 
@@ -257,7 +262,11 @@ public abstract class ServiceConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            Assert.assertTrue(msg.matches("the load strategy configuration should be a map, but it is a\\(n\\) .*"));
+            Assert.assertTrue(msg.matches("'load-strategy' not a map"));
+
+            IllegalStateException e2 = (IllegalStateException)e.getCause();
+            String msg2 = e2.getMessage();
+            Assert.assertTrue(msg2.contains("\"something\""));
         }
     }
 
@@ -272,7 +281,7 @@ public abstract class ServiceConfigurationTest {
         Map<String, Object> lsc = Collections.emptyMap();
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
 
-        ServiceConfiguration c = getServiceConfigurationToTest(m);
+        ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
 
         try {
 
@@ -299,7 +308,7 @@ public abstract class ServiceConfigurationTest {
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
         lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, 1);
 
-        ServiceConfiguration c = getServiceConfigurationToTest(m);
+        ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
 
         try {
 
@@ -326,11 +335,11 @@ public abstract class ServiceConfigurationTest {
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
         lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
 
-        ServiceConfiguration c = getServiceConfigurationToTest(m);
+        ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
 
         Assert.assertEquals("test", c.getLoadStrategyName());
 
-        Map<String, Object> rawConfig = c.getMap(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        Map<String, Object> rawConfig = c.get(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
         Assert.assertEquals(1, rawConfig.size());
         Assert.assertEquals("test", rawConfig.get(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL));
     }
@@ -341,8 +350,8 @@ public abstract class ServiceConfigurationTest {
      * @param rawConfigurationMap the recursive configuration map, corresponding to the "service" key, as loaded from
      *                            the YAML representation.
      */
-    protected abstract ServiceConfiguration getServiceConfigurationToTest(Map<String, Object> rawConfigurationMap)
-            throws Exception;
+    protected abstract ServiceConfiguration getConfigurationToTest(
+            Map<String, Object> rawConfigurationMap, File configurationDirectory) throws Exception;
 
     protected abstract String getServiceTypeToTest();
 

@@ -20,6 +20,7 @@ import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.utilities.UserErrorException;
 
 import java.io.File;
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -66,6 +67,11 @@ public class MockLoadConfiguration implements LoadConfiguration {
     @Override
     public File getFile(String... path) {
         throw new RuntimeException("getFile() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Map<String, Object> get(String... path) {
+        throw new RuntimeException("get() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

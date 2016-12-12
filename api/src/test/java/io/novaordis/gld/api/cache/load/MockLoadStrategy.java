@@ -90,7 +90,7 @@ public class MockLoadStrategy implements LoadStrategy {
 
             CacheServiceConfiguration csc = (CacheServiceConfiguration)sc;
 
-            Map<String, Object> rawConfig = csc.getMap("load-strategy");
+            Map<String, Object> rawConfig = csc.get("load-strategy");
 
             String requiredValue = (String)rawConfig.get(classLevelRequiredConfigurationElementName);
 
