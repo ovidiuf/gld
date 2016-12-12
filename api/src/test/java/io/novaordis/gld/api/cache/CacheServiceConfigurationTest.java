@@ -16,8 +16,8 @@
 
 package io.novaordis.gld.api.cache;
 
-import io.novaordis.gld.api.ServiceConfiguration;
-import io.novaordis.gld.api.ServiceConfigurationTest;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfigurationTest;
 import io.novaordis.gld.api.ServiceType;
 import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;

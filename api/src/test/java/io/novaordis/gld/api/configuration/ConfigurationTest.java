@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.configuration;
+
+import io.novaordis.gld.api.configuration.Configuration;
+import io.novaordis.gld.api.configuration.LoadConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
+import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/7/16
+ * @since 12/4/16
  */
-public class MockLoadConfiguration implements LoadConfiguration {
+public abstract class ConfigurationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -30,37 +37,27 @@ public class MockLoadConfiguration implements LoadConfiguration {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // LoadConfiguration implementation --------------------------------------------------------------------------------
-
-    @Override
-    public int getThreadCount() {
-        throw new RuntimeException("getThreadCount() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Long getOperations() {
-
-        // unlimited
-        return null;
-    }
-
-    @Override
-    public Long getRequests() {
-
-        return getOperations();
-    }
-
-    @Override
-    public Long getMessages() {
-
-        return getOperations();
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // Tests -----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void constructor() throws Exception {
+
+        Configuration c = getConfigurationToTest();
+
+        ServiceConfiguration sc = c.getServiceConfiguration();
+        assertNotNull(sc);
+
+        LoadConfiguration ldc = c.getLoadConfiguration();
+        assertNotNull(ldc);
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected abstract Configuration getConfigurationToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -16,7 +16,7 @@
 
 package io.novaordis.gld.api.cache;
 
-import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.configuration.RawServiceConfigurationMapWrapper;
 import io.novaordis.utilities.UserErrorException;
 

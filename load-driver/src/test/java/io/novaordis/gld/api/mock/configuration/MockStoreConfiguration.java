@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,69 +14,44 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver;
+package io.novaordis.gld.api.mock.configuration;
 
-import io.novaordis.gld.api.KeyStore;
-import io.novaordis.gld.api.store.KeyStoreException;
-import io.novaordis.gld.api.store.StoredValue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.novaordis.gld.api.configuration.StoreConfiguration;
+import io.novaordis.gld.api.mock.MockKeyStore;
+import io.novaordis.utilities.UserErrorException;
 
-import java.util.Set;
+import java.io.File;
 
-public class MockKeyStore implements KeyStore {
+/**
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 12/9/16
+ */
+public class MockStoreConfiguration implements StoreConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = LoggerFactory.getLogger(MockKeyStore.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private boolean started;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // KeyStore implementation -----------------------------------------------------------------------------------------
+    // MockStoreConfiguration implementation ---------------------------------------------------------------------------
 
     @Override
-    public void start() throws KeyStoreException {
+    public String getStoreType() throws UserErrorException {
 
-        this.started = true;
-
-        log.info(this + " started");
+        return MockKeyStore.class.getName();
     }
 
     @Override
-    public void stop() throws KeyStoreException {
-        this.started = false;
+    public <T> T get(Class<? extends T> type, String... path) {
+        throw new RuntimeException("get() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public boolean isStarted()
-    {
-        return started;
-    }
-
-    @Override
-    public void store(String key, byte[]... value) throws IllegalArgumentException, KeyStoreException {
-        throw new RuntimeException("store() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public StoredValue retrieve(String key) throws KeyStoreException {
-        throw new RuntimeException("retrieve() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Set<String> getKeys() throws KeyStoreException {
-        throw new RuntimeException("getKeys() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public long getKeyCount() {
-        throw new RuntimeException("getKeyCount() NOT YET IMPLEMENTED");
+    public File getFile(String... path) {
+        throw new RuntimeException("getFile() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

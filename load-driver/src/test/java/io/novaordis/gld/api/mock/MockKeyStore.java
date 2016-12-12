@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2015 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,46 +14,69 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver;
+package io.novaordis.gld.api.mock;
 
-import io.novaordis.gld.api.LoadConfiguration;
-import io.novaordis.utilities.UserErrorException;
+import io.novaordis.gld.api.KeyStore;
+import io.novaordis.gld.api.store.KeyStoreException;
+import io.novaordis.gld.api.store.StoredValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/9/16
- */
-public class MockLoadConfiguration implements LoadConfiguration {
+import java.util.Set;
+
+public class MockKeyStore implements KeyStore {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(MockKeyStore.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private boolean started;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // MockLoadConfiguration implementation ----------------------------------------------------------------------------
+    // KeyStore implementation -----------------------------------------------------------------------------------------
 
     @Override
-    public int getThreadCount() throws UserErrorException {
+    public void start() throws KeyStoreException {
 
-        return 1;
+        this.started = true;
+
+        log.info(this + " started");
     }
 
     @Override
-    public Long getOperations() throws UserErrorException {
-        throw new RuntimeException("getOperations() NOT YET IMPLEMENTED");
+    public void stop() throws KeyStoreException {
+        this.started = false;
     }
 
     @Override
-    public Long getRequests() throws UserErrorException {
-        throw new RuntimeException("getRequests() NOT YET IMPLEMENTED");
+    public boolean isStarted()
+    {
+        return started;
     }
 
     @Override
-    public Long getMessages() throws UserErrorException {
-        throw new RuntimeException("getMessages() NOT YET IMPLEMENTED");
+    public void store(String key, byte[]... value) throws IllegalArgumentException, KeyStoreException {
+        throw new RuntimeException("store() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public StoredValue retrieve(String key) throws KeyStoreException {
+        throw new RuntimeException("retrieve() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Set<String> getKeys() throws KeyStoreException {
+        throw new RuntimeException("getKeys() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public long getKeyCount() {
+        throw new RuntimeException("getKeyCount() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

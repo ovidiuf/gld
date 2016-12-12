@@ -16,6 +16,8 @@
 
 package io.novaordis.gld.api;
 
+import io.novaordis.gld.api.configuration.Configuration;
+
 /**
  * @{linktourl https://kb.novaordis.com/index.php/Gld_Concepts#Load_Driver_Instance}
  *

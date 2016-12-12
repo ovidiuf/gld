@@ -17,11 +17,12 @@
 package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.KeyProvider;
-import io.novaordis.gld.api.LoadConfiguration;
+import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.mock.MockKeyStore;
 import io.novaordis.gld.api.mock.load.MockLoadStrategy;
 import io.novaordis.gld.driver.sampler.Sampler;
 import io.novaordis.gld.driver.sampler.SamplerImpl;

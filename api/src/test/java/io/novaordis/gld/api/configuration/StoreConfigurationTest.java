@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.configuration;
 
-import org.junit.Test;
+import io.novaordis.gld.api.configuration.StoreConfiguration;
 
-import static org.junit.Assert.assertNotNull;
+import java.io.File;
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 12/8/16
  */
-public abstract class ConfigurationTest {
+public abstract class StoreConfigurationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -36,25 +37,12 @@ public abstract class ConfigurationTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // Tests -----------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void constructor() throws Exception {
-
-        Configuration c = getConfigurationToTest();
-
-        ServiceConfiguration sc = c.getServiceConfiguration();
-        assertNotNull(sc);
-
-        LoadConfiguration ldc = c.getLoadConfiguration();
-        assertNotNull(ldc);
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
-    // Protected -------------------------------------------------------------------------------------------------------
+    protected abstract StoreConfiguration getStoreConfigurationToTest(
+            Map<String, Object> map, File configurationDirectory) throws Exception;
 
-    protected abstract Configuration getConfigurationToTest() throws Exception;
+    // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
 

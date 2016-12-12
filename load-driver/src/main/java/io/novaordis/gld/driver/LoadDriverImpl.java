@@ -16,17 +16,17 @@
 
 package io.novaordis.gld.driver;
 
-import io.novaordis.gld.api.Configuration;
+import io.novaordis.gld.api.configuration.Configuration;
 import io.novaordis.gld.api.KeyStore;
-import io.novaordis.gld.api.LoadConfiguration;
+import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.LoadStrategyFactory;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
-import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceFactory;
-import io.novaordis.gld.api.StoreConfiguration;
+import io.novaordis.gld.api.configuration.StoreConfiguration;
 import io.novaordis.gld.api.store.KeyStoreFactory;
 import io.novaordis.gld.driver.sampler.Sampler;
 import io.novaordis.gld.driver.sampler.SamplerImpl;

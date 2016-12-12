@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver;
+package io.novaordis.gld.api.configuration;
 
-import io.novaordis.gld.api.Configuration;
-import io.novaordis.gld.api.LoadConfiguration;
-import io.novaordis.gld.api.ServiceConfiguration;
-import io.novaordis.gld.api.StoreConfiguration;
+import io.novaordis.gld.api.configuration.LoadConfiguration;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/9/16
+ * @since 12/7/16
  */
-public class MockConfiguration implements Configuration {
+public class MockLoadConfiguration implements LoadConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -35,26 +32,31 @@ public class MockConfiguration implements Configuration {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Configuration implementation ------------------------------------------------------------------------------------
+    // LoadConfiguration implementation --------------------------------------------------------------------------------
 
     @Override
-    public ServiceConfiguration getServiceConfiguration() {
-
-        return new MockServiceConfiguration();
+    public int getThreadCount() {
+        throw new RuntimeException("getThreadCount() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public LoadConfiguration getLoadConfiguration() {
+    public Long getOperations() {
 
-        return new MockLoadConfiguration();
+        // unlimited
+        return null;
     }
 
     @Override
-    public StoreConfiguration getStoreConfiguration() {
+    public Long getRequests() {
 
-        return new MockStoreConfiguration();
+        return getOperations();
     }
 
+    @Override
+    public Long getMessages() {
+
+        return getOperations();
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 

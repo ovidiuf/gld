@@ -18,8 +18,8 @@ package io.novaordis.gld.api.cache.load;
 
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.LoadStrategyFactoryTest;
-import io.novaordis.gld.api.MockLoadConfiguration;
-import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.gld.api.configuration.MockLoadConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.cache.CacheServiceConfiguration;
 import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
 import io.novaordis.utilities.UserErrorException;

@@ -16,6 +16,8 @@
 
 package io.novaordis.gld.api;
 
+import io.novaordis.gld.api.configuration.Configuration;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16

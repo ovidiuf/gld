@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.configuration;
+
+import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 
 import java.util.Collections;
 import java.util.HashMap;

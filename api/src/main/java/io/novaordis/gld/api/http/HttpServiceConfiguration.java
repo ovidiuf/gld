@@ -16,7 +16,7 @@
 
 package io.novaordis.gld.api.http;
 
-import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>

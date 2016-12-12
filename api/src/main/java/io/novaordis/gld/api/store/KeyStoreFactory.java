@@ -17,7 +17,7 @@
 package io.novaordis.gld.api.store;
 
 import io.novaordis.gld.api.KeyStore;
-import io.novaordis.gld.api.StoreConfiguration;
+import io.novaordis.gld.api.configuration.StoreConfiguration;
 import io.novaordis.utilities.UserErrorException;
 
 import java.io.File;

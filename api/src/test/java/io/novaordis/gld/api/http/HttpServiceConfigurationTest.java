@@ -16,7 +16,7 @@
 
 package io.novaordis.gld.api.http;
 
-import io.novaordis.gld.api.ServiceConfigurationTest;
+import io.novaordis.gld.api.configuration.ServiceConfigurationTest;
 import io.novaordis.gld.api.ServiceType;
 
 import java.util.Map;

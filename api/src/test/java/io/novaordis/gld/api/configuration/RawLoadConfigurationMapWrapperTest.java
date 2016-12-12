@@ -16,8 +16,6 @@
 
 package io.novaordis.gld.api.configuration;
 
-import io.novaordis.gld.api.LoadConfigurationTest;
-
 import java.util.Map;
 
 /**

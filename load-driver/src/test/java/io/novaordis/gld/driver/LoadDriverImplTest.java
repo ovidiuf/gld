@@ -18,6 +18,7 @@ package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.mock.configuration.MockConfiguration;
 import io.novaordis.gld.driver.sampler.Sampler;
 import org.junit.Test;
 

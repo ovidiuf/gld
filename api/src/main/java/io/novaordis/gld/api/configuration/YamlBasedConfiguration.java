@@ -16,11 +16,7 @@
 
 package io.novaordis.gld.api.configuration;
 
-import io.novaordis.gld.api.Configuration;
-import io.novaordis.gld.api.LoadConfiguration;
-import io.novaordis.gld.api.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
-import io.novaordis.gld.api.StoreConfiguration;
 import io.novaordis.gld.api.cache.CacheServiceConfigurationImpl;
 import io.novaordis.gld.api.jms.JmsServiceConfigurationImpl;
 import io.novaordis.utilities.UserErrorException;

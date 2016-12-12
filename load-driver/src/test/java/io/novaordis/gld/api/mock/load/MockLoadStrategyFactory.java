@@ -16,9 +16,9 @@
 
 package io.novaordis.gld.api.mock.load;
 
-import io.novaordis.gld.api.LoadConfiguration;
+import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.LoadStrategyFactory;
-import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
 
 /**

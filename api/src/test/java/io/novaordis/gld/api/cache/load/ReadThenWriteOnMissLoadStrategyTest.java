@@ -17,10 +17,10 @@
 package io.novaordis.gld.api.cache.load;
 
 import io.novaordis.gld.api.LoadStrategyTest;
-import io.novaordis.gld.api.MockLoadConfiguration;
-import io.novaordis.gld.api.MockServiceConfiguration;
+import io.novaordis.gld.api.configuration.MockLoadConfiguration;
+import io.novaordis.gld.api.configuration.MockServiceConfiguration;
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
 import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
 import io.novaordis.gld.api.cache.operation.Read;

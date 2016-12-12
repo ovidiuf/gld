@@ -18,6 +18,8 @@ package io.novaordis.gld.api;
 
 import java.util.Set;
 
+import io.novaordis.gld.api.configuration.LoadConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.utilities.UserErrorException;
 
 public interface LoadStrategy {

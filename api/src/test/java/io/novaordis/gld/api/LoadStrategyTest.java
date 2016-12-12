@@ -17,6 +17,9 @@
 package io.novaordis.gld.api;
 
 import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
+import io.novaordis.gld.api.configuration.MockLoadConfiguration;
+import io.novaordis.gld.api.configuration.MockServiceConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;
 import org.slf4j.Logger;

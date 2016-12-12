@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver;
+package io.novaordis.gld.api.mock.configuration;
 
-import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.driver.MockService;
 import io.novaordis.utilities.UserErrorException;
 
 import java.util.Map;

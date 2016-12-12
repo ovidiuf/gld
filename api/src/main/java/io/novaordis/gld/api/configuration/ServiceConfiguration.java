@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.configuration;
 
+import io.novaordis.gld.api.ServiceType;
 import io.novaordis.utilities.UserErrorException;
 
 import java.util.Map;

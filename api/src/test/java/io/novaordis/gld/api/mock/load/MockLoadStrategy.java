@@ -17,11 +17,11 @@
 package io.novaordis.gld.api.mock.load;
 
 import io.novaordis.gld.api.KeyProvider;
-import io.novaordis.gld.api.LoadConfiguration;
+import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.MockOperation;
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

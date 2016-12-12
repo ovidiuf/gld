@@ -16,7 +16,7 @@
 
 package io.novaordis.gld;
 
-import io.novaordis.gld.api.Configuration;
+import io.novaordis.gld.api.configuration.Configuration;
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.configuration.YamlBasedConfiguration;
 import io.novaordis.gld.driver.LoadDriverImpl;

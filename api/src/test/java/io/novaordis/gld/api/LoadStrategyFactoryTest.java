@@ -16,6 +16,9 @@
 
 package io.novaordis.gld.api;
 
+import io.novaordis.gld.api.configuration.MockLoadConfiguration;
+import io.novaordis.gld.api.configuration.MockServiceConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.mock.load.MockLoadStrategy;
 import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;

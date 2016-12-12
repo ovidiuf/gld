@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.mock.configuration;
+
+import io.novaordis.gld.api.configuration.Configuration;
+import io.novaordis.gld.api.configuration.LoadConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
+import io.novaordis.gld.api.configuration.StoreConfiguration;
 
 /**
- * Typed access to underlying configuration.
- *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 12/9/16
  */
-public interface Configuration {
+public class MockConfiguration implements Configuration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,24 +35,28 @@ public interface Configuration {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    // Configuration implementation ------------------------------------------------------------------------------------
+
+    @Override
+    public ServiceConfiguration getServiceConfiguration() {
+
+        return new MockServiceConfiguration();
+    }
+
+    @Override
+    public LoadConfiguration getLoadConfiguration() {
+
+        return new MockLoadConfiguration();
+    }
+
+    @Override
+    public StoreConfiguration getStoreConfiguration() {
+
+        return new MockStoreConfiguration();
+    }
+
+
     // Public ----------------------------------------------------------------------------------------------------------
-
-    // Typed Access ----------------------------------------------------------------------------------------------------
-
-    /**
-     * Never returns null, if the service configuration is missing, configuration parsing section will throw exception.
-     */
-    ServiceConfiguration getServiceConfiguration();
-
-    /**
-     * Never returns null, if the load configuration is missing, configuration parsing section will throw exception.
-     */
-    LoadConfiguration getLoadConfiguration();
-
-    /**
-     * May return null, it means there's no key store, we simply discard the keys used in testing.
-     */
-    StoreConfiguration getStoreConfiguration();
 
     // Package protected -----------------------------------------------------------------------------------------------
 

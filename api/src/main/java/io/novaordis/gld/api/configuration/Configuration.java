@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
-
-import java.io.File;
-import java.util.Map;
+package io.novaordis.gld.api.configuration;
 
 /**
+ * Typed access to underlying configuration.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/8/16
+ * @since 12/4/16
  */
-public abstract class StoreConfigurationTest {
+public interface Configuration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -35,10 +34,24 @@ public abstract class StoreConfigurationTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // Package protected -----------------------------------------------------------------------------------------------
+    // Typed Access ----------------------------------------------------------------------------------------------------
 
-    protected abstract StoreConfiguration getStoreConfigurationToTest(
-            Map<String, Object> map, File configurationDirectory) throws Exception;
+    /**
+     * Never returns null, if the service configuration is missing, configuration parsing section will throw exception.
+     */
+    ServiceConfiguration getServiceConfiguration();
+
+    /**
+     * Never returns null, if the load configuration is missing, configuration parsing section will throw exception.
+     */
+    LoadConfiguration getLoadConfiguration();
+
+    /**
+     * May return null, it means there's no key store, we simply discard the keys used in testing.
+     */
+    StoreConfiguration getStoreConfiguration();
+
+    // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 

@@ -18,7 +18,7 @@ package io.novaordis.gld.api.provider;
 
 import io.novaordis.gld.api.KeyProvider;
 import io.novaordis.gld.api.RandomContentGenerator;
-import io.novaordis.gld.api.ServiceConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;

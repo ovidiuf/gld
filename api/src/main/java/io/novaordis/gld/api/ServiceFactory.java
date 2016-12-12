@@ -17,6 +17,7 @@
 package io.novaordis.gld.api;
 
 import io.novaordis.gld.api.cache.local.LocalCacheService;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.utilities.UserErrorException;
 
 /**

@@ -16,8 +16,6 @@
 
 package io.novaordis.gld.api.configuration;
 
-import io.novaordis.gld.api.ConfigurationTest;
-import io.novaordis.gld.api.StoreConfiguration;
 import io.novaordis.utilities.Files;
 import io.novaordis.utilities.UserErrorException;
 import org.junit.After;

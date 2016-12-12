@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.configuration;
 
 import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;

@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver;
+package io.novaordis.gld.api.mock.configuration;
 
-import io.novaordis.gld.api.StoreConfiguration;
+import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.utilities.UserErrorException;
-
-import java.io.File;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/9/16
  */
-public class MockStoreConfiguration implements StoreConfiguration {
+public class MockLoadConfiguration implements LoadConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -35,22 +33,27 @@ public class MockStoreConfiguration implements StoreConfiguration {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // MockStoreConfiguration implementation ---------------------------------------------------------------------------
+    // MockLoadConfiguration implementation ----------------------------------------------------------------------------
 
     @Override
-    public String getStoreType() throws UserErrorException {
+    public int getThreadCount() throws UserErrorException {
 
-        return MockKeyStore.class.getName();
+        return 1;
     }
 
     @Override
-    public <T> T get(Class<? extends T> type, String... path) {
-        throw new RuntimeException("get() NOT YET IMPLEMENTED");
+    public Long getOperations() throws UserErrorException {
+        throw new RuntimeException("getOperations() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public File getFile(String... path) {
-        throw new RuntimeException("getFile() NOT YET IMPLEMENTED");
+    public Long getRequests() throws UserErrorException {
+        throw new RuntimeException("getRequests() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Long getMessages() throws UserErrorException {
+        throw new RuntimeException("getMessages() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
