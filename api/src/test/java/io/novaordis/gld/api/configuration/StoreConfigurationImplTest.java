@@ -40,10 +40,10 @@ public class StoreConfigurationImplTest extends StoreConfigurationTest {
     // Package protected -----------------------------------------------------------------------------------------------
 
     @Override
-    protected StoreConfigurationImpl getStoreConfigurationToTest(Map<String, Object> map, File configurationDirectory)
-            throws Exception {
+    protected StoreConfigurationImpl getConfigurationToTest(
+            Map<String, Object> rawMap, File configurationDirectory) throws Exception {
 
-        return new StoreConfigurationImpl(map, configurationDirectory);
+        return new StoreConfigurationImpl(rawMap, configurationDirectory);
     }
 
     // Protected -------------------------------------------------------------------------------------------------------

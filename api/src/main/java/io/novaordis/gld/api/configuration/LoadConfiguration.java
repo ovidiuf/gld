@@ -22,10 +22,13 @@ import io.novaordis.utilities.UserErrorException;
  * Typed access to the configuration that specifies the load characteristics (number of threads, duration, number
  * of requests/operations/messages), etc.
  *
+ * The implementations of this interface also allow low-level typed access (typed access to specific points into the
+ * configuration structure) via LowLevelConfiguration.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-public interface LoadConfiguration {
+public interface LoadConfiguration /** extends LowLevelConfiguration */ {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

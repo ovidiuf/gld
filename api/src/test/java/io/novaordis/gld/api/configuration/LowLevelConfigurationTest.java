@@ -38,7 +38,7 @@ public abstract class LowLevelConfigurationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = LoggerFactory.getLogger(LowLevelConfigurationImplTest.class);
+    private static final Logger log = LoggerFactory.getLogger(LowLevelConfigurationTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -56,7 +56,7 @@ public abstract class LowLevelConfigurationTest {
     public void get_NoMatch_FirstElement() throws Exception {
 
         Map<String, Object> m = new HashMap<>();
-        LowLevelConfiguration c = getLowLevelConfigurationToTest(m, new File("."));
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
 
         String s = c.get(String.class, "no-such-top-element");
         assertNull(s);
@@ -71,7 +71,7 @@ public abstract class LowLevelConfigurationTest {
 
         m.put("token1", m2);
 
-        LowLevelConfiguration c = getLowLevelConfigurationToTest(m, new File("."));
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
 
         String s = c.get(String.class, "token1", "token2");
         assertNull(s);
@@ -85,7 +85,7 @@ public abstract class LowLevelConfigurationTest {
         m.put("token1", m2);
         m2.put("token2", "a-string-not-a-map");
 
-        LowLevelConfiguration c = getLowLevelConfigurationToTest(m, new File("."));
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
 
         String s = c.get(String.class, "token1", "token2", "token3");
         assertNull(s);
@@ -101,7 +101,7 @@ public abstract class LowLevelConfigurationTest {
         m2.put("token2", m3);
         m3.put("token3", 10);
 
-        LowLevelConfiguration c = getLowLevelConfigurationToTest(m, new File("."));
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
 
         try {
             c.get(String.class, "token1", "token2", "token3");
@@ -125,7 +125,7 @@ public abstract class LowLevelConfigurationTest {
         m2.put("token2", m3);
         m3.put("token3", "test-value");
 
-        LowLevelConfiguration c = getLowLevelConfigurationToTest(m, new File("."));
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
 
         String s = c.get(String.class, "token1", "token2", "token3");
 
@@ -134,19 +134,64 @@ public abstract class LowLevelConfigurationTest {
 
     // getFile() -------------------------------------------------------------------------------------------------------
 
-//     * Attempt to map the given path onto the low level configuration map managed by this instance and return the
-//     * value found on match as a File instance. If the value corresponds to an absolute file path, return it as such.
-//     * If the value corresponds to a relative file path, resolve it to an absolute path using the <b>location of the
-//     * configuration file</b> as root directory.
-//     *
-//     * If the stored value value is not null and it is not a String, the method throws IllegalStateException.
+    @Test
+    public void nullConfigurationFileDirectory() throws Exception {
+
+        try {
+
+            new LowLevelConfigurationBase(new HashMap<>(), null);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("null configuration directory", msg);
+        }
+    }
+
+    @Test
+    public void configurationFileDirectoryDoesNotExist() throws Exception {
+
+        try {
+
+            new LowLevelConfigurationBase(new HashMap<>(), new File("/I/am/sure/this/directory/does/not/exist"));
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("configuration directory /I/am/sure/this/directory/does/not/exist does not exist", msg);
+        }
+    }
+
+    @Test
+    public void configurationFileDirectoryIsAFile() throws Exception {
+
+        File existingFile = new File(System.getProperty("basedir"), "pom.xml");
+        assertTrue(existingFile.isFile());
+        assertTrue(existingFile.exists());
+
+        try {
+
+            new LowLevelConfigurationBase(new HashMap<>(), existingFile);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("the path " + existingFile.getPath() + " does not represent a directory", msg);
+        }
+    }
 
     @Test
     public void getFile_NoMatch() throws Exception {
 
         Map<String, Object> m = new HashMap<>();
 
-        LowLevelConfiguration c = getLowLevelConfigurationToTest(m, new File("."));
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
 
         File f = c.getFile("token1", "token2", "token3");
 
@@ -162,7 +207,7 @@ public abstract class LowLevelConfigurationTest {
         //noinspection unchecked
         ((Map<String, Object>)m.get("token1")).put("token2", "something else");
 
-        LowLevelConfiguration c = getLowLevelConfigurationToTest(m, new File("."));
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
 
         File f = c.getFile("token1", "token2", "token3");
 
@@ -181,7 +226,7 @@ public abstract class LowLevelConfigurationTest {
         //noinspection unchecked
         ((Map<String, Object>)((Map<String, Object>) m.get("token1")).get("token2")).put("token3", 10);
 
-        LowLevelConfiguration c = getLowLevelConfigurationToTest(m, new File("."));
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
 
         try {
             c.getFile("token1", "token2", "token3");
@@ -209,7 +254,7 @@ public abstract class LowLevelConfigurationTest {
         //noinspection unchecked
         ((Map<String, Object>)((Map<String, Object>) m.get("token1")).get("token2")).put("token3", filePath);
 
-        LowLevelConfiguration c = getLowLevelConfigurationToTest(m, new File("."));
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
 
         File f = c.getFile("token1", "token2", "token3");
 
@@ -234,7 +279,7 @@ public abstract class LowLevelConfigurationTest {
         //noinspection unchecked
         ((Map<String, Object>)((Map<String, Object>) m.get("token1")).get("token2")).put("token3", filePath);
 
-        LowLevelConfiguration c = getLowLevelConfigurationToTest(m, configurationFileDirectory);
+        LowLevelConfiguration c = getConfigurationToTest(m, configurationFileDirectory);
 
         File f = c.getFile("token1", "token2", "token3");
 
@@ -259,7 +304,7 @@ public abstract class LowLevelConfigurationTest {
         //noinspection unchecked
         ((Map<String, Object>)m.get("token1")).put("token2", filePath);
 
-        LowLevelConfiguration c = getLowLevelConfigurationToTest(m, configurationFileDirectory);
+        LowLevelConfiguration c = getConfigurationToTest(m, configurationFileDirectory);
 
         File f = c.getFile("token1", "token2");
 
@@ -284,7 +329,7 @@ public abstract class LowLevelConfigurationTest {
         //noinspection unchecked
         ((Map<String, Object>)m.get("token1")).put("token2", filePath);
 
-        LowLevelConfiguration c = getLowLevelConfigurationToTest(m, configurationFileDirectory);
+        LowLevelConfiguration c = getConfigurationToTest(m, configurationFileDirectory);
 
         File f = c.getFile("token1", "token2");
 
@@ -295,7 +340,7 @@ public abstract class LowLevelConfigurationTest {
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected abstract LowLevelConfiguration getLowLevelConfigurationToTest(
+    protected abstract LowLevelConfiguration getConfigurationToTest(
             Map<String, Object> raw, File configurationDirectory) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------

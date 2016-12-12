@@ -25,7 +25,8 @@ import java.util.Map;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-public class StoreConfigurationImpl implements StoreConfiguration, LowLevelConfiguration {
+public class StoreConfigurationImpl extends LowLevelConfigurationBase
+        implements StoreConfiguration, LowLevelConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -33,48 +34,20 @@ public class StoreConfigurationImpl implements StoreConfiguration, LowLevelConfi
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    // the actual raw configuration map passed at construction
-    private Map<String, Object> rawConfiguration;
-
-    private LowLevelConfigurationImpl configurationAccess;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
-     * @param map the map extracted from the YAML file from under the "load" section.
-     *
+     * @param rawMap the raw map as extracted from the YAML file from the section corresponding to this type of
+     *            configuration.
      * @param configurationDirectory represents the directory the configuration file the map was extracted from lives
      *                               in. It is needed to resolve the configuration elements that are relative file
      *                               paths. All relative file paths will be resolved relatively to the directory that
      *                               contains the configuration file. The directory must exist, otherwise the
      *                               constructor will fail with IllegalArgumentException.
      */
-    public StoreConfigurationImpl(Map<String, Object> map, File configurationDirectory) throws Exception {
+    public StoreConfigurationImpl(Map<String, Object> rawMap, File configurationDirectory) throws Exception {
 
-        this.rawConfiguration = map;
-        this.configurationAccess = new LowLevelConfigurationImpl(rawConfiguration, configurationDirectory);
-    }
-
-    // LowLevelConfiguration implementation ----------------------------------------------------------------------------
-
-    @Override
-    public <T> T get(Class<? extends T> type, String... path) {
-
-        //
-        // we delegate to a generic low-level configuration resolver
-        //
-
-        return configurationAccess.get(type, path);
-    }
-
-    @Override
-    public File getFile(String... path) {
-
-        //
-        // we delegate to a generic low-level configuration resolver
-        //
-
-        return configurationAccess.getFile(path);
+        super(rawMap, configurationDirectory);
     }
 
     // StoreConfiguration implementation -------------------------------------------------------------------------------
@@ -82,21 +55,14 @@ public class StoreConfigurationImpl implements StoreConfiguration, LowLevelConfi
     @Override
     public String getStoreType() throws UserErrorException {
 
-        Object o = rawConfiguration.get(StoreConfiguration.STORE_TYPE_LABEL);
+        String s = get(String.class, StoreConfiguration.STORE_TYPE_LABEL);
 
-        if (o == null) {
+        if (s == null) {
 
             throw new UserErrorException("missing store type");
         }
-        else {
 
-            if (!(o instanceof String)) {
-                throw new UserErrorException(
-                        "'" + StoreConfiguration.STORE_TYPE_LABEL + "' not a string: \"" + o + "\"");
-            }
-
-            return ((String)o);
-        }
+        return s;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

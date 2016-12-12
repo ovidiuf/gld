@@ -24,6 +24,7 @@ import java.util.Map;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
+@Deprecated
 public class RawLoadConfigurationMapWrapper implements LoadConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
