@@ -111,7 +111,7 @@ public abstract class LowLevelConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("expected token1.token2.token3 to be a String but it is a(n) Integer", msg);
+            assertEquals("expected token1.token2.token3 to be a String but it is a(n) Integer: \"10\"", msg);
         }
     }
 
@@ -236,7 +236,7 @@ public abstract class LowLevelConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("expected token1.token2.token3 to be a String but it is a(n) Integer", msg);
+            assertEquals("expected token1.token2.token3 to be a String but it is a(n) Integer: \"10\"", msg);
         }
     }
 

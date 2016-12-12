@@ -19,6 +19,8 @@ package io.novaordis.gld.api.mock.configuration;
 import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.utilities.UserErrorException;
 
+import java.io.File;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/9/16
@@ -54,6 +56,16 @@ public class MockLoadConfiguration implements LoadConfiguration {
     @Override
     public Long getMessages() throws UserErrorException {
         throw new RuntimeException("getMessages() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public <T> T get(Class<? extends T> type, String... path) {
+        throw new RuntimeException("get() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public File getFile(String... path) {
+        throw new RuntimeException("getFile() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

@@ -16,13 +16,14 @@
 
 package io.novaordis.gld.api.configuration;
 
+import java.io.File;
 import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-public class RawLoadConfigurationMapWrapperTest extends LoadConfigurationTest {
+public class LoadConfigurationImplTest extends LoadConfigurationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -39,9 +40,10 @@ public class RawLoadConfigurationMapWrapperTest extends LoadConfigurationTest {
     // Package protected -----------------------------------------------------------------------------------------------
 
     @Override
-    protected RawLoadConfigurationMapWrapper getLoadConfigurationToTest(Map<String, Object> map) throws Exception {
+    protected LoadConfigurationImpl getConfigurationToTest(
+            Map<String, Object> rawMap, File configurationDirectory) throws Exception {
 
-        return new RawLoadConfigurationMapWrapper(map);
+        return new LoadConfigurationImpl(rawMap, configurationDirectory);
     }
 
     // Protected -------------------------------------------------------------------------------------------------------

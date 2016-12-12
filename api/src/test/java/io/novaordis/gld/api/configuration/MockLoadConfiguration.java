@@ -16,7 +16,7 @@
 
 package io.novaordis.gld.api.configuration;
 
-import io.novaordis.gld.api.configuration.LoadConfiguration;
+import java.io.File;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -56,6 +56,16 @@ public class MockLoadConfiguration implements LoadConfiguration {
     public Long getMessages() {
 
         return getOperations();
+    }
+
+    @Override
+    public <T> T get(Class<? extends T> type, String... path) {
+        throw new RuntimeException("get() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public File getFile(String... path) {
+        throw new RuntimeException("getFile() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

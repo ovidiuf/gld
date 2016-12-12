@@ -21,18 +21,20 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-public abstract class LoadConfigurationTest {
+public abstract class LoadConfigurationTest extends LowLevelConfigurationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -56,7 +58,7 @@ public abstract class LoadConfigurationTest {
 
         Map<String, Object> map = new HashMap<>();
         map.put(LoadConfiguration.THREAD_COUNT_LABEL, "blah");
-        LoadConfiguration c = getLoadConfigurationToTest(map);
+        LoadConfiguration c = getConfigurationToTest(map, new File(System.getProperty("basedir")));
 
         try {
 
@@ -67,7 +69,11 @@ public abstract class LoadConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals(msg, "'" + LoadConfiguration.THREAD_COUNT_LABEL + "' not an integer: \"blah\"");
+            assertEquals("'" + LoadConfiguration.THREAD_COUNT_LABEL + "' not an integer", msg);
+
+            IllegalStateException e2 = (IllegalStateException)e.getCause();
+            String msg2 = e2.getMessage();
+            assertTrue(msg2.contains("blah"));
         }
     }
 
@@ -77,7 +83,7 @@ public abstract class LoadConfigurationTest {
         Map<String, Object> map = new HashMap<>();
         assertNull(map.get(LoadConfiguration.THREAD_COUNT_LABEL));
 
-        LoadConfiguration c = getLoadConfigurationToTest(map);
+        LoadConfiguration c = getConfigurationToTest(map, new File(System.getProperty("basedir")));
         assertEquals(LoadConfiguration.DEFAULT_THREAD_COUNT, c.getThreadCount());
     }
 
@@ -91,7 +97,7 @@ public abstract class LoadConfigurationTest {
         //
 
         Map<String, Object> map = new HashMap<>();
-        LoadConfiguration c = getLoadConfigurationToTest(map);
+        LoadConfiguration c = getConfigurationToTest(map, new File(System.getProperty("basedir")));
 
         assertNull(c.getOperations());
         assertNull(c.getRequests());
@@ -103,7 +109,7 @@ public abstract class LoadConfigurationTest {
 
         Map<String, Object> map = new HashMap<>();
         map.put(LoadConfiguration.OPERATION_COUNT_LABEL, "blah");
-        LoadConfiguration c = getLoadConfigurationToTest(map);
+        LoadConfiguration c = getConfigurationToTest(map, new File(System.getProperty("basedir")));
 
         try {
 
@@ -114,7 +120,11 @@ public abstract class LoadConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals(msg, "'" + LoadConfiguration.OPERATION_COUNT_LABEL + "' not a long: \"blah\"");
+            assertEquals( "'" + LoadConfiguration.OPERATION_COUNT_LABEL + "' not a long", msg);
+
+            IllegalStateException e2 = (IllegalStateException)e.getCause();
+            String msg2 = e2.getMessage();
+            assertTrue(msg2.contains("blah"));
         }
 
         try {
@@ -126,7 +136,11 @@ public abstract class LoadConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals(msg, "'" + LoadConfiguration.OPERATION_COUNT_LABEL + "' not a long: \"blah\"");
+            assertEquals("'" + LoadConfiguration.OPERATION_COUNT_LABEL + "' not a long", msg);
+
+            IllegalStateException e2 = (IllegalStateException)e.getCause();
+            String msg2 = e2.getMessage();
+            assertTrue(msg2.contains("blah"));
         }
 
         try {
@@ -138,7 +152,11 @@ public abstract class LoadConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals(msg, "'" + LoadConfiguration.OPERATION_COUNT_LABEL + "' not a long: \"blah\"");
+            assertEquals("'" + LoadConfiguration.OPERATION_COUNT_LABEL + "' not a long", msg);
+
+            IllegalStateException e2 = (IllegalStateException)e.getCause();
+            String msg2 = e2.getMessage();
+            assertTrue(msg2.contains("blah"));
         }
     }
 
@@ -147,7 +165,7 @@ public abstract class LoadConfigurationTest {
 
         Map<String, Object> map = new HashMap<>();
         map.put(LoadConfiguration.REQUEST_COUNT_LABEL, "blah");
-        LoadConfiguration c = getLoadConfigurationToTest(map);
+        LoadConfiguration c = getConfigurationToTest(map, new File(System.getProperty("basedir")));
 
         try {
 
@@ -158,7 +176,11 @@ public abstract class LoadConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals(msg, "'" + LoadConfiguration.REQUEST_COUNT_LABEL + "' not a long: \"blah\"");
+            assertEquals("'" + LoadConfiguration.REQUEST_COUNT_LABEL + "' not a long", msg);
+
+            IllegalStateException e2 = (IllegalStateException)e.getCause();
+            String msg2 = e2.getMessage();
+            assertTrue(msg2.contains("blah"));
         }
 
         try {
@@ -170,7 +192,11 @@ public abstract class LoadConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals(msg, "'" + LoadConfiguration.REQUEST_COUNT_LABEL + "' not a long: \"blah\"");
+            assertEquals("'" + LoadConfiguration.REQUEST_COUNT_LABEL + "' not a long", msg);
+
+            IllegalStateException e2 = (IllegalStateException)e.getCause();
+            String msg2 = e2.getMessage();
+            assertTrue(msg2.contains("blah"));
         }
 
         try {
@@ -182,7 +208,11 @@ public abstract class LoadConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals(msg, "'" + LoadConfiguration.REQUEST_COUNT_LABEL + "' not a long: \"blah\"");
+            assertEquals("'" + LoadConfiguration.REQUEST_COUNT_LABEL + "' not a long",  msg);
+
+            IllegalStateException e2 = (IllegalStateException)e.getCause();
+            String msg2 = e2.getMessage();
+            assertTrue(msg2.contains("blah"));
         }
     }
 
@@ -191,7 +221,7 @@ public abstract class LoadConfigurationTest {
 
         Map<String, Object> map = new HashMap<>();
         map.put(LoadConfiguration.MESSAGE_COUNT_LABEL, "blah");
-        LoadConfiguration c = getLoadConfigurationToTest(map);
+        LoadConfiguration c = getConfigurationToTest(map, new File(System.getProperty("basedir")));
 
         try {
 
@@ -202,7 +232,11 @@ public abstract class LoadConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals(msg, "'" + LoadConfiguration.MESSAGE_COUNT_LABEL + "' not a long: \"blah\"");
+            assertEquals("'" + LoadConfiguration.MESSAGE_COUNT_LABEL + "' not a long", msg);
+
+            IllegalStateException e2 = (IllegalStateException)e.getCause();
+            String msg2 = e2.getMessage();
+            assertTrue(msg2.contains("blah"));
         }
 
         try {
@@ -214,7 +248,11 @@ public abstract class LoadConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals(msg, "'" + LoadConfiguration.MESSAGE_COUNT_LABEL + "' not a long: \"blah\"");
+            assertEquals("'" + LoadConfiguration.MESSAGE_COUNT_LABEL + "' not a long", msg);
+
+            IllegalStateException e2 = (IllegalStateException)e.getCause();
+            String msg2 = e2.getMessage();
+            assertTrue(msg2.contains("blah"));
         }
 
         try {
@@ -226,7 +264,11 @@ public abstract class LoadConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals(msg, "'" + LoadConfiguration.MESSAGE_COUNT_LABEL + "' not a long: \"blah\"");
+            assertEquals("'" + LoadConfiguration.MESSAGE_COUNT_LABEL + "' not a long", msg);
+
+            IllegalStateException e2 = (IllegalStateException)e.getCause();
+            String msg2 = e2.getMessage();
+            assertTrue(msg2.contains("blah"));
         }
     }
 
@@ -235,7 +277,7 @@ public abstract class LoadConfigurationTest {
 
         Map<String, Object> map = new HashMap<>();
         map.put(LoadConfiguration.OPERATION_COUNT_LABEL, 10);
-        LoadConfiguration c = getLoadConfigurationToTest(map);
+        LoadConfiguration c = getConfigurationToTest(map, new File(System.getProperty("basedir")));
 
         Long l = c.getOperations();
         assertEquals(10, l.longValue());
@@ -252,7 +294,7 @@ public abstract class LoadConfigurationTest {
 
         Map<String, Object> map = new HashMap<>();
         map.put(LoadConfiguration.REQUEST_COUNT_LABEL, 10);
-        LoadConfiguration c = getLoadConfigurationToTest(map);
+        LoadConfiguration c = getConfigurationToTest(map, new File(System.getProperty("basedir")));
 
         Long l = c.getOperations();
         assertEquals(10, l.longValue());
@@ -269,7 +311,7 @@ public abstract class LoadConfigurationTest {
 
         Map<String, Object> map = new HashMap<>();
         map.put(LoadConfiguration.MESSAGE_COUNT_LABEL, 10);
-        LoadConfiguration c = getLoadConfigurationToTest(map);
+        LoadConfiguration c = getConfigurationToTest(map, new File(System.getProperty("basedir")));
 
         Long l = c.getOperations();
         assertEquals(10, l.longValue());
@@ -283,7 +325,10 @@ public abstract class LoadConfigurationTest {
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    protected abstract LoadConfiguration getLoadConfigurationToTest(Map<String, Object> map) throws Exception;
+    @Override
+    protected abstract LoadConfiguration getConfigurationToTest(
+            Map<String, Object> rawMap, File configurationDirectory) throws Exception;
+
 
     // Protected -------------------------------------------------------------------------------------------------------
 

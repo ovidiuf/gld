@@ -21,10 +21,10 @@ import io.novaordis.utilities.UserErrorException;
 /**
  * Typed access to the store configuration. More details about the store can be found here:
  *
+ * @{linktourl https://kb.novaordis.com/index.php/Gld_Concepts#Store}
+ *
  * The implementations of this interface also allow low-level typed access (typed access to specific points into the
  * configuration structure) via LowLevelConfiguration.
- *
- * @{linktourl https://kb.novaordis.com/index.php/Gld_Concepts#Store}
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16

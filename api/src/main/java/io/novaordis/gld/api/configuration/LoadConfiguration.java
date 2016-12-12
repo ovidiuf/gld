@@ -28,7 +28,7 @@ import io.novaordis.utilities.UserErrorException;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-public interface LoadConfiguration /** extends LowLevelConfiguration */ {
+public interface LoadConfiguration extends LowLevelConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

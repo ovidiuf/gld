@@ -153,7 +153,7 @@ public class YamlBasedConfiguration implements Configuration {
                         "'" + LOAD_SECTION_LABEL + "' section empty or missing from configuration file " + file);
             }
 
-            loadConfiguration = new RawLoadConfigurationMapWrapper(loadConfigurationMap);
+            loadConfiguration = new LoadConfigurationImpl(loadConfigurationMap, configurationDirectory);
 
             if (storeConfigurationMap != null) {
 

@@ -85,7 +85,8 @@ public abstract class StoreConfigurationTest extends LowLevelConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("expected " + StoreConfiguration.STORE_TYPE_LABEL + " to be a String but it is a(n) Integer",
+            assertEquals(
+                    "expected " + StoreConfiguration.STORE_TYPE_LABEL + " to be a String but it is a(n) Integer: \"10\"",
                     msg);
         }
     }

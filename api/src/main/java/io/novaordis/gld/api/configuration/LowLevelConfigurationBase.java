@@ -123,7 +123,7 @@ public class LowLevelConfigurationBase implements LowLevelConfiguration {
 
             throw new IllegalStateException(
                     "expected " + pathAsString + " to be a " + type.getSimpleName() + " but it is a(n) " +
-                            o.getClass().getSimpleName());
+                            o.getClass().getSimpleName() + ": \"" + o + "\"");
         }
 
         return null;

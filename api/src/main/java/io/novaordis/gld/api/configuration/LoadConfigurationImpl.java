@@ -18,14 +18,15 @@ package io.novaordis.gld.api.configuration;
 
 import io.novaordis.utilities.UserErrorException;
 
+import java.io.File;
 import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-@Deprecated
-public class RawLoadConfigurationMapWrapper implements LoadConfiguration {
+public class LoadConfigurationImpl extends LowLevelConfigurationBase
+        implements LoadConfiguration, LowLevelConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -33,17 +34,20 @@ public class RawLoadConfigurationMapWrapper implements LoadConfiguration {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    // the actual raw configuration map passed at construction
-    private Map<String, Object> rawConfiguration;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
-     * @param map the map extracted from the YAML file from under the "load" section.
+     * @param rawMap the raw map as extracted from the YAML file from the section corresponding to this type of
+     *            configuration.
+     * @param configurationDirectory represents the directory the configuration file the map was extracted from lives
+     *                               in. It is needed to resolve the configuration elements that are relative file
+     *                               paths. All relative file paths will be resolved relatively to the directory that
+     *                               contains the configuration file. The directory must exist, otherwise the
+     *                               constructor will fail with IllegalArgumentException.
      */
-    public RawLoadConfigurationMapWrapper(Map<String, Object> map) throws Exception {
+    public LoadConfigurationImpl(Map<String, Object> rawMap, File configurationDirectory) throws Exception {
 
-        this.rawConfiguration = map;
+        super(rawMap, configurationDirectory);
     }
 
     // LoadConfiguration implementation --------------------------------------------------------------------------
@@ -51,53 +55,60 @@ public class RawLoadConfigurationMapWrapper implements LoadConfiguration {
     @Override
     public int getThreadCount() throws UserErrorException {
 
-        Object o = rawConfiguration.get(LoadConfiguration.THREAD_COUNT_LABEL);
+        Integer i;
 
-        if (o == null) {
+        try {
+
+            i = get(Integer.class, LoadConfiguration.THREAD_COUNT_LABEL);
+        }
+        catch(IllegalStateException e) {
+
+            throw new UserErrorException("'" + LoadConfiguration.THREAD_COUNT_LABEL + "' not an integer", e);
+        }
+
+        if (i == null) {
 
             return LoadConfiguration.DEFAULT_THREAD_COUNT;
         }
-        else {
 
-            if (!(o instanceof Integer)) {
-                throw new UserErrorException(
-                        "'" + LoadConfiguration.THREAD_COUNT_LABEL + "' not an integer: \"" + o + "\"");
-            }
-
-            return ((Integer)o);
-        }
+        return i;
     }
 
     @Override
     public Long getOperations() throws UserErrorException {
 
         String label = LoadConfiguration.OPERATION_COUNT_LABEL;
-        Object o = rawConfiguration.get(label);
 
-        if (o == null) {
+        Integer i = null;
 
-            label = LoadConfiguration.REQUEST_COUNT_LABEL;
-            o = rawConfiguration.get(label);
+        try {
 
-            if (o == null) {
+            i = get(Integer.class, label);
 
-                label = LoadConfiguration.MESSAGE_COUNT_LABEL;
-                o = rawConfiguration.get(label);
+            if (i == null) {
 
-                if (o == null) {
+                label = LoadConfiguration.REQUEST_COUNT_LABEL;
+                i = get(Integer.class, label);
 
-                    // default value is "unlimited"
-                    return null;
+                if (i == null) {
+
+                    label = LoadConfiguration.MESSAGE_COUNT_LABEL;
+                    i = get(Integer.class, label);
+
+                    if (i == null) {
+
+                        // default value is "unlimited"
+                        return null;
+                    }
                 }
             }
         }
+        catch(IllegalStateException e) {
 
-        if (!(o instanceof Integer)) {
-
-            throw new UserErrorException("'" + label + "' not a long: \"" + o + "\"");
+            throw new UserErrorException("'" + label + "' not a long", e);
         }
 
-        return (long)(Integer)o;
+        return (long)i;
     }
 
     @Override
