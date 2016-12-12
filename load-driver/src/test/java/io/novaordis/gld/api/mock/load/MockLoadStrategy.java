@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.fail;
 
@@ -45,10 +46,29 @@ public class MockLoadStrategy implements LoadStrategy {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private volatile boolean initialized;
+    private boolean verbose;
     private volatile boolean started;
+    private volatile boolean initialized;
+    private AtomicInteger remainingOperations;
 
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    /**
+     * Will generate an unlimited number of operations.
+     */
+    public MockLoadStrategy() {
+        this(-1);
+    }
+
+    /**
+     * @param operationCount the number of operations to generate.
+     */
+    public MockLoadStrategy(int operationCount) {
+
+        if (operationCount >= 0) {
+            remainingOperations = new AtomicInteger(operationCount);
+        }
+    }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
 
@@ -100,7 +120,31 @@ public class MockLoadStrategy implements LoadStrategy {
 
     @Override
     public Operation next(Operation last, String lastWrittenKey, boolean runtimeShuttingDown) throws Exception {
-        throw new RuntimeException("next() NOT YET IMPLEMENTED");
+
+        //
+        // if the runtime is shutting down, comply and return null; tests rely on this behavior
+        //
+        if (runtimeShuttingDown) {
+
+            log.info(this + " has been notified that the runtime is shutting down, stopping building operations ...");
+            return null;
+        }
+
+
+        if (remainingOperations != null) {
+
+            if (remainingOperations.getAndDecrement() <= 0) {
+                return null;
+            }
+        }
+
+        MockOperation mo = new MockOperation();
+
+        if (verbose) {
+            mo.setVerbose(true);
+        }
+
+        return mo;
     }
 
     @Override
@@ -118,10 +162,32 @@ public class MockLoadStrategy implements LoadStrategy {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    public int getRemainingOperations()
+    {
+        int i = remainingOperations.get();
+
+        // the counter is decremented under 0, and that has "0" semantics
+
+        if (i < 0)
+        {
+            i = 0;
+        }
+
+        return i;
+    }
+
     @Override
     public String toString() {
 
         return "load-driver MockLoadStrategy";
+    }
+
+    /**
+     * We need to explicitly set the instance as verbose in order to next log.info(), otherwise the high concurrency
+     * tests are too noisy. If this load strategy is verbose, then the MockOperations it builds will be verbose.
+     */
+    public void setVerbose(boolean b) {
+        this.verbose = b;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
