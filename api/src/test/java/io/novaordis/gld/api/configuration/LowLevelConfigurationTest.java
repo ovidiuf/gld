@@ -38,7 +38,7 @@ public abstract class LowLevelConfigurationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = LoggerFactory.getLogger(LowLevelConfigurationAccessTest.class);
+    private static final Logger log = LoggerFactory.getLogger(LowLevelConfigurationImplTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

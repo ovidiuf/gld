@@ -25,7 +25,7 @@ import java.util.Map;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/8/16
  */
-public class LowLevelConfigurationAccess implements LowLevelConfiguration {
+public class LowLevelConfigurationImpl implements LowLevelConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -50,7 +50,7 @@ public class LowLevelConfigurationAccess implements LowLevelConfiguration {
      * @exception IllegalArgumentException if the configuration file directory is not null, it does not exist or
      * it is not a directory.
      */
-    public LowLevelConfigurationAccess(Map<String, Object> raw, File configurationDirectory) {
+    public LowLevelConfigurationImpl(Map<String, Object> raw, File configurationDirectory) {
 
         if (configurationDirectory == null) {
 

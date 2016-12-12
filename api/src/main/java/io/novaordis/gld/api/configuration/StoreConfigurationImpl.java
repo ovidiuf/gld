@@ -36,7 +36,7 @@ public class StoreConfigurationImpl implements StoreConfiguration, LowLevelConfi
     // the actual raw configuration map passed at construction
     private Map<String, Object> rawConfiguration;
 
-    private LowLevelConfigurationAccess configurationAccess;
+    private LowLevelConfigurationImpl configurationAccess;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -52,7 +52,7 @@ public class StoreConfigurationImpl implements StoreConfiguration, LowLevelConfi
     public StoreConfigurationImpl(Map<String, Object> map, File configurationDirectory) throws Exception {
 
         this.rawConfiguration = map;
-        this.configurationAccess = new LowLevelConfigurationAccess(rawConfiguration, configurationDirectory);
+        this.configurationAccess = new LowLevelConfigurationImpl(rawConfiguration, configurationDirectory);
     }
 
     // LowLevelConfiguration implementation ----------------------------------------------------------------------------

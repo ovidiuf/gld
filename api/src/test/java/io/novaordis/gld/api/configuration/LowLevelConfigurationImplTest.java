@@ -32,11 +32,11 @@ import static org.junit.Assert.fail;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/8/16
  */
-public class LowLevelConfigurationAccessTest extends LowLevelConfigurationTest {
+public class LowLevelConfigurationImplTest extends LowLevelConfigurationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = LoggerFactory.getLogger(LowLevelConfigurationAccessTest.class);
+    private static final Logger log = LoggerFactory.getLogger(LowLevelConfigurationImplTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -53,7 +53,7 @@ public class LowLevelConfigurationAccessTest extends LowLevelConfigurationTest {
 
         try {
 
-            new LowLevelConfigurationAccess(new HashMap<>(), null);
+            new LowLevelConfigurationImpl(new HashMap<>(), null);
             fail("should have thrown exception");
         }
         catch(IllegalArgumentException e) {
@@ -69,7 +69,7 @@ public class LowLevelConfigurationAccessTest extends LowLevelConfigurationTest {
 
         try {
 
-            new LowLevelConfigurationAccess(new HashMap<>(), new File("/I/am/sure/this/directory/does/not/exist"));
+            new LowLevelConfigurationImpl(new HashMap<>(), new File("/I/am/sure/this/directory/does/not/exist"));
             fail("should have thrown exception");
         }
         catch(IllegalArgumentException e) {
@@ -89,7 +89,7 @@ public class LowLevelConfigurationAccessTest extends LowLevelConfigurationTest {
 
         try {
 
-            new LowLevelConfigurationAccess(new HashMap<>(), existingFile);
+            new LowLevelConfigurationImpl(new HashMap<>(), existingFile);
             fail("should have thrown exception");
         }
         catch(IllegalArgumentException e) {
@@ -105,10 +105,10 @@ public class LowLevelConfigurationAccessTest extends LowLevelConfigurationTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected LowLevelConfigurationAccess getLowLevelConfigurationToTest(
+    protected LowLevelConfigurationImpl getLowLevelConfigurationToTest(
             Map<String, Object> raw, File configurationDirectory) throws Exception {
 
-        return new LowLevelConfigurationAccess(raw, configurationDirectory);
+        return new LowLevelConfigurationImpl(raw, configurationDirectory);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------
