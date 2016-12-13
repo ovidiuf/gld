@@ -20,10 +20,14 @@ import io.novaordis.gld.api.configuration.MockLoadConfiguration;
 import io.novaordis.gld.api.configuration.MockServiceConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.mock.load.MockLoadStrategy;
+import io.novaordis.gld.api.mock.load.MockLoadStrategyFactory;
 import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -79,6 +83,50 @@ public abstract class LoadStrategyFactoryTest {
     }
 
     // build() static wrapper ------------------------------------------------------------------------------------------
+
+    @Test
+    public void buildInstance_FactoryFullyQualifiedClassName_NoSuchClass() throws Exception {
+
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+        MockServiceConfiguration msc = new MockServiceConfiguration();
+
+        Map<String, Object> completelyCustomLoadStrategyFactoryConfig = new HashMap<>();
+        completelyCustomLoadStrategyFactoryConfig.put(
+                ServiceConfiguration.LOAD_STRATEGY_FACTORY_CLASS_LABEL,
+                "I.am.sure.this.class.does.not.exist");
+        msc.set(completelyCustomLoadStrategyFactoryConfig ,ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+
+        try {
+
+            LoadStrategyFactory.build(msc, mlc);
+            fail("should throw exception");
+        }
+        catch(UserErrorException e) {
+
+            assertEquals(
+                    "failed to instantiate a load strategy factory corresponding to class I.am.sure.this.class.does.not.exist",
+                    e.getMessage());
+
+            ClassNotFoundException e2 = (ClassNotFoundException)e.getCause();
+            assertNotNull(e2);
+        }
+    }
+
+    @Test
+    public void buildInstance_FactoryFullyQualifiedClassName() throws Exception {
+
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+        MockServiceConfiguration msc = new MockServiceConfiguration();
+
+        Map<String, Object> completelyCustomLoadStrategyFactoryConfig = new HashMap<>();
+        completelyCustomLoadStrategyFactoryConfig.put(
+                ServiceConfiguration.LOAD_STRATEGY_FACTORY_CLASS_LABEL,
+                MockLoadStrategyFactory.class.getName());
+        msc.set(completelyCustomLoadStrategyFactoryConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+
+        MockLoadStrategy s  = (MockLoadStrategy)LoadStrategyFactory.build(msc, mlc);
+        assertNotNull(s);
+    }
 
     @Test
     public void buildInstance_NullServiceType() throws Exception {

@@ -51,9 +51,9 @@ public interface LoadStrategyFactory {
     static LoadStrategy build(ServiceConfiguration sc, LoadConfiguration lc) throws Exception {
 
         //
-        // We first instantiate the factory. We first look for the fully qualified class name of the factory. This
-        // option should not be commonly used, it is useful for testing, but the second option should be sufficient for
-        // most cases.
+        // Instantiate the factory. We first look for the factory's fully qualified class name. This is an option that
+        // is not very commonly used, but it is useful for testing. The second option should be sufficient for most
+        // cases.
         //
 
         String ldClassName = sc.get(String.class,
