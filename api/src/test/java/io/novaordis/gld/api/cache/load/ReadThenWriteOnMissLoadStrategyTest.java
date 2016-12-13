@@ -82,7 +82,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
         Map<String, Object> m = new HashMap<>();
         m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
         m.put(ReadThenWriteOnMissLoadStrategy.REUSE_VALUE_LABEL, "true");
-        sc.setMap(m, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        sc.set(m, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
         try {
             s.init(sc, mlc);
@@ -408,7 +408,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
         Map<String, Object> m = new HashMap<>();
         m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
         m.put(ReadThenWriteOnMissLoadStrategy.REUSE_VALUE_LABEL, true);
-        sc.setMap(m, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        sc.set(m, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
         s.init(sc, mlc);
 
@@ -434,7 +434,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
         Map<String, Object> m = new HashMap<>();
         m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
         m.put(ReadThenWriteOnMissLoadStrategy.REUSE_VALUE_LABEL, false);
-        sc.setMap(m, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        sc.set(m, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
         s.init(sc, mlc);
 

@@ -25,6 +25,8 @@ import io.novaordis.gld.api.ServiceType;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/5/16
  */
+// will be instantiated by reflection
+@SuppressWarnings("unused")
 public class MockLoadStrategyFactory implements LoadStrategyFactory {
 
     // Constants -------------------------------------------------------------------------------------------------------

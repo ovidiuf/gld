@@ -17,13 +17,14 @@
 package io.novaordis.gld.api.configuration;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/7/16
  */
-public class MockLoadConfiguration implements LoadConfiguration {
+public class MockLoadConfiguration extends LowLevelConfigurationBase implements LoadConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,6 +33,16 @@ public class MockLoadConfiguration implements LoadConfiguration {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public MockLoadConfiguration() {
+
+        this(new HashMap<>());
+    }
+
+    public MockLoadConfiguration(Map<String, Object> raw) {
+
+        super(raw, new File(System.getProperty("basedir")));
+    }
 
     // LoadConfiguration implementation --------------------------------------------------------------------------------
 
@@ -57,21 +68,6 @@ public class MockLoadConfiguration implements LoadConfiguration {
     public Long getMessages() {
 
         return getOperations();
-    }
-
-    @Override
-    public <T> T get(Class<? extends T> type, String... path) {
-        throw new RuntimeException("get() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public File getFile(String... path) {
-        throw new RuntimeException("getFile() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Map<String, Object> get(String... path) {
-        throw new RuntimeException("get() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

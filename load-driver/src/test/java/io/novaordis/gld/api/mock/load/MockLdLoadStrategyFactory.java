@@ -22,10 +22,15 @@ import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
 
 /**
+ * Named MockLdLoadStrategyFactory instead of MockLoadStrategyFactory to avoid non-obviously clashes with the API
+ * MockLoadStrategy. Ran into problems at times when debugging the modules together.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/5/16
  */
-public class MockLoadStrategyFactory implements LoadStrategyFactory {
+// will be instantiated by reflection
+@SuppressWarnings("unused")
+public class MockLdLoadStrategyFactory implements LoadStrategyFactory {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -38,10 +43,10 @@ public class MockLoadStrategyFactory implements LoadStrategyFactory {
     // LoadStrategyFactory implementation ------------------------------------------------------------------------------
 
     @Override
-    public MockLoadStrategy buildInstance(ServiceConfiguration sc, LoadConfiguration lc)
+    public MockLdLoadStrategy buildInstance(ServiceConfiguration sc, LoadConfiguration lc)
             throws Exception {
 
-        MockLoadStrategy ms = new MockLoadStrategy();
+        MockLdLoadStrategy ms = new MockLdLoadStrategy();
         ms.init(sc, lc);
         return ms;
     }

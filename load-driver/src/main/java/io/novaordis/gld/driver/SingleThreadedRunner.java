@@ -114,24 +114,6 @@ public class SingleThreadedRunner implements Runnable {
 
                 e.printStackTrace();
             }
-
-            //
-            // TODO 34f2G do we really want to stop the key store? What if just one thread fails but the others keep going?
-            // It's not our job to stop it ....
-            //
-
-            if (keyStore != null)  {
-
-                try {
-
-                    keyStore.stop();
-                }
-                catch(Exception e) {
-
-                    e.printStackTrace();
-
-                }
-            }
         }
     }
 

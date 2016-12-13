@@ -69,8 +69,8 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
     /**
      * @param keyStore may be null, if the configuration did not specify one.
      */
-    public MultiThreadedRunnerImpl(Service service, int threadCount, Sampler sampler,
-                                   boolean isBackground, long singleThreadedRunnerSleepMs, KeyStore keyStore) {
+    public MultiThreadedRunnerImpl(Service service, Sampler sampler, KeyStore keyStore,
+                                   int threadCount, boolean isBackground, long singleThreadedRunnerSleepMs) {
 
         this.service = service;
         this.loadStrategy = service.getLoadStrategy();
@@ -213,7 +213,6 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
 
                 keyStore.stop();
             }
-
 
             running = false;
         }

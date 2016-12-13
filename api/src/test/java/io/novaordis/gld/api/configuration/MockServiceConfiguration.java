@@ -19,7 +19,6 @@ package io.novaordis.gld.api.configuration;
 import io.novaordis.gld.api.ServiceType;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,11 +26,9 @@ import java.util.Map;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/6/16
  */
-public class MockServiceConfiguration implements ServiceConfiguration {
+public class MockServiceConfiguration extends LowLevelConfigurationBase implements ServiceConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final String CONTENT_KEY = "CONFIGURATION_MAP_FRAGMENT";
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -41,14 +38,17 @@ public class MockServiceConfiguration implements ServiceConfiguration {
     private String implementation;
     private ServiceType serviceType;
 
-    private Map<String, Object> rawConfigurationMaps;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockServiceConfiguration() {
 
+        this(new HashMap<>());
+    }
+
+    public MockServiceConfiguration(Map<String, Object> raw) {
+
+        super(raw, new File(System.getProperty("basedir")));
         this.serviceType = ServiceType.mock;
-        this.rawConfigurationMaps = new HashMap<>();
     }
 
     // ServiceConfiguration implementation -----------------------------------------------------------------------------
@@ -71,48 +71,6 @@ public class MockServiceConfiguration implements ServiceConfiguration {
         return loadStrategyName;
     }
 
-    @Override
-    public Map<String, Object> get(String... path) {
-
-        Map<String, Object> current = rawConfigurationMaps;
-
-        for(int i = 0; i < path.length; i ++) {
-
-            String pathElement = path[i];
-
-            //noinspection unchecked
-            Map<String, Object> m = (Map<String, Object>)current.get(pathElement);
-
-            if (m == null) {
-
-                return Collections.emptyMap();
-            }
-
-            if (i == path.length - 1) {
-
-                //
-                // the last path element, attempt to next the content
-                //
-
-                //noinspection unchecked
-                Map<String, Object> content = (Map<String, Object>)m.get(CONTENT_KEY);
-
-                if (content == null) {
-
-                    content = Collections.emptyMap();
-                }
-
-                return content;
-            }
-            else {
-
-                current = m;
-            }
-        }
-
-        return Collections.emptyMap();
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
     public void setLoadStrategyName(String s) {
@@ -130,46 +88,13 @@ public class MockServiceConfiguration implements ServiceConfiguration {
         this.serviceType = t;
     }
 
-    public void setMap(Map<String, Object> rawConfigurationMap, String ... path) {
+    //
+    // give public access to set() for testing purposes
+    //
 
-        Map<String, Object> current = rawConfigurationMaps;
+    public void set(Object instance, String ... path) {
 
-        for(int i = 0; i < path.length; i ++) {
-
-            String pathElement = path[i];
-
-            //noinspection unchecked
-            Map<String, Object> m = (Map<String, Object>)current.get(pathElement);
-
-            if (m == null) {
-
-                m = new HashMap<>();
-                current.put(pathElement, m);
-            }
-
-            if (i == path.length - 1) {
-
-                //
-                // the last path element
-                //
-
-                m.put(CONTENT_KEY, rawConfigurationMap);
-            }
-            else {
-
-                current = m;
-            }
-        }
-    }
-
-    @Override
-    public <T> T get(Class<? extends T> type, String... path) {
-        throw new RuntimeException("get() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public File getFile(String... path) {
-        throw new RuntimeException("getFile() NOT YET IMPLEMENTED");
+        super.set(instance, path);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

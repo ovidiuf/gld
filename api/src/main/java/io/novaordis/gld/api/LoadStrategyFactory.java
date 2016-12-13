@@ -33,7 +33,11 @@ public interface LoadStrategyFactory {
     /**
      * A static method that builds the specialized factory dynamically and passes the control to it. We do it this way
      * because we want to be able to add arbitrary service types in the future without modifying the code of this layer
-     * of the factory.
+     * of the factory. There are two ways of specifying the <b>factory</b> implementation:
+     *
+     * 1. Fully qualified class mame (takes precedence, if specified by "class")
+     * 2. The class name is built based on the following pattern:
+     *      <this-package>.<service-type>.load.<service-type-with-first-letter-capitalized>LoadFactory
      *
      * @param sc the associated service configuration instance.
      *
@@ -46,45 +50,66 @@ public interface LoadStrategyFactory {
      */
     static LoadStrategy build(ServiceConfiguration sc, LoadConfiguration lc) throws Exception {
 
-        ServiceType t = sc.getType();
+        //
+        // We first instantiate the factory. We first look for the fully qualified class name of the factory. This
+        // option should not be commonly used, it is useful for testing, but the second option should be sufficient for
+        // most cases.
+        //
 
-        if (t == null) {
-            throw new IllegalArgumentException("null service type");
+        String ldClassName = sc.get(String.class,
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
+                ServiceConfiguration.LOAD_STRATEGY_FACTORY_CLASS_LABEL);
+
+        // if specified, takes precedence, if not the usual pattern applies
+
+        ServiceType t = null;
+
+        if (ldClassName == null) {
+
+            t = sc.getType();
+
+            if (t == null) {
+                throw new IllegalArgumentException("null service type");
+            }
+
+            //
+            // we instantiate the load strategy factory corresponding to a specific service type dynamically. This
+            // is to allow adding new service types without changing this method.
+            //
+
+            String serviceTypeName = t.name();
+
+            //
+            // we expect the factory class name to match the following pattern:
+            //
+            // <this-package>.<service-type>.load.<service-type-with-first-letter-capitalized>LoadFactory
+            //
+
+            ldClassName = LoadStrategyFactory.class.getPackage().getName();
+
+            ldClassName += "." + serviceTypeName;
+            ldClassName += ".load.";
+            ldClassName +=
+                    Character.toUpperCase(serviceTypeName.charAt(0)) + serviceTypeName.substring(1);
+            ldClassName += "LoadStrategyFactory";
         }
 
-        //
-        // we instantiate the load strategy factory corresponding to a specific service type dynamically. This
-        // is to allow adding new service types without changing this method.
-        //
-
-        String serviceTypeName = t.name();
-
-        //
-        // we expect the factory class name to match the following pattern:
-        //
-        // <this-package>.<service-type>.load.<service-type-with-first-letter-capitalized>LoadFactory
-        //
-
-        String className = LoadStrategyFactory.class.getPackage().getName();
-
-        className += "." + serviceTypeName;
-        className += ".load.";
-        className += Character.toUpperCase(serviceTypeName.charAt(0)) + serviceTypeName.substring(1);
-        className += "LoadStrategyFactory";
-
-        log.debug("attempting to use load strategy factory class " + className);
+        log.debug("attempting to use load strategy factory class " + ldClassName);
 
         LoadStrategyFactory f;
 
         try {
 
-            Class c = Class.forName(className);
+            Class c = Class.forName(ldClassName);
             f = (LoadStrategyFactory) c.newInstance();
 
         } catch (Exception e) {
 
-            throw new UserErrorException(
-                    "failed to instantiate a load strategy factory corresponding to a service of type " + t, e);
+            String msg = t == null ?
+                    "failed to instantiate a load strategy factory corresponding to class " + ldClassName :
+                    "failed to instantiate a load strategy factory corresponding to a service of type " + t;
+
+            throw new UserErrorException(msg, e);
         }
 
         //noinspection UnnecessaryLocalVariable

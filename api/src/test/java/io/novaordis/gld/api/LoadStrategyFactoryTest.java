@@ -152,7 +152,6 @@ public abstract class LoadStrategyFactoryTest {
         // make sure the name of the strategy is configured
         //
         assertEquals(loadStrategyName, s.getName());
-
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -52,7 +52,7 @@ public class MultiThreadedRunnerImplTest extends MultiThreadedRunnerTest
 //
 //        int operations = 10;
 //        // init the strategy to generate 10 operations and exit
-//        MockLoadStrategy mockLoadStrategy = new MockLoadStrategy(operations);
+//        MockLdLoadStrategy mockLoadStrategy = new MockLdLoadStrategy(operations);
 //
 //        MultiThreadedRunnerImpl runner = new MultiThreadedRunnerImpl(mockService, threadCount, mockSampler, false, -1L);
 //
@@ -80,10 +80,9 @@ public class MultiThreadedRunnerImplTest extends MultiThreadedRunnerTest
 
     @Override
     protected MultiThreadedRunnerImpl getMultiThreadedRunnerToTest(
-            Service service, LoadStrategy loadStrategy, Sampler sampler,
-            boolean background, int threadCount, KeyStore keyStore) throws Exception {
+            Service service, Sampler sampler, KeyStore keyStore, boolean background, int threadCount) throws Exception {
 
-        return new MultiThreadedRunnerImpl(service, threadCount, sampler, background, -1L, keyStore);
+        return new MultiThreadedRunnerImpl(service, sampler, keyStore, threadCount, background, -1L);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

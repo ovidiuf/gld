@@ -17,7 +17,6 @@
 package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.KeyStore;
-import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.driver.sampler.Sampler;
 import org.slf4j.Logger;
@@ -43,7 +42,7 @@ public abstract class MultiThreadedRunnerTest {
 //    public void stop() throws Exception {
 //
 //        MockService ms = new MockService();
-//        MockLoadStrategy mst = new MockLoadStrategy();
+//        MockLdLoadStrategy mst = new MockLdLoadStrategy();
 //        MockSampler msp = new MockSampler();
 //        final boolean background = true;
 //        int threadCount = 1;
@@ -68,7 +67,7 @@ public abstract class MultiThreadedRunnerTest {
 //
 //        MockService ms = new MockService();
 //        ms.setVerbose(false);
-//        MockLoadStrategy mst = new MockLoadStrategy();
+//        MockLdLoadStrategy mst = new MockLdLoadStrategy();
 //        mst.setVerbose(false);
 //        MockSampler msp = new MockSampler();
 //        final boolean background = true;
@@ -124,7 +123,7 @@ public abstract class MultiThreadedRunnerTest {
 //    public void timeLimitedRun_SeveralThreads() throws Exception {
 //
 //        MockService ms = new MockService();
-//        MockLoadStrategy mst = new MockLoadStrategy();
+//        MockLdLoadStrategy mst = new MockLdLoadStrategy();
 //        MockSampler msp = new MockSampler();
 //        final boolean background = true;
 //
@@ -185,7 +184,7 @@ public abstract class MultiThreadedRunnerTest {
 //    public void exitGuardIsUnlatchedInBackground() throws Exception {
 //
 //        MockService ms = new MockService();
-//        MockLoadStrategy mst = new MockLoadStrategy(3);
+//        MockLdLoadStrategy mst = new MockLdLoadStrategy(3);
 //        MockSampler msp = new MockSampler();
 //        final boolean background = true;
 //        int threadCount = 1;
@@ -234,73 +233,12 @@ public abstract class MultiThreadedRunnerTest {
 //        }
 //    }
 
-//    @Test
-//    public void insureComponentsAreStoppedOnGracefulExit() throws Exception {
-//
-//        //
-//        // make sure the components such as the Service, Sampler and KeyStore are stopped on graceful exit
-//        //
-//
-//        Service ms = new MockService();
-//        Sampler msp = new MockSampler();
-//        KeyStore mks = new MockKeyStore();
-//
-//        ms.start();
-//        assertTrue(ms.isStarted());
-//
-//        msp.start();
-//        assertTrue(msp.isStarted());
-//
-//        mks.start();
-//        assertTrue(mks.isStarted());
-//
-//
-//        // ...
-//
-//
-//        assertFalse(mks.isStarted());
-//        assertFalse(msp.isStarted());
-//        assertFalse(ms.isStarted());
-//
-//    }
-//
-//    @Test
-//    public void insureComponentsAreStoppedOnFailure() throws Exception {
-//
-//        //
-//        // make sure the components such as the Service, Sampler and KeyStore are stopped on failure
-//        //
-//
-//        Service ms = new MockService();
-//        Sampler msp = new MockSampler();
-//        KeyStore mks = new MockKeyStore();
-//
-//        ms.start();
-//        assertTrue(ms.isStarted());
-//
-//        msp.start();
-//        assertTrue(msp.isStarted());
-//
-//        mks.start();
-//        assertTrue(mks.isStarted());
-//
-//
-//        // ...
-//
-//
-//        assertFalse(mks.isStarted());
-//        assertFalse(msp.isStarted());
-//        assertFalse(ms.isStarted());
-//    }
-
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
     protected abstract MultiThreadedRunner getMultiThreadedRunnerToTest(
-            Service service, LoadStrategy loadStrategy, Sampler sampler,
-            boolean background, int threadCount, KeyStore keyStore) throws Exception;
+            Service service, Sampler sampler, KeyStore keyStore, boolean background, int threadCount) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

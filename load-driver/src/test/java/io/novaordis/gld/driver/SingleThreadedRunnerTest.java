@@ -26,7 +26,7 @@ import io.novaordis.gld.api.mock.MockCleanupOperation;
 import io.novaordis.gld.api.mock.MockKeyStore;
 import io.novaordis.gld.api.mock.MockOperation;
 import io.novaordis.gld.api.mock.MockService;
-import io.novaordis.gld.api.mock.load.MockLoadStrategy;
+import io.novaordis.gld.api.mock.load.MockLdLoadStrategy;
 import io.novaordis.gld.driver.sampler.Sampler;
 import io.novaordis.gld.driver.sampler.SamplerImpl;
 import org.junit.Test;
@@ -70,7 +70,7 @@ public class SingleThreadedRunnerTest {
         try {
 
             new SingleThreadedRunner(
-                    "TEST", null, new MockLoadStrategy(), new SamplerImpl(), new CyclicBarrier(1),
+                    "TEST", null, new MockLdLoadStrategy(), new SamplerImpl(), new CyclicBarrier(1),
                     new AtomicBoolean(false), -1L, new MockKeyStore());
 
             fail("should fail with IllegalArgumentException, null config");
@@ -86,7 +86,7 @@ public class SingleThreadedRunnerTest {
         try  {
 
             new SingleThreadedRunner(
-                    "TEST", new MockService(), new MockLoadStrategy(), null, new CyclicBarrier(1),
+                    "TEST", new MockService(), new MockLdLoadStrategy(), null, new CyclicBarrier(1),
                     new AtomicBoolean(false), -1L, new MockKeyStore());
 
             fail("should fail with IllegalArgumentException, null sampler");
@@ -103,7 +103,7 @@ public class SingleThreadedRunnerTest {
         try {
 
             new SingleThreadedRunner(
-                "TEST", new MockService(), new MockLoadStrategy(), new SamplerImpl(), null,
+                "TEST", new MockService(), new MockLdLoadStrategy(), new SamplerImpl(), null,
                     new AtomicBoolean(false), -1L, new MockKeyStore());
 
             fail("should fail with IllegalArgumentException, null barrier");
@@ -120,7 +120,7 @@ public class SingleThreadedRunnerTest {
 //        try {
 //
 //            new SingleThreadedRunner(
-//                "TEST", new MockService(), new MockLoadStrategy(), new SamplerImpl(), new CyclicBarrier(1),
+//                "TEST", new MockService(), new MockLdLoadStrategy(), new SamplerImpl(), new CyclicBarrier(1),
 //                    new AtomicBoolean(false), -1L);
 //
 //            fail("should fail with IllegalArgumentException, null service");
@@ -137,7 +137,7 @@ public class SingleThreadedRunnerTest {
         try {
 
             new SingleThreadedRunner(
-                    "TEST", new MockService(), new MockLoadStrategy(), new SamplerImpl(),
+                    "TEST", new MockService(), new MockLdLoadStrategy(), new SamplerImpl(),
                     new CyclicBarrier(1), null, -1L, new MockKeyStore());
 
             fail("should fail with IllegalArgumentException, null duration expired");
@@ -151,7 +151,7 @@ public class SingleThreadedRunnerTest {
     @Test
     public void constructorAndRun() throws Exception {
 
-        LoadStrategy mls = new MockLoadStrategy(1);
+        LoadStrategy mls = new MockLdLoadStrategy(1);
 
         Sampler s = new SamplerImpl(0L, 1000L);
         s.registerOperation(MockOperation.class);
@@ -177,7 +177,7 @@ public class SingleThreadedRunnerTest {
 //    public void insureThatKeyStoreIsClosedOnExit() throws Exception {
 //
 //        MockKeyStore mks = new MockKeyStore();
-//        MockLoadStrategy mockLoadStrategy = new MockLoadStrategy(1);
+//        MockLdLoadStrategy mockLoadStrategy = new MockLdLoadStrategy(1);
 //        mockLoadStrategy.getKeyProvider(mks);
 //
 //        Sampler s = new SamplerImpl(0L, 1000L);
@@ -213,7 +213,7 @@ public class SingleThreadedRunnerTest {
         MockService ms = new MockService();
 
         MockSampler mockSampler = new MockSampler();
-        MockLoadStrategy mockLoadStrategy = new MockLoadStrategy(1);
+        MockLdLoadStrategy mockLoadStrategy = new MockLdLoadStrategy(1);
 
         CyclicBarrier barrier = new CyclicBarrier(1);
 

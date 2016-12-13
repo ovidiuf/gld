@@ -43,43 +43,6 @@ public class LoadDriverImplTest extends LoadDriverTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
-    @Test
-    public void init_turnOff_cycle() throws Exception {
-
-        LoadDriverImpl ld = new LoadDriverImpl("test", true);
-
-        MockConfiguration mc = new MockConfiguration();
-
-        ld.init(mc);
-
-        Service service = ld.getService();
-        Sampler sampler = ld.getSampler();
-        KeyStore keyStore = ld.getKeyStore();
-        MultiThreadedRunner runner = ld.getRunner();
-
-        assertTrue(service.isStarted());
-        assertTrue(sampler.isStarted());
-        assertTrue(keyStore.isStarted());
-
-        //
-        // we did not start the runner
-        //
-
-        assertFalse(runner.isRunning());
-
-        ld.turnOff();
-
-        //
-        // make sure all lifecycle-enabled components are off
-        //
-
-        assertFalse(runner.isRunning());
-
-        assertFalse(keyStore.isStarted());
-        assertFalse(sampler.isStarted());
-        assertFalse(service.isStarted());
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     @Override

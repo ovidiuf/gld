@@ -33,14 +33,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.Assert.fail;
 
 /**
+ * Named MockLdLoadStrategy instead of MockLoadStrategy to avoid non-obviously clashes with the API MockLoadStrategy.
+ * Ran into problems at times when debugging the modules together.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-public class MockLoadStrategy implements LoadStrategy {
+public class MockLdLoadStrategy implements LoadStrategy {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = LoggerFactory.getLogger(MockLoadStrategy.class);
+    private static final Logger log = LoggerFactory.getLogger(MockLdLoadStrategy.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -56,14 +59,14 @@ public class MockLoadStrategy implements LoadStrategy {
     /**
      * Will generate an unlimited number of operations.
      */
-    public MockLoadStrategy() {
+    public MockLdLoadStrategy() {
         this(-1);
     }
 
     /**
      * @param operationCount the number of operations to generate.
      */
-    public MockLoadStrategy(int operationCount) {
+    public MockLdLoadStrategy(int operationCount) {
 
         if (operationCount >= 0) {
             remainingOperations = new AtomicInteger(operationCount);

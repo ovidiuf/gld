@@ -179,7 +179,7 @@ public class LoadCommandTest extends CommandTest {
 //
 //        LoadStrategy ls = load.getLoadStrategy();
 //
-//        assertTrue(ls instanceof MockLoadStrategy);
+//        assertTrue(ls instanceof MockLdLoadStrategy);
 //
 //        assertTrue(load.isInitialized());
 //    }
@@ -239,7 +239,7 @@ public class LoadCommandTest extends CommandTest {
 //
 //        assertTrue(load.isInitialized());
 //
-//        MockLoadStrategy mls = (MockLoadStrategy)load.getLoadStrategy();
+//        MockLdLoadStrategy mls = (MockLdLoadStrategy)load.getLoadStrategy();
 //        assertEquals("load-blah", mls.getMockLoadArgument());
 //
 //        MockStorageStrategy mss = (MockStorageStrategy)mc.getStorageStrategy();

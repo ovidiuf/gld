@@ -65,7 +65,7 @@ public class LoadDriverImpl implements LoadDriver {
 
     private KeyStore keyStore;
 
-    private MultiThreadedRunner multiThreadedRunner;
+    private MultiThreadedRunner runner;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -115,15 +115,14 @@ public class LoadDriverImpl implements LoadDriver {
         // service initialization and configuration
         //
 
-        service = ServiceFactory.buildInstance(svc, ls, this);
+        this.service = ServiceFactory.buildInstance(svc, ls, this);
 
-        service.start();
 
         //
         // load configuration
         //
 
-        sampler = new SamplerImpl();
+        this.sampler = new SamplerImpl();
 
         //
         // register operations
@@ -132,18 +131,35 @@ public class LoadDriverImpl implements LoadDriver {
         Set<Class<? extends Operation>> operations = ls.getOperationTypes();
         operations.forEach(sampler::registerOperation);
 
-        sampler.start();
-
         long singleThreadedRunnerSleepMs = -1L;
 
         if (stc != null) {
 
-            keyStore = KeyStoreFactory.build(stc);
-            keyStore.start();
+            this.keyStore = KeyStoreFactory.build(stc);
         }
 
-        multiThreadedRunner = new MultiThreadedRunnerImpl(
-                service, ldc.getThreadCount(), sampler, background, singleThreadedRunnerSleepMs, keyStore);
+        this.runner = new MultiThreadedRunnerImpl(
+                service, sampler, keyStore, ldc.getThreadCount(), background, singleThreadedRunnerSleepMs);
+    }
+
+    @Override
+    public void run() throws Exception {
+
+        //
+        // start the dependent lifecycle services the start the runner, then enter the main control loop
+        //
+
+        startLifeCycleServices();
+
+        runner.run();
+
+        //
+        // the main control loop
+        //
+
+        //
+        // turnOff() will be invoked in a finally block by the upper layer
+        //
     }
 
     @Override
@@ -153,11 +169,11 @@ public class LoadDriverImpl implements LoadDriver {
         // execute the init() operations in reverse order
         //
 
-        if (multiThreadedRunner != null) {
+        if (runner != null) {
 
             try {
 
-                multiThreadedRunner.stop();
+                runner.stop();
 
             } catch (Exception e) {
 
@@ -205,31 +221,6 @@ public class LoadDriverImpl implements LoadDriver {
     }
 
     @Override
-    public void run() {
-
-        //
-        // start the load and then enter the main control loop
-        //
-
-        try {
-
-            multiThreadedRunner.run();
-        }
-        catch(Exception e) {
-
-            throw new RuntimeException("NOT YET IMPLEMENTED " + e);
-        }
-
-        //
-        // the main control loop
-        //
-
-        //
-        // turnOff() will be invoked in a finally block by the upper layer
-        //
-    }
-
-    @Override
     public boolean background() {
 
         return background;
@@ -269,7 +260,17 @@ public class LoadDriverImpl implements LoadDriver {
 
     MultiThreadedRunner getRunner() {
 
-        return multiThreadedRunner;
+        return runner;
+    }
+
+    void startLifeCycleServices() throws Exception {
+
+        service.start();
+        sampler.start();
+
+        if (keyStore != null) {
+            keyStore.start();
+        }
     }
 
     // Protected -------------------------------------------------------------------------------------------------------

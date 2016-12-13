@@ -493,6 +493,321 @@ public abstract class LowLevelConfigurationTest {
         assertEquals("something", nm.get("token1"));
     }
 
+    // set() -----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void set_ReplaceTheWholeMap() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        //
+        // we only test LowLevelConfigurationBases, we're a noop otherwise
+        //
+
+        if (!(c instanceof LowLevelConfigurationBase)) {
+
+            return;
+        }
+
+        LowLevelConfigurationBase base = (LowLevelConfigurationBase)c;
+
+        Map<String, Object> m2 = new HashMap<>();
+        base.set(m2);
+
+        Map<String, Object> m3 = c.get();
+        assertTrue(m2 == m3);
+    }
+
+    @Test
+    public void set_ReplaceTheWholeMap_InvalidArgument() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        //
+        // we only test LowLevelConfigurationBases, we're a noop otherwise
+        //
+
+        if (!(c instanceof LowLevelConfigurationBase)) {
+
+            return;
+        }
+
+        LowLevelConfigurationBase base = (LowLevelConfigurationBase)c;
+
+        try {
+
+            base.set("something");
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("invalid attempt to replace the root map with a String", msg);
+        }
+    }
+
+    @Test
+    public void set_IntermediatePathElementNotAMap() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        m.put("token1", m1);
+        m1.put("token2", "something");
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        //
+        // we only test LowLevelConfigurationBases, we're a noop otherwise
+        //
+
+        if (!(c instanceof LowLevelConfigurationBase)) {
+
+            return;
+        }
+
+        LowLevelConfigurationBase base = (LowLevelConfigurationBase)c;
+
+        try {
+            base.set(new HashMap<>(), "token1", "token2", "token3");
+            fail("should have thrown an exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("token1.token2 does not match a map", msg);
+        }
+    }
+
+    @Test
+    public void set_ReplacementOfANonMapWithANonMap() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        m.put("token1", m1);
+        Map<String, Object> m2 = new HashMap<>();
+        m1.put("token2", m2);
+        m2.put("token3", "something");
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        //
+        // we only test LowLevelConfigurationBases, we're a noop otherwise
+        //
+
+        if (!(c instanceof LowLevelConfigurationBase)) {
+
+            return;
+        }
+
+        assertEquals("something", c.get(String.class, "token1", "token2", "token3"));
+
+        LowLevelConfigurationBase base = (LowLevelConfigurationBase)c;
+
+        //
+        // correct replacement of a non-map with a non-map
+        //
+
+        base.set(10, "token1", "token2", "token3");
+
+        assertEquals(10, c.get(Integer.class, "token1", "token2", "token3").intValue());
+    }
+
+    @Test
+    public void set_ReplacementOfAMapWithANonMap() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        m.put("token1", m1);
+        Map<String, Object> m2 = new HashMap<>();
+        m1.put("token2", m2);
+        m2.put("token3", new HashMap<>());
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        //
+        // we only test LowLevelConfigurationBases, we're a noop otherwise
+        //
+
+        if (!(c instanceof LowLevelConfigurationBase)) {
+
+            return;
+        }
+
+        LowLevelConfigurationBase base = (LowLevelConfigurationBase)c;
+
+        Map<String, Object> nm = c.get("token1", "token2", "token3");
+        assertTrue(nm.isEmpty());
+
+        //
+        // incorrect replacement of a map with a non-map
+        //
+
+        try {
+            base.set("something", "token1", "token2", "token3");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("illegal replacement of the token1.token2.token3 map with a non-map", msg);
+        }
+    }
+
+    @Test
+    public void set_ReplacementOfAMapWithAMap() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        m.put("token1", m1);
+        Map<String, Object> m2 = new HashMap<>();
+        m1.put("token2", m2);
+        Map<String, Object> m3 = new HashMap<>();
+        m2.put("token3", m3);
+
+        m3.put("a", "b");
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        //
+        // we only test LowLevelConfigurationBases, we're a noop otherwise
+        //
+
+        if (!(c instanceof LowLevelConfigurationBase)) {
+
+            return;
+        }
+
+        assertEquals("b", c.get("token1", "token2", "token3").get("a"));
+
+        LowLevelConfigurationBase base = (LowLevelConfigurationBase)c;
+
+        //
+        // correct replacement of a map with a map
+        //
+
+        Map<String, Object> nm = new HashMap<>();
+        nm.put("c", "d");
+
+        base.set(nm, "token1", "token2", "token3");
+
+        Map<String, Object> nm2 = c.get("token1", "token2", "token3");
+        assertEquals("d", nm2.get("c"));
+    }
+
+    @Test
+    public void set_ReplacementOfANonExistentElementWithAMap() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        m.put("token1", m1);
+        m1.put("token2", new HashMap<>());
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        //
+        // we only test LowLevelConfigurationBases, we're a noop otherwise
+        //
+
+        if (!(c instanceof LowLevelConfigurationBase)) {
+
+            return;
+        }
+
+        assertNull(c.get(String.class, "token1", "token2", "token3"));
+
+        LowLevelConfigurationBase base = (LowLevelConfigurationBase)c;
+
+        //
+        // correct replacement of a map with a map
+        //
+
+        Map<String, Object> nm = new HashMap<>();
+        nm.put("c", "d");
+
+        base.set(nm, "token1", "token2", "token3");
+
+        Map<String, Object> nm2 = c.get("token1", "token2", "token3");
+        assertEquals("d", nm2.get("c"));
+    }
+
+    @Test
+    public void set_ReplacementOfANonExistentElementWithANonMap() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        m.put("token1", m1);
+        m1.put("token2", new HashMap<>());
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        //
+        // we only test LowLevelConfigurationBases, we're a noop otherwise
+        //
+
+        if (!(c instanceof LowLevelConfigurationBase)) {
+
+            return;
+        }
+
+        assertNull(c.get(String.class, "token1", "token2", "token3"));
+
+        LowLevelConfigurationBase base = (LowLevelConfigurationBase)c;
+
+        //
+        // correct replacement of a map with a map
+        //
+
+        base.set("something", "token1", "token2", "token3");
+
+        String s = c.get(String.class, "token1", "token2", "token3");
+        assertEquals("something", s);
+    }
+
+
+    @Test
+    public void set_ReplacementOfNonMapWithAMap() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        m.put("token1", m1);
+        Map<String, Object> m2 = new HashMap<>();
+        m1.put("token2", m2);
+        m2.put("token3", "something");
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        //
+        // we only test LowLevelConfigurationBases, we're a noop otherwise
+        //
+
+        if (!(c instanceof LowLevelConfigurationBase)) {
+
+            return;
+        }
+
+        LowLevelConfigurationBase base = (LowLevelConfigurationBase)c;
+
+        assertEquals("something", c.get(String.class, "token1", "token2", "token3"));
+
+        //
+        // incorrect replacement of a non-map with a map
+        //
+
+        try {
+            base.set(new HashMap<>(), "token1", "token2", "token3");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("illegal replacement of the token1.token2.token3 non-map with a map", msg);
+        }
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

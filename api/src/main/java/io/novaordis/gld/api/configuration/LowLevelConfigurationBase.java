@@ -189,6 +189,102 @@ public class LowLevelConfigurationBase implements LowLevelConfiguration {
 
     // Protected -------------------------------------------------------------------------------------------------------
 
+    /**
+     * Replaces the underlying instance at the specified position, if the path matches. If there is not a full patch
+     * match, and all the parents aren't Maps, the method throws IllegalArgumentException (no new parent maps are
+     * created). However, we will create the map corresponding to the last token in path, if the last token in path
+     * is not known.
+     *
+     * If we attempt to set a Map, this has a special significance, it means we want to replace the underlying raw
+     * configuration sub-map.
+     */
+    protected void set(Object instance, String ... path) {
+
+        if (path.length == 0) {
+
+            //
+            //
+            //
+
+            if (!(instance instanceof Map)) {
+
+                throw new IllegalArgumentException(
+                        "invalid attempt to replace the root map with a " +
+                                (instance == null ? "null" : instance.getClass().getSimpleName()));
+            }
+
+            //noinspection unchecked
+            rawConfiguration = (Map<String, Object>)instance;
+        }
+
+        Map<String, Object> crtMap = rawConfiguration;
+        String pathAsString = "";
+
+        for(int i = 0; i < path.length; i ++) {
+
+            String crtToken = path[i];
+
+            pathAsString = pathAsString.isEmpty() ? crtToken : pathAsString + "." + crtToken;
+
+            Object crtInstance = crtMap.get(crtToken);
+
+            if (i < path.length - 1) {
+
+                //
+                // intermediate node, must be Map<String, Object>
+                //
+
+                if (!(crtInstance instanceof Map)) {
+
+                    throw new IllegalArgumentException(pathAsString + " does not match a map");
+                }
+
+                //noinspection unchecked
+                crtMap = (Map<String, Object>) crtInstance;
+
+                continue;
+            }
+
+            //
+            // the last token in the path
+            //
+
+            Object storedInstance = crtMap.get(crtToken);
+
+            if (instance instanceof Map) {
+
+                if (storedInstance  != null && !(storedInstance instanceof Map)) {
+
+                    throw new IllegalArgumentException(
+                            "illegal replacement of the " + pathAsString + " non-map with a map");
+                }
+
+                //
+                // map for map replacement, if the stored map is null, we'll extend the storage, but in this case
+                // the instance has to be a Map<String, Object> otherwise we'll get an exception
+                //
+
+                crtMap.put(crtToken, instance);
+
+            }
+            else {
+
+                if (storedInstance  != null && storedInstance instanceof Map) {
+
+                    throw new IllegalArgumentException(
+                            "illegal replacement of the " + pathAsString + " map with a non-map");
+                }
+
+                //
+                // non-map (even null) for non-map replacement
+                //
+
+                crtMap.put(crtToken, instance);
+            }
+        }
+    }
+
+
     // Private ---------------------------------------------------------------------------------------------------------
 
     // Inner classes ---------------------------------------------------------------------------------------------------

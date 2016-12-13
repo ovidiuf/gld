@@ -32,6 +32,8 @@ import java.util.Set;
 import static org.junit.Assert.fail;
 
 /**
+ * Named
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */

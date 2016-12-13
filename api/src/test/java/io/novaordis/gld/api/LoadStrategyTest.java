@@ -65,7 +65,7 @@ public abstract class LoadStrategyTest {
         Map<String, Object> mockRawConfig = new HashMap<>();
         mockRawConfig.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
         mockRawConfig.put("unknown-configuration-element", "some-value");
-        msc.setMap(mockRawConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        msc.set(mockRawConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
         try {
 
@@ -88,9 +88,9 @@ public abstract class LoadStrategyTest {
         MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockServiceConfiguration msc = new MockServiceConfiguration();
 
-        Map<String, Object> mockRawConfigu = new HashMap<>();
-        mockRawConfigu.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "wrong-name");
-        msc.setMap(mockRawConfigu, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        Map<String, Object> mockRawConfig = new HashMap<>();
+        mockRawConfig.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "wrong-name");
+        msc.set(mockRawConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
         try {
 
@@ -115,7 +115,7 @@ public abstract class LoadStrategyTest {
 
         Map<String, Object> mockRawConfig = new HashMap<>();
         mockRawConfig.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
-        msc.setMap(mockRawConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        msc.set(mockRawConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
         s.init(msc, mlc);
 

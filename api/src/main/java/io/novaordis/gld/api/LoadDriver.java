@@ -56,8 +56,17 @@ public interface LoadDriver {
 
     /**
      * The main LoadDriver instance loop.
+     *
+     * The implementation should start all installed lifecycle components, which were previously initialized by init()
+     * and then it should start sending load into the target service.
+     *
+     * It is run()'s responsibility to stop() (or at least attempt to stop all dependent services) at the end of the
+     * run, irregardless of whether the run was successful or not.
+     *
+     * @exception Exception if anything goes wrong with the dependent lifecycle components or with the run itself.
+     * By the moment the Exception emerges from run(), the dependent services should be stopped already.
      */
-    void run();
+    void run() throws Exception;
 
     /**
      * An idempotent operation that reverses the effects on init() and essentially stops lifecycle-enabled components.
