@@ -50,11 +50,6 @@ public class MockLoadDriver implements LoadDriver {
     }
 
     @Override
-    public void turnOff() {
-        throw new RuntimeException("turnOff() NOT YET IMPLEMENTED");
-    }
-
-    @Override
     public boolean background() {
         throw new RuntimeException("background() NOT YET IMPLEMENTED");
     }

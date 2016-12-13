@@ -60,6 +60,9 @@ public interface LowLevelConfiguration {
      * Walks the internal storage following the specified path and returns raw configuration map fragment found at the
      * end of the path. May return an empty map, but never null.
      *
+     * For the no argument form (get()), the method is guaranteed to return the actual raw storage implementation,
+     * and not a copy.
+     *
      * @exception IllegalStateException if the value at the end of the path is not a raw sub-map, but a value of a
      * specific type.
      */

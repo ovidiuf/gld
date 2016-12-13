@@ -16,17 +16,17 @@
 
 package io.novaordis.gld.api.mock.configuration;
 
-import io.novaordis.gld.api.configuration.LoadConfiguration;
-import io.novaordis.utilities.UserErrorException;
+import io.novaordis.gld.api.configuration.LoadConfigurationImpl;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/9/16
  */
-public class MockLoadConfiguration implements LoadConfiguration {
+public class MockLoadConfiguration extends LoadConfigurationImpl {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -36,45 +36,24 @@ public class MockLoadConfiguration implements LoadConfiguration {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public MockLoadConfiguration() throws Exception {
+
+        super(new HashMap<>(), new File("."));
+
+        Map<String, Object> root = get();
+
+        root.put(THREAD_COUNT_LABEL, 1);
+    }
+
     // MockLoadConfiguration implementation ----------------------------------------------------------------------------
 
-    @Override
-    public int getThreadCount() throws UserErrorException {
-
-        return 1;
-    }
-
-    @Override
-    public Long getOperations() throws UserErrorException {
-        throw new RuntimeException("getOperations() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Long getRequests() throws UserErrorException {
-        throw new RuntimeException("getRequests() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Long getMessages() throws UserErrorException {
-        throw new RuntimeException("getMessages() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public <T> T get(Class<? extends T> type, String... path) {
-        throw new RuntimeException("get() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public File getFile(String... path) {
-        throw new RuntimeException("getFile() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Map<String, Object> get(String... path) {
-        throw new RuntimeException("get() NOT YET IMPLEMENTED");
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public void setOperations(Integer i) {
+
+        Map<String, Object> root = get();
+        root.put(OPERATION_COUNT_LABEL, i);
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

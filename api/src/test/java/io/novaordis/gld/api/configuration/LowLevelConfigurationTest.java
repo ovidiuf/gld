@@ -491,6 +491,12 @@ public abstract class LowLevelConfigurationTest {
         assertNotNull(nm);
         assertEquals(1, nm.size());
         assertEquals("something", nm.get("token1"));
+
+        //
+        // actually, the documentation says that get() is guarantee to return the actual storage
+        //
+
+        assertTrue(nm == m);
     }
 
     // set() -----------------------------------------------------------------------------------------------------------

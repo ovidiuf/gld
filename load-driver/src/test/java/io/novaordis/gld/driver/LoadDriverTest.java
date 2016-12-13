@@ -22,6 +22,8 @@ import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.mock.MockKeyStore;
 import io.novaordis.gld.api.mock.MockService;
 import io.novaordis.gld.api.mock.configuration.MockConfiguration;
+import io.novaordis.gld.api.mock.configuration.MockLoadConfiguration;
+import io.novaordis.gld.api.mock.load.MockLdLoadStrategy;
 import io.novaordis.gld.driver.sampler.Sampler;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -61,6 +63,7 @@ public abstract class LoadDriverTest {
         // We're installing a LoadStrategy that produces zero operations and gets depleted immediately - this will
         // make the runner finnish immediately, and successfully
         //
+        ((MockLoadConfiguration)mc.getLoadConfiguration()).setOperations(0);
 
         ld.init(mc);
 

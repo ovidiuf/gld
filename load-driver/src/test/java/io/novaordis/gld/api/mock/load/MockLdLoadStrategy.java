@@ -23,6 +23,7 @@ import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
 import io.novaordis.gld.api.mock.MockOperation;
+import io.novaordis.gld.api.mock.configuration.MockLoadConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,6 +97,12 @@ public class MockLdLoadStrategy implements LoadStrategy {
         if (initialized) {
 
             fail(this + ".init(...) called twice");
+        }
+
+        MockLoadConfiguration mlc = (MockLoadConfiguration)lc;
+        Long operations = mlc.getOperations();
+        if (operations != null) {
+            remainingOperations = new AtomicInteger(operations.intValue());
         }
 
         this.initialized = true;

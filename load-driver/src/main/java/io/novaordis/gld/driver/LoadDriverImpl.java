@@ -145,77 +145,68 @@ public class LoadDriverImpl implements LoadDriver {
     @Override
     public void run() throws Exception {
 
-        //
-        // start the dependent lifecycle services the start the runner, then enter the main control loop
-        //
+        try {
 
-        startLifeCycleServices();
+            //
+            // start the dependent lifecycle services the start the runner, then enter the main control loop
+            //
 
-        runner.run();
+            startLifeCycleServices();
 
-        //
-        // the main control loop
-        //
+            runner.run();
 
-        //
-        // turnOff() will be invoked in a finally block by the upper layer
-        //
-    }
-
-    @Override
-    public void turnOff() {
-
-        //
-        // execute the init() operations in reverse order
-        //
-
-        if (runner != null) {
-
-            try {
-
-                runner.stop();
-
-            } catch (Exception e) {
-
-                log.warn("failed to stop the runner: " + e.getMessage());
-            }
+            //
+            // the main control loop
+            //
         }
+        finally {
 
-        if (keyStore != null) {
+            //
+            // execute the init() operations in reverse order and stops lifecycle-enabled components. The sequence must
+            // be invoked in a finally block, to leave the driver and associated components in a clean state,
+            // irrespective of whether the driver completed the run cleanly, or existed because of an exception. If it
+            // cannot complete, must log and exit. Failure to stop one component must not prevent other components to
+            // stop.
+            //
 
-            try {
+            if (keyStore != null) {
 
-                keyStore.stop();
+                try {
 
-            } catch (Exception e) {
+                    keyStore.stop();
 
-                log.warn("failed to stop the key store: " + e.getMessage());
+                } catch (Throwable e) {
+
+                    log.warn("failed to stop the key store: " + e.getMessage());
+                }
             }
-        }
 
-        if (sampler != null) {
+            if (sampler != null) {
 
-            try {
+                try {
 
-                sampler.stop();
+                    sampler.stop();
 
-            } catch (Exception e) {
+                } catch (Throwable e) {
 
-                log.warn("failed to stop the sampler: " + e.getMessage());
+                    log.warn("failed to stop the sampler: " + e.getMessage());
+                }
             }
-        }
 
-        if (service != null) {
+            if (service != null) {
 
-            try {
+                try {
 
-                // this will also stop the associated load strategy
-                service.stop();
+                    //
+                    // this will also stop the associated load strategy
+                    //
+                    service.stop();
 
-            }
-            catch(Exception e) {
+                }
+                catch(Throwable e) {
 
-                log.warn("failed to stop service: " + e.getMessage());
+                    log.warn("failed to stop service: " + e.getMessage());
+                }
             }
         }
     }

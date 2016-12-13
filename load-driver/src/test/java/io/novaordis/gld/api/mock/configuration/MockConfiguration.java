@@ -33,28 +33,38 @@ public class MockConfiguration implements Configuration {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private MockServiceConfiguration serviceConfiguration;
+    private MockLoadConfiguration loadConfiguration;
+    private MockStoreConfiguration storeConfiguration;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public MockConfiguration() throws Exception {
+
+        serviceConfiguration = new MockServiceConfiguration();
+        loadConfiguration = new MockLoadConfiguration();
+        storeConfiguration = new MockStoreConfiguration();
+    }
 
     // Configuration implementation ------------------------------------------------------------------------------------
 
     @Override
     public ServiceConfiguration getServiceConfiguration() {
 
-        return new MockServiceConfiguration();
+        return serviceConfiguration;
     }
 
     @Override
     public LoadConfiguration getLoadConfiguration() {
 
-        return new MockLoadConfiguration();
+        return loadConfiguration;
     }
 
     @Override
     public StoreConfiguration getStoreConfiguration() {
 
-        return new MockStoreConfiguration();
+        return storeConfiguration;
     }
-
 
     // Public ----------------------------------------------------------------------------------------------------------
 

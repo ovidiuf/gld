@@ -16,19 +16,22 @@
 
 package io.novaordis.gld.api.mock.configuration;
 
+import io.novaordis.gld.api.configuration.LowLevelConfigurationBase;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
 import io.novaordis.gld.api.mock.MockService;
+import io.novaordis.gld.api.mock.load.MockLdLoadStrategyFactory;
 import io.novaordis.utilities.UserErrorException;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/9/16
  */
-public class MockServiceConfiguration implements ServiceConfiguration {
+public class MockServiceConfiguration extends LowLevelConfigurationBase implements ServiceConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -37,6 +40,20 @@ public class MockServiceConfiguration implements ServiceConfiguration {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public MockServiceConfiguration() {
+
+        super(new HashMap<>(), new File("."));
+
+        //
+        // make sure this service configuration "encourages" the use of the load-driver own LoadStrategyFactory
+        //
+
+        Map<String, Object> loadStrategyConfig = new HashMap<>();
+        loadStrategyConfig.put(LOAD_STRATEGY_FACTORY_CLASS_LABEL, MockLdLoadStrategyFactory.class.getName());
+        set(loadStrategyConfig, LOAD_STRATEGY_CONFIGURATION_LABEL);
+    }
+
 
     // ServiceConfiguration implementation -----------------------------------------------------------------------------
 
@@ -55,21 +72,6 @@ public class MockServiceConfiguration implements ServiceConfiguration {
     @Override
     public String getLoadStrategyName() throws UserErrorException {
         throw new RuntimeException("getLoadStrategyName() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public <T> T get(Class<? extends T> type, String... path) {
-        throw new RuntimeException("get() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public File getFile(String... path) {
-        throw new RuntimeException("getFile() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Map<String, Object> get(String... path) {
-        throw new RuntimeException("get() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

@@ -62,7 +62,7 @@ public class MockLdLoadStrategyFactory implements LoadStrategyFactory {
     @Override
     public String toString() {
 
-        return "load-driver MockLoadStrategyFactory";
+        return "load-driver Mock(Ld)LoadStrategyFactory";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

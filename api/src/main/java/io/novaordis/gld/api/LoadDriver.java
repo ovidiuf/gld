@@ -68,15 +68,6 @@ public interface LoadDriver {
      */
     void run() throws Exception;
 
-    /**
-     * An idempotent operation that reverses the effects on init() and essentially stops lifecycle-enabled components.
-     *
-     * It must be invoked in a finally block, to leave the driver and associated components in a clean state,
-     * irrespective of whether the driver completed the run cleanly, or existed because of an exception. Must not
-     * throw any exception, even an unchecked one. If it cannot complete, must log and exit.
-     */
-    void turnOff();
-
     //
     // topology --------------------------------------------------------------------------------------------------------
     //

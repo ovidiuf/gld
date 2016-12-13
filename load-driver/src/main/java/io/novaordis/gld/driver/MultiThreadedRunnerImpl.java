@@ -16,7 +16,6 @@
 
 package io.novaordis.gld.driver;
 
-import io.novaordis.gld.api.KeyProvider;
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Service;
@@ -34,7 +33,7 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
-    
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = LoggerFactory.getLogger(MultiThreadedRunnerImpl.class);
@@ -106,116 +105,88 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
 
         running = true;
 
-        try {
+        checkPreconditions();
 
-            checkPreconditions();
+        if (isBackground) {
 
-            if (isBackground) {
+            //
+            // unlatch the exit guard, exit when the threads are done
+            //
 
-                //
-                // unlatch the exit guard, exit when the threads are done
-                //
+            exitGuard.allowExit();
+        }
+        else {
 
-                exitGuard.allowExit();
+            //
+            // not in background, we need the console
+            //
+            commandLineConsole = new CommandLineConsole(this, sampler);
+            commandLineConsole.start();
+        }
+
+        // threadCount + the main thread that runs this code
+        CyclicBarrier barrier = new CyclicBarrier(threadCount + 1);
+
+        //
+        // end of initialization
+        //
+
+
+        //
+        // if this run has a limited duration, start a high priority timer that will stop the run after the time
+        // has passed. If the run is not time-limited, "durationExpired" will never become "true".
+        //
+
+        final AtomicBoolean durationExpired = new AtomicBoolean(false);
+
+        if (getDuration() != null) {
+
+            Duration d = getDuration();
+            Timer durationTimer = new Timer("Multi-threaded runner " + d + " stop thread");
+            durationTimer.schedule(new DurationTimerTask(d, durationExpired), d.getMilliseconds());
+            log.debug("duration timer task scheduled, it will fire after " + d);
+        }
+
+        //
+        // start the threads
+        //
+
+        for (int i = 0; i < threadCount; i++) {
+
+            String name = "GLD Runner " + i;
+
+            SingleThreadedRunner r = new SingleThreadedRunner(
+                    name, service, loadStrategy, sampler, barrier, durationExpired,
+                    singleThreadedRunnerSleepMs, keyStore);
+
+            singleThreadedRunners.add(r);
+
+            r.start();
+        }
+
+        log.debug("waiting for " + singleThreadedRunners.size() + " SingleThreadedRunner(s) to finish ...");
+
+        barrier.await();
+
+        log.debug(singleThreadedRunners.size() + " SingleThreadedRunner(s) have finished");
+
+        if (commandLineConsole != null) {
+
+            if (isWaitForConsoleQuit()) {
+
+                log.debug("waiting for console to issue quit ...");
+                commandLineConsole.waitForExplicitQuit();
+                log.debug("console issued quit");
             }
             else {
 
-                //
-                // not in background, we need the console
-                //
-                commandLineConsole = new CommandLineConsole(this, sampler);
-                commandLineConsole.start();
+                commandLineConsole.stop(); // no more input needed from the console so dispose of it
             }
-
-            // threadCount + the main thread that runs this code
-            CyclicBarrier barrier = new CyclicBarrier(threadCount + 1);
-
-            //
-            // end of initialization
-            //
-
-
-            //
-            // if this run has a limited duration, start a high priority timer that will stop the run after the time
-            // has passed. If the run is not time-limited, "durationExpired" will never become "true".
-            //
-
-            final AtomicBoolean durationExpired = new AtomicBoolean(false);
-
-            if (getDuration() != null) {
-
-                Duration d = getDuration();
-                Timer durationTimer = new Timer("Multi-threaded runner " + d + " stop thread");
-                durationTimer.schedule(new DurationTimerTask(d, durationExpired), d.getMilliseconds());
-                log.debug("duration timer task scheduled, it will fire after " + d);
-            }
-
-            //
-            // start the threads
-            //
-
-            for (int i = 0; i < threadCount; i++) {
-
-                String name = "GLD Runner " + i;
-
-                SingleThreadedRunner r = new SingleThreadedRunner(
-                        name, service, loadStrategy, sampler, barrier, durationExpired,
-                        singleThreadedRunnerSleepMs, keyStore);
-
-                singleThreadedRunners.add(r);
-
-                r.start();
-            }
-
-            log.debug("waiting for " + singleThreadedRunners.size() + " SingleThreadedRunner(s) to finish ...");
-
-            barrier.await();
-
-            log.debug(singleThreadedRunners.size() + " SingleThreadedRunner(s) have finished");
-
-            if (commandLineConsole != null) {
-
-                if (isWaitForConsoleQuit()) {
-
-                    log.debug("waiting for console to issue quit ...");
-                    commandLineConsole.waitForExplicitQuit();
-                    log.debug("console issued quit");
-                }
-                else {
-
-                    commandLineConsole.stop(); // no more input needed from the console so dispose of it
-                }
-            }
-
-            exitGuard.waitUntilExitIsAllowed();
-
         }
-        finally {
 
-            if (service != null) {
+        exitGuard.waitUntilExitIsAllowed();
 
-                service.stop();
-            }
-
-            KeyProvider keyProvider = loadStrategy.getKeyProvider();
-
-            if (keyProvider != null) {
-
-                keyProvider.stop();
-            }
-
-            if (sampler != null) {
-
-                sampler.stop();
-            }
-
-            if (keyStore != null) {
-
-                keyStore.stop();
-            }
-
-            running = false;
-        }
+        running = false;
     }
 
     @Override

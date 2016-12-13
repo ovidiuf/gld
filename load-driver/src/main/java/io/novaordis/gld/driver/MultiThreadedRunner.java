@@ -27,6 +27,10 @@ public interface MultiThreadedRunner {
      */
     void run() throws Exception;
 
+    /**
+     * Normally the runner stops when all operations are depleted or the load run duration expires. This method
+     * is used to forcibly stop the runner during the run.
+     */
     void stop() throws Exception;
 
     /**
