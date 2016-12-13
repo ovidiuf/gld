@@ -16,15 +16,6 @@
 
 package io.novaordis.gld.driver;
 
-import io.novaordis.gld.api.KeyStore;
-import io.novaordis.gld.api.Service;
-import io.novaordis.gld.api.mock.configuration.MockConfiguration;
-import io.novaordis.gld.driver.sampler.Sampler;
-import org.junit.Test;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/2/16

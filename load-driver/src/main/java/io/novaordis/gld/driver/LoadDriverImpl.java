@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.driver;
 
+import io.novaordis.gld.api.Runner;
 import io.novaordis.gld.api.configuration.Configuration;
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.configuration.LoadConfiguration;
@@ -28,8 +29,8 @@ import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceFactory;
 import io.novaordis.gld.api.configuration.StoreConfiguration;
 import io.novaordis.gld.api.store.KeyStoreFactory;
-import io.novaordis.gld.driver.sampler.Sampler;
-import io.novaordis.gld.driver.sampler.SamplerImpl;
+import io.novaordis.gld.api.sampler.Sampler;
+import io.novaordis.gld.api.sampler.SamplerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,6 +90,24 @@ public class LoadDriverImpl implements LoadDriver {
     public Service getService() {
 
         return service;
+    }
+
+    @Override
+    public KeyStore getKeyStore() {
+
+        return keyStore;
+    }
+
+    @Override
+    public Sampler getSampler() {
+
+        return sampler;
+    }
+
+    @Override
+    public Runner getRunner() {
+
+        return runner;
     }
 
     @Override
@@ -238,21 +257,6 @@ public class LoadDriverImpl implements LoadDriver {
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
-
-    Sampler getSampler() {
-
-        return sampler;
-    }
-
-    KeyStore getKeyStore() {
-
-        return keyStore;
-    }
-
-    MultiThreadedRunner getRunner() {
-
-        return runner;
-    }
 
     void startLifeCycleServices() throws Exception {
 

@@ -18,21 +18,16 @@ package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadDriver;
+import io.novaordis.gld.api.Runner;
 import io.novaordis.gld.api.Service;
-import io.novaordis.gld.api.mock.MockKeyStore;
-import io.novaordis.gld.api.mock.MockService;
 import io.novaordis.gld.api.mock.configuration.MockConfiguration;
 import io.novaordis.gld.api.mock.configuration.MockLoadConfiguration;
-import io.novaordis.gld.api.mock.load.MockLdLoadStrategy;
-import io.novaordis.gld.driver.sampler.Sampler;
+import io.novaordis.gld.api.sampler.Sampler;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -55,7 +50,7 @@ public abstract class LoadDriverTest {
     @Test
     public void init_run_sequence_SuccessfulRun() throws Exception {
 
-        LoadDriverImpl ld = new LoadDriverImpl("test", true);
+        LoadDriver ld = getLoadDriverToTest();
 
         MockConfiguration mc = new MockConfiguration();
 
@@ -70,7 +65,7 @@ public abstract class LoadDriverTest {
         Service service = ld.getService();
         Sampler sampler = ld.getSampler();
         KeyStore keyStore = ld.getKeyStore();
-        MultiThreadedRunner runner = ld.getRunner();
+        Runner runner = ld.getRunner();
 
         //
         // init() does not start anything
@@ -81,14 +76,13 @@ public abstract class LoadDriverTest {
         assertFalse(keyStore.isStarted());
         assertFalse(runner.isRunning());
 
-
         //
         // successful run - services will get started and then stopped cleanly upon each run
         //
 
-
         ld.run();
 
+        log.info("run completed");
 
         //
         // make sure all lifecycle-enabled components are off

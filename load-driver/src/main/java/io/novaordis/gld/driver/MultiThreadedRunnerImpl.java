@@ -20,7 +20,7 @@ import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.driver.console.CommandLineConsole;
-import io.novaordis.gld.driver.sampler.Sampler;
+import io.novaordis.gld.api.sampler.Sampler;
 import io.novaordis.utilities.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

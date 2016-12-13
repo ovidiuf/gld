@@ -17,6 +17,7 @@
 package io.novaordis.gld.api;
 
 import io.novaordis.gld.api.configuration.Configuration;
+import io.novaordis.gld.api.sampler.Sampler;
 
 /**
  * @{linktourl https://kb.novaordis.com/index.php/Gld_Concepts#Load_Driver_Instance}
@@ -76,6 +77,15 @@ public interface LoadDriver {
      * A LoadDriver instance can only be associated with a service at a time.
      */
     Service getService();
+
+    /**
+     * @return the KeyStore instance. May be null if the keys are not stored.
+     */
+    KeyStore getKeyStore();
+
+    Runner getRunner();
+
+    Sampler getSampler();
 
     //
     // logging ---------------------------------------------------------------------------------------------------------

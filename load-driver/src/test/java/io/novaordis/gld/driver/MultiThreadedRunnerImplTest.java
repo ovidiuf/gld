@@ -17,11 +17,8 @@
 package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.KeyStore;
-import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Service;
-import io.novaordis.gld.driver.sampler.Sampler;
-import org.junit.Assert;
-import org.junit.Test;
+import io.novaordis.gld.api.sampler.Sampler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

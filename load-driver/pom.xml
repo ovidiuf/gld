@@ -49,11 +49,6 @@
             <groupId>io.novaordis.utilities</groupId>
             <artifactId>novaordis-utilities</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.novaordis.ac</groupId>
-            <artifactId>async-collector</artifactId>
-            <version>1.4.2</version>
-        </dependency>
 
         <!--
             Dependencies Specific to this Module

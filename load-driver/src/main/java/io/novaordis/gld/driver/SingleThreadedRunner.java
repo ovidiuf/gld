@@ -20,7 +20,7 @@ import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
-import io.novaordis.gld.driver.sampler.Sampler;
+import io.novaordis.gld.api.sampler.Sampler;
 import org.apache.log4j.Logger;
 
 import java.util.concurrent.CyclicBarrier;

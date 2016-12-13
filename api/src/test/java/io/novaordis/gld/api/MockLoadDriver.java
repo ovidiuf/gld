@@ -17,6 +17,7 @@
 package io.novaordis.gld.api;
 
 import io.novaordis.gld.api.configuration.Configuration;
+import io.novaordis.gld.api.sampler.Sampler;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -57,6 +58,21 @@ public class MockLoadDriver implements LoadDriver {
     @Override
     public Service getService() {
         throw new RuntimeException("getService() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public KeyStore getKeyStore() {
+        throw new RuntimeException("getKeyStore() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Runner getRunner() {
+        throw new RuntimeException("getRunner() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Sampler getSampler() {
+        throw new RuntimeException("getSampler() NOT YET IMPLEMENTED");
     }
 
     @Override

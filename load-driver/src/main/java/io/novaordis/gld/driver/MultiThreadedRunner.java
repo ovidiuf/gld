@@ -16,22 +16,10 @@
 
 package io.novaordis.gld.driver;
 
+import io.novaordis.gld.api.Runner;
 import io.novaordis.utilities.time.Duration;
 
-public interface MultiThreadedRunner {
-
-    boolean isRunning();
-
-    /**
-     * Run on multiple threads. When all threads finish, return.
-     */
-    void run() throws Exception;
-
-    /**
-     * Normally the runner stops when all operations are depleted or the load run duration expires. This method
-     * is used to forcibly stop the runner during the run.
-     */
-    void stop() throws Exception;
+public interface MultiThreadedRunner extends Runner {
 
     /**
      * @see ExitGuard

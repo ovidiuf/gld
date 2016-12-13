@@ -94,21 +94,6 @@ public class Util {
         return result;
     }
 
-    public static Throwable getRoot(Throwable t) {
-        if (t == null)
-        {
-            throw new IllegalArgumentException("null throwable");
-        }
-
-        Throwable root = t;
-        while (root.getCause() != null)
-        {
-            root = root.getCause();
-        }
-
-        return root;
-    }
-
     public static void displayContentFromClasspath(String fileName) {
         BufferedReader br = null;
 

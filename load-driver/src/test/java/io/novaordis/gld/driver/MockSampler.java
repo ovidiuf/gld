@@ -17,10 +17,10 @@
 package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.driver.sampler.Counter;
-import io.novaordis.gld.driver.sampler.Sampler;
-import io.novaordis.gld.driver.sampler.SamplingConsumer;
-import io.novaordis.gld.driver.sampler.metrics.Metric;
+import io.novaordis.gld.api.sampler.Counter;
+import io.novaordis.gld.api.sampler.Sampler;
+import io.novaordis.gld.api.sampler.SamplingConsumer;
+import io.novaordis.gld.api.sampler.metrics.Metric;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;

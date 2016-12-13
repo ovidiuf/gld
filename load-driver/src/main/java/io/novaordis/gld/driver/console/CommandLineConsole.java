@@ -18,7 +18,7 @@ package io.novaordis.gld.driver.console;
 
 import io.novaordis.gld.driver.MultiThreadedRunner;
 import io.novaordis.gld.driver.Util;
-import io.novaordis.gld.driver.sampler.Sampler;
+import io.novaordis.gld.api.sampler.Sampler;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
