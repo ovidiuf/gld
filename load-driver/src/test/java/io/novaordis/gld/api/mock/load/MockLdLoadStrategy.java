@@ -46,6 +46,12 @@ public class MockLdLoadStrategy implements LoadStrategy {
 
     private static final Logger log = LoggerFactory.getLogger(MockLdLoadStrategy.class);
 
+    public static final int SERVICE_STATE_INDEX = 0;
+    public static final int SAMPLER_STATE_INDEX = 1;
+    public static final int KEY_STORE_STATE_INDEX = 2;
+    public static final int LOAD_STRATEGY_STATE_INDEX = 3;
+    public static final int KEY_PROVIDER_STATE_INDEX = 4;
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
@@ -54,6 +60,11 @@ public class MockLdLoadStrategy implements LoadStrategy {
     private volatile boolean started;
     private volatile boolean initialized;
     private AtomicInteger remainingOperations;
+
+    private volatile boolean recordLifecycleComponentState;
+
+    // Service, Sampler, KeyStore, LoadStrategy, KeyProvider
+    private boolean[] componentStarted = new boolean[5];
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -131,6 +142,20 @@ public class MockLdLoadStrategy implements LoadStrategy {
     @Override
     public Operation next(Operation last, String lastWrittenKey, boolean runtimeShuttingDown) throws Exception {
 
+
+        if (recordLifecycleComponentState) {
+
+            //
+            // record the state on the first operation
+            //
+
+            recordLifecycleComponentState = false;
+
+            componentStarted[LOAD_STRATEGY_STATE_INDEX] = isStarted();
+            KeyProvider provider = getKeyProvider();
+            componentStarted[KEY_PROVIDER_STATE_INDEX] = provider.isStarted();
+        }
+
         //
         // if the runtime is shutting down, comply and return null; tests rely on this behavior
         //
@@ -198,6 +223,16 @@ public class MockLdLoadStrategy implements LoadStrategy {
      */
     public void setVerbose(boolean b) {
         this.verbose = b;
+    }
+
+    public void recordLifecycleComponentState() {
+
+        this.recordLifecycleComponentState = true;
+    }
+
+    public boolean[] getComponentStarted() {
+
+        return componentStarted;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -22,12 +22,14 @@ import io.novaordis.gld.api.Runner;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.mock.configuration.MockConfiguration;
 import io.novaordis.gld.api.mock.configuration.MockLoadConfiguration;
+import io.novaordis.gld.api.mock.load.MockLdLoadStrategy;
 import io.novaordis.gld.api.sampler.Sampler;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -68,10 +70,19 @@ public abstract class LoadDriverTest {
         Runner runner = ld.getRunner();
 
         //
+        // instrument the Mock load strategy to report on the state of the lifecycle services
+        //
+
+        MockLdLoadStrategy mls = (MockLdLoadStrategy)service.getLoadStrategy();
+        mls.recordLifecycleComponentState();
+
+        //
         // init() does not start anything
         //
 
         assertFalse(service.isStarted());
+        assertFalse(service.getLoadStrategy().isStarted());
+        assertFalse(service.getLoadStrategy().getKeyProvider().isStarted());
         assertFalse(sampler.isStarted());
         assertFalse(keyStore.isStarted());
         assertFalse(runner.isRunning());
@@ -80,9 +91,23 @@ public abstract class LoadDriverTest {
         // successful run - services will get started and then stopped cleanly upon each run
         //
 
+        //
+        // the load strategy is instrumented to insure all lifecycle components are started
+        //
+
         ld.run();
 
         log.info("run completed");
+
+        //
+        // verify lifecycle-enabled component state when the first load strategy next() was called
+        //
+        boolean[] componentStarted = mls.getComponentStarted();
+        assertTrue(componentStarted[MockLdLoadStrategy.SERVICE_STATE_INDEX]);
+        assertTrue(componentStarted[MockLdLoadStrategy.LOAD_STRATEGY_STATE_INDEX]);
+        assertTrue(componentStarted[MockLdLoadStrategy.KEY_PROVIDER_STATE_INDEX]);
+        assertTrue(componentStarted[MockLdLoadStrategy.SAMPLER_STATE_INDEX]);
+        assertTrue(componentStarted[MockLdLoadStrategy.KEY_STORE_STATE_INDEX]);
 
         //
         // make sure all lifecycle-enabled components are off
@@ -92,6 +117,8 @@ public abstract class LoadDriverTest {
         assertFalse(keyStore.isStarted());
         assertFalse(sampler.isStarted());
         assertFalse(service.isStarted());
+        assertFalse(service.getLoadStrategy().isStarted());
+        assertFalse(service.getLoadStrategy().getKeyProvider().isStarted());
     }
 
 //    @Test

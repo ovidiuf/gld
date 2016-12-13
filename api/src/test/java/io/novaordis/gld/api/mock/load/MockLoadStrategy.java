@@ -102,6 +102,10 @@ public class MockLoadStrategy implements LoadStrategy {
 
     @Override
     public Operation next(Operation last, String lastWrittenKey, boolean runtimeShuttingDown) throws Exception {
+
+        //
+        // we use this mock load strategy in the testing process, to report on the state of
+        //
         throw new RuntimeException("next() NOT YET IMPLEMENTED");
     }
 
