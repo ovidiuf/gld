@@ -36,6 +36,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
@@ -70,6 +71,24 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
         assertTrue(operations.contains(Write.class));
 
         assertTrue(s.isReuseValue());
+    }
+
+    @Test
+    public void init() throws Exception {
+
+        ReadThenWriteOnMissLoadStrategy s = getLoadStrategyToTest();
+
+        MockCacheServiceConfiguration msc = new MockCacheServiceConfiguration();
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+
+        Map<String, Object> m = new HashMap<>();
+        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        msc.set(m, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+
+        s.init(msc, mlc);
+
+        // no relationship with a service yet
+        assertNull(s.getService());
     }
 
     @Test

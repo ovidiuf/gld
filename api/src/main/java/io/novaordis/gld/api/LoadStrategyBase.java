@@ -125,11 +125,36 @@ public abstract class LoadStrategyBase implements LoadStrategy {
     @Override
     public void setService(Service s) {
 
-        //
-        // TODO insure the service and this instance are compatible
-        //
+        if (s == null) {
 
-        this.service = s;
+            //
+            // remove the relationship, if any
+            //
+            this.service = null;
+        }
+        else {
+
+            //
+            // insure the types are the same
+            //
+
+            ServiceType thatType = s.getType();
+
+            if (thatType == null) {
+
+                throw new IllegalArgumentException("invalid service " + s + ", it has a null type");
+            }
+
+            ServiceType thisType = getServiceType();
+
+            if (!thatType.equals(thisType)) {
+
+                throw new IllegalArgumentException(
+                        "cannot associate a " + thatType + " service with a " + thisType + " load strategy");
+            }
+
+            this.service = s;
+        }
     }
 
     @Override

@@ -37,7 +37,17 @@ public class MockService implements Service {
     private LoadStrategy loadStrategy;
     private LoadDriver loadDriver;
 
+    private ServiceType type;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public MockService() {
+
+        //
+        // we're mock by default but we can change that
+        //
+        this.type = ServiceType.mock;
+    }
 
     // Service implementation ------------------------------------------------------------------------------------------
 
@@ -83,7 +93,7 @@ public class MockService implements Service {
     @Override
     public ServiceType getType() {
 
-        return ServiceType.mock;
+        return type;
     }
 
     @Override
@@ -107,6 +117,14 @@ public class MockService implements Service {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    /**
+     * Simulate a mock service with a different type
+     */
+    public void setServiceType(ServiceType t) {
+
+        this.type = t;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

@@ -74,7 +74,7 @@ public interface LoadStrategy {
     Service getService();
 
     /**
-     * Use it to link the load strategy factory to the associated service.
+     * Use it to link the load strategy factory to the associated service, or remove the relationship (if null is used)
      *
      * @param s the associated service.
      *

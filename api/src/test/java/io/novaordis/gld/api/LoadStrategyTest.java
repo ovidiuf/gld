@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -156,23 +157,48 @@ public abstract class LoadStrategyTest {
 
         assertNull(ls.getService());
 
+        //
+        // the load strategy is not initialized, so we can associate it with any service
+        //
+
+        ServiceType type = ls.getServiceType();
+
+        //
+        // build a MockService that has the type we want
+        //
+
         MockService ms = new MockService();
+        ms.setServiceType(type);
+
         ls.setService(ms);
 
         Service s2 = ls.getService();
         assertEquals(ms, s2);
+
+        //
+        // sever the relationship
+        //
+
+        ls.setService(null);
+        assertNull(ls.getService());
     }
 
+    /**
+     * Make sure setService() cannot be used to set a wrong service.
+     */
     @Test
-    public void setService_InvalidService() throws Exception {
+    public void setInvalidServiceBeforeInitialization() throws Exception {
 
         LoadStrategy ls = getLoadStrategyToTest();
 
-        assertNull(ls.getService());
+        ServiceType type = ls.getServiceType();
+        assertNotNull(type);
 
         MockService ms = new MockService();
+        assertNotEquals(type, ms.getType());
 
         try {
+
             ls.setService(ms);
             fail("should have thrown exception");
         }
@@ -180,7 +206,40 @@ public abstract class LoadStrategyTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("return here", msg);
+            assertEquals("cannot associate a mock service with a " + type.name() + " load strategy", msg);
+        }
+    }
+
+    @Test
+    public void setInvalidServiceAfterInitialization() throws Exception {
+
+        LoadStrategy s = getLoadStrategyToTest();
+
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+        MockCacheServiceConfiguration msc = new MockCacheServiceConfiguration();
+
+        Map<String, Object> mockRawConfig = new HashMap<>();
+        mockRawConfig.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        msc.set(mockRawConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+
+        s.init(msc, mlc);
+
+        ServiceType type = s.getServiceType();
+        assertNotNull(type);
+
+        MockService ms = new MockService();
+        assertNotEquals(type, ms.getType());
+
+        try {
+
+            s.setService(ms);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("cannot associate a mock service with a " + type + " load strategy", msg);
         }
     }
 
