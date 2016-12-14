@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/GLD.iml" filepath="$PROJECT_DIR$/GLD.iml" />
-      <module fileurl="file://$PROJECT_DIR$/api/gld-api.iml" filepath="$PROJECT_DIR$/api/gld-api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/load-driver/gld-load-driver.iml" filepath="$PROJECT_DIR$/load-driver/gld-load-driver.iml" />
-      <module fileurl="file://$PROJECT_DIR$/release/release.iml" filepath="$PROJECT_DIR$/release/release.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GLD.iml" filepath="$PROJECT_DIR$/GLD.iml" group="GLD and modules" />
+      <module fileurl="file://$PROJECT_DIR$/api/gld-api.iml" filepath="$PROJECT_DIR$/api/gld-api.iml" group="GLD and modules" />
+      <module fileurl="file://$PROJECT_DIR$/load-driver/gld-load-driver.iml" filepath="$PROJECT_DIR$/load-driver/gld-load-driver.iml" group="GLD and modules" />
+      <module fileurl="file://$PROJECT_DIR$/extensions/jboss-datagrid-7.0.0/jboss-datagrid-7.0.0.iml" filepath="$PROJECT_DIR$/extensions/jboss-datagrid-7.0.0/jboss-datagrid-7.0.0.iml" />
+      <module fileurl="file://$PROJECT_DIR$/release/release.iml" filepath="$PROJECT_DIR$/release/release.iml" group="GLD and modules" />
     </modules>
   </component>
 </project>
