@@ -31,6 +31,7 @@ public abstract class LoadStrategyBase implements LoadStrategy {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private Service service;
     private KeyProvider keyProvider;
     private RandomContentGenerator valueGenerator;
     private volatile boolean started;
@@ -119,6 +120,22 @@ public abstract class LoadStrategyBase implements LoadStrategy {
 
             throw new UserErrorException(msg);
         }
+    }
+
+    @Override
+    public void setService(Service s) {
+
+        //
+        // TODO insure the service and this instance are compatible
+        //
+
+        this.service = s;
+    }
+
+    @Override
+    public Service getService() {
+
+        return service;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

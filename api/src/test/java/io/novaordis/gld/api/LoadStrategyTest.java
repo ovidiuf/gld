@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api;
 
+import io.novaordis.gld.api.cache.MockCacheService;
 import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
 import io.novaordis.gld.api.configuration.MockLoadConfiguration;
 import io.novaordis.gld.api.configuration.MockServiceConfiguration;
@@ -28,7 +29,9 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -119,6 +122,20 @@ public abstract class LoadStrategyTest {
 
         s.init(msc, mlc);
 
+        //
+        // we did not linked to the service yet
+        //
+        assertNull(s.getService());
+
+        //
+        // link and test
+        //
+        MockCacheService ms = new MockCacheService();
+        s.setService(ms);
+
+        Service s2 = s.getService();
+        assertEquals(ms, s2);
+
         LoadStrategyBase lsb = (LoadStrategyBase)s;
 
         //
@@ -128,6 +145,43 @@ public abstract class LoadStrategyTest {
         KeyProvider p = lsb.getKeyProvider();
         assertNotNull(p);
         assertTrue(p.isStarted());
+    }
+
+    // setService() ----------------------------------------------------------------------------------------------------
+
+    @Test
+    public void setService() throws Exception {
+
+        LoadStrategy ls = getLoadStrategyToTest();
+
+        assertNull(ls.getService());
+
+        MockService ms = new MockService();
+        ls.setService(ms);
+
+        Service s2 = ls.getService();
+        assertEquals(ms, s2);
+    }
+
+    @Test
+    public void setService_InvalidService() throws Exception {
+
+        LoadStrategy ls = getLoadStrategyToTest();
+
+        assertNull(ls.getService());
+
+        MockService ms = new MockService();
+
+        try {
+            ls.setService(ms);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("return here", msg);
+        }
     }
 
     // constructors ----------------------------------------------------------------------------------------------------

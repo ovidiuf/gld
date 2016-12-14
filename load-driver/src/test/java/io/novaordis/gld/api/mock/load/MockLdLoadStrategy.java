@@ -17,6 +17,7 @@
 package io.novaordis.gld.api.mock.load;
 
 import io.novaordis.gld.api.KeyProvider;
+import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
@@ -91,6 +92,16 @@ public class MockLdLoadStrategy implements LoadStrategy {
     public ServiceType getServiceType() {
 
         return ServiceType.mock;
+    }
+
+    @Override
+    public Service getService() {
+        throw new RuntimeException("getService() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void setService(Service s) throws IllegalArgumentException {
+        throw new RuntimeException("setService() NOT YET IMPLEMENTED");
     }
 
     @Override

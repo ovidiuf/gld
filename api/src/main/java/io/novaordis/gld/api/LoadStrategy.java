@@ -30,8 +30,14 @@ public interface LoadStrategy {
      * A strategy must be generally initialized before the first use. If the strategy requires configuration and it was
      * not properly configured, the first next() invocation will throw IllegalStateException.
      *
+     * Note that initialization may also consist in establishing relationship with other components, such as the
+     * associated Service. However, that can be done outside the init() method, which is, strictly speaking, aimed
+     * to configure the LoadStrategy instance private internal state.
+     *
      * @param serviceConfiguration the service configuration. Subclasses may cast it to more specific types. It gives
-     *                             access to raw configuration sub-maps, if necessary.
+     *                             access to raw configuration sub-maps, if necessary.It is here to allow access to
+     *                             the load strategy raw configuration sub-map and also to service configuration
+     *                             elements (such as the default key size for a cache service, etc.)
      *
      * @param loadConfiguration the load characteristics.
      *
@@ -51,16 +57,30 @@ public interface LoadStrategy {
     // accessors -------------------------------------------------------------------------------------------------------
 
     /**
-     * @return the service type this load strategy is associated with.
-     */
-    ServiceType getServiceType();
-
-    /**
      * The name this load strategy is known under, and which can be used in a configuration file.
      *
      * Example: "read-then-write-on-miss" will instruct the runtime to dynamically load ReadThenWriteOnMissLoadStrategy.
      */
     String getName();
+
+    /**
+     * @return the service type this load strategy is associated with.
+     */
+    ServiceType getServiceType();
+
+    /**
+     * @return The "owner" service.
+     */
+    Service getService();
+
+    /**
+     * Use it to link the load strategy factory to the associated service.
+     *
+     * @param s the associated service.
+     *
+     * @exception IllegalArgumentException if the service and this load strategy instance are not compatible.
+     */
+    void setService(Service s) throws IllegalArgumentException;
 
     /**
      * @return the next operation to be sent into the service, factoring in the last operation that has been sent into
