@@ -42,418 +42,260 @@ public class ReadWriteRatioTest {
 
     // read-to-write, write-to-read ------------------------------------------------------------------------------------
 
-//    @Test
-//    public void defaults() throws Exception {
-//
-//        ReadWriteRatio r = new ReadWriteRatio(null, null);
-//
-//        // default: a write followed by a series of one read
-//        assertTrue(r.isWrite());
-//        assertFalse(r.isRead());
-//        assertEquals(1, r.getFollowUpSeriesSize());
-//
-//        assertTrue(r.doesWritingTakePlace());
-//    }
-//
-//    @Test
-//    public void readToWriteNotAnInteger() throws Exception {
-//
-//        try {
-//
-//            new ReadWriteRatio("blah", null);
-//            fail("should fail with UserErrorException because --read-to-write value is not an integer");
-//        }
-//        catch(UserErrorException e) {
-//
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void writeToReadNotAnInteger() throws Exception {
-//
-//        try {
-//
-//            new ReadWriteRatio(null, "blah");
-//            fail("should fail with UserErrorException because --write-to-read value is not an integer");
-//        }
-//        catch(UserErrorException e) {
-//
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void readToWriteNotAnInteger2() throws Exception {
-//
-//        try {
-//
-//            new ReadWriteRatio("2.5", null);
-//            fail("should fail with UserErrorException because --read-to-write value is not an integer");
-//        }
-//        catch(UserErrorException e) {
-//
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void writeToReadNotAnInteger2() throws Exception {
-//
-//        try {
-//
-//            new ReadWriteRatio(null, "0.1");
-//            fail("should fail with UserErrorException because --write-to-read value is not an integer");
-//        }
-//        catch(UserErrorException e) {
-//
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void readToWrite_Negative() throws Exception {
-//
-//        try {
-//
-//            new ReadWriteRatio("-1", null);
-//            fail("should fail with UserErrorException because --read-to-write value is not positive or zero");
-//        }
-//        catch(UserErrorException e) {
-//
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void writeToRead_Negative() throws Exception {
-//
-//        try {
-//
-//            new ReadWriteRatio(null, "-1");
-//            fail("should fail with UserErrorException because --write-to-read value is not positive or zero");
-//        }
-//        catch(UserErrorException e) {
-//
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void oneToOne() throws Exception {
-//
-//        ReadWriteRatio r = new ReadWriteRatio("1", null);
-//
-//        assertTrue(r.isWrite());
-//        assertFalse(r.isRead());
-//        assertEquals(1, r.getFollowUpSeriesSize());
-//
-//        assertTrue(r.doesWritingTakePlace());
-//
-//        ReadWriteRatio r2 = new ReadWriteRatio(null, "1");
-//
-//        assertTrue(r2.isWrite());
-//        assertFalse(r2.isRead());
-//        assertEquals(1, r.getFollowUpSeriesSize());
-//
-//        assertTrue(r2.doesWritingTakePlace());
-//    }
-//
-//    @Test
-//    public void oneToOne_equivalent() throws Exception {
-//
-//        ReadWriteRatio r = new ReadWriteRatio("1", "1");
-//
-//        assertTrue(r.isWrite());
-//        assertFalse(r.isRead());
-//        assertEquals(1, r.getFollowUpSeriesSize());
-//
-//        assertTrue(r.doesWritingTakePlace());
-//    }
-//
-//    @Test
-//    public void oneToOne_incompatible() throws Exception {
-//
-//        try {
-//
-//            new ReadWriteRatio("1", "0");
-//            fail("incompatible values");
-//        }
-//        catch(UserErrorException e) {
-//
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void oneToOne_incompatible_2() throws Exception {
-//
-//        try {
-//
-//            new ReadWriteRatio("1", "2");
-//            fail("incompatible values");
-//        }
-//        catch(UserErrorException e) {
-//
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void onlyWrites() throws Exception {
-//
-//        ReadWriteRatio r = new ReadWriteRatio("0", null);
-//
-//        assertTrue(r.isWrite());
-//        assertFalse(r.isRead());
-//        assertEquals(0, r.getFollowUpSeriesSize());
-//    }
-//
-//    @Test
-//    public void onlyWrites_IncompatibleWriteToReadValue() throws Exception {
-//
-//        try {
-//
-//            new ReadWriteRatio("0", "0");
-//            fail("should fail with UserErrorException, incompatible --read-to-write/--write-to-read values");
-//        }
-//        catch(UserErrorException e) {
-//
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void onlyWrites_IncompatibleWriteToReadValue_2() throws Exception {
-//
-//        try {
-//
-//            new ReadWriteRatio("0", "1");
-//            fail("should fail with UserErrorException, incompatible --read-to-write/--write-to-read values");
-//        }
-//        catch(UserErrorException e) {
-//
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void onlyWrites_IncompatibleWriteToReadValue_3() throws Exception {
-//
-//        try {
-//
-//            new ReadWriteRatio("0", "5");
-//            fail("should fail with UserErrorException, incompatible --read-to-write/--write-to-read values");
-//        }
-//        catch(UserErrorException e) {
-//
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void multipleReadsToWrite() throws Exception {
-//
-//        ReadWriteRatio r = new ReadWriteRatio("3", null);
-//
-//        assertTrue(r.isWrite());
-//        assertFalse(r.isRead());
-//        assertEquals(3, r.getFollowUpSeriesSize());
-//
-//        assertTrue(r.doesWritingTakePlace());
-//    }
-//
-//    @Test
-//    public void multipleReadsToWrite_IncompatibleWriteToRead() throws Exception {
-//
-//        try {
-//
-//            new ReadWriteRatio("3", "0");
-//            fail("should fail with UserErrorException, incompatible --read-to-write/--write-to-read values");
-//        }
-//        catch(UserErrorException e) {
-//
-//            log.info(e.getMessage());
-//        }
-//
-//        try {
-//
-//            new ReadWriteRatio("3", "1");
-//            fail("should fail with UserErrorException, incompatible --read-to-write/--write-to-read values");
-//        }
-//        catch(UserErrorException e) {
-//
-//            log.info(e.getMessage());
-//        }
-//
-//        try {
-//
-//            new ReadWriteRatio("3", "3");
-//            fail("should fail with UserErrorException, incompatible --read-to-write/--write-to-read values");
-//        }
-//        catch(UserErrorException e) {
-//
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void onlyReads() throws Exception {
-//
-//        ReadWriteRatio r = new ReadWriteRatio(null, "0");
-//
-//        assertFalse(r.isWrite());
-//        assertTrue(r.isRead());
-//        assertEquals(0, r.getFollowUpSeriesSize());
-//
-//        assertFalse(r.doesWritingTakePlace());
-//    }
-//
-//    @Test
-//    public void oneToOne_2() throws Exception {
-//
-//        ReadWriteRatio r = new ReadWriteRatio(null, "1");
-//
-//        assertTrue(r.isWrite());
-//        assertFalse(r.isRead());
-//        assertEquals(1, r.getFollowUpSeriesSize());
-//
-//        assertTrue(r.doesWritingTakePlace());
-//    }
-//
-//    @Test
-//    public void moreReadsThanWrites() throws Exception {
-//
-//        ReadWriteRatio r = new ReadWriteRatio(null, "2");
-//
-//        assertTrue(r.isRead());
-//        assertFalse(r.isWrite());
-//        assertEquals(2, r.getFollowUpSeriesSize());
-//
-//        assertTrue(r.doesWritingTakePlace());
-//    }
+    @Test
+    public void defaults() throws Exception {
 
-//    @Test
-//    public void writeToReadRatio() throws Exception {
-//
-//        ConfigurationImpl c = new ConfigurationImpl(new String[]
-//            {
-//                "load",
-//                "--nodes", "embedded",
-//                "--write-to-read", "5",
-//            });
-//
-//        Load load = (Load)c.getCommand();
-//        ReadWriteRatio r = ((WriteThenReadLoadStrategy)load.getLoadStrategy()).getReadWriteRatio();
-//
-//        assertTrue(r.isRead());
-//        assertFalse(r.isWrite());
-//        assertEquals(5, r.getFollowUpSeriesSize());
-//
-//        assertTrue(r.doesWritingTakePlace());
-//    }
+        ReadWriteRatio r = new ReadWriteRatio(null, null);
 
-//    @Test
-//    public void onlyReads_2() throws Exception {
-//
-//        ConfigurationImpl c = new ConfigurationImpl(new String[]
-//            {
-//                "load",
-//                "--nodes", "embedded",
-//                "--write-to-read", "0",
-//            });
-//
-//        Load load = (Load)c.getCommand();
-//        ReadWriteRatio r = ((WriteThenReadLoadStrategy)load.getLoadStrategy()).getReadWriteRatio();
-//
-//        assertTrue(r.isRead());
-//        assertFalse(r.isWrite());
-//        assertEquals(0, r.getFollowUpSeriesSize());
-//
-//        assertFalse(r.doesWritingTakePlace());
-//    }
+        // default: a write followed by a series of one read
+        assertTrue(r.isWrite());
+        assertFalse(r.isRead());
+        assertEquals(1, r.getFollowUpSeriesSize());
 
-//    @Test
-//    public void readToWriteRatio() throws Exception {
-//
-//        ConfigurationImpl c = new ConfigurationImpl(new String[]
-//            {
-//                "load",
-//                "--nodes", "embedded",
-//                "--read-to-write", "7",
-//            });
-//
-//        Load load = (Load)c.getCommand();
-//        ReadWriteRatio r = ((WriteThenReadLoadStrategy)load.getLoadStrategy()).getReadWriteRatio();
-//
-//        assertTrue(r.isWrite());
-//        assertFalse(r.isRead());
-//        assertEquals(7, r.getFollowUpSeriesSize());
-//
-//        assertTrue(r.doesWritingTakePlace());
-//    }
+        assertTrue(r.doesWritingTakePlace());
+    }
 
-//    @Test
-//    public void onlyWrites_2() throws Exception {
-//
-//        ConfigurationImpl c = new ConfigurationImpl(new String[]
-//            {
-//                "load",
-//                "--nodes", "embedded",
-//                "--read-to-write", "0",
-//            });
-//
-//        Load load = (Load)c.getCommand();
-//        ReadWriteRatio r = ((WriteThenReadLoadStrategy)load.getLoadStrategy()).getReadWriteRatio();
-//
-//        assertTrue(r.isWrite());
-//        assertFalse(r.isRead());
-//        assertEquals(0, r.getFollowUpSeriesSize());
-//
-//        assertTrue(r.doesWritingTakePlace());
-//    }
+    @Test
+    public void readToWrite_Negative() throws Exception {
 
-//    @Test
-//    public void writeToReadAndReadToWriteAreMutuallyExclusive() throws Exception {
-//
-//        try
-//        {
-//            new ConfigurationImpl(new String[]
-//                {
-//                    "load",
-//                    "--nodes", "embedded",
-//                    "--read-to-write", "2",
-//                    "--write-to-read", "2",
-//                });
-//
-//            fail("should fail because --read-to-write and --write-to-read are mutually exclusive");
-//        }
-//        catch(UserErrorException e)
-//        {
-//            log.info(e.getMessage());
-//        }
-//    }
+        try {
 
-//    @Test
-//    public void writeToReadAndReadToWriteAreMutuallyExclusiveUnlessTheyAreBothOne() throws Exception {
-//
-//        ConfigurationImpl c = new ConfigurationImpl(new String[]
-//            {
-//                "load",
-//                "--nodes", "embedded",
-//                "--read-to-write", "1",
-//                "--write-to-read", "1",
-//            });
-//
-//        Load load = (Load)c.getCommand();
-//        ReadWriteRatio r = ((WriteThenReadLoadStrategy)load.getLoadStrategy()).getReadWriteRatio();
-//
-//        assertTrue(r.isWrite());
-//        assertFalse(r.isRead());
-//        assertEquals(1, r.getFollowUpSeriesSize());
-//
-//        assertTrue(r.doesWritingTakePlace());
-//    }
+            new ReadWriteRatio(-1, null);
+            fail("should throw exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("only positive or zero integers can be read-to-write ratios", msg);
+        }
+    }
+
+    @Test
+    public void writeToRead_Negative() throws Exception {
+
+        try {
+
+            new ReadWriteRatio(null, -1);
+            fail("should throw exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("only positive or zero integers can be write-to-read ratios", msg);
+        }
+    }
+
+    @Test
+    public void oneToOne() throws Exception {
+
+        ReadWriteRatio r = new ReadWriteRatio(1, null);
+
+        assertTrue(r.isWrite());
+        assertFalse(r.isRead());
+        assertEquals(1, r.getFollowUpSeriesSize());
+
+        assertTrue(r.doesWritingTakePlace());
+
+        ReadWriteRatio r2 = new ReadWriteRatio(null, 1);
+
+        assertTrue(r2.isWrite());
+        assertFalse(r2.isRead());
+        assertEquals(1, r.getFollowUpSeriesSize());
+
+        assertTrue(r2.doesWritingTakePlace());
+    }
+
+    @Test
+    public void oneToOne_equivalent() throws Exception {
+
+        ReadWriteRatio r = new ReadWriteRatio(1, 1);
+
+        assertTrue(r.isWrite());
+        assertFalse(r.isRead());
+        assertEquals(1, r.getFollowUpSeriesSize());
+
+        assertTrue(r.doesWritingTakePlace());
+    }
+
+    @Test
+    public void oneToOne_incompatible() throws Exception {
+
+        try {
+
+            new ReadWriteRatio(1, 0);
+            fail("incompatible values");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("incompatible read-to-write/write-to-read values: .*"));
+        }
+    }
+
+    @Test
+    public void oneToOne_incompatible_2() throws Exception {
+
+        try {
+
+            new ReadWriteRatio(1, 2);
+            fail("incompatible values");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("incompatible read-to-write/write-to-read values: .*"));
+        }
+    }
+
+    @Test
+    public void onlyWrites() throws Exception {
+
+        ReadWriteRatio r = new ReadWriteRatio(0, null);
+
+        assertTrue(r.isWrite());
+        assertFalse(r.isRead());
+        assertEquals(0, r.getFollowUpSeriesSize());
+    }
+
+    @Test
+    public void onlyWrites_IncompatibleWriteToReadValue() throws Exception {
+
+        try {
+
+            new ReadWriteRatio(0, 0);
+            fail("should throw UserErrorException");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("incompatible read-to-write/write-to-read values: .*"));
+        }
+    }
+
+    @Test
+    public void onlyWrites_IncompatibleWriteToReadValue_2() throws Exception {
+
+        try {
+
+            new ReadWriteRatio(0, 1);
+            fail("should throw UserErrorException");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("incompatible read-to-write/write-to-read values: .*"));
+        }
+    }
+
+    @Test
+    public void onlyWrites_IncompatibleWriteToReadValue_3() throws Exception {
+
+        try {
+
+            new ReadWriteRatio(0, 5);
+            fail("should throw UserErrorException");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("incompatible read-to-write/write-to-read values: .*"));
+        }
+    }
+
+    @Test
+    public void multipleReadsToWrite() throws Exception {
+
+        ReadWriteRatio r = new ReadWriteRatio(3, null);
+
+        assertTrue(r.isWrite());
+        assertFalse(r.isRead());
+        assertEquals(3, r.getFollowUpSeriesSize());
+
+        assertTrue(r.doesWritingTakePlace());
+    }
+
+    @Test
+    public void multipleReadsToWrite_IncompatibleWriteToRead() throws Exception {
+
+        try {
+
+            new ReadWriteRatio(3, 0);
+            fail("should throw UserErrorException");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("incompatible read-to-write/write-to-read values: .*"));
+        }
+
+        try {
+
+            new ReadWriteRatio(3, 1);
+            fail("should throw UserErrorException");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("incompatible read-to-write/write-to-read values: .*"));
+        }
+
+        try {
+
+            new ReadWriteRatio(3, 3);
+            fail("should throw UserErrorException");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("incompatible read-to-write/write-to-read values: .*"));
+        }
+    }
+
+    @Test
+    public void onlyReads() throws Exception {
+
+        ReadWriteRatio r = new ReadWriteRatio(null, 0);
+
+        assertFalse(r.isWrite());
+        assertTrue(r.isRead());
+        assertEquals(0, r.getFollowUpSeriesSize());
+
+        assertFalse(r.doesWritingTakePlace());
+    }
+
+    @Test
+    public void oneToOne_2() throws Exception {
+
+        ReadWriteRatio r = new ReadWriteRatio(null, 1);
+
+        assertTrue(r.isWrite());
+        assertFalse(r.isRead());
+        assertEquals(1, r.getFollowUpSeriesSize());
+
+        assertTrue(r.doesWritingTakePlace());
+    }
+
+    @Test
+    public void moreReadsThanWrites() throws Exception {
+
+        ReadWriteRatio r = new ReadWriteRatio(null, 2);
+
+        assertTrue(r.isRead());
+        assertFalse(r.isWrite());
+        assertEquals(2, r.getFollowUpSeriesSize());
+
+        assertTrue(r.doesWritingTakePlace());
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
