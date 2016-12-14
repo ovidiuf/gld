@@ -16,8 +16,8 @@
 
 package io.novaordis.gld.driver.keystore;
 
-import com.novaordis.ac.Collector;
-import com.novaordis.ac.Handler;
+import io.novaordis.utilities.ac.Collector;
+import io.novaordis.utilities.ac.Handler;
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.store.KeyStoreException;
 import io.novaordis.gld.api.store.StoredValue;

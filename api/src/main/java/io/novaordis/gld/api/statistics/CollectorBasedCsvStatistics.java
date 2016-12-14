@@ -16,7 +16,7 @@
 
 package io.novaordis.gld.api.statistics;
 
-import com.novaordis.ac.Collector;
+import io.novaordis.utilities.ac.Collector;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
