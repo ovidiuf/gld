@@ -119,23 +119,23 @@ public class LoadDriverImpl implements LoadDriver {
     @Override
     public void init(Configuration c) throws Exception {
 
-        ServiceConfiguration svc = c.getServiceConfiguration();
-        LoadConfiguration ldc = c.getLoadConfiguration();
-        StoreConfiguration stc = c.getStoreConfiguration();
+        ServiceConfiguration serviceConfiguration = c.getServiceConfiguration();
+        LoadConfiguration loadConfiguration = c.getLoadConfiguration();
+        StoreConfiguration storeConfiguration = c.getStoreConfiguration();
 
         //
         // load strategy instantiation and installation; the load strategy usually initializes the key provider,
         // which is accessible with LoadStrategy.getKeyProvider()
         //
 
-        LoadStrategy ls = LoadStrategyFactory.build(svc, ldc);
+        LoadStrategy ls = LoadStrategyFactory.build(serviceConfiguration, loadConfiguration);
 
         //
         // service initialization and configuration - it also establishes service - load strategy bidirectional
         // relationship
         //
 
-        this.service = ServiceFactory.buildInstance(svc, ls, this);
+        this.service = ServiceFactory.buildInstance(serviceConfiguration, ls, this);
 
         //
         // load configuration
@@ -152,13 +152,13 @@ public class LoadDriverImpl implements LoadDriver {
 
         long singleThreadedRunnerSleepMs = -1L;
 
-        if (stc != null) {
+        if (storeConfiguration != null) {
 
-            this.keyStore = KeyStoreFactory.build(stc);
+            this.keyStore = KeyStoreFactory.build(storeConfiguration);
         }
 
         this.runner = new MultiThreadedRunnerImpl(
-                service, sampler, keyStore, ldc.getThreadCount(), background, singleThreadedRunnerSleepMs);
+                service, sampler, keyStore, loadConfiguration.getThreadCount(), background, singleThreadedRunnerSleepMs);
     }
 
     @Override

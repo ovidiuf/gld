@@ -35,6 +35,7 @@ public class MockKeyStore implements KeyStore {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private boolean started;
+    private boolean failToStop;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -50,6 +51,12 @@ public class MockKeyStore implements KeyStore {
 
     @Override
     public void stop() throws KeyStoreException {
+
+        if (failToStop) {
+
+            throw new KeyStoreException("SYNTHETIC FAILURE TO STOP");
+        }
+
         this.started = false;
     }
 
@@ -84,6 +91,11 @@ public class MockKeyStore implements KeyStore {
     public String toString() {
 
         return "MockKeyStore[" + Integer.toHexString(System.identityHashCode(this)) + "]";
+    }
+
+    public void configureToFailToStop() {
+
+        failToStop = true;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

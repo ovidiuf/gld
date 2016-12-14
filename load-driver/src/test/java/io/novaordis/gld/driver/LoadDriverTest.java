@@ -21,7 +21,6 @@ import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.Runner;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.mock.MockKeyStore;
-import io.novaordis.gld.api.mock.MockService;
 import io.novaordis.gld.api.mock.configuration.MockConfiguration;
 import io.novaordis.gld.api.mock.configuration.MockLoadConfiguration;
 import io.novaordis.gld.api.mock.load.MockLdLoadStrategy;
@@ -128,7 +127,7 @@ public abstract class LoadDriverTest {
     }
 
     @Test
-    public void init_run_sequence_UnsuccessfulRun() throws Exception {
+    public void init_run_sequence_UnsuccessfulRun_AllComponentsAreStoppedCorrectly() throws Exception {
 
         LoadDriver ld = getLoadDriverToTest();
 
@@ -203,69 +202,84 @@ public abstract class LoadDriverTest {
     }
 
     @Test
-    public void insureAllComponentsAreStoppedOnGracefulExit() throws Exception {
-
-        //
-        // make sure the components such as the Service, Sampler and KeyStore are stopped on graceful exit
-        //
-
-        Service ms = new MockService();
-        Sampler msp = new MockSampler();
-        KeyStore mks = new MockKeyStore();
-
-        ms.start();
-        assertTrue(ms.isStarted());
-
-        msp.start();
-        assertTrue(msp.isStarted());
-
-        mks.start();
-        assertTrue(mks.isStarted());
+    public void init_run_sequence_UnsuccessfulRun_SomeComponentsFailToStop() throws Exception {
 
         LoadDriver ld = getLoadDriverToTest();
 
-        fail("return here: " + ld);
+        MockConfiguration mc = new MockConfiguration();
 
-        assertFalse(mks.isStarted());
-        assertFalse(msp.isStarted());
-        assertFalse(ms.isStarted());
-    }
+        ld.init(mc);
 
-    @Test
-    public void insureAllComponentsAreStoppedOnFailure() throws Exception {
+        Service service = ld.getService();
+        Sampler sampler = ld.getSampler();
+        KeyStore keyStore = ld.getKeyStore();
+        Runner runner = ld.getRunner();
 
         //
-        // make sure the components such as the Service, Sampler and KeyStore are stopped on failure
+        // instrument the Mock load strategy to report on the state of the lifecycle services and then block
+        // indefinitely before producing the next operation
         //
 
-        Service ms = new MockService();
-        Sampler msp = new MockSampler();
-        KeyStore mks = new MockKeyStore();
+        MockLdLoadStrategy mls = (MockLdLoadStrategy)service.getLoadStrategy();
+        mls.recordLifecycleComponentState();
+        mls.blockIndefinitely();
 
-        ms.start();
-        assertTrue(ms.isStarted());
+        //
+        // init() does not start anything
+        //
 
-        msp.start();
-        assertTrue(msp.isStarted());
+        assertFalse(service.isStarted());
+        assertFalse(service.getLoadStrategy().isStarted());
+        assertFalse(service.getLoadStrategy().getKeyProvider().isStarted());
+        assertFalse(sampler.isStarted());
+        assertFalse(keyStore.isStarted());
+        assertFalse(runner.isRunning());
+        assertEquals(service, service.getLoadStrategy().getService());
 
-        mks.start();
-        assertTrue(mks.isStarted());
+        //
+        // trigger an unsuccessful run by interrupting the main thread - services will get started and then there
+        // will be an attempt to be stopped, but some of the services will fail to stop
+        //
 
+        //
+        // instruct the KeyStore to fail to stop
+        //
+        ((MockKeyStore)keyStore).configureToFailToStop();
 
-        fail("add here logic that would simulate components stopped on failure");
+        Thread.currentThread().interrupt();
 
+        try {
 
-        assertFalse(mks.isStarted());
-        assertFalse(msp.isStarted());
-        assertFalse(ms.isStarted());
+            ld.run();
+            fail("should have thrown exception");
+        }
+        catch(InterruptedException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+        }
+
+        //
+        // verify lifecycle-enabled component state when the first load strategy next() was called
+        //
+        boolean[] componentStarted = mls.getComponentStarted();
+        assertTrue(componentStarted[MockLdLoadStrategy.SERVICE_STATE_INDEX]);
+        assertTrue(componentStarted[MockLdLoadStrategy.LOAD_STRATEGY_STATE_INDEX]);
+        assertTrue(componentStarted[MockLdLoadStrategy.KEY_PROVIDER_STATE_INDEX]);
+        assertTrue(componentStarted[MockLdLoadStrategy.SAMPLER_STATE_INDEX]);
+        assertTrue(componentStarted[MockLdLoadStrategy.KEY_STORE_STATE_INDEX]);
+
+        //
+        // make sure all lifecycle-enabled components are off
+        //
+
+        assertFalse(runner.isRunning());
+        assertTrue(keyStore.isStarted()); // this was not stopped, as the stopping failed
+        assertFalse(sampler.isStarted());
+        assertFalse(service.isStarted());
+        assertFalse(service.getLoadStrategy().isStarted());
+        assertFalse(service.getLoadStrategy().getKeyProvider().isStarted());
     }
-
-    @Test
-    public void ifAComponentFailsToStopOthersAreStoppedCorrectly() throws Exception {
-
-        fail("add here logic ");
-    }
-
 
     // Public ----------------------------------------------------------------------------------------------------------
 

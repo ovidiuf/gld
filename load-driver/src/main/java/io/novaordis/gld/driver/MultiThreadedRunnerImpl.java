@@ -100,103 +100,106 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
 
         running = true;
 
-        checkPreconditions();
+        try {
 
-        if (isBackground) {
+            checkPreconditions();
 
-            //
-            // unlatch the exit guard, exit when the threads are done
-            //
+            if (isBackground) {
 
-            exitGuard.allowExit();
-        }
-        else {
+                //
+                // unlatch the exit guard, exit when the threads are done
+                //
 
-            //
-            // not in background, we need the console
-            //
-            commandLineConsole = new CommandLineConsole(this, sampler);
-            commandLineConsole.start();
-        }
+                exitGuard.allowExit();
+            } else {
 
-        // threadCount + the main thread that runs this code
-        CyclicBarrier barrier = new CyclicBarrier(threadCount + 1);
-
-        //
-        // end of initialization
-        //
-
-
-        //
-        // if this run has a limited duration, start a high priority timer that will stop the run after the time
-        // has passed. If the run is not time-limited, "durationExpired" will never become "true".
-        //
-
-        final AtomicBoolean durationExpired = new AtomicBoolean(false);
-
-        if (getDuration() != null) {
-
-            Duration d = getDuration();
-            Timer durationTimer = new Timer("Multi-threaded runner " + d + " stop thread");
-            durationTimer.schedule(new DurationTimerTask(d, durationExpired), d.getMilliseconds());
-            log.debug("duration timer task scheduled, it will fire after " + d);
-        }
-
-        //
-        // start the threads
-        //
-
-        for (int i = 0; i < threadCount; i++) {
-
-            String name = "GLD Runner " + i;
-
-            SingleThreadedRunner r = new SingleThreadedRunner(
-                    name, service, loadStrategy, sampler, barrier, durationExpired,
-                    singleThreadedRunnerSleepMs, keyStore);
-
-            singleThreadedRunners.add(r);
-
-            r.start();
-        }
-
-        log.debug("waiting for " + singleThreadedRunners.size() + " SingleThreadedRunner(s) to finish ...");
-
-        //
-        // this will throw InterruptedException if the thread executing the runner is interrupted
-        //
-        barrier.await();
-
-        log.debug(singleThreadedRunners.size() + " SingleThreadedRunner(s) have finished");
-
-        if (commandLineConsole != null) {
-
-            if (isWaitForConsoleQuit()) {
-
-                log.debug("waiting for console to issue quit ...");
-                commandLineConsole.waitForExplicitQuit();
-                log.debug("console issued quit");
+                //
+                // not in background, we need the console
+                //
+                commandLineConsole = new CommandLineConsole(this, sampler);
+                commandLineConsole.start();
             }
-            else {
 
-                commandLineConsole.stop(); // no more input needed from the console so dispose of it
+            // threadCount + the main thread that runs this code
+            CyclicBarrier barrier = new CyclicBarrier(threadCount + 1);
+
+            //
+            // end of initialization
+            //
+
+
+            //
+            // if this run has a limited duration, start a high priority timer that will stop the run after the time
+            // has passed. If the run is not time-limited, "durationExpired" will never become "true".
+            //
+
+            final AtomicBoolean durationExpired = new AtomicBoolean(false);
+
+            if (getDuration() != null) {
+
+                Duration d = getDuration();
+                Timer durationTimer = new Timer("Multi-threaded runner " + d + " stop thread");
+                durationTimer.schedule(new DurationTimerTask(d, durationExpired), d.getMilliseconds());
+                log.debug("duration timer task scheduled, it will fire after " + d);
             }
+
+            //
+            // start the threads
+            //
+
+            for (int i = 0; i < threadCount; i++) {
+
+                String name = "GLD Runner " + i;
+
+                SingleThreadedRunner r = new SingleThreadedRunner(
+                        name, service, loadStrategy, sampler, barrier, durationExpired,
+                        singleThreadedRunnerSleepMs, keyStore);
+
+                singleThreadedRunners.add(r);
+
+                r.start();
+            }
+
+            log.debug("waiting for " + singleThreadedRunners.size() + " SingleThreadedRunner(s) to finish ...");
+
+            //
+            // this will throw InterruptedException if the thread executing the runner is interrupted
+            //
+            barrier.await();
+
+            log.debug(singleThreadedRunners.size() + " SingleThreadedRunner(s) have finished");
+
+            if (commandLineConsole != null) {
+
+                if (isWaitForConsoleQuit()) {
+
+                    log.debug("waiting for console to issue quit ...");
+                    commandLineConsole.waitForExplicitQuit();
+                    log.debug("console issued quit");
+                } else {
+
+                    commandLineConsole.stop(); // no more input needed from the console so dispose of it
+                }
+            }
+
+            exitGuard.waitUntilExitIsAllowed();
+
         }
+        finally {
 
-        exitGuard.waitUntilExitIsAllowed();
+            //
+            // stopping the lifecycle components is the caller's responsibility, but we need to mark this runner
+            // as "not running", irrespective of how we leave the function
+            //
 
-        running = false;
-
-        //
-        // stopping the lifecycle components is the caller's responsibility.
-        //
+            running = false;
+        }
     }
 
     @Override
     public void stop() {
 
-        for (SingleThreadedRunner r : singleThreadedRunners) {
-            r.stop();
-        }
+        singleThreadedRunners.forEach(io.novaordis.gld.driver.SingleThreadedRunner::stop);
     }
 
     @Override
