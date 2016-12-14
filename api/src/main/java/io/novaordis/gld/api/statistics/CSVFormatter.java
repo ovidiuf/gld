@@ -22,7 +22,8 @@ import io.novaordis.gld.api.sampler.SamplingConsumer;
 import io.novaordis.gld.api.sampler.SamplingInterval;
 import io.novaordis.gld.api.sampler.metrics.MeasureUnit;
 import io.novaordis.gld.api.sampler.metrics.Metric;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -34,7 +35,7 @@ public class CSVFormatter implements SamplingConsumer {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(CSVFormatter.class);
+    private static final Logger log = LoggerFactory.getLogger(CSVFormatter.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

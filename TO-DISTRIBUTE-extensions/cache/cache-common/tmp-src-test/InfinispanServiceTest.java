@@ -20,7 +20,6 @@ import com.novaordis.gld.Configuration;
 import com.novaordis.gld.EmbeddedNode;
 import com.novaordis.gld.Node;
 import com.novaordis.gld.service.cache.CacheServiceTest;
-import org.apache.log4j.Logger;
 
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class InfinispanServiceTest extends CacheServiceTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(InfinispanServiceTest.class);
+    private static final Logger log = LoggerFactory.getLogger(InfinispanServiceTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

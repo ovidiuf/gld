@@ -21,7 +21,6 @@ import com.novaordis.gld.ContentType;
 import com.novaordis.gld.Node;
 import io.novaordis.gld.api.Operation;
 import com.novaordis.gld.Util;
-import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.Map;
@@ -33,7 +32,7 @@ public class EmbeddedCacheService extends CacheServiceBase
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(EmbeddedCacheService.class);
+    private static final Logger log = LoggerFactory.getLogger(EmbeddedCacheService.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

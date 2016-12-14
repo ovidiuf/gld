@@ -19,7 +19,6 @@ package com.novaordis.gld.strategy.load.cache.http.operations;
 import com.novaordis.gld.service.cache.infinispan.MockRemoteCache;
 import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
 import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulationException;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.util.Map;
@@ -37,7 +36,7 @@ public class HttpSessionCreateTest extends HttpSessionOperationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(HttpSessionCreateTest.class);
+    private static final Logger log = LoggerFactory.getLogger(HttpSessionCreateTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

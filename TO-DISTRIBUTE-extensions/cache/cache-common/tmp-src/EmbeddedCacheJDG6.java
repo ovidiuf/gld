@@ -16,7 +16,6 @@
 
 package com.novaordis.gld.service.cache;
 
-import org.apache.log4j.Logger;
 import org.infinispan.client.hotrod.Flag;
 import org.infinispan.client.hotrod.MetadataValue;
 import org.infinispan.client.hotrod.RemoteCache;
@@ -34,7 +33,7 @@ public class EmbeddedCacheJDG6 { // implements RemoteCache {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(EmbeddedCacheJDG6.class);
+    private static final Logger log = LoggerFactory.getLogger(EmbeddedCacheJDG6.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

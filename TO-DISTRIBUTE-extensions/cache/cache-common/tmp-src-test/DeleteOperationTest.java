@@ -17,7 +17,6 @@
 package com.novaordis.gld.operations.cache;
 
 import com.novaordis.gld.mock.MockCacheService;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -27,7 +26,7 @@ public class DeleteOperationTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(DeleteOperationTest.class);
+    private static final Logger log = LoggerFactory.getLogger(DeleteOperationTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

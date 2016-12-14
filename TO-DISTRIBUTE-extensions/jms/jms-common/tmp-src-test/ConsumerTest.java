@@ -19,7 +19,6 @@ package com.novaordis.gld.service.jms;
 import com.novaordis.gld.service.jms.embedded.EmbeddedMessageConsumer;
 import com.novaordis.gld.service.jms.embedded.EmbeddedQueue;
 import com.novaordis.gld.service.jms.embedded.EmbeddedSession;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import javax.jms.MessageConsumer;
@@ -32,7 +31,7 @@ public class ConsumerTest extends JmsEndpointTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(ConsumerTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ConsumerTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

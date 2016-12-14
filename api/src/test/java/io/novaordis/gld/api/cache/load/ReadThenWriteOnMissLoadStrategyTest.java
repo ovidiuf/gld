@@ -27,8 +27,9 @@ import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
 import io.novaordis.gld.api.cache.operation.Read;
 import io.novaordis.gld.api.cache.operation.Write;
 import io.novaordis.utilities.UserErrorException;
-import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(ReadThenWriteOnMissLoadStrategyTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ReadThenWriteOnMissLoadStrategyTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

@@ -16,8 +16,9 @@
 
 package io.novaordis.gld.api.todiscard;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class NodeTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(NodeTest.class);
+    private static final Logger log = LoggerFactory.getLogger(NodeTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

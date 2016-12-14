@@ -17,8 +17,9 @@
 package io.novaordis.gld.api.store;
 
 import io.novaordis.utilities.testing.Tests;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.junit.After;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -28,7 +29,7 @@ public class TextFileStorageStrategyTest extends StorageStrategyTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(TextFileStorageStrategyTest.class);
+    private static final Logger log = LoggerFactory.getLogger(TextFileStorageStrategyTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

@@ -19,7 +19,8 @@ package io.novaordis.gld.driver.console;
 import io.novaordis.gld.driver.MultiThreadedRunner;
 import io.novaordis.gld.driver.Util;
 import io.novaordis.gld.api.sampler.Sampler;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class CommandLineConsole implements Runnable {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    public static final Logger log = Logger.getLogger(CommandLineConsole.class);
+    public static final Logger log = LoggerFactory.getLogger(CommandLineConsole.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -210,7 +211,7 @@ public class CommandLineConsole implements Runnable {
                     inBufferedReader.close();
                 }
                 catch(Exception e) {
-                    log.debug(e);
+                    log.debug("" + e);
                 }
             }
         }, "gld command line console closer thread");

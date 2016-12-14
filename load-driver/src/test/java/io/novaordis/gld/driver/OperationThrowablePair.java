@@ -17,14 +17,15 @@
 package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.Operation;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class OperationThrowablePair
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(OperationThrowablePair.class);
+    private static final Logger log = LoggerFactory.getLogger(OperationThrowablePair.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

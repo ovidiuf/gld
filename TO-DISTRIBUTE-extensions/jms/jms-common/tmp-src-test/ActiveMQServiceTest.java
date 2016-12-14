@@ -28,7 +28,6 @@ import com.novaordis.gld.service.jms.embedded.EmbeddedConnection;
 import com.novaordis.gld.service.jms.embedded.EmbeddedMessageProducer;
 import com.novaordis.gld.service.jms.embedded.EmbeddedSession;
 import com.novaordis.gld.strategy.load.jms.SendLoadStrategy;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ public class ActiveMQServiceTest extends ServiceTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(ActiveMQServiceTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ActiveMQServiceTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

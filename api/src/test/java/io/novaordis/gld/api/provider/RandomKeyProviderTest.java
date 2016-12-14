@@ -18,8 +18,9 @@ package io.novaordis.gld.api.provider;
 
 import io.novaordis.gld.api.KeyProviderTest;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -30,7 +31,7 @@ public class RandomKeyProviderTest extends KeyProviderTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(RandomKeyProviderTest.class);
+    private static final Logger log = LoggerFactory.getLogger(RandomKeyProviderTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

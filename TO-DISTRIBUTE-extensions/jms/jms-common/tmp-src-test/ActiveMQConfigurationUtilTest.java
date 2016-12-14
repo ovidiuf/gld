@@ -17,7 +17,6 @@
 package com.novaordis.gld.service.jms.activemq;
 
 import com.novaordis.gld.UserErrorException;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -27,7 +26,7 @@ public class ActiveMQConfigurationUtilTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(ActiveMQConfigurationUtilTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ActiveMQConfigurationUtilTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

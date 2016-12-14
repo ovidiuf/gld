@@ -16,13 +16,14 @@
 
 package io.novaordis.gld.api.sampler.metrics;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SystemCpuLoadTest extends MetricTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(SystemCpuLoadTest.class);
+    private static final Logger log = LoggerFactory.getLogger(SystemCpuLoadTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

@@ -18,7 +18,6 @@ package com.novaordis.gld.mock;
 
 import com.novaordis.ac.Handler;
 import com.novaordis.gld.statistics.DeprecatedSamplingInterval;
-import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,7 @@ public class MockHandler implements Handler
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(MockHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(MockHandler.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

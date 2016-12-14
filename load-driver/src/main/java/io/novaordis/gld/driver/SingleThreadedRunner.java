@@ -21,7 +21,8 @@ import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.sampler.Sampler;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -30,7 +31,7 @@ public class SingleThreadedRunner implements Runnable {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(SingleThreadedRunner.class);
+    private static final Logger log = LoggerFactory.getLogger(SingleThreadedRunner.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

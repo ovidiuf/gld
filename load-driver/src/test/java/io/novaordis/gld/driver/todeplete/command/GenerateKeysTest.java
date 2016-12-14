@@ -18,14 +18,15 @@ package io.novaordis.gld.driver.todeplete.command;
 
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.utilities.testing.Tests;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.junit.After;
+import org.slf4j.LoggerFactory;
 
 public class GenerateKeysTest extends CommandTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(GenerateKeysTest.class);
+    private static final Logger log = LoggerFactory.getLogger(GenerateKeysTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

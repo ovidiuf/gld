@@ -17,7 +17,6 @@
 package com.novaordis.gld.mock;
 
 import com.novaordis.gld.service.jms.JmsEndpoint;
-import org.apache.log4j.Logger;
 
 import javax.jms.Session;
 
@@ -25,7 +24,7 @@ public class MockJmsEndpoint implements JmsEndpoint
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(MockJmsEndpoint.class);
+    private static final Logger log = LoggerFactory.getLogger(MockJmsEndpoint.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

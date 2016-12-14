@@ -17,13 +17,14 @@
 package io.novaordis.gld.driver.todeplete.command;
 
 import io.novaordis.gld.api.todiscard.Configuration;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConnectTest extends CommandTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(ConnectTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ConnectTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

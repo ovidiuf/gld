@@ -16,13 +16,14 @@
 
 package io.novaordis.gld.api;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AnotherTypeOfMockSamplerOperation implements Operation  {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(AnotherTypeOfMockSamplerOperation.class);
+    private static final Logger log = LoggerFactory.getLogger(AnotherTypeOfMockSamplerOperation.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

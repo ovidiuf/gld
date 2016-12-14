@@ -18,7 +18,8 @@ package io.novaordis.gld.api.sampler;
 
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.sampler.metrics.Metric;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +35,7 @@ public class SamplerImpl extends TimerTask implements Sampler {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(SamplerImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(SamplerImpl.class);
     private static final boolean debug = log.isDebugEnabled();
 
     public static final long DEFAULT_SAMPLING_TASK_RUN_INTERVAL_MS = 500L;

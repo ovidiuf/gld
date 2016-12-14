@@ -17,14 +17,13 @@
 package com.novaordis.gld.operations.jms;
 
 import com.novaordis.gld.strategy.load.jms.JmsLoadStrategy;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 public abstract class JmsOperationTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(JmsOperationTest.class);
+    private static final Logger log = LoggerFactory.getLogger(JmsOperationTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

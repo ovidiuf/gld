@@ -17,7 +17,8 @@
 package io.novaordis.gld.api.sampler;
 
 import io.novaordis.gld.api.Operation;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class NonBlockingCounter implements Counter {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(NonBlockingCounter.class);
+    private static final Logger log = LoggerFactory.getLogger(NonBlockingCounter.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

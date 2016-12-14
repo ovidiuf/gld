@@ -19,9 +19,10 @@ package io.novaordis.gld.api.todiscard;
 import io.novaordis.utilities.Files;
 import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.testing.Tests;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.junit.After;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
@@ -35,7 +36,7 @@ public class ConfigurationImplTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(ConfigurationImplTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ConfigurationImplTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

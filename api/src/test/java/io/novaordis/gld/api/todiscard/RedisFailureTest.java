@@ -16,8 +16,9 @@
 
 package io.novaordis.gld.api.todiscard;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.junit.Assert;
+import org.slf4j.LoggerFactory;
 //import redis.clients.jedis.exceptions.JedisConnectionException;
 //import redis.clients.jedis.exceptions.JedisDataException;
 
@@ -26,7 +27,7 @@ public class RedisFailureTest extends Assert
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(RedisFailureTest.class);
+    private static final Logger log = LoggerFactory.getLogger(RedisFailureTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

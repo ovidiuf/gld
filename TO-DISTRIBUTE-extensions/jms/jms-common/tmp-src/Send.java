@@ -19,7 +19,6 @@ package com.novaordis.gld.operations.jms;
 import com.novaordis.gld.service.jms.JmsEndpoint;
 import com.novaordis.gld.service.jms.Producer;
 import com.novaordis.gld.strategy.load.jms.SendLoadStrategy;
-import org.apache.log4j.Logger;
 
 import javax.jms.MessageProducer;
 import javax.jms.Session;
@@ -29,7 +28,7 @@ public class Send extends JmsOperation
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(Send.class);
+    private static final Logger log = LoggerFactory.getLogger(Send.class);
     private static final boolean trace = log.isTraceEnabled();
 
     // Static ----------------------------------------------------------------------------------------------------------

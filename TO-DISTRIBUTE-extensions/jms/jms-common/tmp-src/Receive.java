@@ -20,7 +20,6 @@ import com.novaordis.gld.service.jms.Consumer;
 import com.novaordis.gld.service.jms.JmsEndpoint;
 import com.novaordis.gld.strategy.load.jms.Destination;
 import com.novaordis.gld.strategy.load.jms.ReceiveLoadStrategy;
-import org.apache.log4j.Logger;
 
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
@@ -30,7 +29,7 @@ public class Receive extends JmsOperation
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(Receive.class);
+    private static final Logger log = LoggerFactory.getLogger(Receive.class);
     private static final boolean trace = log.isTraceEnabled();
 
     // Static ----------------------------------------------------------------------------------------------------------

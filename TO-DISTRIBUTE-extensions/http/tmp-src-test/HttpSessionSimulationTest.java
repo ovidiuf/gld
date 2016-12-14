@@ -20,7 +20,6 @@ import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionCreate;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionOperation;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionWrite;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionInvalidate;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.util.Random;
@@ -38,7 +37,7 @@ public class HttpSessionSimulationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(HttpSessionSimulationTest.class);
+    private static final Logger log = LoggerFactory.getLogger(HttpSessionSimulationTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

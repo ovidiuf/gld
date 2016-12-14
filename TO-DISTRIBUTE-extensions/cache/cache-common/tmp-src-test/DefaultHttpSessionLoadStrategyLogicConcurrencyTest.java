@@ -18,7 +18,6 @@ package com.novaordis.gld.strategy.load.cache;
 
 import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionOperation;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public class DefaultHttpSessionLoadStrategyLogicConcurrencyTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(DefaultHttpSessionLoadStrategyLogicConcurrencyTest.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultHttpSessionLoadStrategyLogicConcurrencyTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

@@ -16,7 +16,6 @@
 
 package com.novaordis.gld.service.cache;
 
-import org.apache.log4j.Logger;
 import org.infinispan.client.hotrod.CacheTopologyInfo;
 import org.infinispan.client.hotrod.Flag;
 import org.infinispan.client.hotrod.MetadataValue;
@@ -37,7 +36,7 @@ public class EmbeddedCache implements RemoteCache {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(EmbeddedCache.class);
+    private static final Logger log = LoggerFactory.getLogger(EmbeddedCache.class);
 
     @Override
     public boolean removeWithVersion(Object o, long l) {

@@ -19,7 +19,6 @@ package com.novaordis.gld.strategy.load.cache.http.operations;
 import com.novaordis.gld.MockService;
 import io.novaordis.gld.api.Service;
 import com.novaordis.gld.strategy.load.cache.http.HttpSessionSimulation;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -33,7 +32,7 @@ public abstract class HttpSessionOperationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(HttpSessionOperationTest.class);
+    private static final Logger log = LoggerFactory.getLogger(HttpSessionOperationTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

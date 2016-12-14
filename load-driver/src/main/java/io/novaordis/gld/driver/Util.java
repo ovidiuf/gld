@@ -18,7 +18,8 @@ package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.RandomContentGenerator;
 import io.novaordis.utilities.UserErrorException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -35,7 +36,7 @@ public class Util {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(Util.class);
+    private static final Logger log = LoggerFactory.getLogger(Util.class);
 
     private static int UUID_STRING_SIZE = UUID.randomUUID().toString().length();
 

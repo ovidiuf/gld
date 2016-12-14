@@ -17,8 +17,9 @@
 package io.novaordis.gld.driver.todeplete.command;
 
 import io.novaordis.gld.api.todiscard.Configuration;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public class DeleteCommandTest extends CommandTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(DeleteCommandTest.class);
+    private static final Logger log = LoggerFactory.getLogger(DeleteCommandTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

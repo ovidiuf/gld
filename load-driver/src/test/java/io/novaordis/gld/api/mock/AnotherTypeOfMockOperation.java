@@ -19,13 +19,14 @@ package io.novaordis.gld.api.mock;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AnotherTypeOfMockOperation implements Operation  {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(AnotherTypeOfMockOperation.class);
+    private static final Logger log = LoggerFactory.getLogger(AnotherTypeOfMockOperation.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

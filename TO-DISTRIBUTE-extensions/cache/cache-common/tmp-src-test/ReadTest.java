@@ -17,7 +17,6 @@
 package com.novaordis.gld.operations.cache;
 
 import com.novaordis.gld.mock.MockCacheService;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -28,7 +27,7 @@ public class ReadTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(ReadTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ReadTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

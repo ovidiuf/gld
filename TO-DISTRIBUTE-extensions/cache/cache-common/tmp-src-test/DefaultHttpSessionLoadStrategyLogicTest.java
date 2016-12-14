@@ -21,7 +21,6 @@ import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionCreate;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionInvalidate;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionOperation;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionWrite;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -43,7 +42,7 @@ public class DefaultHttpSessionLoadStrategyLogicTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(DefaultHttpSessionLoadStrategyLogicTest.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultHttpSessionLoadStrategyLogicTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

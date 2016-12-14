@@ -23,7 +23,6 @@ import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.mock.MockConfiguration;
 import io.novaordis.gld.driver.ServiceTest;
 import io.novaordis.utilities.testing.Tests;
-import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Test;
 
@@ -41,7 +40,7 @@ public class CollocatedBrokerServiceTest extends ServiceTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(CollocatedBrokerServiceTest.class);
+    private static final Logger log = LoggerFactory.getLogger(CollocatedBrokerServiceTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

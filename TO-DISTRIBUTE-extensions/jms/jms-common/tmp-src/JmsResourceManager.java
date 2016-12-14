@@ -19,7 +19,6 @@ package com.novaordis.gld.service.jms;
 import com.novaordis.gld.operations.jms.JmsOperation;
 import com.novaordis.gld.operations.jms.Send;
 import com.novaordis.gld.strategy.load.jms.Destination;
-import org.apache.log4j.Logger;
 
 import javax.jms.Connection;
 import javax.jms.MessageConsumer;
@@ -62,7 +61,7 @@ public class JmsResourceManager
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(JmsResourceManager.class);
+    private static final Logger log = LoggerFactory.getLogger(JmsResourceManager.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

@@ -22,7 +22,6 @@ import com.novaordis.gld.command.Load;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.service.jms.EndpointPolicy;
 import com.novaordis.gld.strategy.load.LoadStrategyTest;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public abstract class JmsLoadStrategyTest extends LoadStrategyTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(JmsLoadStrategyTest.class);
+    private static final Logger log = LoggerFactory.getLogger(JmsLoadStrategyTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

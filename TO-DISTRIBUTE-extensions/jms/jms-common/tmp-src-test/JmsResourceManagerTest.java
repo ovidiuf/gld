@@ -27,7 +27,6 @@ import com.novaordis.gld.strategy.load.jms.Queue;
 import com.novaordis.gld.strategy.load.jms.ReceiveLoadStrategy;
 import com.novaordis.gld.strategy.load.jms.SendLoadStrategy;
 import com.novaordis.gld.strategy.load.jms.Topic;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.util.List;
@@ -41,7 +40,7 @@ public class JmsResourceManagerTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(JmsResourceManagerTest.class);
+    private static final Logger log = LoggerFactory.getLogger(JmsResourceManagerTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

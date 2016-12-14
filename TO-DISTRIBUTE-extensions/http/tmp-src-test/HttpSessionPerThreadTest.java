@@ -20,7 +20,6 @@ import com.novaordis.gld.strategy.load.cache.HttpSessionLoadStrategy;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionCreate;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionInvalidate;
 import com.novaordis.gld.strategy.load.cache.http.operations.HttpSessionOperation;
-import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Test;
 
@@ -38,7 +37,7 @@ public class HttpSessionPerThreadTest extends HttpSessionSimulationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(HttpSessionPerThreadTest.class);
+    private static final Logger log = LoggerFactory.getLogger(HttpSessionPerThreadTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

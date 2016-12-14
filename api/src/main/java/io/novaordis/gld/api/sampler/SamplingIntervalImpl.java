@@ -18,7 +18,8 @@ package io.novaordis.gld.api.sampler;
 
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.sampler.metrics.Metric;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -36,7 +37,7 @@ public class SamplingIntervalImpl implements SamplingInterval {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(SamplingIntervalImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(SamplingIntervalImpl.class);
 
     public static final Format TIMESTAMP_DISPLAY_FORMAT = new SimpleDateFormat("yy/MM/dd HH:mm:ss,SSS");
 

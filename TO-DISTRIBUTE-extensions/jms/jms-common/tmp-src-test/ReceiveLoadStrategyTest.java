@@ -23,7 +23,6 @@ import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.command.Load;
 import com.novaordis.gld.mock.MockConfiguration;
 import com.novaordis.gld.operations.jms.Receive;
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(ReceiveLoadStrategyTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ReceiveLoadStrategyTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

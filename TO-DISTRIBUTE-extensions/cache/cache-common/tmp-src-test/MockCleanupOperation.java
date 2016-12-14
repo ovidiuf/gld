@@ -16,13 +16,12 @@
 
 package com.novaordis.gld.strategy.load.cache;
 
-import org.apache.log4j.Logger;
 
 public class MockCleanupOperation extends MockOperation {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(MockCleanupOperation.class);
+    private static final Logger log = LoggerFactory.getLogger(MockCleanupOperation.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

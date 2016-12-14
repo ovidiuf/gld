@@ -24,7 +24,6 @@ import com.novaordis.gld.UserErrorException;
 import com.novaordis.gld.operations.jms.Send;
 import io.novaordis.gld.api.Service;
 import io.novaordis.utilities.Files;
-import org.apache.log4j.Logger;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
@@ -67,7 +66,7 @@ public class CollocatedBrokerService implements Service
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(CollocatedBrokerService.class);
+    private static final Logger log = LoggerFactory.getLogger(CollocatedBrokerService.class);
     private static final boolean trace = log.isTraceEnabled();
 
     public static final String DEFAULT_LOCAL_DIRECTORY = "/tmp/gld";

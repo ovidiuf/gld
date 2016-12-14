@@ -25,7 +25,8 @@ import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.ContentType;
 import io.novaordis.gld.api.todiscard.Node;
 import io.novaordis.utilities.UserErrorException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class MockService extends ServiceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(MockService.class);
+    private static final Logger log = LoggerFactory.getLogger(MockService.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

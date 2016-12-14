@@ -17,8 +17,9 @@
 package io.novaordis.gld.api.statistics;
 
 import io.novaordis.gld.api.sampler.metrics.MeasureUnit;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -27,7 +28,7 @@ public class StatisticsTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(StatisticsTest.class);
+    private static final Logger log = LoggerFactory.getLogger(StatisticsTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

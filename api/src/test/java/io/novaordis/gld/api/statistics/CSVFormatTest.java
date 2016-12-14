@@ -29,8 +29,9 @@ import io.novaordis.gld.api.sampler.metrics.MockMetric;
 import io.novaordis.gld.api.sampler.metrics.SystemCpuLoad;
 import io.novaordis.gld.api.sampler.metrics.SystemLoadAverage;
 import io.novaordis.gld.api.sampler.metrics.TotalPhysicalMemorySize;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +48,7 @@ public class CSVFormatTest extends FormatTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(CSVFormatTest.class);
+    private static final Logger log = LoggerFactory.getLogger(CSVFormatTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

@@ -21,7 +21,8 @@ import io.novaordis.gld.api.sampler.Counter;
 import io.novaordis.gld.api.sampler.Sampler;
 import io.novaordis.gld.api.sampler.SamplingConsumer;
 import io.novaordis.gld.api.sampler.metrics.Metric;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -32,7 +33,7 @@ public class MockSampler implements Sampler {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(MockSampler.class);
+    private static final Logger log = LoggerFactory.getLogger(MockSampler.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

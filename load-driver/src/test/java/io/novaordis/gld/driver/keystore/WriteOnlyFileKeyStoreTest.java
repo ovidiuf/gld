@@ -17,9 +17,10 @@
 package io.novaordis.gld.driver.keystore;
 
 import io.novaordis.utilities.testing.Tests;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.junit.After;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
@@ -30,7 +31,7 @@ public class WriteOnlyFileKeyStoreTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(WriteOnlyFileKeyStoreTest.class);
+    private static final Logger log = LoggerFactory.getLogger(WriteOnlyFileKeyStoreTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

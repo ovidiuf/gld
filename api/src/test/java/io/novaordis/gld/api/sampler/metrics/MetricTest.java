@@ -16,8 +16,9 @@
 
 package io.novaordis.gld.api.sampler.metrics;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -26,7 +27,7 @@ public abstract class MetricTest
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(MetricTest.class);
+    private static final Logger log = LoggerFactory.getLogger(MetricTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

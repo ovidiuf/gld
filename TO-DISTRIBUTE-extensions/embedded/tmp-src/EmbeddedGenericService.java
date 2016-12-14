@@ -22,7 +22,6 @@ import com.novaordis.gld.Node;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
 import com.novaordis.gld.UserErrorException;
-import org.apache.log4j.Logger;
 
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class EmbeddedGenericService implements Service
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(EmbeddedGenericService.class);
+    private static final Logger log = LoggerFactory.getLogger(EmbeddedGenericService.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

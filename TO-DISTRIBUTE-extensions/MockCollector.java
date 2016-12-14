@@ -18,7 +18,6 @@ package com.novaordis.gld.mock;
 
 import com.novaordis.ac.Collector;
 import com.novaordis.ac.Handler;
-import org.apache.log4j.Logger;
 
 /**
  * A mock collector that does NOT collect asynchronously. For testing only.
@@ -27,7 +26,7 @@ public class MockCollector implements Collector
 {
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(MockCollector.class);
+    private static final Logger log = LoggerFactory.getLogger(MockCollector.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

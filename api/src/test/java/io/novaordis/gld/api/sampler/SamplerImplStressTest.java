@@ -16,7 +16,8 @@
 
 package io.novaordis.gld.api.sampler;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 
@@ -24,7 +25,7 @@ public class SamplerImplStressTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(SamplerImplStressTest.class);
+    private static final Logger log = LoggerFactory.getLogger(SamplerImplStressTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

@@ -23,7 +23,6 @@ import com.novaordis.gld.Node;
 import io.novaordis.gld.api.Operation;
 import com.novaordis.gld.UserErrorException;
 import io.novaordis.gld.api.Service;
-import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,7 +38,7 @@ public class MockCacheService implements CacheService {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = Logger.getLogger(MockCacheService.class);
+    private static final Logger log = LoggerFactory.getLogger(MockCacheService.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
