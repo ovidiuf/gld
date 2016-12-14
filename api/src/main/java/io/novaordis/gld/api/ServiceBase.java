@@ -43,16 +43,14 @@ public abstract class ServiceBase implements Service {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
-     * @exception IllegalArgumentException on null load strategy.
+     * @param loadStrategy - null is acceptable, the Service instance may be initialized later with setLoadStrategy().
+     * @param loadDriver - null is acceptable, the Service instance may be initialized later with setLoadDriver().
+     * @@exception IllegalArgumentException on null load strategy.
      */
-    protected ServiceBase(LoadStrategy s, LoadDriver d) {
+    protected ServiceBase(LoadStrategy loadStrategy, LoadDriver loadDriver) {
 
-        if (s == null) {
-            throw new IllegalArgumentException("null load strategy");
-        }
-
-        this.loadStrategy = s;
-        this.loadDriver = d;
+        this.loadStrategy = loadStrategy;
+        this.loadDriver = loadDriver;
     }
 
     // Service implementation ------------------------------------------------------------------------------------------

@@ -63,7 +63,7 @@ public class RandomKeyProvider implements KeyProvider {
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
 
         if (!started) {
 

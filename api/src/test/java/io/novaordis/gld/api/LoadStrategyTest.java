@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -148,6 +149,49 @@ public abstract class LoadStrategyTest {
         assertTrue(p.isStarted());
     }
 
+    // lifecycle -------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void lifecycle() throws Exception {
+
+        LoadStrategy s = getLoadStrategyToTest();
+
+        assertFalse(s.isStarted());
+
+        assertNull(s.getKeyProvider());
+
+        MockKeyProvider mkp = new MockKeyProvider();
+        s.setKeyProvider(mkp);
+
+        assertEquals(mkp, s.getKeyProvider());
+
+        s.start();
+
+        assertTrue(s.isStarted());
+        assertTrue(s.getKeyProvider().isStarted());
+
+        //
+        // idempotence
+        //
+        s.start();
+
+        assertTrue(s.isStarted());
+        assertTrue(s.getKeyProvider().isStarted());
+
+        s.stop();
+
+        assertFalse(s.isStarted());
+        assertFalse(s.getKeyProvider().isStarted());
+
+        //
+        // idempotence
+        //
+        s.stop();
+
+        assertFalse(s.isStarted());
+        assertFalse(s.getKeyProvider().isStarted());
+    }
+
     // setService() ----------------------------------------------------------------------------------------------------
 
     @Test
@@ -243,6 +287,26 @@ public abstract class LoadStrategyTest {
         }
     }
 
+    // next() ----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void uninitializedStrategyShouldFailUponFirstUse() throws Exception {
+
+        LoadStrategy s = getLoadStrategyToTest();
+
+        try {
+
+            s.next(null, null, false);
+            fail("should have thrown exception");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.contains("was not initialized"));
+        }
+    }
+
     // constructors ----------------------------------------------------------------------------------------------------
 
 //    @Test
@@ -293,26 +357,6 @@ public abstract class LoadStrategyTest {
 //        }
 //    }
 //
-    // next() ----------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void uninitializedStrategyShouldFailUponFirstUse() throws Exception {
-
-        LoadStrategy s = getLoadStrategyToTest();
-
-        try {
-
-            s.next(null, null, false);
-            fail("should have thrown exception");
-        }
-        catch(IllegalStateException e) {
-
-            String msg = e.getMessage();
-            log.info(msg);
-            assertTrue(msg.contains("was not initialized"));
-        }
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

@@ -320,6 +320,11 @@ public class SingleThreadedRunnerTest {
             public KeyProvider getKeyProvider() {
                 throw new RuntimeException("getKeyProvider() NOT YET IMPLEMENTED");
             }
+
+            @Override
+            public void setKeyProvider(KeyProvider keyProvider) {
+                throw new RuntimeException("setKeyProvider() NOT YET IMPLEMENTED");
+            }
         };
 
         MockService ms = new MockService();

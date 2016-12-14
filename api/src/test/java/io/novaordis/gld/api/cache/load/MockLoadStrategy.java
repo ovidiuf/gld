@@ -152,6 +152,11 @@ public class MockLoadStrategy implements LoadStrategy {
         throw new RuntimeException("getKeyProvider() NOT YET IMPLEMENTED");
     }
 
+    @Override
+    public void setKeyProvider(KeyProvider keyProvider) {
+        throw new RuntimeException("setKeyProvider() NOT YET IMPLEMENTED");
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Override

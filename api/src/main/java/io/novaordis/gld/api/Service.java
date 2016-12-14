@@ -47,6 +47,8 @@ public interface Service {
     // lifecycle -------------------------------------------------------------------------------------------------------
 
     /**
+     * If the internal lifecycle components are installed, the will be started recursively.
+     *
      * Starting an already started service should throw IllegalStateException.
      *
      * @throws IllegalStateException on attempt to start an already started service instance.
@@ -57,7 +59,7 @@ public interface Service {
     void start() throws Exception;
 
     /**
-     * It stops the service and the associated load strategy.
+     * It stops the service and the internal lifecycle components (load strategy and its components), etc.
      *
      * Stopping an already stopped service instance should be a noop.
      */

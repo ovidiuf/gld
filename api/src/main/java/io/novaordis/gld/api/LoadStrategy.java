@@ -48,10 +48,16 @@ public interface LoadStrategy {
      */
     void init(ServiceConfiguration serviceConfiguration, LoadConfiguration loadConfiguration) throws Exception;
 
+    /**
+     * Recursively start internal life cycle components.
+     */
     void start() throws Exception;
 
     boolean isStarted();
 
+    /**
+     * Recursively stop internal life cycle components.
+     */
     void stop();
 
     // accessors -------------------------------------------------------------------------------------------------------
@@ -110,6 +116,8 @@ public interface LoadStrategy {
      * @return the key provider used by this load strategy. May return null.
      */
     KeyProvider getKeyProvider();
+
+    void setKeyProvider(KeyProvider keyProvider);
 
 
 }

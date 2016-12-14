@@ -50,17 +50,16 @@ public abstract class ServiceTest {
 
         MockLoadDriver md = new MockLoadDriver();
 
-        try {
+        //
+        // null load strategy is acceptable, the service instance can be initialized later with setLoadStrategy()
+        //
+        Service s = getServiceToTest(null, md);
 
-            getServiceToTest(null, md);
-            fail("should have thrown exception");
-        }
-        catch(IllegalArgumentException e) {
+        assertNull(s.getLoadStrategy());
+        MockLoadStrategy mls = new MockLoadStrategy();
+        s.setLoadStrategy(mls);
 
-            String msg = e.getMessage();
-            log.info(msg);
-            assertEquals("null load strategy", msg);
-        }
+        assertEquals(mls, s.getLoadStrategy());
     }
 
     @Test
@@ -87,7 +86,7 @@ public abstract class ServiceTest {
         MockLoadDriver md = new MockLoadDriver();
 
         Service s = getServiceToTest(ms, md);
-        ((ServiceBase)s).setLoadStrategy(null);
+        s.setLoadStrategy(null);
 
         assertNull(s.getLoadStrategy());
 
@@ -190,11 +189,11 @@ public abstract class ServiceTest {
 
         assertEquals(ms, s.getLoadStrategy());
 
-        assertTrue(ms.isStarted());
+        assertTrue(s.getLoadStrategy().isStarted());
 
         s.stop();
 
-        assertFalse(ms.isStarted());
+        assertFalse(s.getLoadStrategy().isStarted());
         assertFalse(s.isStarted());
     }
 

@@ -23,6 +23,7 @@ import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.mock.MockKeyProvider;
 import io.novaordis.gld.api.mock.MockOperation;
 import io.novaordis.gld.api.mock.configuration.MockLoadConfiguration;
 import org.slf4j.Logger;
@@ -67,6 +68,10 @@ public class MockLdLoadStrategy implements LoadStrategy {
     // Service, Sampler, KeyStore, LoadStrategy, KeyProvider
     private boolean[] componentStarted = new boolean[5];
 
+    private Service service;
+
+    private KeyProvider keyProvider;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
@@ -84,6 +89,11 @@ public class MockLdLoadStrategy implements LoadStrategy {
         if (operationCount >= 0) {
             remainingOperations = new AtomicInteger(operationCount);
         }
+
+        //
+        // we create an internal key provider
+        //
+        keyProvider = new MockKeyProvider();
     }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
@@ -96,12 +106,17 @@ public class MockLdLoadStrategy implements LoadStrategy {
 
     @Override
     public Service getService() {
-        throw new RuntimeException("getService() NOT YET IMPLEMENTED");
+
+        return service;
     }
 
     @Override
     public void setService(Service s) throws IllegalArgumentException {
-        throw new RuntimeException("setService() NOT YET IMPLEMENTED");
+
+        //
+        // we don't perform any validation, we're a mock. The real implementations should, though ...
+        //
+        this.service = s;
     }
 
     @Override
@@ -135,6 +150,15 @@ public class MockLdLoadStrategy implements LoadStrategy {
     @Override
     public void start() throws Exception {
 
+        //
+        // we need to start internal lifecycle components
+        //
+
+        if (keyProvider != null) {
+
+            keyProvider.start();
+        }
+
         started = true;
     }
 
@@ -148,11 +172,19 @@ public class MockLdLoadStrategy implements LoadStrategy {
     public void stop() {
 
         started = false;
+
+        //
+        // we need to start internal lifecycle components
+        //
+
+        if (keyProvider != null) {
+
+            keyProvider.stop();
+        }
     }
 
     @Override
     public Operation next(Operation last, String lastWrittenKey, boolean runtimeShuttingDown) throws Exception {
-
 
         if (recordLifecycleComponentState) {
 
@@ -162,9 +194,11 @@ public class MockLdLoadStrategy implements LoadStrategy {
 
             recordLifecycleComponentState = false;
 
+            componentStarted[SERVICE_STATE_INDEX] = getService().isStarted();
+            componentStarted[SAMPLER_STATE_INDEX] = getService().getLoadDriver().getSampler().isStarted();
+            componentStarted[KEY_STORE_STATE_INDEX] = getService().getLoadDriver().getKeyStore().isStarted();
             componentStarted[LOAD_STRATEGY_STATE_INDEX] = isStarted();
-            KeyProvider provider = getKeyProvider();
-            componentStarted[KEY_PROVIDER_STATE_INDEX] = provider.isStarted();
+            componentStarted[KEY_PROVIDER_STATE_INDEX] = getKeyProvider().isStarted();
         }
 
         //
@@ -203,7 +237,14 @@ public class MockLdLoadStrategy implements LoadStrategy {
 
     @Override
     public KeyProvider getKeyProvider() {
-        throw new RuntimeException("getKeyProvider() NOT YET IMPLEMENTED");
+
+        return keyProvider;
+    }
+
+    @Override
+    public void setKeyProvider(KeyProvider keyProvider) {
+
+        this.keyProvider = keyProvider;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

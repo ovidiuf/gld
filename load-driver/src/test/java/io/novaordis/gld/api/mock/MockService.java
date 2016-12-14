@@ -19,7 +19,7 @@ package io.novaordis.gld.api.mock;
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.ServiceBase;
 import io.novaordis.gld.api.ServiceType;
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.ContentType;
@@ -32,7 +32,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class MockService implements Service {
+/**
+ * We extend ServiceBase because some of the tests depend on the start()/stop() built-in capacity to start/stop
+ * dependencies.
+ */
+public class MockService extends ServiceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -43,24 +47,61 @@ public class MockService implements Service {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private boolean verbose;
-    private boolean started;
     private boolean wasStarted;
 
     private Map<Thread, Integer> perThreadInvocationCount;
     private List<Operation> executedOperations;
 
-    private LoadStrategy loadStrategy;
-    private LoadDriver loadDriver;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockService() {
 
+        this(null, null);
+    }
+
+    public MockService(LoadStrategy loadStrategy, LoadDriver loadDriver) {
+
+        super(loadStrategy, loadDriver);
         perThreadInvocationCount = new ConcurrentHashMap<>();
         executedOperations = new ArrayList<>();
     }
 
     // Service implementation ------------------------------------------------------------------------------------------
+
+    //
+    // we rely on the subclass' start()
+    //
+
+    @Override
+    public void start() throws Exception {
+
+        wasStarted = true;
+        super.start();
+    }
+
+    //
+    // we rely on the subclass' stop()
+    //
+
+    //
+    // we rely on the subclass' isStarted()
+    //
+
+    //
+    // we rely on the subclass' getLoadDriver()
+    //
+
+    //
+    // we rely on the subclass' setLoadDriver(...)
+    //
+
+    //
+    // we rely on the subclass' getLoadStrategy()
+    //
+
+    //
+    // we rely on the subclass' setLoadStrategy(...)
+    //
 
     @Override
     public void setConfiguration(Configuration c)
@@ -84,49 +125,6 @@ public class MockService implements Service {
     public ContentType getContentType()
     {
         throw new RuntimeException("getContentType() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public LoadDriver getLoadDriver() {
-
-        return loadDriver;
-    }
-
-    @Override
-    public void setLoadDriver(LoadDriver d) {
-
-        loadDriver = d;
-    }
-
-    @Override
-    public LoadStrategy getLoadStrategy() {
-
-        return loadStrategy;
-    }
-
-    @Override
-    public void setLoadStrategy(LoadStrategy s) {
-
-        this.loadStrategy  = s;
-    }
-
-    @Override
-    public void start() throws Exception {
-
-        started = true;
-        wasStarted = true;
-        log.info(this + " started");
-    }
-
-    @Override
-    public void stop() throws Exception {
-        started = false;
-        log.info(this + " stopped");
-    }
-
-    @Override
-    public boolean isStarted() {
-        return started;
     }
 
     @Override

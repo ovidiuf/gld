@@ -33,9 +33,10 @@ public interface KeyProvider {
     void start() throws Exception;
 
     /**
-     * The implementations must be idempotent.
+     * The implementations must be idempotent. Must not throw exceptions, not even unchecked, if the instance cannot
+     * be stopped for some reason, log and return.
      */
-    void stop() throws Exception;
+    void stop();
 
     boolean isStarted();
 

@@ -216,10 +216,7 @@ public class LoadDriverImpl implements LoadDriver {
 
                 try {
 
-                    //
-                    // this will also stop the associated load strategy
-                    //
-                    service.stop();
+                    service.stop(); // this will stop internal lifecycle components, recursively.
 
                 }
                 catch(Throwable e) {
@@ -260,9 +257,8 @@ public class LoadDriverImpl implements LoadDriver {
 
     void startLifeCycleServices() throws Exception {
 
-        service.start();
+        service.start(); // this will start internal lifecycle components, recursively.
         sampler.start();
-
         if (keyStore != null) {
             keyStore.start();
         }

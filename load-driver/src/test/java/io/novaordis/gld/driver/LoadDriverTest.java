@@ -18,7 +18,6 @@ package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadDriver;
-import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Runner;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.mock.configuration.MockConfiguration;
@@ -76,6 +75,7 @@ public abstract class LoadDriverTest {
         //
 
         MockLdLoadStrategy mls = (MockLdLoadStrategy)service.getLoadStrategy();
+        mls.setVerbose(false);
         mls.recordLifecycleComponentState();
 
         //
