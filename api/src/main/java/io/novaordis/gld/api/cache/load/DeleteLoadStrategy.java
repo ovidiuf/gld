@@ -14,25 +14,27 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.load.cache;
+package io.novaordis.gld.api.cache.load;
 
-import com.novaordis.gld.service.cache.CacheService;
-import com.novaordis.gld.Configuration;
-import com.novaordis.gld.KeyStore;
+import io.novaordis.gld.api.KeyProvider;
+import io.novaordis.gld.api.LoadStrategyBase;
 import io.novaordis.gld.api.Operation;
-import com.novaordis.gld.keystore.SetKeyStore;
-import com.novaordis.gld.operations.cache.Delete;
-import com.novaordis.gld.strategy.load.LoadStrategyBase;
+import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.cache.CacheServiceConfiguration;
+import io.novaordis.gld.api.cache.operation.Delete;
+import io.novaordis.gld.api.configuration.LoadConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
+import io.novaordis.gld.api.provider.SetKeyProvider;
 
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * A load strategy that generate delete operations based on keys read from an external storage.
  */
-public class DeleteLoadStrategy extends LoadStrategyBase
-{
+public class DeleteLoadStrategy extends LoadStrategyBase {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     /**
@@ -40,81 +42,61 @@ public class DeleteLoadStrategy extends LoadStrategyBase
      */
     public static final int DEFAULT_KEY_COUNT = 1;
 
+    public static final String NAME = "delete";
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private int keyCount;
+    private volatile boolean initialized;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public DeleteLoadStrategy(int keyCount)
-    {
+    public DeleteLoadStrategy(int keyCount) {
+
         super();
         this.keyCount = keyCount;
     }
 
-    public DeleteLoadStrategy()
-    {
+    public DeleteLoadStrategy() {
+
         this(DEFAULT_KEY_COUNT);
     }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
 
     @Override
-    public void configure(Configuration configuration, List<String> arguments, int from) throws Exception
-    {
-        super.configure(configuration, arguments, from);
+    public String getName() {
 
-        // we assume cache installed and running
-
-        CacheService cs = (CacheService)configuration.getService();
-
-        if (cs == null)
-        {
-            throw new IllegalStateException("null cache service");
-        }
-
-        if (!cs.isStarted())
-        {
-            throw new IllegalStateException("cache service " + cs + " not started");
-        }
-
-        // TODO this is a potentially costly operation
-
-        Set<String> keys = cs.keys(null);
-
-        Set<String> keysToDelete = new HashSet<>();
-        int counter = 0;
-
-        for(String k: keys)
-        {
-            keysToDelete.add(k);
-
-            if (++counter == keyCount)
-            {
-                break;
-            }
-        }
-
-        KeyStore ks = new SetKeyStore(keysToDelete);
-        setKeyStore(ks);
+        return NAME;
     }
 
     @Override
-    public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown)
-    {
-        KeyStore keyStore = getKeyStore();
+    public ServiceType getServiceType() {
 
-        if (keyStore == null)
-        {
-            throw new IllegalStateException(this + " not configured");
+        return ServiceType.cache;
+    }
+
+    @Override
+    public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown) {
+
+        if (!initialized) {
+
+            throw new IllegalStateException(this + " was not initialized");
         }
 
-        String key = keyStore.get();
+        KeyProvider kp = getKeyProvider();
 
-        if (key == null)
-        {
+        if (kp == null) {
+
+            throw new IllegalStateException(this + " not configured, missing key provider");
+        }
+
+        String key = kp.next();
+
+        if (key == null) {
+
             return null;
         }
 
@@ -123,6 +105,7 @@ public class DeleteLoadStrategy extends LoadStrategyBase
 
     @Override
     public Set<Class<? extends Operation>> getOperationTypes() {
+
         throw new RuntimeException("getOperationTypes() NOT YET IMPLEMENTED");
     }
 
@@ -136,12 +119,61 @@ public class DeleteLoadStrategy extends LoadStrategyBase
     @Override
     public String toString()
     {
-        return "Delete[count=" + keyCount + "]";
+        return getName() + " (count=" + keyCount + ")";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected void init(ServiceConfiguration sc, Map<String, Object> loadStrategyRawConfig, LoadConfiguration lc)
+            throws Exception {
+
+        if (!(sc instanceof CacheServiceConfiguration)) {
+
+            throw new IllegalArgumentException(sc + " not a CacheServiceConfiguration");
+        }
+
+        Set<String> keysToDelete = new HashSet<>();
+
+//        CacheServiceConfiguration cc = (CacheServiceConfiguration)sc;
+//
+//        //
+//        // TODO this is a potentially costly operation
+//        //
+//
+//        CacheService cacheService = ...
+//
+//        Set<String> keys = cacheService.keys(null);
+//
+//        Set<String> keysToDelete = new HashSet<>();
+//        int counter = 0;
+//
+//        for(String k: keys) {
+//
+//            keysToDelete.add(k);
+//
+//            if (++counter == keyCount) {
+//                break;
+//            }
+//        }
+
+        KeyProvider keyProvider = new SetKeyProvider(keysToDelete);
+
+        //
+        // install the provider ...
+        //
+        setKeyProvider(keyProvider);
+
+        //
+        // ... and start it
+        //
+
+        keyProvider.start();
+
+        initialized = true;
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

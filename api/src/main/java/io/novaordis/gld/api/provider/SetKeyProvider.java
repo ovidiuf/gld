@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.cache;
+package io.novaordis.gld.api.provider;
 
-import io.novaordis.gld.api.MockService;
-import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.KeyProvider;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
- * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/7/16
+ * A KeyProvider backed by a memory set.
  */
-public class MockCacheService extends MockService implements CacheService {
+public class SetKeyProvider implements KeyProvider {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -35,45 +32,82 @@ public class MockCacheService extends MockService implements CacheService {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Map<String, String> entries;
+    private final Set<String> storage;
+    private volatile Iterator<String> iterator;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockCacheService() {
+    public SetKeyProvider(Set<String> keys) {
 
-        this.entries = new HashMap<>();
+        this.storage = keys;
     }
 
-    // CacheService implementation -------------------------------------------------------------------------------------
+    // KeyProvider implementation --------------------------------------------------------------------------------------
+
+    // lifecycle -------------------------------------------------------------------------------------------------------
 
     @Override
-    public ServiceType getType() {
+    public void start() throws Exception {
 
-        return ServiceType.cache;
-    }
+        if (iterator != null) {
 
-    @Override
-    public String get(String key) throws Exception {
+            return;
+        }
 
-        return entries.get(key);
-    }
-
-    @Override
-    public void put(String key, String value) throws Exception {
-
-        entries.put(key, value);
+        iterator = storage.iterator();
     }
 
     @Override
-    public void remove(String key) throws Exception {
+    public void stop() {
 
-        entries.remove(key);
+        if (iterator == null) {
+
+            return;
+        }
+
+        iterator = null;
     }
 
     @Override
-    public Set<String> keys() throws Exception {
+    public boolean isStarted() {
 
-        return entries.keySet();
+        return iterator != null;
+    }
+
+    @Override
+    public Long getRemainingKeyCount() {
+
+        synchronized (storage) {
+
+            return (long)storage.size();
+        }
+    }
+
+    @Override
+    public String next() {
+
+        if (iterator == null) {
+
+            throw new IllegalStateException(this + " not started");
+        }
+
+        synchronized (storage) {
+
+            if (iterator == null) {
+
+                iterator = storage.iterator();
+            }
+
+            if (!iterator.hasNext()) {
+
+                return null;
+            }
+
+
+            String key = iterator.next();
+            iterator.remove();
+            return key;
+        }
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

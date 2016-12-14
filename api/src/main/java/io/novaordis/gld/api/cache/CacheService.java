@@ -18,6 +18,8 @@ package io.novaordis.gld.api.cache;
 
 import io.novaordis.gld.api.Service;
 
+import java.util.Set;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/7/16
@@ -33,5 +35,15 @@ public interface CacheService extends Service {
     String get(String key) throws Exception;
 
     void put(String key, String value) throws Exception;
+
+    void remove(String key) throws Exception;
+
+    /**
+     * Potentially expensive operation. Implementations may chose not to implement it, in which case they will
+     * throw UnsupportedOperationException.
+     *
+     * @throws UnsupportedOperationException if the operation is not supported by the implementation.
+     */
+    Set<String> keys() throws Exception;
 
 }

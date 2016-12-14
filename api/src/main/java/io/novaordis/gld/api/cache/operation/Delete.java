@@ -14,81 +14,55 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.operations.cache;
+package io.novaordis.gld.api.cache.operation;
 
-import com.novaordis.gld.service.cache.CacheService;
-import com.novaordis.gld.LoadStrategy;
-import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.cache.CacheService;
 
-public class Delete implements Operation
-{
+public class Delete extends CacheOperationBase {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String key;
-
-    private boolean successful;
-
-    private boolean performed;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Delete(String key)
-    {
-        this.key = key;
+    public Delete(String key) {
+
+        super(key);
     }
 
     // Operation implementation ----------------------------------------------------------------------------------------
 
-    /**
-     * @see Operation#perform(Service)
-     */
     @Override
-    public void perform(Service cs) throws Exception
-    {
-        performed = true;
+    public void perform(Service s) throws Exception {
 
-        String deleted = ((CacheService)cs).delete(key);
+        CacheService cs = insureCacheService(s);
 
-        if (deleted != null)
-        {
-            this.successful = true;
+        String key = getKey();
+
+        try {
+
+            setPerformed(true);
+
+            cs.remove(key);
+
+            setSuccessful(true);
         }
-    }
+        catch(Throwable t) {
 
-    @Override
-    public LoadStrategy getLoadStrategy()
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+            throw new RuntimeException("NOT YET IMPLEMENTED: we did not decide yet how to handle service failures");
+        }
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    /**
-     * A successful delete means we actually deleted something from the cache. An unsuccessful delete means
-     * the key wasn't there to be deleted.
-     */
-    public boolean isSuccessful()
-    {
-        return successful;
-    }
-
-    /**
-     * May return null if the instance was not initialized.
-     */
-    public String getKey()
-    {
-        return key;
-    }
-
     @Override
-    public String toString()
-    {
-        return key + (performed ? " (" + (successful ? "successfully deleted" : "not found in cache") + ")" : "");
+    public String toString() {
+
+        return getKey();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

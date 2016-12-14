@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.cache;
+package io.novaordis.gld.api.cache.operation;
 
-import io.novaordis.gld.api.MockService;
-import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.cache.MockCacheService;
+import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/7/16
  */
-public class MockCacheService extends MockService implements CacheService {
+public class DeleteTest extends CacheOperationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -35,52 +35,39 @@ public class MockCacheService extends MockService implements CacheService {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Map<String, String> entries;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockCacheService() {
-
-        this.entries = new HashMap<>();
-    }
-
-    // CacheService implementation -------------------------------------------------------------------------------------
-
-    @Override
-    public ServiceType getType() {
-
-        return ServiceType.cache;
-    }
-
-    @Override
-    public String get(String key) throws Exception {
-
-        return entries.get(key);
-    }
-
-    @Override
-    public void put(String key, String value) throws Exception {
-
-        entries.put(key, value);
-    }
-
-    @Override
-    public void remove(String key) throws Exception {
-
-        entries.remove(key);
-    }
-
-    @Override
-    public Set<String> keys() throws Exception {
-
-        return entries.keySet();
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void lifecycle() throws Exception {
+
+        Delete d = getOperationToTest("test-key");
+
+        assertFalse(d.wasPerformed());
+        assertFalse(d.wasSuccessful());
+        assertNull(d.getValue());
+
+        MockCacheService ms = new MockCacheService();
+        assertNull(ms.get("test-key"));
+
+        d.perform(ms);
+
+        assertTrue(d.wasPerformed());
+        assertTrue(d.wasSuccessful());
+
+        assertNull(d.getValue());
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected Delete getOperationToTest(String key) throws Exception {
+
+        return new Delete(key);
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

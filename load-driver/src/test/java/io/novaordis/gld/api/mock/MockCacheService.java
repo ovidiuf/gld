@@ -19,6 +19,7 @@ package io.novaordis.gld.api.mock;
 import io.novaordis.gld.api.cache.CacheService;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -54,6 +55,18 @@ public class MockCacheService extends MockService implements CacheService {
     public void put(String key, String value) throws Exception {
 
         storage.put(key, value);
+    }
+
+    @Override
+    public void remove(String key) throws Exception {
+
+        storage.remove(key);
+    }
+
+    @Override
+    public Set<String> keys() throws Exception {
+
+        return storage.keySet();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

@@ -27,6 +27,7 @@ import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.utilities.UserErrorException;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -113,6 +114,18 @@ public class LocalCacheService extends ServiceBase implements CacheService {
     public void put(String key, String value) throws Exception {
 
         cache.put(key, value);
+    }
+
+    @Override
+    public void remove(String key) throws Exception {
+
+        cache.remove(key);
+    }
+
+    @Override
+    public Set<String> keys() throws Exception {
+
+        return cache.keySet();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
