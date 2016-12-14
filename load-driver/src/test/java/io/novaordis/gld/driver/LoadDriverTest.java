@@ -18,6 +18,7 @@ package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadDriver;
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Runner;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.mock.configuration.MockConfiguration;
@@ -28,6 +29,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -86,6 +88,7 @@ public abstract class LoadDriverTest {
         assertFalse(sampler.isStarted());
         assertFalse(keyStore.isStarted());
         assertFalse(runner.isRunning());
+        assertEquals(service, service.getLoadStrategy().getService());
 
         //
         // successful run - services will get started and then stopped cleanly upon each run

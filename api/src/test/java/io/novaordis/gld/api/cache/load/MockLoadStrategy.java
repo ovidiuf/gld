@@ -60,6 +60,8 @@ public class MockLoadStrategy implements LoadStrategy {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private Service service;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
@@ -72,12 +74,17 @@ public class MockLoadStrategy implements LoadStrategy {
 
     @Override
     public Service getService() {
-        throw new RuntimeException("getService() NOT YET IMPLEMENTED");
+
+        return service;
     }
 
     @Override
     public void setService(Service s) throws IllegalArgumentException {
-        throw new RuntimeException("setService() NOT YET IMPLEMENTED");
+
+        //
+        // we don't perform any validation, we're a mock. The real implementations should, though ...
+        //
+        this.service = s;
     }
 
     @Override

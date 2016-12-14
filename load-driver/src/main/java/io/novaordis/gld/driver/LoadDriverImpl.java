@@ -131,11 +131,11 @@ public class LoadDriverImpl implements LoadDriver {
         LoadStrategy ls = LoadStrategyFactory.build(svc, ldc);
 
         //
-        // service initialization and configuration
+        // service initialization and configuration - it also establishes service - load strategy bidirectional
+        // relationship
         //
 
         this.service = ServiceFactory.buildInstance(svc, ls, this);
-
 
         //
         // load configuration

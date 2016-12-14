@@ -30,6 +30,9 @@ public class ServiceFactory {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
+    /**
+     * The implementation also establishes the Service - LoadStrategy bidirectional relationship.
+     */
     public static Service buildInstance(ServiceConfiguration sc, LoadStrategy loadStrategy, LoadDriver loadDriver)
             throws Exception {
 
@@ -41,39 +44,50 @@ public class ServiceFactory {
             throw new IllegalArgumentException("null implementation");
         }
 
+        Service service;
+
         if (ServiceType.cache.equals(t) && "local".equals(implementation)) {
 
-            return new LocalCacheService(loadStrategy, loadDriver);
+            service = new LocalCacheService(loadStrategy, loadDriver);
+
+        }
+        else {
+
+            //
+            // attempt to instantiate the fully qualified class name
+            //
+
+
+            Class c = Class.forName(implementation);
+
+            if (!Service.class.isAssignableFrom(c)) {
+
+                throw new UserErrorException(implementation + " is not a Service implementation");
+            }
+
+            Object o = c.newInstance();
+            service = (Service) o;
+
+            if (!t.equals(service.getType())) {
+
+                throw new UserErrorException(implementation + " is not a " + t + " Service");
+            }
+
+            //
+            // install dependencies
+            //
+
+            service.setLoadStrategy(loadStrategy);
+            service.setLoadDriver(loadDriver);
         }
 
         //
-        // attempt to instantiate the fully qualified class name
+        // establish Service - Load Strategy bidirectional relationship
         //
 
+        loadStrategy.setService(service);
 
-        Class c = Class.forName(implementation);
-
-        if (!Service.class.isAssignableFrom(c)) {
-
-            throw new UserErrorException(implementation + " is not a Service implementation");
-        }
-
-        Object o = c.newInstance();
-        Service s = (Service)o;
-
-        if (!t.equals(s.getType())) {
-
-            throw new UserErrorException(implementation + " is not a " + t + " Service");
-        }
-
-        //
-        // install dependencies
-        //
-
-        s.setLoadStrategy(loadStrategy);
-        s.setLoadDriver(loadDriver);
-
-        return s;
+        return service;
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------

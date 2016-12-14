@@ -63,6 +63,11 @@ public class ServiceFactoryTest {
 
         assertEquals(md, lcs.getLoadDriver());
         assertEquals(ms, lcs.getLoadStrategy());
+
+        //
+        // service - load strategy relationship
+        //
+        assertEquals(lcs, lcs.getLoadStrategy().getService());
     }
 
     @Test
@@ -122,6 +127,11 @@ public class ServiceFactoryTest {
 
         assertEquals(md, msrv.getLoadDriver());
         assertEquals(ms, msrv.getLoadStrategy());
+
+        //
+        // service - load strategy relationship
+        //
+        assertEquals(msrv, msrv.getLoadStrategy().getService());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
