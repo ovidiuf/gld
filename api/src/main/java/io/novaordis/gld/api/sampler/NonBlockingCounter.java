@@ -50,8 +50,8 @@ public class NonBlockingCounter implements Counter {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public NonBlockingCounter(Class<? extends Operation> operationType)
-    {
+    public NonBlockingCounter(Class<? extends Operation> operationType) {
+
         this.operationType = operationType;
         this.successCount = new AtomicLong(0L);
         this.cumulatedSuccessTimeNano = new AtomicLong(0L);
@@ -63,48 +63,53 @@ public class NonBlockingCounter implements Counter {
     // Counter implementation ------------------------------------------------------------------------------------------
 
     @Override
-    public Class<? extends Operation> getOperationType()
-    {
+    public Class<? extends Operation> getOperationType() {
         return operationType;
     }
 
-    /**
-     * @see Counter#update(long, long, long, Throwable...)
-     */
     @Override
-    public void update(long t0Ms, long t0Nano, long t1Nano, Throwable... t)
-    {
+    public void update(long t0Ms, long t0Nano, long t1Nano, Throwable... t) {
+
         long duration = t1Nano - t0Nano;
 
-        if (duration < 0)
-        {
+        if (duration < 0) {
+
             throw new IllegalArgumentException("t1 " + t1Nano + " precedes t0 " + t0Nano);
         }
 
-        if (t == null || t.length == 0 || (t[0] == null))
-        {
+        if (t == null || t.length == 0 || (t[0] == null)) {
+
+            //
             // success
+            //
 
             successCount.incrementAndGet();
             cumulatedSuccessTimeNano.addAndGet(duration);
         }
-        else if (t.length > 1)
-        {
+        else if (t.length > 1) {
+
+            //
             // unsupported usage
+            //
             throw new IllegalArgumentException(
                 "just one throwable is allowed as argument, but " + t.length + " were provided");
         }
-        else
-        {
+        else {
+
+            //
             // failure
+            //
+
             Class<? extends Throwable> failureType = t[0].getClass();
 
             NonBlockingFailureCounter failureCounter = failureCounters.get(failureType);
 
-            if (failureCounter == null)
-            {
+            if (failureCounter == null) {
+
+                //
                 // only create the instance if it is *not* in the map - there's a slight change a FailureCounter
                 // instance will be created unnecessarily but that is an unlikely, rare and ultimately harmless event
+                //
                 failureCounter = new NonBlockingFailureCounter();
                 failureCounters.putIfAbsent(failureType, failureCounter);
             }
@@ -113,12 +118,9 @@ public class NonBlockingCounter implements Counter {
         }
     }
 
-    /**
-     * @see Counter#getCounterValuesAndReset()
-     */
     @Override
-    public CounterValues getCounterValuesAndReset()
-    {
+    public CounterValues getCounterValuesAndReset() {
+
         long sc = successCount.getAndSet(0L);
         long cstn = cumulatedSuccessTimeNano.getAndSet(0L);
 
@@ -129,8 +131,8 @@ public class NonBlockingCounter implements Counter {
         Set<Class<? extends Throwable>> failureTypes = failureCounters.keySet();
         Map<Class<? extends Throwable>, ImmutableFailureCounter> failureCounterSnapshot = new HashMap<>();
 
-        for(Class<? extends Throwable> failureType: failureTypes)
-        {
+        for(Class<? extends Throwable> failureType: failureTypes) {
+
             NonBlockingFailureCounter c = failureCounters.get(failureType);
             ImmutableFailureCounter ifc = c.getFailureCounterSnapshotAndReset();
             failureCounterSnapshot.put(failureType, ifc);
@@ -142,9 +144,9 @@ public class NonBlockingCounter implements Counter {
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Override
-    public String toString()
-    {
-        return operationType == null ? "null" : operationType.getSimpleName();
+    public String toString() {
+
+        return operationType == null ? "null" : operationType.getSimpleName() + " Non-Blocking Counter";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

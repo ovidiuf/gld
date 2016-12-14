@@ -68,6 +68,12 @@ public class ExitGuard {
         latch.countDown();
     }
 
+    @Override
+    public String toString() {
+
+        return "ExitGuard[" + Integer.toHexString(System.identityHashCode(this)) + "]";
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

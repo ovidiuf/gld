@@ -54,8 +54,7 @@ public class MockKeyStore implements KeyStore {
     }
 
     @Override
-    public boolean isStarted()
-    {
+    public boolean isStarted() {
         return started;
     }
 
@@ -80,6 +79,12 @@ public class MockKeyStore implements KeyStore {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+
+        return "MockKeyStore[" + Integer.toHexString(System.identityHashCode(this)) + "]";
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

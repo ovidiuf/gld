@@ -32,6 +32,9 @@ public interface Runner {
 
     /**
      * May trigger multi-threaded execution. When all threads finish, return.
+     *
+     * Implementations typically initialize dependencies, start multiple SingleThreadedRunners in parallel, and wait
+     * until those finish. Stopping the life cycle components is not this method's responsibility, but the caller's.
      */
     void run() throws Exception;
 

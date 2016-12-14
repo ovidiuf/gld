@@ -20,6 +20,8 @@ import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.Runner;
 import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.mock.MockKeyStore;
+import io.novaordis.gld.api.mock.MockService;
 import io.novaordis.gld.api.mock.configuration.MockConfiguration;
 import io.novaordis.gld.api.mock.configuration.MockLoadConfiguration;
 import io.novaordis.gld.api.mock.load.MockLdLoadStrategy;
@@ -31,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -124,123 +127,144 @@ public abstract class LoadDriverTest {
         assertFalse(service.getLoadStrategy().getKeyProvider().isStarted());
     }
 
-//    @Test
-//    public void init_run_sequence_UnsuccessfulRun() throws Exception {
-//
-//        LoadDriverImpl ld = new LoadDriverImpl("test", true);
-//
-//        MockConfiguration mc = new MockConfiguration();
-//
-//        ld.init(mc);
-//
-//        Service service = ld.getService();
-//        Sampler sampler = ld.getSampler();
-//        KeyStore keyStore = ld.getKeyStore();
-//        MultiThreadedRunner runner = ld.getRunner();
-//
-//        //
-//        // init() does not start anything
-//        //
-//
-//        assertFalse(service.isStarted());
-//        assertFalse(sampler.isStarted());
-//        assertFalse(keyStore.isStarted());
-//        assertFalse(runner.isRunning());
-//
-//
-//        //
-//        // unsuccessful run - services will get started and then stopped cleanly upon each run
-//        //
-//
-//        try {
-//
-//            ld.run();
-//            fail("should have thrown exception");
-//        }
-//        catch(RuntimeException e) {
-//
-//            String msg = e.getMessage();
-//            log.info(msg);
-//            assertEquals("SYNTHETIC", msg);
-//        }
-//
-//        //
-//        // make sure all lifecycle-enabled components are off
-//        //
-//
-//        assertFalse(runner.isRunning());
-//        assertFalse(keyStore.isStarted());
-//        assertFalse(sampler.isStarted());
-//        assertFalse(service.isStarted());
-//    }
-//
-//    @Test
-//    public void insureAllComponentsAreStoppedOnGracefulExit() throws Exception {
-//
-//        //
-//        // make sure the components such as the Service, Sampler and KeyStore are stopped on graceful exit
-//        //
-//
-//        Service ms = new MockService();
-//        Sampler msp = new MockSampler();
-//        KeyStore mks = new MockKeyStore();
-//
-//        ms.start();
-//        assertTrue(ms.isStarted());
-//
-//        msp.start();
-//        assertTrue(msp.isStarted());
-//
-//        mks.start();
-//        assertTrue(mks.isStarted());
-//
-//        LoadDriver ld = getLoadDriverToTest();
-//
-//        fail("return here");
-//
-////        assertFalse(ld.isRunning());
-////
-////        ld.stop();
-//
-//        assertFalse(mks.isStarted());
-//        assertFalse(msp.isStarted());
-//        assertFalse(ms.isStarted());
-//    }
-//
-//    @Test
-//    public void insureAllComponentsAreStoppedOnFailure() throws Exception {
-//
-//        //
-//        // make sure the components such as the Service, Sampler and KeyStore are stopped on failure
-//        //
-//
-//        Service ms = new MockService();
-//        Sampler msp = new MockSampler();
-//        KeyStore mks = new MockKeyStore();
-//
-//        ms.start();
-//        assertTrue(ms.isStarted());
-//
-//        msp.start();
-//        assertTrue(msp.isStarted());
-//
-//        mks.start();
-//        assertTrue(mks.isStarted());
-//
-//
-//        fail("add here logic that would simulate components stopped on failure");
-//
-//
-//        assertFalse(mks.isStarted());
-//        assertFalse(msp.isStarted());
-//        assertFalse(ms.isStarted());
-//    }
-//
-//    @Test
-//    public void ifAComponentFailsToStopOthersAreStoppedCorrectly() throws Exception {
-//
-//        fail("add here logic ");
-//    }
+    @Test
+    public void init_run_sequence_UnsuccessfulRun() throws Exception {
+
+        LoadDriver ld = getLoadDriverToTest();
+
+        MockConfiguration mc = new MockConfiguration();
+
+        ld.init(mc);
+
+        Service service = ld.getService();
+        Sampler sampler = ld.getSampler();
+        KeyStore keyStore = ld.getKeyStore();
+        Runner runner = ld.getRunner();
+
+        //
+        // instrument the Mock load strategy to report on the state of the lifecycle services and then block
+        // indefinitely before producing the next operation
+        //
+
+        MockLdLoadStrategy mls = (MockLdLoadStrategy)service.getLoadStrategy();
+        mls.recordLifecycleComponentState();
+        mls.blockIndefinitely();
+
+        //
+        // init() does not start anything
+        //
+
+        assertFalse(service.isStarted());
+        assertFalse(service.getLoadStrategy().isStarted());
+        assertFalse(service.getLoadStrategy().getKeyProvider().isStarted());
+        assertFalse(sampler.isStarted());
+        assertFalse(keyStore.isStarted());
+        assertFalse(runner.isRunning());
+        assertEquals(service, service.getLoadStrategy().getService());
+
+        //
+        // trigger an unsuccessful run by interrupting the main thread - services will get started and then stopped
+        // cleanly upon run
+        //
+
+        Thread.currentThread().interrupt();
+
+        try {
+
+            ld.run();
+            fail("should have thrown exception");
+        }
+        catch(InterruptedException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+        }
+
+        //
+        // verify lifecycle-enabled component state when the first load strategy next() was called
+        //
+        boolean[] componentStarted = mls.getComponentStarted();
+        assertTrue(componentStarted[MockLdLoadStrategy.SERVICE_STATE_INDEX]);
+        assertTrue(componentStarted[MockLdLoadStrategy.LOAD_STRATEGY_STATE_INDEX]);
+        assertTrue(componentStarted[MockLdLoadStrategy.KEY_PROVIDER_STATE_INDEX]);
+        assertTrue(componentStarted[MockLdLoadStrategy.SAMPLER_STATE_INDEX]);
+        assertTrue(componentStarted[MockLdLoadStrategy.KEY_STORE_STATE_INDEX]);
+
+        //
+        // make sure all lifecycle-enabled components are off
+        //
+
+        assertFalse(runner.isRunning());
+        assertFalse(keyStore.isStarted());
+        assertFalse(sampler.isStarted());
+        assertFalse(service.isStarted());
+        assertFalse(service.getLoadStrategy().isStarted());
+        assertFalse(service.getLoadStrategy().getKeyProvider().isStarted());
+    }
+
+    @Test
+    public void insureAllComponentsAreStoppedOnGracefulExit() throws Exception {
+
+        //
+        // make sure the components such as the Service, Sampler and KeyStore are stopped on graceful exit
+        //
+
+        Service ms = new MockService();
+        Sampler msp = new MockSampler();
+        KeyStore mks = new MockKeyStore();
+
+        ms.start();
+        assertTrue(ms.isStarted());
+
+        msp.start();
+        assertTrue(msp.isStarted());
+
+        mks.start();
+        assertTrue(mks.isStarted());
+
+        LoadDriver ld = getLoadDriverToTest();
+
+        fail("return here: " + ld);
+
+        assertFalse(mks.isStarted());
+        assertFalse(msp.isStarted());
+        assertFalse(ms.isStarted());
+    }
+
+    @Test
+    public void insureAllComponentsAreStoppedOnFailure() throws Exception {
+
+        //
+        // make sure the components such as the Service, Sampler and KeyStore are stopped on failure
+        //
+
+        Service ms = new MockService();
+        Sampler msp = new MockSampler();
+        KeyStore mks = new MockKeyStore();
+
+        ms.start();
+        assertTrue(ms.isStarted());
+
+        msp.start();
+        assertTrue(msp.isStarted());
+
+        mks.start();
+        assertTrue(mks.isStarted());
+
+
+        fail("add here logic that would simulate components stopped on failure");
+
+
+        assertFalse(mks.isStarted());
+        assertFalse(msp.isStarted());
+        assertFalse(ms.isStarted());
+    }
+
+    @Test
+    public void ifAComponentFailsToStopOthersAreStoppedCorrectly() throws Exception {
+
+        fail("add here logic ");
+    }
 
 
     // Public ----------------------------------------------------------------------------------------------------------

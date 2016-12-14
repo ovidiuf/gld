@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.fail;
@@ -71,6 +72,8 @@ public class MockLdLoadStrategy implements LoadStrategy {
     private Service service;
 
     private KeyProvider keyProvider;
+
+    private CountDownLatch latch;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -144,7 +147,7 @@ public class MockLdLoadStrategy implements LoadStrategy {
 
         this.initialized = true;
 
-        log.info(this + ".init()");
+        log.info(this + " init()");
     }
 
     @Override
@@ -218,6 +221,12 @@ public class MockLdLoadStrategy implements LoadStrategy {
             }
         }
 
+        if (latch != null) {
+
+            log.info("blocking on latch ...");
+            latch.await();
+        }
+
         MockOperation mo = new MockOperation();
 
         if (verbose) {
@@ -285,6 +294,11 @@ public class MockLdLoadStrategy implements LoadStrategy {
     public boolean[] getComponentStarted() {
 
         return componentStarted;
+    }
+
+    public void blockIndefinitely() {
+
+        this.latch = new CountDownLatch(1);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

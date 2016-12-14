@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -94,14 +95,8 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
         return running;
     }
 
-    /**
-     * Initializes dependencies, starts multiple SingleThreadedRunners in parallel, wait until those finish, shut
-     * down dependencies and return.
-     *
-     * @see io.novaordis.gld.driver.MultiThreadedRunner#run()
-     */
     @Override
-    public void run() throws Exception {
+    public void run() throws BrokenBarrierException, InterruptedException {
 
         running = true;
 
@@ -166,6 +161,9 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
 
         log.debug("waiting for " + singleThreadedRunners.size() + " SingleThreadedRunner(s) to finish ...");
 
+        //
+        // this will throw InterruptedException if the thread executing the runner is interrupted
+        //
         barrier.await();
 
         log.debug(singleThreadedRunners.size() + " SingleThreadedRunner(s) have finished");
@@ -187,20 +185,23 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
         exitGuard.waitUntilExitIsAllowed();
 
         running = false;
+
+        //
+        // stopping the lifecycle components is the caller's responsibility.
+        //
     }
 
     @Override
-    public void stop()
-    {
-        for (SingleThreadedRunner r : singleThreadedRunners)
-        {
+    public void stop() {
+
+        for (SingleThreadedRunner r : singleThreadedRunners) {
             r.stop();
         }
     }
 
     @Override
-    public ExitGuard getExitGuard()
-    {
+    public ExitGuard getExitGuard() {
+
         return exitGuard;
     }
 
@@ -218,11 +219,13 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
 
     @Override
     public boolean isWaitForConsoleQuit() {
+
         throw new RuntimeException("isWaitForConsoleQuit() NOT YET IMPLEMENTED");
     }
 
     @Override
     public void setWaitForConsoleQuit(boolean b) {
+
         throw new RuntimeException("setWaitForConsoleQuit() NOT YET IMPLEMENTED");
     }
 
