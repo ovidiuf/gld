@@ -68,7 +68,17 @@ public class MockServiceConfiguration extends LowLevelConfigurationBase implemen
     @Override
     public String getLoadStrategyName() {
 
-        return loadStrategyName;
+        if (loadStrategyName != null) {
+
+            return loadStrategyName;
+        }
+
+        //
+        // if not explicitely set, defer to the underlying map
+        //
+        return get(String.class,
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
+                ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

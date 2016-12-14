@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.cache.load;
 
+import io.novaordis.gld.api.LoadStrategyFactory;
 import io.novaordis.gld.api.LoadStrategyTest;
 import io.novaordis.gld.api.configuration.MockLoadConfiguration;
 import io.novaordis.gld.api.configuration.MockServiceConfiguration;
@@ -467,6 +468,23 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
         String value2 = write2.getValue();
 
         assertNotEquals(value, value2);
+    }
+
+    // factory ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void factory() throws Exception {
+
+        MockCacheServiceConfiguration msc = new MockCacheServiceConfiguration();
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+        msc.set(new HashMap<>(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        msc.set(ReadThenWriteOnMissLoadStrategy.NAME,
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
+                ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL);
+
+
+        ReadThenWriteOnMissLoadStrategy s = (ReadThenWriteOnMissLoadStrategy) LoadStrategyFactory.build(msc, mlc);
+        assertEquals(ReadThenWriteOnMissLoadStrategy.NAME, s.getName());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -16,12 +16,14 @@
 
 package io.novaordis.gld.api.cache.load;
 
+import io.novaordis.gld.api.LoadStrategyFactory;
 import io.novaordis.gld.api.LoadStrategyTest;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
 import io.novaordis.gld.api.cache.operation.Read;
 import io.novaordis.gld.api.cache.operation.Write;
 import io.novaordis.gld.api.configuration.MockLoadConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -477,6 +480,22 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest {
         assertTrue(o instanceof Read);
     }
 
+    // factory ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void factory() throws Exception {
+
+        MockCacheServiceConfiguration msc = new MockCacheServiceConfiguration();
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+        msc.set(new HashMap<>(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        msc.set(WriteThenReadLoadStrategy.NAME,
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
+                ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL);
+
+
+        WriteThenReadLoadStrategy s = (WriteThenReadLoadStrategy)LoadStrategyFactory.build(msc, mlc);
+        assertEquals(WriteThenReadLoadStrategy.NAME, s.getName());
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
