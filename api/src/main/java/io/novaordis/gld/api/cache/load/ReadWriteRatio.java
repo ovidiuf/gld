@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.load.cache;
+package io.novaordis.gld.api.cache.load;
 
-import com.novaordis.gld.UserErrorException;
+import io.novaordis.utilities.UserErrorException;
 
 /**
  * In-line documentation (if the logic changes, also change the documentation):
@@ -36,8 +36,8 @@ import com.novaordis.gld.UserErrorException;
 
  The default behavior in absence of any configuration is: one write (isWrite() == true) followed by a series of 1 read.
  */
-public class ReadWriteRatio
-{
+public class ReadWriteRatio {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
@@ -55,131 +55,112 @@ public class ReadWriteRatio
      * @param writeToRead - the command line string that follows the '--read-to-write' option. May be null if no
      *        '--read-to-write' is specified on command line.
      */
-    public ReadWriteRatio(String readToWrite, String writeToRead) throws Exception
-    {
+    public ReadWriteRatio(Integer readToWrite, Integer writeToRead) throws Exception {
+
         this.write = true;
         this.followUpSeriesSize = 1;
 
-        Integer rtw = null;
-        Integer wtr = null;
+        if (readToWrite != null) {
 
-        if (readToWrite != null)
-        {
-            try
-            {
-                rtw = new Integer(readToWrite);
-            }
-            catch(Exception e)
-            {
-                throw new UserErrorException("invalid --read-to-write value '" + readToWrite + "'");
-            }
-
-            if (rtw < 0)
-            {
-                throw new UserErrorException("only positive or zero integers can be --read-to-write ratios");
+            if (readToWrite < 0) {
+                throw new UserErrorException("only positive or zero integers can be read-to-write ratios");
             }
 
         }
 
-        if (writeToRead != null)
-        {
-            try
-            {
-                wtr = new Integer(writeToRead);
-            }
-            catch(Exception e)
-            {
-                throw new UserErrorException("invalid --write-to-read value '" + writeToRead + "'");
-            }
+        if (writeToRead != null) {
 
-            if (wtr < 0)
-            {
-                throw new UserErrorException("only positive or zero integers can be --write-to-read ratios");
+            if (writeToRead < 0) {
+
+                throw new UserErrorException("only positive or zero integers can be write-to-read ratios");
             }
 
         }
 
-        if (rtw != null)
-        {
-            if (rtw == 1)
-            {
+        if (readToWrite != null) {
+
+            if (readToWrite == 1) {
+
                 write = true;
                 followUpSeriesSize = 1;
 
-                if (wtr != null && wtr != 1)
-                {
-                    throw new UserErrorException("incompatible --read-to-write/--write-to-read values: " + rtw + "/" + wtr);
+                if (writeToRead != null && writeToRead != 1) {
+
+                    throw new UserErrorException(
+                            "incompatible read-to-write/write-to-read values: " + readToWrite + "/" + writeToRead);
                 }
 
                 return;
             }
 
-            if (rtw == 0)
-            {
+            if (readToWrite == 0) {
+
                 write = true;
                 followUpSeriesSize = 0;
             }
-            else
-            {
+            else {
+
                 write = true;
-                followUpSeriesSize = rtw;
+                followUpSeriesSize = readToWrite;
             }
 
-            if (wtr != null)
-            {
-                throw new UserErrorException("incompatible --read-to-write/--write-to-read values: " + rtw + "/" + wtr);
+            if (writeToRead != null) {
+
+                throw new UserErrorException(
+                        "incompatible read-to-write/write-to-read values: " + readToWrite + "/" + writeToRead);
             }
         }
-        else
-        {
-            if (wtr == null || wtr == 1)
-            {
+        else {
+
+            if (writeToRead == null || writeToRead == 1) {
+
                 write = true;
                 followUpSeriesSize = 1;
             }
-            else if (wtr == 0)
-            {
+            else if (writeToRead == 0) {
+
                 write = false;
                 followUpSeriesSize = 0;
             }
-            else
-            {
+            else {
+
                 write = false;
-                followUpSeriesSize = wtr;
+                followUpSeriesSize = writeToRead;
             }
         }
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public boolean doesWritingTakePlace()
-    {
+    public boolean doesWritingTakePlace() {
+
         return write || followUpSeriesSize > 0;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
+
         String s;
-        if (write)
-        {
-            if (followUpSeriesSize == 0)
-            {
+
+        if (write) {
+
+            if (followUpSeriesSize == 0) {
+
                 s = "writes only";
             }
-            else
-            {
+            else {
+
                 s = "write followed by " + (followUpSeriesSize == 1 ? "read" : followUpSeriesSize + " reads");
             }
         }
-        else
-        {
-            if (followUpSeriesSize == 0)
-            {
+        else {
+
+            if (followUpSeriesSize == 0) {
+
                 s = "reads only";
             }
-            else
-            {
+            else {
+
                 s = "read followed by " + (followUpSeriesSize == 1 ? "write" : followUpSeriesSize + " writes");
             }
         }
@@ -189,18 +170,18 @@ public class ReadWriteRatio
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    boolean isRead()
-    {
+    boolean isRead() {
+
         return !write;
     }
 
-    boolean isWrite()
-    {
+    boolean isWrite() {
+
         return write;
     }
 
-    int getFollowUpSeriesSize()
-    {
+    int getFollowUpSeriesSize() {
+
         return followUpSeriesSize;
     }
 

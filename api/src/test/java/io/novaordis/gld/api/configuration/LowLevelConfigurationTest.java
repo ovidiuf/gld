@@ -814,6 +814,334 @@ public abstract class LowLevelConfigurationTest {
         }
     }
 
+    // set(null, ...)/remove() -----------------------------------------------------------------------------------------
+
+    @Test
+    public void setNull_TheWholeMap() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        //
+        // we only test LowLevelConfigurationBases, we're a noop otherwise
+        //
+
+        if (!(c instanceof LowLevelConfigurationBase)) {
+
+            return;
+        }
+
+        LowLevelConfigurationBase base = (LowLevelConfigurationBase)c;
+
+        try {
+
+            base.set(null);
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("invalid attempt to remove the root storage", msg);
+        }
+    }
+
+    @Test
+    public void remove_TheWholeMap() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        //
+        // we only test LowLevelConfigurationBases, we're a noop otherwise
+        //
+
+        if (!(c instanceof LowLevelConfigurationBase)) {
+
+            return;
+        }
+
+        LowLevelConfigurationBase base = (LowLevelConfigurationBase)c;
+
+        try {
+
+            base.remove();
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("invalid attempt to remove the root storage", msg);
+        }
+    }
+
+    @Test
+    public void setNull_IntermediatePathElementNotAMap() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        m.put("token1", m1);
+        m1.put("token2", "something");
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        //
+        // we only test LowLevelConfigurationBases, we're a noop otherwise
+        //
+
+        if (!(c instanceof LowLevelConfigurationBase)) {
+
+            return;
+        }
+
+        LowLevelConfigurationBase base = (LowLevelConfigurationBase)c;
+
+        try {
+
+            base.set(null, "token1", "token2", "token3");
+            fail("should have thrown an exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("token1.token2 does not match a map", msg);
+        }
+    }
+
+    @Test
+    public void remove_IntermediatePathElementNotAMap() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        m.put("token1", m1);
+        m1.put("token2", "something");
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        //
+        // we only test LowLevelConfigurationBases, we're a noop otherwise
+        //
+
+        if (!(c instanceof LowLevelConfigurationBase)) {
+
+            return;
+        }
+
+        LowLevelConfigurationBase base = (LowLevelConfigurationBase)c;
+
+        try {
+
+            base.remove("token1", "token2", "token3");
+            fail("should have thrown an exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("token1.token2 does not match a map", msg);
+        }
+    }
+
+    @Test
+    public void setNull_RemoveANonMap() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        m.put("token1", m1);
+        Map<String, Object> m2 = new HashMap<>();
+        m1.put("token2", m2);
+        m2.put("token3", "something");
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        //
+        // we only test LowLevelConfigurationBases, we're a noop otherwise
+        //
+
+        if (!(c instanceof LowLevelConfigurationBase)) {
+
+            return;
+        }
+
+        assertEquals("something", c.get(String.class, "token1", "token2", "token3"));
+
+        LowLevelConfigurationBase base = (LowLevelConfigurationBase)c;
+
+        //
+        // correct removal of a non-map
+        //
+
+        base.set(null, "token1", "token2", "token3");
+
+        assertTrue(m2.isEmpty());
+    }
+
+    @Test
+    public void remove_NonMap() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        m.put("token1", m1);
+        Map<String, Object> m2 = new HashMap<>();
+        m1.put("token2", m2);
+        m2.put("token3", "something");
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        //
+        // we only test LowLevelConfigurationBases, we're a noop otherwise
+        //
+
+        if (!(c instanceof LowLevelConfigurationBase)) {
+
+            return;
+        }
+
+        assertEquals("something", c.get(String.class, "token1", "token2", "token3"));
+
+        LowLevelConfigurationBase base = (LowLevelConfigurationBase)c;
+
+        //
+        // correct removal of a non-map
+        //
+
+        base.remove("token1", "token2", "token3");
+
+        assertTrue(m2.isEmpty());
+    }
+
+    @Test
+    public void setNull_RemovalOfAMap() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        m.put("token1", m1);
+        Map<String, Object> m2 = new HashMap<>();
+        m1.put("token2", m2);
+        m2.put("token3", new HashMap<>());
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        //
+        // we only test LowLevelConfigurationBases, we're a noop otherwise
+        //
+
+        if (!(c instanceof LowLevelConfigurationBase)) {
+
+            return;
+        }
+
+        LowLevelConfigurationBase base = (LowLevelConfigurationBase)c;
+
+        Map<String, Object> nm = c.get("token1", "token2", "token3");
+        assertTrue(nm.isEmpty());
+
+        base.set(null, "token1", "token2", "token3");
+
+        assertTrue(m2.isEmpty());
+    }
+
+    @Test
+    public void remove_Map() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        m.put("token1", m1);
+        Map<String, Object> m2 = new HashMap<>();
+        m1.put("token2", m2);
+        m2.put("token3", new HashMap<>());
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        //
+        // we only test LowLevelConfigurationBases, we're a noop otherwise
+        //
+
+        if (!(c instanceof LowLevelConfigurationBase)) {
+
+            return;
+        }
+
+        LowLevelConfigurationBase base = (LowLevelConfigurationBase)c;
+
+        Map<String, Object> nm = c.get("token1", "token2", "token3");
+        assertTrue(nm.isEmpty());
+
+        base.remove("token1", "token2", "token3");
+
+        assertTrue(m2.isEmpty());
+    }
+
+    @Test
+    public void setNull_NonExistentElement() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        m.put("token1", m1);
+        //noinspection MismatchedQueryAndUpdateOfCollection
+        Map<String, Object> m2 = new HashMap<>();
+        m1.put("token2", m2);
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        //
+        // we only test LowLevelConfigurationBases, we're a noop otherwise
+        //
+
+        if (!(c instanceof LowLevelConfigurationBase)) {
+
+            return;
+        }
+
+        assertNull(c.get(String.class, "token1", "token2", "token3"));
+
+        LowLevelConfigurationBase base = (LowLevelConfigurationBase)c;
+
+        //
+        // should be a noop
+        //
+
+        base.set(null, "token1", "token2", "token3");
+
+        assertTrue(m2 == m1.get("token2"));
+        assertTrue(m2.isEmpty());
+    }
+
+    @Test
+    public void remove_NonExistentElement() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        m.put("token1", m1);
+        //noinspection MismatchedQueryAndUpdateOfCollection
+        Map<String, Object> m2 = new HashMap<>();
+        m1.put("token2", m2);
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        //
+        // we only test LowLevelConfigurationBases, we're a noop otherwise
+        //
+
+        if (!(c instanceof LowLevelConfigurationBase)) {
+
+            return;
+        }
+
+        assertNull(c.get(String.class, "token1", "token2", "token3"));
+
+        LowLevelConfigurationBase base = (LowLevelConfigurationBase)c;
+
+        //
+        // should be a noop
+        //
+
+        base.remove("token1", "token2", "token3");
+
+        assertTrue(m2 == m1.get("token2"));
+        assertTrue(m2.isEmpty());
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

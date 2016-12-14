@@ -59,6 +59,7 @@ public class SingleThreadedRunner implements Runnable {
      * @param durationExpired an AtomicBoolean that will externally set to "true" if the overall time allocated to the
      *                        run expired. If the run is not time-limited, the boolean will never become "true".
      *                        Cannot be null.
+     * @param singleThreadedRunnerSleepMs zero or negative means never sleep
      */
     public SingleThreadedRunner(String name, Service service, LoadStrategy loadStrategy,
                                 Sampler sampler, CyclicBarrier barrier, AtomicBoolean durationExpired,
@@ -198,7 +199,7 @@ public class SingleThreadedRunner implements Runnable {
 
                 t1 = System.nanoTime();
 
-                if (keyStore != null /* && !keyStore.isReadOnly() */) {
+                if (keyStore != null) {
 
                     //
                     // the operation was successful, which means the key was sent successfully into the service;

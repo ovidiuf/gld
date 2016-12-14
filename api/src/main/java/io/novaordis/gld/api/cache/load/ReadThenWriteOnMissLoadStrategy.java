@@ -65,18 +65,18 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
         OPERATION_TYPES = Collections.unmodifiableSet(s);
     }
 
+    public static final String NAME = "read-then-write-on-miss";
+
     public static final String REUSE_VALUE_LABEL = "reuse-value";
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private volatile boolean initialized;
-
+    private int valueSize;
     private boolean reuseValue;
     private String cachedValue;
-
-    private int valueSize;
+    private volatile boolean initialized;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -90,7 +90,7 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
     @Override
     public String getName() {
 
-        return "read-then-write-on-miss";
+        return NAME;
     }
 
     @Override
@@ -99,6 +99,7 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
         return ServiceType.cache;
     }
 
+    @Override
     public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown) {
 
         if (!initialized) {

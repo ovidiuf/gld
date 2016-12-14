@@ -90,6 +90,8 @@ public class StoredValue {
 
     /**
      * @return the value bytes for a regular value. Return null of a null value or a "not stored" value.
+     *
+     * assertNotNull(getBytes()) can be used as test for "regular value".
      */
     public byte[] getBytes() {
 

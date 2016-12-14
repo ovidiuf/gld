@@ -18,18 +18,26 @@ package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.KeyProvider;
 import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.cache.CacheServiceConfiguration;
+import io.novaordis.gld.api.cache.load.WriteThenReadLoadStrategy;
+import io.novaordis.gld.api.cache.operation.Write;
 import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.mock.MockCacheService;
 import io.novaordis.gld.api.mock.MockCleanupOperation;
 import io.novaordis.gld.api.mock.MockKeyStore;
 import io.novaordis.gld.api.mock.MockOperation;
 import io.novaordis.gld.api.mock.MockService;
+import io.novaordis.gld.api.mock.configuration.MockCacheServiceConfiguration;
+import io.novaordis.gld.api.mock.configuration.MockLoadConfiguration;
 import io.novaordis.gld.api.mock.load.MockLdLoadStrategy;
 import io.novaordis.gld.api.sampler.Sampler;
 import io.novaordis.gld.api.sampler.SamplerImpl;
+import io.novaordis.gld.api.store.InMemoryStore;
+import io.novaordis.gld.api.store.StoredValue;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +49,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -357,6 +367,109 @@ public class SingleThreadedRunnerTest {
 
         Operation o2 = operations.get(1);
         assertTrue(o2 instanceof MockCleanupOperation);
+    }
+
+    // WriteThenReadLoadStrategy - SingleThreadedRunner integration ----------------------------------------------------
+
+    @Test
+    public void integration_WriteThenRead_SingleThreadedRunner() throws Exception {
+
+        MockSampler ms = new MockSampler();
+        CyclicBarrier barrier = new CyclicBarrier(1);
+
+        MockCacheService mcs = new MockCacheService();
+
+        MockCacheServiceConfiguration msc = new MockCacheServiceConfiguration();
+        msc.setKeySize(3);
+        msc.setValueSize(7);
+
+        msc.set(WriteThenReadLoadStrategy.NAME,
+                CacheServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
+                CacheServiceConfiguration.LOAD_STRATEGY_NAME_LABEL);
+
+        //
+        // only writes
+        //
+
+        msc.set(0,
+                CacheServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
+                WriteThenReadLoadStrategy.READ_TO_WRITE_LABEL);
+
+        //
+        // use the same value
+        //
+
+        msc.set(true,
+                CacheServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
+                WriteThenReadLoadStrategy.REUSE_VALUE_LABEL);
+
+
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+        mlc.setOperations(2);
+
+        //
+        // because we're building the instance directly and not with the factory, clean configuration elements
+        // that otherwise would have been removed by the factory
+        //
+
+        msc.remove(CacheServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
+                CacheServiceConfiguration.LOAD_STRATEGY_FACTORY_CLASS_LABEL);
+
+        WriteThenReadLoadStrategy wtr = new WriteThenReadLoadStrategy();
+
+        wtr.init(msc, mlc);
+
+        InMemoryStore ks = new InMemoryStore();
+        ks.start();
+
+        SingleThreadedRunner st =
+                new SingleThreadedRunner("TEST", mcs, wtr, ms, barrier, new AtomicBoolean(false), 0L, ks);
+
+        SingleThreadedRunnerTest.setRunning(st);
+
+        st.run();
+
+        List<OperationThrowablePair> recorded = ms.getRecorded();
+        assertEquals(2, recorded.size());
+
+        Write w = (Write)recorded.get(0).operation;
+        assertNull(recorded.get(0).throwable);
+
+        String key = w.getKey();
+        String value = w.getValue();
+
+        assertNotNull(key);
+        assertNotNull(value);
+
+        Write w2 = (Write)recorded.get(1).operation;
+        assertNull(recorded.get(1).throwable);
+
+        String key2 = w2.getKey();
+        String value2 = w2.getValue();
+
+        assertNotNull(key2);
+        assertNotNull(value2);
+
+        // make sure the key is in
+
+        // 1. cache
+
+        assertEquals(value, mcs.get(key));
+        assertEquals(value2, mcs.get(key2));
+
+        // 2. key storeFile
+
+        //
+        // we only stored keys, not values
+        //
+
+        StoredValue v = ks.retrieve(key);
+        assertNotNull(v);
+        assertTrue(v.notStored());
+
+        StoredValue v2 = ks.retrieve(key2);
+        assertNotNull(v2);
+        assertTrue(v2.notStored());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

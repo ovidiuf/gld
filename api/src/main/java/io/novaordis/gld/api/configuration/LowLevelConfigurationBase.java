@@ -197,14 +197,17 @@ public class LowLevelConfigurationBase implements LowLevelConfiguration {
      *
      * If we attempt to set a Map, this has a special significance, it means we want to replace the underlying raw
      * configuration sub-map.
+     *
+     * If we attempt to set to null, it means "remove" and it is semantically equivalent with remove(String ...path).
      */
     protected void set(Object instance, String ... path) {
 
         if (path.length == 0) {
 
-            //
-            //
-            //
+            if (instance == null) {
+
+                throw new IllegalArgumentException("invalid attempt to remove the root storage");
+            }
 
             if (!(instance instanceof Map)) {
 
@@ -253,7 +256,7 @@ public class LowLevelConfigurationBase implements LowLevelConfiguration {
 
             if (instance instanceof Map) {
 
-                if (storedInstance  != null && !(storedInstance instanceof Map)) {
+                if (storedInstance != null && !(storedInstance instanceof Map)) {
 
                     throw new IllegalArgumentException(
                             "illegal replacement of the " + pathAsString + " non-map with a map");
@@ -269,21 +272,43 @@ public class LowLevelConfigurationBase implements LowLevelConfiguration {
             }
             else {
 
-                if (storedInstance  != null && storedInstance instanceof Map) {
+                //
+                // if the replacement is null, that means "remove", and we do remove a maps and non-maps
+                //
 
-                    throw new IllegalArgumentException(
-                            "illegal replacement of the " + pathAsString + " map with a non-map");
+                if (instance == null) {
+
+                    crtMap.remove(crtToken);
                 }
+                else {
 
-                //
-                // non-map (even null) for non-map replacement
-                //
+                    //
+                    // the replacement is non-null
+                    //
 
-                crtMap.put(crtToken, instance);
+                    if (storedInstance  != null && storedInstance instanceof Map) {
+
+                        throw new IllegalArgumentException(
+                                "illegal replacement of the " + pathAsString + " map with a non-map");
+                    }
+
+                    //
+                    // non-map for non-map replacement
+                    //
+
+                    crtMap.put(crtToken, instance);
+                }
             }
         }
     }
 
+    /**
+     * Removes the key/value pair associated with the given path (if any).
+     */
+    protected void remove(String ... path) {
+
+        set(null, path);
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 
