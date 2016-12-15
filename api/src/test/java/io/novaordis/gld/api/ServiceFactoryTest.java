@@ -18,7 +18,7 @@ package io.novaordis.gld.api;
 
 import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
 import io.novaordis.gld.api.cache.load.MockLoadStrategy;
-import io.novaordis.gld.api.cache.local.LocalCacheService;
+import io.novaordis.gld.api.cache.embedded.EmbeddedCacheService;
 import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -55,11 +55,11 @@ public class ServiceFactoryTest {
         MockLoadDriver md = new MockLoadDriver();
         MockLoadStrategy ms = new MockLoadStrategy();
         MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
-        sc.setImplementation("local");
+        sc.setImplementation("embedded");
 
         Service service = ServiceFactory.buildInstance(sc, ms, md);
 
-        LocalCacheService lcs = (LocalCacheService)service;
+        EmbeddedCacheService lcs = (EmbeddedCacheService)service;
 
         assertEquals(md, lcs.getLoadDriver());
         assertEquals(ms, lcs.getLoadStrategy());

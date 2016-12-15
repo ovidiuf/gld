@@ -16,7 +16,8 @@
 
 package io.novaordis.gld.api;
 
-import io.novaordis.gld.api.cache.local.LocalCacheService;
+import io.novaordis.gld.api.cache.embedded.EmbeddedCacheService;
+import io.novaordis.gld.api.configuration.ImplementationConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.utilities.UserErrorException;
 
@@ -37,18 +38,20 @@ public class ServiceFactory {
             throws Exception {
 
         ServiceType t = sc.getType();
-        String implementation = sc.getImplementation();
 
-        if (implementation == null) {
+        ImplementationConfiguration ic = sc.getImplementationConfiguration();
 
-            throw new IllegalArgumentException("null implementation");
-        }
+        String extensionName = ic.getExtensionName();
 
         Service service;
 
-        if (ServiceType.cache.equals(t) && "local".equals(implementation)) {
+        //
+        // "embedded" extensions
+        //
 
-            service = new LocalCacheService(loadStrategy, loadDriver);
+        if (ServiceType.cache.equals(t) && "embedded".equals(extensionName)) {
+
+            service = new EmbeddedCacheService(loadStrategy, loadDriver);
 
         }
         else {
@@ -57,28 +60,30 @@ public class ServiceFactory {
             // attempt to instantiate the fully qualified class name
             //
 
+            throw new RuntimeException("RETURN HERE");
 
-            Class c = Class.forName(implementation);
 
-            if (!Service.class.isAssignableFrom(c)) {
-
-                throw new UserErrorException(implementation + " is not a Service implementation");
-            }
-
-            Object o = c.newInstance();
-            service = (Service) o;
-
-            if (!t.equals(service.getType())) {
-
-                throw new UserErrorException(implementation + " is not a " + t + " Service");
-            }
-
-            //
-            // install dependencies
-            //
-
-            service.setLoadStrategy(loadStrategy);
-            service.setLoadDriver(loadDriver);
+//            Class c = Class.forName(implementation);
+//
+//            if (!Service.class.isAssignableFrom(c)) {
+//
+//                throw new UserErrorException(implementation + " is not a Service implementation");
+//            }
+//
+//            Object o = c.newInstance();
+//            service = (Service) o;
+//
+//            if (!t.equals(service.getType())) {
+//
+//                throw new UserErrorException(implementation + " is not a " + t + " Service");
+//            }
+//
+//            //
+//            // install dependencies
+//            //
+//
+//            service.setLoadStrategy(loadStrategy);
+//            service.setLoadDriver(loadDriver);
         }
 
         //

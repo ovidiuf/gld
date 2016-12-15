@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,23 +14,17 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver.todeplete.command;
+package io.novaordis.gld.api.configuration;
 
-import io.novaordis.gld.api.todiscard.Configuration;
-import io.novaordis.utilities.UserErrorException;
-
-import java.util.ArrayList;
+import java.io.File;
+import java.util.Map;
 
 /**
- * Use this command to start gld in "background" mode, where it reads a scenario from configuration, and starts
- * sending load into target, writing statistics into embedded files until it is explicitly stopped with the Stop command
- * or it runs out of load.
- *
- * @see Stop
- * @see Status
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 12/4/16
  */
-public class Start extends Load
-{
+public class ImplementationConfigurationImplTest extends ImplementationConfigurationTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
@@ -39,21 +33,18 @@ public class Start extends Load
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Start(Configuration c) throws UserErrorException
-    {
-        // we read the configuration from the file
-        super(c, new ArrayList<String>(), -1);
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Override
-    public String toString()
-    {
-        return "Start[" + Integer.toHexString(System.identityHashCode(this)) + "]";
-    }
+    // Tests -----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
+
+    @Override
+    protected ImplementationConfigurationImpl getConfigurationToTest(
+            Map<String, Object> rawMap, File configurationDirectory) throws Exception {
+
+        return new ImplementationConfigurationImpl(rawMap, configurationDirectory);
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

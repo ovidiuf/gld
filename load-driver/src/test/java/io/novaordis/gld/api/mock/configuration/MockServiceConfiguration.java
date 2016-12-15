@@ -16,10 +16,10 @@
 
 package io.novaordis.gld.api.mock.configuration;
 
+import io.novaordis.gld.api.configuration.ImplementationConfiguration;
 import io.novaordis.gld.api.configuration.LowLevelConfigurationBase;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.ServiceType;
-import io.novaordis.gld.api.mock.MockService;
 import io.novaordis.gld.api.mock.load.MockLdLoadStrategyFactory;
 import io.novaordis.utilities.UserErrorException;
 
@@ -64,9 +64,11 @@ public class MockServiceConfiguration extends LowLevelConfigurationBase implemen
     }
 
     @Override
-    public String getImplementation() throws UserErrorException {
+    public ImplementationConfiguration getImplementationConfiguration() throws UserErrorException {
 
-        return MockService.class.getName();
+//        return MockService.class.getName();
+
+        throw new RuntimeException("RETURN HERE");
     }
 
     @Override

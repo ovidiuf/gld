@@ -8,7 +8,7 @@
 service:
 
   type: cache # options: cache, jms, http, etc.
-  implementation: local
+  implementation: embedded
 
   key-size: 512
   value-size: 1024

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.cache.local;
+package io.novaordis.gld.api.cache.embedded;
 
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.ServiceBase;
@@ -36,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/2/16
  */
-public class LocalCacheService extends ServiceBase implements CacheService {
+public class EmbeddedCacheService extends ServiceBase implements CacheService {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -48,7 +48,7 @@ public class LocalCacheService extends ServiceBase implements CacheService {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public LocalCacheService(LoadStrategy loadStrategy, LoadDriver loadDriver) {
+    public EmbeddedCacheService(LoadStrategy loadStrategy, LoadDriver loadDriver) {
 
         super(loadStrategy, loadDriver);
 

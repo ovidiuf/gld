@@ -55,7 +55,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
 
         Map<String, Object> map = new HashMap<>();
         map.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.name());
-        map.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        map.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         Map<String, Object> loadStrategy = new HashMap<>();
         map.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, loadStrategy);
         loadStrategy.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
@@ -71,7 +71,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
 
         Map<String, Object> map = new HashMap<>();
         map.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.name());
-        map.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        map.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         Map<String, Object> loadStrategy = new HashMap<>();
         map.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, loadStrategy);
         loadStrategy.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
@@ -102,7 +102,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
 
         Map<String, Object> map = new HashMap<>();
         map.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.name());
-        map.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        map.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         Map<String, Object> loadStrategy = new HashMap<>();
         map.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, loadStrategy);
         loadStrategy.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
@@ -118,7 +118,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
 
         Map<String, Object> map = new HashMap<>();
         map.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.name());
-        map.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        map.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         Map<String, Object> loadStrategy = new HashMap<>();
         map.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, loadStrategy);
         loadStrategy.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
@@ -134,7 +134,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
 
         Map<String, Object> map = new HashMap<>();
         map.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.name());
-        map.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        map.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         Map<String, Object> loadStrategy = new HashMap<>();
         map.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, loadStrategy);
         loadStrategy.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
@@ -165,7 +165,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
 
         Map<String, Object> map = new HashMap<>();
         map.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.name());
-        map.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        map.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         Map<String, Object> loadStrategy = new HashMap<>();
         map.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, loadStrategy);
         loadStrategy.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");

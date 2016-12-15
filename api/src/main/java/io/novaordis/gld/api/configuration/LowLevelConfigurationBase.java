@@ -183,6 +183,12 @@ public class LowLevelConfigurationBase implements LowLevelConfiguration {
         return m;
     }
 
+    @Override
+    public File getConfigurationDirectory() {
+
+        return configurationDirectory;
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -212,8 +218,7 @@ public class LowLevelConfigurationBase implements LowLevelConfiguration {
             if (!(instance instanceof Map)) {
 
                 throw new IllegalArgumentException(
-                        "invalid attempt to replace the root map with a " +
-                                (instance == null ? "null" : instance.getClass().getSimpleName()));
+                        "invalid attempt to replace the root map with a " +instance.getClass().getSimpleName());
             }
 
             //noinspection unchecked

@@ -84,7 +84,7 @@ public class CacheServiceConfigurationImpl extends ServiceConfigurationImpl impl
     @Override
     public String toString() {
 
-        Object o = get(Object.class, ServiceConfiguration.IMPLEMENTATION_LABEL);
+        Object o = get(Object.class, ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL);
 
         if (o == null) {
             return "null";

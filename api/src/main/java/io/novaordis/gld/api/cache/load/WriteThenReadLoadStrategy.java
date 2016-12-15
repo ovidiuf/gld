@@ -36,7 +36,7 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * A load strategy that attempts to write a key (either randomly generated or read from a local key store) then
+ * A load strategy that attempts to write a key (either randomly generated or read from a embedded key store) then
  * read it back from the cache. The strategy generates writes and reads in series: one write followed by a constant
  * number of reads (or vice-versa), depending on the configured read-to-write or write-to-read ratio.
  *

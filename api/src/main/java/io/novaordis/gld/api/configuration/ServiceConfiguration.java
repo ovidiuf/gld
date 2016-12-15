@@ -19,8 +19,6 @@ package io.novaordis.gld.api.configuration;
 import io.novaordis.gld.api.ServiceType;
 import io.novaordis.utilities.UserErrorException;
 
-import java.util.Map;
-
 /**
  * Typed and untyped access to underlying service configuration.
  *
@@ -37,7 +35,7 @@ public interface ServiceConfiguration extends LowLevelConfiguration {
     int DEFAULT_KEY_SIZE = 12; // in characters
 
     String TYPE_LABEL = "type";
-    String IMPLEMENTATION_LABEL = "implementation";
+    String IMPLEMENTATION_CONFIGURATION_LABEL = "implementation";
     String LOAD_STRATEGY_CONFIGURATION_LABEL = "load-strategy";
     String LOAD_STRATEGY_NAME_LABEL = "name";
     String LOAD_STRATEGY_FACTORY_CLASS_LABEL = "factory-class";
@@ -48,9 +46,16 @@ public interface ServiceConfiguration extends LowLevelConfiguration {
 
     // Typed Access ----------------------------------------------------------------------------------------------------
 
+    /**
+     * @throws UserErrorException if the service type is missing from the configuration or it has an invalid type.
+     */
     ServiceType getType() throws UserErrorException;
 
-    String getImplementation() throws UserErrorException;
+    /**
+     * @throws UserErrorException if the implementation configuration is missing from the configuration or we encounter
+     * problems while parsing it.
+     */
+    ImplementationConfiguration getImplementationConfiguration() throws UserErrorException;
 
     String getLoadStrategyName() throws UserErrorException;
 

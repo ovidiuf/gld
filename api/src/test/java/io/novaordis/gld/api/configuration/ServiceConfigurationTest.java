@@ -61,7 +61,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
         Map<String, Object> m = new HashMap<>();
 
         m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
-        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        m.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         Map<String, Object> lsc = new HashMap<>();
         lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
@@ -72,7 +72,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
 
         assertEquals(3, uam.size());
         assertEquals(ServiceType.cache.toString(), uam.get(ServiceConfiguration.TYPE_LABEL));
-        assertEquals("local", uam.get(ServiceConfiguration.IMPLEMENTATION_LABEL));
+        assertEquals("embedded", uam.get(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL));
         //noinspection unchecked
         Map<String, Object> lsc2 = (Map<String, Object>)uam.get(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
         assertNotNull(lsc2);
@@ -86,7 +86,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
         Map<String, Object> m = new HashMap<>();
 
         m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
-        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        m.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         Map<String, Object> lsc = new HashMap<>();
         lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
@@ -145,7 +145,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
 
         Map<String, Object> m = new HashMap<>();
         m.put(ServiceConfiguration.TYPE_LABEL, getServiceTypeToTest());
-        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        m.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         Map<String, Object> lsc = new HashMap<>();
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
         lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
@@ -158,7 +158,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
     // implementation --------------------------------------------------------------------------------------------------
 
     @Test
-    public void getImplementation_MissingKey() throws Exception {
+    public void getImplementationConfiguration_MissingKey() throws Exception {
 
         Map<String, Object> m = new HashMap<>();
 
@@ -167,56 +167,64 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
 
         try {
 
-            c.getImplementation();
+            c.getImplementationConfiguration();
             fail("should throw exception");
         }
         catch(UserErrorException e) {
+
             String msg = e.getMessage();
             log.info(msg);
-            Assert.assertTrue(msg.matches("missing implementation"));
+            assertTrue(msg.matches("missing implementation"));
         }
     }
 
     @Test
-    public void getImplementation_wrongType() throws Exception {
+    public void getImplementationConfiguration_NotAMap() throws Exception {
 
         Map<String, Object> m = new HashMap<>();
 
         m.put(ServiceConfiguration.TYPE_LABEL, getServiceTypeToTest());
-        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, 1);
+        m.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "something");
+
         ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
 
         try {
 
-            c.getImplementation();
+            c.getImplementationConfiguration();
             fail("should throw exception");
         }
         catch(UserErrorException e) {
 
             String msg = e.getMessage();
             log.info(msg);
-            Assert.assertTrue(msg.matches("'implementation' not a string"));
+            assertEquals("'" + ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL + "' not a map", msg);
 
             IllegalStateException e2 = (IllegalStateException)e.getCause();
-            String msg2 = e2.getMessage();
-            Assert.assertTrue(msg2.contains("\"1\""));
+            assertNotNull(e2);
+            log.info(e2.getMessage());
         }
     }
 
     @Test
-    public void getImplementation() throws Exception {
+    public void getImplementationConfiguration() throws Exception {
 
         Map<String, Object> m = new HashMap<>();
 
         m.put(ServiceConfiguration.TYPE_LABEL, getServiceTypeToTest());
-        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+
+        Map<String, Object> icm = new HashMap<>();
+        m.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, icm);
+        icm.put(ImplementationConfiguration.EXTENSION_NAME_LABEL, "embedded");
+
         Map<String, Object> lsc = new HashMap<>();
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
         lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
 
         ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
         Assert.assertEquals(ServiceType.valueOf(getServiceTypeToTest()), c.getType());
-        Assert.assertEquals("local", c.getImplementation());
+
+        ImplementationConfiguration ic = c.getImplementationConfiguration();
+        assertNotNull(ic);
     }
 
     // load strategy configuration -------------------------------------------------------------------------------------
@@ -227,7 +235,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
         Map<String, Object> m = new HashMap<>();
 
         m.put(ServiceConfiguration.TYPE_LABEL, getServiceTypeToTest());
-        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        m.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
 
         try {
@@ -249,7 +257,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
         Map<String, Object> m = new HashMap<>();
 
         m.put(ServiceConfiguration.TYPE_LABEL, getServiceTypeToTest());
-        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        m.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, "something");
         ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
 
@@ -276,7 +284,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
         Map<String, Object> m = new HashMap<>();
 
         m.put(ServiceConfiguration.TYPE_LABEL, getServiceTypeToTest());
-        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        m.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
 
         Map<String, Object> lsc = Collections.emptyMap();
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
@@ -302,7 +310,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
         Map<String, Object> m = new HashMap<>();
 
         m.put(ServiceConfiguration.TYPE_LABEL, getServiceTypeToTest());
-        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        m.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
 
         Map<String, Object> lsc = new HashMap<>();
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
@@ -329,7 +337,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
         Map<String, Object> m = new HashMap<>();
 
         m.put(ServiceConfiguration.TYPE_LABEL, getServiceTypeToTest());
-        m.put(ServiceConfiguration.IMPLEMENTATION_LABEL, "local");
+        m.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
 
         Map<String, Object> lsc = new HashMap<>();
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);

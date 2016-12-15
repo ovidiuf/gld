@@ -69,4 +69,11 @@ public interface LowLevelConfiguration {
     Map<String, Object> get(String ... path);
 
 
+    /**
+     * @return the directory containing the configuration file this configuration was loaded from. It is necessary
+     * to resolve relative paths.
+     */
+    File getConfigurationDirectory();
+
+
 }

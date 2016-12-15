@@ -84,25 +84,21 @@ public class ServiceConfigurationImpl extends LowLevelConfigurationBase
     }
 
     @Override
-    public String getImplementation() throws UserErrorException {
+    public ImplementationConfiguration getImplementationConfiguration() throws UserErrorException {
 
-        String s;
+        Map<String, Object> m;
 
         try {
 
-            s = get(String.class, ServiceConfiguration.IMPLEMENTATION_LABEL);
+            m = get(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL);
         }
         catch(IllegalStateException e) {
 
-            throw new UserErrorException("'" + ServiceConfiguration.IMPLEMENTATION_LABEL + "' not a string", e);
+            throw new UserErrorException(
+                    "'" + ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL + "' not a map", e);
         }
 
-        if (s == null) {
-
-            throw new UserErrorException("missing implementation");
-        }
-
-        return s;
+        return new ImplementationConfigurationImpl(m, getConfigurationDirectory());
     }
 
     @Override

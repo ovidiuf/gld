@@ -73,6 +73,11 @@ public class MockStoreConfiguration implements StoreConfiguration {
         throw new RuntimeException("get() NOT YET IMPLEMENTED");
     }
 
+    @Override
+    public File getConfigurationDirectory() {
+        throw new RuntimeException("getConfigurationDirectory() NOT YET IMPLEMENTED");
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     public void setStoreType(String s) {

@@ -16,18 +16,17 @@
 
 package io.novaordis.gld.api.configuration;
 
-import io.novaordis.gld.api.ServiceType;
 import io.novaordis.utilities.UserErrorException;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/6/16
+ * @since 12/4/16
  */
-public class MockServiceConfiguration extends LowLevelConfigurationBase implements ServiceConfiguration {
+public class ImplementationConfigurationImpl extends LowLevelConfigurationBase
+        implements ImplementationConfiguration, LowLevelConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -35,77 +34,31 @@ public class MockServiceConfiguration extends LowLevelConfigurationBase implemen
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String loadStrategyName;
-    private ServiceType serviceType;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockServiceConfiguration() {
+    /**
+     * @param rawMap the raw map as extracted from the YAML file from the section corresponding to this type of
+     *            configuration.
+     * @param configurationDirectory represents the directory the configuration file the map was extracted from lives
+     *                               in. It is needed to resolve the configuration elements that are relative file
+     *                               paths. All relative file paths will be resolved relatively to the directory that
+     *                               contains the configuration file. The directory must exist, otherwise the
+     *                               constructor will fail with IllegalArgumentException.
+     */
+    public ImplementationConfigurationImpl(Map<String, Object> rawMap, File configurationDirectory)
+            throws UserErrorException {
 
-        this(new HashMap<>());
+        super(rawMap, configurationDirectory);
     }
 
-    public MockServiceConfiguration(Map<String, Object> raw) {
-
-        super(raw, new File(System.getProperty("basedir")));
-        this.serviceType = ServiceType.mock;
-    }
-
-    // ServiceConfiguration implementation -----------------------------------------------------------------------------
+    // ImplementationConfiguration implementation ----------------------------------------------------------------------
 
     @Override
-    public ServiceType getType() {
-
-        return serviceType;
-    }
-
-    @Override
-    public ImplementationConfiguration getImplementationConfiguration() throws UserErrorException {
-
-        throw new RuntimeException("getImplementationConfiguration() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public String getLoadStrategyName() {
-
-        if (loadStrategyName != null) {
-
-            return loadStrategyName;
-        }
-
-        //
-        // if not explicitely set, defer to the underlying map
-        //
-        return get(String.class,
-                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
-                ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL);
+    public String getExtensionName() throws UserErrorException {
+        throw new RuntimeException("getExtensionName() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public void setLoadStrategyName(String s) {
-
-        this.loadStrategyName = s;
-    }
-
-    public void setImplementation(String s) {
-
-        throw new RuntimeException("RETURN HERE");
-    }
-
-    public void setServiceType(ServiceType t) {
-
-        this.serviceType = t;
-    }
-
-    //
-    // give public access to set() for testing purposes
-    //
-
-    public void set(Object instance, String ... path) {
-
-        super.set(instance, path);
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

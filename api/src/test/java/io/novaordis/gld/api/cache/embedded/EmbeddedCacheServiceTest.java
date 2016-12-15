@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.cache.local;
+package io.novaordis.gld.api.cache.embedded;
 
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.ServiceTest;
-import io.novaordis.gld.api.cache.local.LocalCacheService;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-public class LocalCacheServiceTest extends ServiceTest {
+public class EmbeddedCacheServiceTest extends ServiceTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -43,7 +42,7 @@ public class LocalCacheServiceTest extends ServiceTest {
     @Override
     protected Service getServiceToTest(LoadStrategy s, LoadDriver d) throws Exception {
 
-        return new LocalCacheService(s, d);
+        return new EmbeddedCacheService(s, d);
     }
 
     // Protected -------------------------------------------------------------------------------------------------------

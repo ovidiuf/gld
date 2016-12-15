@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,46 +14,45 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver.todeplete.command;
+package io.novaordis.gld.api.configuration;
 
-import io.novaordis.gld.api.todiscard.Configuration;
-import io.novaordis.utilities.UserErrorException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.util.Map;
 
 /**
- * Use this command to start gld in "background" mode, where it reads a scenario from configuration, and starts
- * sending load into target, writing statistics into embedded files until it is explicitly stopped with the Stop command
- * or it runs out of load.
- *
- * @see Stop
- * @see Status
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 12/4/16
  */
-public class Start extends Load
-{
+public abstract class ImplementationConfigurationTest extends LowLevelConfigurationTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
+    private static final Logger log = LoggerFactory.getLogger(ImplementationConfigurationTest.class);
+
     // Static ----------------------------------------------------------------------------------------------------------
+
+    static {
+
+        log.debug("ImplementationConfigurationTest");
+    }
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Start(Configuration c) throws UserErrorException
-    {
-        // we read the configuration from the file
-        super(c, new ArrayList<String>(), -1);
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Override
-    public String toString()
-    {
-        return "Start[" + Integer.toHexString(System.identityHashCode(this)) + "]";
-    }
+    // Tests -----------------------------------------------------------------------------------------------------------
+
+    // Untyped Access --------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
+
+    protected abstract ImplementationConfiguration getConfigurationToTest(
+            Map<String, Object> rawConfigurationMap, File configurationDirectory) throws Exception;
 
     // Protected -------------------------------------------------------------------------------------------------------
 

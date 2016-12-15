@@ -21,7 +21,7 @@ import io.novaordis.utilities.UserErrorException;
 
 /**
  * Use this command to stop gld running in "background" mode, where it reads a scenario from configuration, and starts
- * sending load into target, writing statistics into local files until it is explicitly stopped with the Stop command
+ * sending load into target, writing statistics into embedded files until it is explicitly stopped with the Stop command
  * or it runs out of load.
  *
  * @see Start

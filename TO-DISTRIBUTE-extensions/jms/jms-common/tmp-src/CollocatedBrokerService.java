@@ -51,10 +51,10 @@ import java.util.List;
  *
  * Optional Configuration Parameters
  *
- * "--directory <local-directory>": the local directory collocated broker persists to. If not specified, the default
+ * "--directory <embedded-directory>": the embedded directory collocated broker persists to. If not specified, the default
  *     value is /tmp/gld.
  *
- * "--delete-directory-at-boot": if specified, the local directory is cleaned before each GLD instance startup. The
+ * "--delete-directory-at-boot": if specified, the embedded directory is cleaned before each GLD instance startup. The
  *     default behavior is to do nothing to the directory if exists (and create if it does not exists).
  *
  * "--broker-id <broker-id>: Optional, the default value if not specified is "gld.0".

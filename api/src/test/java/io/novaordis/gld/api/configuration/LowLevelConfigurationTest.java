@@ -51,6 +51,18 @@ public abstract class LowLevelConfigurationTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
+    // identity --------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void identity() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        File configDirectory = new File(System.getProperty("basedir"));
+        LowLevelConfiguration c = getConfigurationToTest(m, configDirectory);
+
+        assertEquals(configDirectory, c.getConfigurationDirectory());
+    }
+
     // get() -----------------------------------------------------------------------------------------------------------
 
     @Test
