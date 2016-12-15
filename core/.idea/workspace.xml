@@ -1,0 +1,1625 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="0c9e2a1c-901c-498e-8c3c-324a4b267bf1" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../extensions/jboss-datagrid-7/.idea/copyright/Apache_2_0.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../extensions/jboss-datagrid-7/.idea/libraries/Maven__io_novaordis_utilities_novaordis_utilities_4_3_0_SNAPSHOT_6.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../extensions/jboss-datagrid-7/.idea/libraries/Maven__junit_junit_4_11.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../extensions/jboss-datagrid-7/.idea/libraries/Maven__log4j_log4j_1_2_16.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../extensions/jboss-datagrid-7/.idea/libraries/Maven__org_hamcrest_hamcrest_core_1_3.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../extensions/jboss-datagrid-7/.idea/libraries/Maven__org_slf4j_slf4j_api_1_7_6.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../extensions/jboss-datagrid-7/.idea/libraries/Maven__org_yaml_snakeyaml_1_17.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../extensions/jboss-datagrid-7/.idea/compiler.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../extensions/jboss-datagrid-7/.idea/encodings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../extensions/jboss-datagrid-7/.idea/misc.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../extensions/jboss-datagrid-7/.idea/modules.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../extensions/jboss-datagrid-7/.idea/copyright/profiles_settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../extensions/jboss-datagrid-7/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../extensions/jboss-datagrid-7/.idea/workspace.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../extensions/jboss-datagrid-7.0.0/jboss-datagrid-7.0.0.iml" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/.name" afterPath="$PROJECT_DIR$/.idea/.name" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/copyright/Apache_2_0.xml" afterPath="$PROJECT_DIR$/.idea/copyright/Apache_2_0.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/copyright/profiles_settings.xml" afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/dictionaries/ovidiu.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/ovidiu.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/libraries/Maven__io_novaordis_gld_gld_api_1_0_0_SNAPSHOT_14.xml" afterPath="$PROJECT_DIR$/../extensions/jboss-datagrid-7/.idea/libraries/Maven__io_novaordis_gld_gld_api_1_0_0_SNAPSHOT_14.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/libraries/Maven__io_novaordis_utilities_novaordis_utilities_4_3_0_SNAPSHOT_6.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_novaordis_utilities_novaordis_utilities_4_3_0_SNAPSHOT_6.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/libraries/Maven__junit_junit_4_11.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__junit_junit_4_11.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/libraries/Maven__log4j_log4j_1_2_16.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__log4j_log4j_1_2_16.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/libraries/Maven__log4j_log4j_1_2_17.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__log4j_log4j_1_2_17.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/libraries/Maven__org_hamcrest_hamcrest_core_1_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hamcrest_hamcrest_core_1_3.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/libraries/Maven__org_slf4j_slf4j_api_1_7_6.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_api_1_7_6.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/libraries/Maven__org_slf4j_slf4j_log4j12_1_6_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_log4j12_1_6_3.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/libraries/Maven__org_slf4j_slf4j_log4j12_1_7_6.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_log4j12_1_7_6.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/libraries/Maven__org_yaml_snakeyaml_1_17.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_yaml_snakeyaml_1_17.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/uiDesigner.xml" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../GLD.iml" afterPath="$PROJECT_DIR$/GLD Core.iml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../LICENSE" afterPath="$PROJECT_DIR$/LICENSE" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/gld-api.iml" afterPath="$PROJECT_DIR$/api/gld-api.iml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/pom.xml" afterPath="$PROJECT_DIR$/api/pom.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/ClassLoadingUtilities.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/ClassLoadingUtilities.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/KeyProvider.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/KeyProvider.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/KeyStore.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/KeyStore.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/LoadDriver.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/LoadDriver.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/LoadStrategy.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/LoadStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/LoadStrategyBase.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/LoadStrategyBase.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/LoadStrategyFactory.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/LoadStrategyFactory.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/Operation.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/Operation.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/OperationBase.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/OperationBase.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/RandomContentGenerator.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/RandomContentGenerator.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/Runner.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/Runner.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/Service.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/Service.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/ServiceBase.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/ServiceBase.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/ServiceFactory.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/ServiceFactory.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/ServiceType.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/ServiceType.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/Util.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/Util.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/cache/CacheService.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/cache/CacheService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/cache/CacheServiceConfiguration.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/cache/CacheServiceConfiguration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/cache/CacheServiceConfigurationImpl.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/cache/CacheServiceConfigurationImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/cache/embedded/EmbeddedCacheService.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/cache/embedded/EmbeddedCacheService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/cache/load/CacheLoadStrategyFactory.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/cache/load/CacheLoadStrategyFactory.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/cache/load/DeleteLoadStrategy.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/cache/load/DeleteLoadStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/cache/load/ReadThenWriteOnMissLoadStrategy.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/cache/load/ReadThenWriteOnMissLoadStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/cache/load/ReadWriteRatio.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/cache/load/ReadWriteRatio.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/cache/load/WriteThenReadLoadStrategy.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/cache/load/WriteThenReadLoadStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/cache/operation/CacheOperation.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/cache/operation/CacheOperation.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/cache/operation/CacheOperationBase.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/cache/operation/CacheOperationBase.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/cache/operation/Delete.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/cache/operation/Delete.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/cache/operation/Read.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/cache/operation/Read.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/cache/operation/Write.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/cache/operation/Write.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/configuration/Configuration.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/Configuration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/configuration/ImplementationConfiguration.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/ImplementationConfiguration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/configuration/ImplementationConfigurationImpl.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/ImplementationConfigurationImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/configuration/LoadConfiguration.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/LoadConfiguration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/configuration/LoadConfigurationImpl.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/LoadConfigurationImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/configuration/LowLevelConfiguration.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/LowLevelConfiguration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/configuration/LowLevelConfigurationBase.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/LowLevelConfigurationBase.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/configuration/ServiceConfiguration.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/ServiceConfiguration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/configuration/ServiceConfigurationImpl.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/ServiceConfigurationImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/configuration/StoreConfiguration.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/StoreConfiguration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/configuration/StoreConfigurationImpl.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/StoreConfigurationImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/configuration/YamlBasedConfiguration.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/YamlBasedConfiguration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/http/HttpOperation.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/http/HttpOperation.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/http/HttpServiceConfiguration.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/http/HttpServiceConfiguration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/http/HttpServiceConfigurationImpl.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/http/HttpServiceConfigurationImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/jms/JmsOperation.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/jms/JmsOperation.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/jms/JmsServiceConfiguration.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/jms/JmsServiceConfiguration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/jms/JmsServiceConfigurationImpl.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/jms/JmsServiceConfigurationImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/provider/RandomKeyProvider.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/provider/RandomKeyProvider.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/provider/SetKeyProvider.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/provider/SetKeyProvider.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/Counter.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/Counter.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/CounterValues.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/CounterValues.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/CounterValuesImpl.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/CounterValuesImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/FailureCounter.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/FailureCounter.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/ImmutableFailureCounter.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/ImmutableFailureCounter.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/NonBlockingCounter.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/NonBlockingCounter.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/NonBlockingFailureCounter.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/NonBlockingFailureCounter.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/Sampler.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/Sampler.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/SamplerConfigurator.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/SamplerConfigurator.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/SamplerImpl.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/SamplerImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/SamplingConsumer.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/SamplingConsumer.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/SamplingInterval.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/SamplingInterval.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/SamplingIntervalImpl.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/SamplingIntervalImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/SamplingIntervalUtil.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/SamplingIntervalUtil.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/metrics/FreePhysicalMemorySize.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/metrics/FreePhysicalMemorySize.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/metrics/MeasureUnit.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/metrics/MeasureUnit.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/metrics/Metric.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/metrics/Metric.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/metrics/MetricType.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/metrics/MetricType.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/metrics/SystemCpuLoad.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/metrics/SystemCpuLoad.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/metrics/SystemLoadAverage.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/metrics/SystemLoadAverage.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/sampler/metrics/TotalPhysicalMemorySize.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler/metrics/TotalPhysicalMemorySize.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/statistics/CSVFormat.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/statistics/CSVFormat.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/statistics/CSVFormatter.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/statistics/CSVFormatter.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/statistics/CollectorBasedCsvStatistics.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/statistics/CollectorBasedCsvStatistics.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/statistics/DeprecatedSamplingInterval.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/statistics/DeprecatedSamplingInterval.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/statistics/DeprecatedStatistics.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/statistics/DeprecatedStatistics.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/statistics/Format.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/statistics/Format.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/statistics/Statistics.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/statistics/Statistics.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/store/HierarchicalStore.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/store/HierarchicalStore.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/store/InMemoryStore.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/store/InMemoryStore.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/store/KeyStoreException.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/store/KeyStoreException.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/store/KeyStoreFactory.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/store/KeyStoreFactory.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/store/KeyValuePair.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/store/KeyValuePair.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/store/NotStored.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/store/NotStored.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/store/Null.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/store/Null.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/store/StdoutStorageStrategy.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/store/StdoutStorageStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/store/StorageStrategyBase.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/store/StorageStrategyBase.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/store/StorageStrategyFactory.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/store/StorageStrategyFactory.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/store/StoredValue.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/store/StoredValue.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/store/TextFileStorageStrategy.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/store/TextFileStorageStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/todiscard/Command.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/todiscard/Command.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/todiscard/Configuration.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/todiscard/Configuration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/todiscard/ConfigurationImpl.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/todiscard/ConfigurationImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/todiscard/ContentType.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/todiscard/ContentType.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/todiscard/EmbeddedNode.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/todiscard/EmbeddedNode.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/todiscard/Node.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/todiscard/Node.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/todiscard/RedisFailure.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/todiscard/RedisFailure.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/todiscard/StorageStrategy.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/todiscard/StorageStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/main/java/io/novaordis/gld/api/todiscard/SystemStatistics.java" afterPath="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/todiscard/SystemStatistics.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/AnotherTypeOfMockSamplerOperation.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/AnotherTypeOfMockSamplerOperation.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/ClassLoadingUtilitiesTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/ClassLoadingUtilitiesTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/KeyProviderTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/KeyProviderTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/KeyStoreTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/KeyStoreTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/LoadStrategyFactoryTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/LoadStrategyFactoryTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/LoadStrategyTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/LoadStrategyTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/MockInterface.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/MockInterface.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/MockInterface2.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/MockInterface2.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/MockKeyProvider.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/MockKeyProvider.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/MockLoadDriver.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/MockLoadDriver.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/MockOperation.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/MockOperation.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/MockSamplerOperation.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/MockSamplerOperation.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/MockService.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/MockService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/OperationTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/OperationTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/RandomContentGeneratorTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/RandomContentGeneratorTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/RunnerTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/RunnerTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/ServiceFactoryTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/ServiceFactoryTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/ServiceTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/ServiceTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/UtilTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/UtilTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/cache/CacheServiceConfigurationTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/cache/CacheServiceConfigurationTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/cache/MockCacheService.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/cache/MockCacheService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/cache/MockCacheServiceConfiguration.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/cache/MockCacheServiceConfiguration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/cache/embedded/EmbeddedCacheServiceTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/cache/embedded/EmbeddedCacheServiceTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/cache/load/CacheLoadStrategyFactoryTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/cache/load/CacheLoadStrategyFactoryTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/cache/load/DeleteLoadStrategyTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/cache/load/DeleteLoadStrategyTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/cache/load/MockLoadStrategy.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/cache/load/MockLoadStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/cache/load/ReadThenWriteOnMissLoadStrategyTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/cache/load/ReadThenWriteOnMissLoadStrategyTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/cache/load/ReadWriteRatioTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/cache/load/ReadWriteRatioTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/cache/load/WriteThenReadLoadStrategyTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/cache/load/WriteThenReadLoadStrategyTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/cache/operation/CacheOperationTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/cache/operation/CacheOperationTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/cache/operation/DeleteTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/cache/operation/DeleteTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/cache/operation/ReadTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/cache/operation/ReadTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/cache/operation/WriteTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/cache/operation/WriteTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/configuration/ConfigurationTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/ConfigurationTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/configuration/ImplementationConfigurationImplTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/ImplementationConfigurationImplTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/configuration/ImplementationConfigurationTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/ImplementationConfigurationTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/configuration/LoadConfigurationImplTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/LoadConfigurationImplTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/configuration/LoadConfigurationTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/LoadConfigurationTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/configuration/LowLevelConfigurationTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/LowLevelConfigurationTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/configuration/MockLoadConfiguration.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/MockLoadConfiguration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/configuration/MockServiceConfiguration.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/MockServiceConfiguration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/configuration/MockStoreConfiguration.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/MockStoreConfiguration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/configuration/ServiceConfigurationTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/ServiceConfigurationTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/configuration/StoreConfigurationImplTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/StoreConfigurationImplTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/configuration/StoreConfigurationTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/StoreConfigurationTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/configuration/YamlBasedConfigurationTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/YamlBasedConfigurationTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/http/HttpOperationTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/http/HttpOperationTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/http/HttpServiceConfigurationTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/http/HttpServiceConfigurationTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/jms/JmsOperationTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/jms/JmsOperationTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/jms/JmsServiceConfigurationTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/jms/JmsServiceConfigurationTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/mock/load/MockLoadStrategy.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/mock/load/MockLoadStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/mock/load/MockLoadStrategyFactory.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/mock/load/MockLoadStrategyFactory.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/mockpackage/NoNoArgConstructorStrategy.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/mockpackage/NoNoArgConstructorStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/mockpackage/PrivateNoArgConstructorStrategy.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/mockpackage/PrivateNoArgConstructorStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/mockpackage/WinningStrategy.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/mockpackage/WinningStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/provider/RandomKeyProviderTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/provider/RandomKeyProviderTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/provider/SetKeyProviderTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/provider/SetKeyProviderTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/CounterTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/CounterTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/CounterValuesImplTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/CounterValuesImplTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/CounterValuesTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/CounterValuesTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/FailureCounterTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/FailureCounterTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/ImmutableFailureCounterTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/ImmutableFailureCounterTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/MockSamplingConsumer.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/MockSamplingConsumer.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/NonBlockingCounterTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/NonBlockingCounterTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/NonBlockingFailureCounterTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/NonBlockingFailureCounterTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/SamplerConfiguratorTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/SamplerConfiguratorTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/SamplerImplStressTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/SamplerImplStressTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/SamplerImplTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/SamplerImplTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/SamplerImplWorkBenchTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/SamplerImplWorkBenchTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/SamplerTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/SamplerTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/SamplingIntervalImplTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/SamplingIntervalImplTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/SamplingIntervalTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/SamplingIntervalTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/SamplingIntervalUtilTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/SamplingIntervalUtilTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/metrics/FreePhysicalMemorySizeTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/metrics/FreePhysicalMemorySizeTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/metrics/MeasureUnitTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/metrics/MeasureUnitTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/metrics/MetricTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/metrics/MetricTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/metrics/MockMeasureUnit.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/metrics/MockMeasureUnit.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/metrics/MockMetric.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/metrics/MockMetric.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/metrics/SystemCpuLoadTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/metrics/SystemCpuLoadTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/metrics/SystemLoadAverageTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/metrics/SystemLoadAverageTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/sampler/metrics/TotalPhysicalMemorySizeTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/sampler/metrics/TotalPhysicalMemorySizeTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/statistics/CSVFormatTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/statistics/CSVFormatTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/statistics/CSVFormatterTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/statistics/CSVFormatterTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/statistics/CollectorBasedCsvStatisticsConvertedToSamplerTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/statistics/CollectorBasedCsvStatisticsConvertedToSamplerTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/statistics/FormatTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/statistics/FormatTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/statistics/StatisticsTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/statistics/StatisticsTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/store/HierarchicalStoreTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/store/HierarchicalStoreTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/store/InMemoryStoreTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/store/InMemoryStoreTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/store/KeyStoreFactoryTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/store/KeyStoreFactoryTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/store/KeyStoreValueTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/store/KeyStoreValueTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/store/MockKeyStore.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/store/MockKeyStore.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/store/MockStorageStrategy.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/store/MockStorageStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/store/NotStoredTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/store/NotStoredTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/store/NullTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/store/NullTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/store/StorageStrategyFactoryTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/store/StorageStrategyFactoryTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/store/StorageStrategyTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/store/StorageStrategyTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/store/StoredValueTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/store/StoredValueTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/store/TextFileStorageStrategyTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/store/TextFileStorageStrategyTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/todiscard/ConfigurationImplTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/todiscard/ConfigurationImplTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/todiscard/ContentTypeTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/todiscard/ContentTypeTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/todiscard/NodeTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/todiscard/NodeTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/java/io/novaordis/gld/api/todiscard/RedisFailureTest.java" afterPath="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/todiscard/RedisFailureTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../api/src/test/resources/data/reference-configuration.yml" afterPath="$PROJECT_DIR$/api/src/test/resources/data/reference-configuration.yml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../doc/Generic Load Driver Development Manual.docx" afterPath="$PROJECT_DIR$/doc/Generic Load Driver Development Manual.docx" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../doc/Generic Load Driver User Manual.docx" afterPath="$PROJECT_DIR$/doc/Generic Load Driver User Manual.docx" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../doc/environments/c068" afterPath="$PROJECT_DIR$/doc/environments/c068" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../doc/environments/ec2" afterPath="$PROJECT_DIR$/doc/environments/ec2" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../doc/examples/ec2-wrapper-scripts/README" afterPath="$PROJECT_DIR$/doc/examples/ec2-wrapper-scripts/README" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../doc/examples/ec2-wrapper-scripts/clean" afterPath="$PROJECT_DIR$/doc/examples/ec2-wrapper-scripts/clean" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../doc/examples/ec2-wrapper-scripts/common" afterPath="$PROJECT_DIR$/doc/examples/ec2-wrapper-scripts/common" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../doc/examples/ec2-wrapper-scripts/consume" afterPath="$PROJECT_DIR$/doc/examples/ec2-wrapper-scripts/consume" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../doc/examples/ec2-wrapper-scripts/produce" afterPath="$PROJECT_DIR$/doc/examples/ec2-wrapper-scripts/produce" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../doc/gld Architecture.odg" afterPath="$PROJECT_DIR$/doc/gld Architecture.odg" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../doc/local.conf" afterPath="$PROJECT_DIR$/doc/local.conf" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../doc/release-notes.txt" afterPath="$PROJECT_DIR$/doc/release-notes.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/gld-load-driver.iml" afterPath="$PROJECT_DIR$/load-driver/gld-load-driver.iml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/pom.xml" afterPath="$PROJECT_DIR$/load-driver/pom.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/Main.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/Main.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/ExitGuard.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/ExitGuard.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/LoadDriverImpl.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/LoadDriverImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/Main.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/Main.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/MultiThreadedRunner.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/MultiThreadedRunner.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/MultiThreadedRunnerImpl.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/MultiThreadedRunnerImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/SingleThreadedRunner.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/SingleThreadedRunner.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/Util.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/Util.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/console/CommandLineConsole.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/console/CommandLineConsole.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/keystore/ReadOnlyFileKeyStore.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/keystore/ReadOnlyFileKeyStore.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/keystore/WriteOnlyFileKeyStore.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/keystore/WriteOnlyFileKeyStore.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/CommandBase.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/CommandBase.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/Connect.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/Connect.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/Content.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/Content.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/Delete.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/Delete.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/GenerateKeys.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/GenerateKeys.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/Help.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/Help.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/Load.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/Load.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/Start.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/Start.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/Status.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/Status.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/Stop.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/Stop.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/Test.java" afterPath="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/todeplete/command/Test.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/MainTest.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/MainTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/MockEnvironmentVariableProvider.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/MockEnvironmentVariableProvider.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/api/mock/AnotherTypeOfMockOperation.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/AnotherTypeOfMockOperation.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/api/mock/MockCacheService.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/MockCacheService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/api/mock/MockCleanupOperation.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/MockCleanupOperation.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/api/mock/MockKeyProvider.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/MockKeyProvider.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/api/mock/MockKeyStore.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/MockKeyStore.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/api/mock/MockOperation.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/MockOperation.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/api/mock/MockService.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/MockService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/api/mock/configuration/MockCacheServiceConfiguration.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/configuration/MockCacheServiceConfiguration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/api/mock/configuration/MockConfiguration.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/configuration/MockConfiguration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/api/mock/configuration/MockLoadConfiguration.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/configuration/MockLoadConfiguration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/api/mock/configuration/MockServiceConfiguration.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/configuration/MockServiceConfiguration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/api/mock/configuration/MockStoreConfiguration.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/configuration/MockStoreConfiguration.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/api/mock/load/MockLdLoadStrategy.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/load/MockLdLoadStrategy.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/api/mock/load/MockLdLoadStrategyFactory.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/load/MockLdLoadStrategyFactory.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/driver/ExitGuardTest.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/ExitGuardTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/driver/LoadDriverImplTest.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/LoadDriverImplTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/driver/LoadDriverTest.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/LoadDriverTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/driver/MockMultiThreadRunner.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/MockMultiThreadRunner.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/driver/MockSampler.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/MockSampler.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/driver/MultiThreadedRunnerImplTest.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/MultiThreadedRunnerImplTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/driver/MultiThreadedRunnerTest.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/MultiThreadedRunnerTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/driver/OperationThrowablePair.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/OperationThrowablePair.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/driver/SingleThreadedRunnerTest.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/SingleThreadedRunnerTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/driver/console/CommandLineConsoleTest.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/console/CommandLineConsoleTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/driver/keystore/ReadOnlyFileKeyStoreTest.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/keystore/ReadOnlyFileKeyStoreTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/driver/keystore/WriteOnlyFileKeyStoreTest.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/keystore/WriteOnlyFileKeyStoreTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/CommandTest.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/CommandTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/ConnectTest.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/ConnectTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/ContentCommandTest.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/ContentCommandTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/DeleteCommandTest.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/DeleteCommandTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/GenerateKeysTest.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/GenerateKeysTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/HelpCommandTest.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/HelpCommandTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/LoadCommandTest.java" afterPath="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/LoadCommandTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/resources/data/end-to-end-configuration.yml" afterPath="$PROJECT_DIR$/load-driver/src/test/resources/data/end-to-end-configuration.yml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../load-driver/src/test/resources/log4j.xml" afterPath="$PROJECT_DIR$/load-driver/src/test/resources/log4j.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../release/pom.xml" afterPath="$PROJECT_DIR$/release/pom.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../release/release.iml" afterPath="$PROJECT_DIR$/release/release.iml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../release/src/assembly/release.xml" afterPath="$PROJECT_DIR$/release/src/assembly/release.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../release/src/main/bash/.install" afterPath="$PROJECT_DIR$/release/src/main/bash/.install" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../release/src/main/bash/gld" afterPath="$PROJECT_DIR$/release/src/main/bash/gld" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../release/src/main/resources/VERSION" afterPath="$PROJECT_DIR$/release/src/main/resources/VERSION" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../release/src/main/resources/log4j.xml" afterPath="$PROJECT_DIR$/release/src/main/resources/log4j.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../release/src/test/resources/local-cache.yml" afterPath="$PROJECT_DIR$/release/src/test/resources/local-cache.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../extensions/jboss-datagrid-7/jboss-datagrid-7.iml" afterPath="$PROJECT_DIR$/../extensions/jboss-datagrid-7/jboss-datagrid-7.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../extensions/jboss-datagrid-7/pom.xml" afterPath="$PROJECT_DIR$/../extensions/jboss-datagrid-7/pom.xml" />
+    </list>
+    <ignored path="GLD.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <ignored path="$PROJECT_DIR$/load-driver/target/" />
+    <ignored path="$PROJECT_DIR$/release/target/" />
+    <ignored path="$PROJECT_DIR$/api/target/" />
+    <ignored path="$PROJECT_DIR$/target/" />
+    <ignored path=".idea/dataSources.local.xml" />
+    <ignored path="$PROJECT_DIR$/extensions/jboss-datagrid-7.0.0/target/" />
+    <ignored path="$PROJECT_DIR$/extensions/jboss-datagrid-7/target/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="GLD" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="25" column="24" selection-start-line="25" selection-start-column="24" selection-end-line="25" selection-end-column="24" />
+              <folding>
+                <element signature="n#build#0;n#project#0;n#!!top" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/load-driver/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="26" column="28" selection-start-line="26" selection-start-column="28" selection-end-line="26" selection-end-column="28" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/release/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="17" column="11" selection-start-line="17" selection-start-column="11" selection-end-line="17" selection-end-column="11" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="release.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/release/src/assembly/release.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.11853448">
+              <caret line="11" column="10" selection-start-line="11" selection-start-column="10" selection-end-line="11" selection-end-column="10" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/api/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="26" column="28" selection-start-line="26" selection-start-column="28" selection-end-line="26" selection-end-column="28" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Go File" />
+        <option value="Class" />
+        <option value="Interface" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GradleLocalSettings">
+    <option name="externalProjectsViewState">
+      <projects_view />
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/ConnectTest.java" />
+        <option value="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/ContentCommandTest.java" />
+        <option value="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/DeleteCommandTest.java" />
+        <option value="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/GenerateKeysTest.java" />
+        <option value="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/HelpCommandTest.java" />
+        <option value="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/todeplete/command/LoadCommandTest.java" />
+        <option value="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/MockService.java" />
+        <option value="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/AnotherTypeOfMockOperation.java" />
+        <option value="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/MockOperation.java" />
+        <option value="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/OperationThrowablePair.java" />
+        <option value="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/keystore/ReadOnlyFileKeyStoreTest.java" />
+        <option value="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/keystore/WriteOnlyFileKeyStoreTest.java" />
+        <option value="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/MockSampler.java" />
+        <option value="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/statistics/CollectorBasedCsvStatistics.java" />
+        <option value="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/keystore/WriteOnlyFileKeyStore.java" />
+        <option value="$PROJECT_DIR$/TO-DISTRIBUTE/HELP" />
+        <option value="$PROJECT_DIR$/extensions/jboss-datagrid-7.0.0/src/main/java/io/novaordis/gld/extensions/jboss/datagrid/JBossDatagrid7Service.java" />
+        <option value="$PROJECT_DIR$/extensions/jboss-datagrid-7.0.0/src/test/java/io/novaordis/gld/extensions/jboss/datagrid/JBossDataGrid7ServiceTest.go" />
+        <option value="$PROJECT_DIR$/extensions/jboss-datagrid-7.0.0/src/test/java/io/novaordis/gld/extensions/jboss/datagrid/JBossDataGrid7ServiceTest.java" />
+        <option value="$PROJECT_DIR$/extensions/jboss-datagrid-7.0.0/src/main/java/io/novaordis/gld/extensions/jboss/datagrid/JBossDataGrid7Service.java" />
+        <option value="$PROJECT_DIR$/doc/release-notes.txt" />
+        <option value="$PROJECT_DIR$/extensions/jboss-datagrid-7.0.0/src/test/resources/data/reference-gld-jboss-datagrid-7.0.yml" />
+        <option value="$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/Main.java" />
+        <option value="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/ServiceConfiguration.java" />
+        <option value="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/LowLevelConfiguration.java" />
+        <option value="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/LowLevelConfigurationTest.java" />
+        <option value="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/LowLevelConfigurationBase.java" />
+        <option value="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/cache/embedded/LocalCacheService.java" />
+        <option value="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/MockStoreConfiguration.java" />
+        <option value="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/configuration/MockStoreConfiguration.java" />
+        <option value="$PROJECT_DIR$/extensions/jboss-datagrid-7.0.0/src/test/java/io/novaordis/gld/extensions/jboss/datagrid/JBossDatagrid7ServiceTest.java" />
+        <option value="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/MockServiceConfiguration.java" />
+        <option value="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/cache/embedded/EmbeddedCacheService.java" />
+        <option value="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/ImplementationConfigurationImplTest.java" />
+        <option value="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/ImplementationConfigurationTest.java" />
+        <option value="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/ImplementationConfigurationImpl.java" />
+        <option value="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/ServiceConfigurationImpl.java" />
+        <option value="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/ServiceConfigurationTest.java" />
+        <option value="$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/configuration/MockServiceConfiguration.java" />
+        <option value="$PROJECT_DIR$/load-driver/src/test/resources/data/end-to-end-configuration.yml" />
+        <option value="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/ImplementationConfiguration.java" />
+        <option value="$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/ServiceFactoryTest.java" />
+        <option value="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/ServiceFactory.java" />
+        <option value="$PROJECT_DIR$/extensions/jboss-datagrid-7.0.0/pom.xml" />
+        <option value="$PROJECT_DIR$/release/src/main/bash/gld" />
+        <option value="$PROJECT_DIR$/extensions/jboss-datagrid-7/pom.xml" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/api/pom.xml" />
+        <option value="$PROJECT_DIR$/load-driver/pom.xml" />
+        <option value="$PROJECT_DIR$/release/pom.xml" />
+        <option value="$PROJECT_DIR$/release/src/assembly/release.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Bundled (Maven 3)" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="createModuleGroups" value="true" />
+        <option name="downloadSourcesAutomatically" value="true" />
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="NamedScopeManager">
+    <order />
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="543" />
+    <option name="y" value="23" />
+    <option name="width" value="1953" />
+    <option name="height" value="1512" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages ProjectPane="false" />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GLD" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GLD" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GLD" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="release" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GLD" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="release" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GLD" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="release" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="assembly" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GLD" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="load-driver" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="GLD" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="api" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scratches" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="settings.editor.splitter.proportion" value="0.2" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="OverrideImplement.combined" value="true" />
+    <property name="OverrideImplement.overriding.sorted" value="false" />
+    <property name="recentsLimit" value="5" />
+    <property name="restartRequiresConfirmation" value="true" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="DefaultGoTemplateProperty" value="Go File" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/sampler" />
+      <recent name="$PROJECT_DIR$/load-driver/src/test/resources/data" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="io.novaordis.gld.api.todiscard" />
+      <recent name="io.novaordis.gld.api.statistics" />
+      <recent name="io.novaordis.gld.api.sampler" />
+      <recent name="io.novaordis.gld.api.sampler.metrics" />
+      <recent name="io.novaordis.gld.api" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="io.novaordis.gld.api.configuration" />
+      <recent name="io.novaordis.gld.api.cache.operation" />
+      <recent name="io.novaordis.gld.api.provider" />
+      <recent name="io.novaordis.gld.api.store" />
+      <recent name="io.novaordis.gld.api" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Remote.maven and command line">
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+      <option name="PROGRAM_PARAMETERS" />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
+      <module name="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
+      <module name="" />
+      <option name="TESTING_TYPE" value="0" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <module />
+      <method />
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="BashConfigurationType" factoryName="Bash">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="INTERPRETER_PATH" value="/bin/bash" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="myFilePath" />
+      <option name="GLUE" />
+      <option name="myNameFilter" />
+      <option name="myGeneratedName" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="FlashRunConfigurationType" factoryName="Flash App">
+      <option name="BCName" value="" />
+      <option name="IOSSimulatorSdkPath" value="" />
+      <option name="adlOptions" value="" />
+      <option name="airProgramParameters" value="" />
+      <option name="appDescriptorForEmulator" value="Android" />
+      <option name="debugTransport" value="USB" />
+      <option name="debuggerSdkRaw" value="BC SDK" />
+      <option name="emulator" value="NexusOne" />
+      <option name="emulatorAdlOptions" value="" />
+      <option name="fastPackaging" value="true" />
+      <option name="fullScreenHeight" value="0" />
+      <option name="fullScreenWidth" value="0" />
+      <option name="launchUrl" value="false" />
+      <option name="launcherParameters">
+        <LauncherParameters>
+          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
+          <option name="launcherType" value="OSDefault" />
+          <option name="newPlayerInstance" value="false" />
+          <option name="playerPath" value="/Applications/Flash Player Debugger.app" />
+        </LauncherParameters>
+      </option>
+      <option name="mobileRunTarget" value="Emulator" />
+      <option name="moduleName" value="" />
+      <option name="overriddenMainClass" value="" />
+      <option name="overriddenOutputFileName" value="" />
+      <option name="overrideMainClass" value="false" />
+      <option name="runTrusted" value="true" />
+      <option name="screenDpi" value="0" />
+      <option name="screenHeight" value="0" />
+      <option name="screenWidth" value="0" />
+      <option name="url" value="http://" />
+      <option name="usbDebugPort" value="7936" />
+      <method />
+    </configuration>
+    <configuration default="true" type="FlexUnitRunConfigurationType" factoryName="FlexUnit" appDescriptorForEmulator="Android" class_name="" emulatorAdlOptions="" method_name="" package_name="" scope="Class">
+      <option name="BCName" value="" />
+      <option name="launcherParameters">
+        <LauncherParameters>
+          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
+          <option name="launcherType" value="OSDefault" />
+          <option name="newPlayerInstance" value="false" />
+          <option name="playerPath" value="/Applications/Flash Player Debugger.app" />
+        </LauncherParameters>
+      </option>
+      <option name="moduleName" value="" />
+      <option name="trusted" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="" />
+      <working_directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <method />
+    </configuration>
+    <configuration default="true" type="GoRunFileConfiguration" factoryName="Go Single File">
+      <module name="" />
+      <working_directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method />
+    </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="" />
+      <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <kind value="DIRECTORY" />
+      <method />
+    </configuration>
+    <configuration default="true" type="GradleRunConfiguration" factoryName="Gradle">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list />
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <method />
+    </configuration>
+    <configuration default="true" type="GrailsRunConfigurationType" factoryName="Grails">
+      <module name="" />
+      <setting name="vmparams" value="" />
+      <setting name="cmdLine" value="run-app" />
+      <setting name="depsClasspath" value="false" />
+      <setting name="passParentEnv" value="true" />
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <setting name="launchBrowser" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration default="true" type="JarApplication" factoryName="JAR Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+      <method />
+    </configuration>
+    <configuration default="true" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="executeSpecs" factoryName="Gauge Execution">
+      <setting name="environment" value="" />
+      <setting name="specsToExecute" value="" />
+      <setting name="tags" value="" />
+      <setting name="parallelNodes" value="" />
+      <setting name="execInParallel" value="false" />
+      <setting name="programParameters" value="" />
+      <setting name="workingDirectory" value="" />
+      <setting name="moduleName" value="" />
+      <envMap />
+      <setting name="rowsRange" value="" />
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <pass-parent-envs>true</pass-parent-envs>
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="osgi.bnd.run" factoryName="Run Launcher">
+      <method />
+    </configuration>
+    <configuration default="true" type="osgi.bnd.run" factoryName="Test Launcher (JUnit)">
+      <method />
+    </configuration>
+    <configuration default="false" name="maven and command line" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="5005" />
+        <option name="LOCAL" value="false" />
+      </RunnerSettings>
+      <method />
+    </configuration>
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="Remote.maven and command line" />
+    </list>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0c9e2a1c-901c-498e-8c3c-324a4b267bf1" name="Default" comment="" />
+      <created>1480743713402</created>
+      <option name="number" value="Default" />
+      <updated>1480743713402</updated>
+      <workItem from="1480743715633" duration="10014000" />
+      <workItem from="1480809277362" duration="5648000" />
+      <workItem from="1480909037936" duration="18053000" />
+      <workItem from="1480955720066" duration="498000" />
+      <workItem from="1480964615700" duration="11572000" />
+      <workItem from="1480982958542" duration="8862000" />
+      <workItem from="1481068901141" duration="18660000" />
+      <workItem from="1481125420312" duration="27489000" />
+      <workItem from="1481160158166" duration="11366000" />
+      <workItem from="1481211541895" duration="4698000" />
+      <workItem from="1481241330484" duration="20844000" />
+      <workItem from="1481264673841" duration="149000" />
+      <workItem from="1481312670028" duration="15077000" />
+      <workItem from="1481339205598" duration="16119000" />
+      <workItem from="1481479139531" duration="817000" />
+      <workItem from="1481570513573" duration="3588000" />
+      <workItem from="1481574743207" duration="26112000" />
+      <workItem from="1481642420881" duration="4144000" />
+      <workItem from="1481680729325" duration="793000" />
+      <workItem from="1481682320901" duration="12238000" />
+      <workItem from="1481732680750" duration="24767000" />
+      <workItem from="1481758944268" duration="716000" />
+      <workItem from="1481810283098" duration="2747000" />
+      <workItem from="1481821096043" duration="15165000" />
+      <workItem from="1481843105303" duration="1719000" />
+      <workItem from="1481845022465" duration="70000" />
+      <workItem from="1481845195261" duration="637000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="262562000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="543" y="23" width="1953" height="1512" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27263212" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28528973" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32876712" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2621664" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35352114" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30492958" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout>
+    <layout-to-restore>
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4130293" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24690554" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6757679" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24687144" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/YamlBasedConfigurationTest.java</url>
+          <line>202</line>
+          <properties />
+          <option name="timeStamp" value="79" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/LoadConfigurationTest.java</url>
+          <line>64</line>
+          <properties />
+          <option name="timeStamp" value="150" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/KeyStoreTest.java</url>
+          <line>135</line>
+          <properties />
+          <option name="timeStamp" value="230" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/ImplementationConfigurationTest.java</url>
+          <line>206</line>
+          <properties />
+          <option name="timeStamp" value="251" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/ServiceConfigurationTest.java</url>
+          <line>169</line>
+          <properties />
+          <option name="timeStamp" value="254" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/LoadDriverTest.java</url>
+          <line>67</line>
+          <properties />
+          <option name="timeStamp" value="256" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/ServiceFactory.java</url>
+          <line>44</line>
+          <properties />
+          <option name="timeStamp" value="257" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="258" />
+    </breakpoint-manager>
+    <watches-manager />
+  </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/ServiceFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="103" column="53" selection-start-line="103" selection-start-column="53" selection-end-line="103" selection-end-column="53" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/keystore/WriteOnlyFileKeyStoreTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="29" column="38" selection-start-line="29" selection-start-column="38" selection-end-line="29" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/MockSampler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.06465517">
+          <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/todiscard/RedisFailure.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="33" column="57" selection-start-line="33" selection-start-column="57" selection-end-line="33" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/statistics/CollectorBasedCsvStatistics.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="22" column="49" selection-start-line="22" selection-start-column="49" selection-end-line="22" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/keystore/WriteOnlyFileKeyStore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/todiscard/SystemStatistics.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.06465517">
+          <caret line="23" column="13" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/cache/CacheService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="26" column="17" selection-start-line="26" selection-start-column="17" selection-end-line="26" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/ServiceBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="54" column="0" selection-start-line="49" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/doc/release-notes.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/release/src/test/resources/local-cache.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.18318966">
+          <caret line="17" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.645464">
+          <caret line="107" column="0" selection-start-line="107" selection-start-column="0" selection-end-line="107" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/test/resources/data/reference-configuration.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/LoadConfiguration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.25026068">
+          <caret line="30" column="17" selection-start-line="30" selection-start-column="17" selection-end-line="30" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/Configuration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.15641293">
+          <caret line="24" column="17" selection-start-line="24" selection-start-column="17" selection-end-line="24" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/cache/CacheServiceConfigurationImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="43" column="5" selection-start-line="43" selection-start-column="5" selection-end-line="43" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/ServiceConfiguration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="57" column="32" selection-start-line="57" selection-start-column="32" selection-end-line="57" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/MockStoreConfiguration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="55" column="13" selection-start-line="55" selection-start-column="13" selection-end-line="55" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/configuration/MockStoreConfiguration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.09698276">
+          <caret line="28" column="3" selection-start-line="28" selection-start-column="3" selection-end-line="28" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/ClassLoadingUtilities.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.15641293">
+          <caret line="26" column="91" selection-start-line="26" selection-start-column="4" selection-end-line="26" selection-end-column="91" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_25.jdk/Contents/Home/jre/lib/rt.jar!/sun/reflect/NativeMethodAccessorImpl.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.333333">
+          <caret line="37" column="33" selection-start-line="37" selection-start-column="33" selection-end-line="37" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/MockServiceConfiguration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4577685">
+          <caret line="49" column="60" selection-start-line="49" selection-start-column="60" selection-end-line="49" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/LowLevelConfigurationBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33263817">
+          <caret line="79" column="17" selection-start-line="79" selection-start-column="17" selection-end-line="79" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/LowLevelConfiguration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33263817">
+          <caret line="40" column="10" selection-start-line="40" selection-start-column="10" selection-end-line="40" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/cache/embedded/EmbeddedCacheService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="63" column="47" selection-start-line="63" selection-start-column="47" selection-end-line="63" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/ImplementationConfigurationImplTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="45" column="39" selection-start-line="45" selection-start-column="39" selection-end-line="45" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/ImplementationConfigurationImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="92" column="5" selection-start-line="92" selection-start-column="5" selection-end-line="92" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/LowLevelConfigurationTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.8888888">
+          <caret line="37" column="22" selection-start-line="37" selection-start-column="22" selection-end-line="37" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/ImplementationConfigurationTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.45386267">
+          <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/cache/CacheServiceConfigurationTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.5555553">
+          <caret line="38" column="61" selection-start-line="38" selection-start-column="61" selection-end-line="38" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/configuration/ServiceConfigurationTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.37037">
+          <caret line="176" column="72" selection-start-line="176" selection-start-column="72" selection-end-line="176" selection-end-column="72" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/ServiceConfigurationImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="102" column="81" selection-start-line="102" selection-start-column="81" selection-end-line="102" selection-end-column="81" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/load/MockLdLoadStrategyFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.11/junit-4.11-sources.jar!/org/junit/internal/runners/model/ReflectiveCallable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="18" column="1" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/api/mock/configuration/MockServiceConfiguration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="54" column="58" selection-start-line="54" selection-start-column="58" selection-end-line="54" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/driver/LoadDriverTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="67" column="0" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/LoadStrategyFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="102" column="0" selection-start-line="102" selection-start-column="0" selection-end-line="102" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/load-driver/src/main/java/io/novaordis/gld/driver/LoadDriverImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="140" column="29" selection-start-line="140" selection-start-column="29" selection-end-line="140" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/load-driver/src/test/java/io/novaordis/gld/MainTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="377" column="9" selection-start-line="377" selection-start-column="9" selection-end-line="377" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/load-driver/src/test/resources/data/end-to-end-configuration.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="18" selection-start-line="11" selection-start-column="18" selection-end-line="11" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/configuration/ImplementationConfiguration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.4535975">
+          <caret line="144" column="4" selection-start-line="144" selection-start-column="4" selection-end-line="144" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/release/src/main/bash/gld">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/main/java/io/novaordis/gld/api/ServiceFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.42887932">
+          <caret line="103" column="53" selection-start-line="103" selection-start-column="53" selection-end-line="103" selection-end-column="53" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/src/test/java/io/novaordis/gld/api/ServiceFactoryTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.69827586">
+          <caret line="104" column="0" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="26" column="28" selection-start-line="26" selection-start-column="28" selection-end-line="26" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="25" column="24" selection-start-line="25" selection-start-column="24" selection-end-line="25" selection-end-column="24" />
+          <folding>
+            <element signature="n#build#0;n#project#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/load-driver/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="26" column="28" selection-start-line="26" selection-start-column="28" selection-end-line="26" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/release/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="17" column="11" selection-start-line="17" selection-start-column="11" selection-end-line="17" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/release/src/assembly/release.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.11853448">
+          <caret line="11" column="10" selection-start-line="11" selection-start-column="10" selection-end-line="11" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="Copyright.UI">
+        <settings>
+          <last-edited>Apache 2.0</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>hornetq-server-2.3.25.Final-redhat-1</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>jboss-datagrid-7.0.0</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Maven: io.novaordis.utilities:novaordis-utilities:4.3.0-SNAPSHOT-5</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

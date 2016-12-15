@@ -24,7 +24,7 @@
 
     <parent>
         <groupId>io.novaordis.gld</groupId>
-        <artifactId>GLD</artifactId>
+        <artifactId>GLD-CORE</artifactId>
         <version>1.0.0-SNAPSHOT-15</version>
     </parent>
 

@@ -45,10 +45,6 @@
             <outputDirectory>lib</outputDirectory>
             <filtered>true</filtered>
         </file>
-        <file>
-            <source>../extensions/jboss-datagrid-7/target/jboss-datagrid-7-1.0.0-SNAPSHOT-1.jar</source>
-            <outputDirectory>lib/extensions/jboss-datagrid-7</outputDirectory>
-        </file>
     </files>
 
     <dependencySets>

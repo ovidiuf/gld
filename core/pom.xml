@@ -23,7 +23,7 @@
     <name>Generic Load Driver</name>
 
     <groupId>io.novaordis.gld</groupId>
-    <artifactId>GLD</artifactId>
+    <artifactId>GLD-CORE</artifactId>
     <version>1.0.0-SNAPSHOT-15</version>
     <packaging>pom</packaging>
 
@@ -42,7 +42,6 @@
     <modules>
         <module>api</module>
         <module>load-driver</module>
-        <module>extensions/jboss-datagrid-7</module>
         <module>release</module>
     </modules>
 

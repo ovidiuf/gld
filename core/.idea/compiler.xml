@@ -43,11 +43,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="jboss-datagrid-7" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="GLD" target="1.8" />
+      <module name="GLD Core" target="1.8" />
       <module name="gld-api" target="1.8" />
       <module name="gld-load-driver" target="1.8" />
       <module name="jboss-datagrid-7" target="1.8" />

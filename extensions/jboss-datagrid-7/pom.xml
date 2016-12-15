@@ -4,7 +4,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <name>JBoss Data Grid 7 Extension</name>
+    <name>GLD Extension for JBoss Data Grid 7</name>
 
     <groupId>io.novaordis.gld.extensions</groupId>
     <artifactId>jboss-datagrid-7</artifactId>
@@ -19,13 +19,37 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>MM/dd/yy</maven.build.timestamp.format>
         <release_date>${maven.build.timestamp}</release_date>
+
+        <!--
+            Dependency versions
+        -->
+
+        <slf4j.version>1.7.6</slf4j.version>
+        <novaordis.utilities.version>4.3.0-SNAPSHOT-6</novaordis.utilities.version>
+        <gld.api.version>1.0.0-SNAPSHOT-14</gld.api.version>
+
     </properties>
 
     <dependencies>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.novaordis.utilities</groupId>
+            <artifactId>novaordis-utilities</artifactId>
+            <version>${novaordis.utilities.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+        </dependency>
+        <dependency>
             <groupId>io.novaordis.gld</groupId>
             <artifactId>gld-api</artifactId>
-            <version>1.0.0-SNAPSHOT-14</version>
+            <version>${gld.api.version}</version>
         </dependency>
     </dependencies>
 
@@ -98,5 +122,6 @@
             </plugin>
         </plugins>
     </build>
+
 
 </project>
