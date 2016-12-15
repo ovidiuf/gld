@@ -9,7 +9,7 @@
     <parent>
         <groupId>io.novaordis.gld</groupId>
         <artifactId>GLD</artifactId>
-        <version>1.0.0-SNAPSHOT-14</version>
+        <version>1.0.0-SNAPSHOT-15</version>
     </parent>
 
     <artifactId>release</artifactId>

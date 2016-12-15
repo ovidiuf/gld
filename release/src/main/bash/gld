@@ -2,6 +2,10 @@
 
 function build-classpath() {
 
+    #
+    # add the JARs from lib
+    #
+
     local lib_dir=$(dirname $0)/../lib
 
     [ -d ${lib_dir} ] || { echo "library directory ${lib_dir} not found" 1>&2; exit 1; }
@@ -13,6 +17,21 @@ function build-classpath() {
     done
 
     [ -z "${classpath}" ] && { echo "no jar files found in ${lib_dir}" 1>&2; exit 1; }
+
+    local extensions_dir=$(dirname $0)/../extensions
+
+    if [ ! -d ${extensions_dir} ]; then
+
+        echo "[warn]: extensions directory ${extensions_dir} not found" 1>&2
+
+    else
+
+        #
+        # add the extension JARs
+        #
+
+        echo "....."
+    fi
 
     #
     # place the directory itself (and the log4j.xml) at the front of the classpath

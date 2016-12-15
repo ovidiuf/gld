@@ -31,19 +31,27 @@
         <processorPath useClasspath="true" />
         <module name="gld-api" />
       </profile>
-      <profile default="false" name="Maven default annotation processors profile" enabled="true">
+      <profile default="false" name="Annotation profile for jboss-datagrid-7.0.0" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="jboss-datagrid-7.0.0" />
       </profile>
+      <profile default="false" name="Annotation profile for jboss-datagrid-7" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="jboss-datagrid-7" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="GLD" target="1.8" />
       <module name="gld-api" target="1.8" />
       <module name="gld-load-driver" target="1.8" />
-      <module name="jboss-datagrid-7.0.0" target="1.5" />
+      <module name="jboss-datagrid-7" target="1.8" />
+      <module name="jboss-datagrid-7.0.0" target="1.8" />
       <module name="release" target="1.8" />
     </bytecodeTargetLevel>
   </component>
