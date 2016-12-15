@@ -48,6 +48,15 @@ public class EmbeddedCacheService extends ServiceBase implements CacheService {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    /**
+     * Required for no-argument reflection instantiation.
+     */
+    @SuppressWarnings("unused")
+    public EmbeddedCacheService() {
+
+        this(null, null);
+    }
+
     public EmbeddedCacheService(LoadStrategy loadStrategy, LoadDriver loadDriver) {
 
         super(loadStrategy, loadDriver);

@@ -28,7 +28,7 @@ import java.util.Set;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/14/16
  */
-public class JBossDataGrid7Service extends ServiceBase implements CacheService {
+public class JBossDatagrid7Service extends ServiceBase implements CacheService {
 
 
     // Constants -------------------------------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ public class JBossDataGrid7Service extends ServiceBase implements CacheService {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    protected JBossDataGrid7Service(LoadStrategy loadStrategy, LoadDriver loadDriver) {
+    protected JBossDatagrid7Service(LoadStrategy loadStrategy, LoadDriver loadDriver) {
 
         super(loadStrategy, loadDriver);
     }

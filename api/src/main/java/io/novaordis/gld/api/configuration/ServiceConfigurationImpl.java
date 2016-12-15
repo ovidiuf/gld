@@ -98,6 +98,11 @@ public class ServiceConfigurationImpl extends LowLevelConfigurationBase
                     "'" + ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL + "' not a map", e);
         }
 
+        if (m.isEmpty()) {
+
+            throw new UserErrorException("missing implementation configuration");
+        }
+
         return new ImplementationConfigurationImpl(m, getConfigurationDirectory());
     }
 

@@ -49,13 +49,80 @@ public class ImplementationConfigurationImpl extends LowLevelConfigurationBase
             throws UserErrorException {
 
         super(rawMap, configurationDirectory);
+
+        //
+        // consistency checks
+        //
+
+        nameAndClassPreconditions();
     }
 
     // ImplementationConfiguration implementation ----------------------------------------------------------------------
 
     @Override
     public String getExtensionName() throws UserErrorException {
-        throw new RuntimeException("getExtensionName() NOT YET IMPLEMENTED");
+
+        String name;
+
+        try {
+
+            name = get(String.class, EXTENSION_NAME_LABEL);
+        }
+        catch(IllegalStateException e) {
+
+            throw new UserErrorException(e);
+        }
+
+        if (name != null) {
+
+            return name;
+        }
+
+        //
+        // make sure that at least class is available
+        //
+
+        String c = get(String.class, EXTENSION_CLASS_LABEL);
+
+        if (c == null) {
+
+            throw new UserErrorException("neither implementation name or class are present");
+        }
+
+        return null;
+    }
+
+    @Override
+    public String getExtensionClass() throws UserErrorException {
+
+        String c;
+
+        try {
+
+            c = get(String.class, EXTENSION_CLASS_LABEL);
+        }
+        catch(IllegalStateException e) {
+
+            throw new UserErrorException(e);
+        }
+
+        if (c != null) {
+
+            return c;
+        }
+
+        //
+        // make sure that at least name is available
+        //
+
+        String n = get(String.class, EXTENSION_NAME_LABEL);
+
+        if (n == null) {
+
+            throw new UserErrorException("neither implementation name or class are present");
+        }
+
+        return null;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -65,6 +132,17 @@ public class ImplementationConfigurationImpl extends LowLevelConfigurationBase
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private void nameAndClassPreconditions() throws UserErrorException {
+
+        Object name = get(Object.class, EXTENSION_NAME_LABEL);
+        Object c = get(Object.class, EXTENSION_CLASS_LABEL);
+
+        if (name != null && c != null) {
+
+            throw new UserErrorException("mutually exclusive implementation name and class are both present");
+        }
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

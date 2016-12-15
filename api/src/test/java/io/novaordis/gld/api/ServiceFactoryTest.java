@@ -19,10 +19,14 @@ package io.novaordis.gld.api;
 import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
 import io.novaordis.gld.api.cache.load.MockLoadStrategy;
 import io.novaordis.gld.api.cache.embedded.EmbeddedCacheService;
+import io.novaordis.gld.api.configuration.ImplementationConfiguration;
 import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -55,7 +59,10 @@ public class ServiceFactoryTest {
         MockLoadDriver md = new MockLoadDriver();
         MockLoadStrategy ms = new MockLoadStrategy();
         MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
-        sc.setImplementation("embedded");
+
+        sc.setImplementationConfigurationMap(buildImplementationConfigMap(
+                "embedded",
+                null));
 
         Service service = ServiceFactory.buildInstance(sc, ms, md);
 
@@ -76,7 +83,9 @@ public class ServiceFactoryTest {
         MockLoadDriver md = new MockLoadDriver();
         MockLoadStrategy ms = new MockLoadStrategy();
         MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
-        sc.setImplementation("io.novaordis.gld.api.MockLoadDriver");
+        sc.setImplementationConfigurationMap(buildImplementationConfigMap(
+                null,
+                "io.novaordis.gld.api.MockLoadDriver"));
 
         try {
 
@@ -98,7 +107,9 @@ public class ServiceFactoryTest {
         MockLoadDriver md = new MockLoadDriver();
         MockLoadStrategy ms = new MockLoadStrategy();
         MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
-        sc.setImplementation("io.novaordis.gld.api.MockService");
+        sc.setImplementationConfigurationMap(buildImplementationConfigMap(
+                null,
+                "io.novaordis.gld.api.MockService"));
 
         try {
 
@@ -119,7 +130,9 @@ public class ServiceFactoryTest {
         MockLoadDriver md = new MockLoadDriver();
         MockLoadStrategy ms = new MockLoadStrategy();
         MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
-        sc.setImplementation("io.novaordis.gld.api.cache.MockCacheService");
+        sc.setImplementationConfigurationMap(buildImplementationConfigMap(
+                null,
+                "io.novaordis.gld.api.cache.MockCacheService"));
 
         Service service = ServiceFactory.buildInstance(sc, ms, md);
 
@@ -139,6 +152,25 @@ public class ServiceFactoryTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private Map<String, Object> buildImplementationConfigMap(String extensionName, String className) {
+
+        Map<String, Object> map = new HashMap<>();
+
+        if (extensionName != null && className != null) {
+            fail("can't have both extension name and class name");
+        }
+
+        if (extensionName != null) {
+            map.put(ImplementationConfiguration.EXTENSION_NAME_LABEL, extensionName);
+        }
+
+        if (className != null) {
+            map.put(ImplementationConfiguration.EXTENSION_CLASS_LABEL, className);
+        }
+
+        return map;
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

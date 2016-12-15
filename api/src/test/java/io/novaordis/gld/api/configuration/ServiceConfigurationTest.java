@@ -174,7 +174,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
 
             String msg = e.getMessage();
             log.info(msg);
-            assertTrue(msg.matches("missing implementation"));
+            assertTrue(msg.matches("missing implementation configuration"));
         }
     }
 

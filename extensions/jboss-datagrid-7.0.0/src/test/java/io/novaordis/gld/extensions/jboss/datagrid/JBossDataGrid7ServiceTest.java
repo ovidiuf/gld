@@ -16,11 +16,16 @@
 
 package io.novaordis.gld.extensions.jboss.datagrid;
 
+import io.novaordis.gld.api.configuration.ImplementationConfiguration;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/14/16
  */
-public class JBossDataGrid7ServiceTest {
+public class JBossDatagrid7ServiceTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -31,6 +36,21 @@ public class JBossDataGrid7ServiceTest {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // Tests -----------------------------------------------------------------------------------------------------------
+
+    // fully qualified class name inference based on extension name ----------------------------------------------------
+
+    @Test
+    public void fullyQualifiedClassNameInference() throws Exception {
+
+        String extensionName = "jboss-datagrid-7";
+
+        String fqcn = ImplementationConfiguration.
+                extensionNameToExtensionServiceFullyQualifiedClassName(extensionName, null);
+
+        assertEquals(JBossDatagrid7Service.class.getName(), fqcn);
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

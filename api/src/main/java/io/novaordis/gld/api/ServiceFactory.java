@@ -16,10 +16,11 @@
 
 package io.novaordis.gld.api;
 
-import io.novaordis.gld.api.cache.embedded.EmbeddedCacheService;
 import io.novaordis.gld.api.configuration.ImplementationConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.utilities.UserErrorException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -28,6 +29,8 @@ import io.novaordis.utilities.UserErrorException;
 public class ServiceFactory {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(ServiceFactory.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -41,50 +44,49 @@ public class ServiceFactory {
 
         ImplementationConfiguration ic = sc.getImplementationConfiguration();
 
-        String extensionName = ic.getExtensionName();
+        String extensionServiceFQCN = ic.getExtensionClass();
 
-        Service service;
-
-        //
-        // "embedded" extensions
-        //
-
-        if (ServiceType.cache.equals(t) && "embedded".equals(extensionName)) {
-
-            service = new EmbeddedCacheService(loadStrategy, loadDriver);
-
-        }
-        else {
+        if (extensionServiceFQCN == null) {
 
             //
-            // attempt to instantiate the fully qualified class name
+            // try name, as the class name is not avaialbe
             //
 
-            throw new RuntimeException("RETURN HERE");
+            String extensionName = ic.getExtensionName();
 
+            //
+            // attempt to build a fully qualified class name based on the extension name, and then attempt to instantiate it
+            //
 
-//            Class c = Class.forName(implementation);
-//
-//            if (!Service.class.isAssignableFrom(c)) {
-//
-//                throw new UserErrorException(implementation + " is not a Service implementation");
-//            }
-//
-//            Object o = c.newInstance();
-//            service = (Service) o;
-//
-//            if (!t.equals(service.getType())) {
-//
-//                throw new UserErrorException(implementation + " is not a " + t + " Service");
-//            }
-//
-//            //
-//            // install dependencies
-//            //
-//
-//            service.setLoadStrategy(loadStrategy);
-//            service.setLoadDriver(loadDriver);
+            extensionServiceFQCN = ImplementationConfiguration.
+                    extensionNameToExtensionServiceFullyQualifiedClassName(extensionName, t);
         }
+
+        log.debug("attempting to load Service implementation class " + extensionServiceFQCN);
+
+        Class c = Class.forName(extensionServiceFQCN);
+
+        if (!Service.class.isAssignableFrom(c)) {
+
+            throw new UserErrorException(extensionServiceFQCN + " is not a Service implementation");
+        }
+
+        log.debug("attempting to instantiate Service implementation class " + extensionServiceFQCN);
+
+        Object o = c.newInstance();
+        Service service = (Service) o;
+
+        if (!t.equals(service.getType())) {
+
+            throw new UserErrorException(extensionServiceFQCN + " is not a " + t + " Service");
+        }
+
+        //
+        // install dependencies
+        //
+
+        service.setLoadStrategy(loadStrategy);
+        service.setLoadDriver(loadDriver);
 
         //
         // establish Service - Load Strategy bidirectional relationship

@@ -37,7 +37,7 @@
         <release_date>${maven.build.timestamp}</release_date>
 
         <slf4j.version>1.7.6</slf4j.version>
-        <novaordis.utilities.version>4.3.0-SNAPSHOT-5</novaordis.utilities.version>
+        <novaordis.utilities.version>4.3.0-SNAPSHOT-6</novaordis.utilities.version>
     </properties>
 
     <modules>

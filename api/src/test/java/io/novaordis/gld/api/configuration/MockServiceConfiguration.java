@@ -62,7 +62,8 @@ public class MockServiceConfiguration extends LowLevelConfigurationBase implemen
     @Override
     public ImplementationConfiguration getImplementationConfiguration() throws UserErrorException {
 
-        throw new RuntimeException("getImplementationConfiguration() NOT YET IMPLEMENTED");
+        return new ImplementationConfigurationImpl(
+                get(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL), new File("."));
     }
 
     @Override
@@ -88,9 +89,9 @@ public class MockServiceConfiguration extends LowLevelConfigurationBase implemen
         this.loadStrategyName = s;
     }
 
-    public void setImplementation(String s) {
+    public void setImplementationConfigurationMap(Map<String, Object> m) {
 
-        throw new RuntimeException("RETURN HERE");
+        set(m, ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL);
     }
 
     public void setServiceType(ServiceType t) {
