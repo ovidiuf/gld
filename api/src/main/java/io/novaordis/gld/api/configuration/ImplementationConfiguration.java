@@ -57,7 +57,7 @@ public interface ImplementationConfiguration extends LowLevelConfiguration {
      * Example: jboss-datagrid-7 generates "io.novaordis.gld.extensions.jboss.datagrid.JBossDatagrid7Service"
      */
     static String extensionNameToExtensionServiceFullyQualifiedClassName(
-            String extensionName, ServiceType serviceType) throws Exception {
+            String extensionName, ServiceType serviceType) throws UserErrorException {
 
         if ("embedded".equals(extensionName)) {
 
@@ -131,7 +131,7 @@ public interface ImplementationConfiguration extends LowLevelConfiguration {
      *
      * @exception UserErrorException if the value is not a string.
      */
-    public String getExtensionName() throws UserErrorException;
+    String getExtensionName() throws UserErrorException;
 
     /**
      * The fully qualified class name to be used to instantiate the extension service implementation.
@@ -142,7 +142,7 @@ public interface ImplementationConfiguration extends LowLevelConfiguration {
      *
      * @exception UserErrorException if the value is not a string.
      */
-    public String getExtensionClass() throws UserErrorException;
+    String getExtensionClass() throws UserErrorException;
 
 
     // Public ----------------------------------------------------------------------------------------------------------

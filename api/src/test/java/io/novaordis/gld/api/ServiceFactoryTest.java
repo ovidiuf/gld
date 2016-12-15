@@ -78,7 +78,33 @@ public class ServiceFactoryTest {
     }
 
     @Test
-    public void buildInstance_ImplementationIsAFullyQualifiedClassName_ImplementationIsNotAService() throws Exception {
+    public void buildInstance_ImplementationIsAFullyQualifiedClassName_ClassNotFound()
+            throws Exception {
+
+        MockLoadDriver md = new MockLoadDriver();
+        MockLoadStrategy ms = new MockLoadStrategy();
+        MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
+        sc.setImplementationConfigurationMap(buildImplementationConfigMap(
+                null,
+                "i.am.sure.there.is.no.such.Class"));
+
+        try {
+
+            ServiceFactory.buildInstance(sc, ms, md);
+            fail("should throw exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("extension class i.am.sure.there.is.no.such.Class not found, make sure the corresponding extension was installed",
+                    msg);
+        }
+    }
+
+    @Test
+    public void buildInstance_ImplementationIsAFullyQualifiedClassName_ImplementationIsNotAService()
+            throws Exception {
 
         MockLoadDriver md = new MockLoadDriver();
         MockLoadStrategy ms = new MockLoadStrategy();

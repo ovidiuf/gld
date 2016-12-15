@@ -36,14 +36,17 @@ public class ServiceFactory {
 
     /**
      * The implementation also establishes the Service - LoadStrategy bidirectional relationship.
+     *
+     * @exception UserErrorException on any instantiation exception, with human friendly error message
      */
     public static Service buildInstance(ServiceConfiguration sc, LoadStrategy loadStrategy, LoadDriver loadDriver)
-            throws Exception {
+            throws UserErrorException {
 
         ServiceType t = sc.getType();
 
         ImplementationConfiguration ic = sc.getImplementationConfiguration();
 
+        String extensionName = null;
         String extensionServiceFQCN = ic.getExtensionClass();
 
         if (extensionServiceFQCN == null) {
@@ -52,7 +55,7 @@ public class ServiceFactory {
             // try name, as the class name is not avaialbe
             //
 
-            String extensionName = ic.getExtensionName();
+            extensionName = ic.getExtensionName();
 
             //
             // attempt to build a fully qualified class name based on the extension name, and then attempt to instantiate it
@@ -64,7 +67,23 @@ public class ServiceFactory {
 
         log.debug("attempting to load Service implementation class " + extensionServiceFQCN);
 
-        Class c = Class.forName(extensionServiceFQCN);
+        Class c;
+
+        try {
+
+            c = Class.forName(extensionServiceFQCN);
+
+        }
+        catch (Exception e) {
+
+            log.debug(extensionServiceFQCN + " loading failed", e);
+
+            String msg = "extension class " + extensionServiceFQCN + " not found, make sure ";
+            msg += extensionName == null ?
+                    "the corresponding extension was installed" :
+                    "'" + extensionName + "' extension was installed";
+            throw new UserErrorException(msg, e);
+        }
 
         if (!Service.class.isAssignableFrom(c)) {
 
@@ -73,7 +92,24 @@ public class ServiceFactory {
 
         log.debug("attempting to instantiate Service implementation class " + extensionServiceFQCN);
 
-        Object o = c.newInstance();
+        Object o;
+
+        try {
+
+            o = c.newInstance();
+
+        }
+        catch(Exception e) {
+
+            log.debug(extensionServiceFQCN + " class instantiation failed", e);
+            String msg = "extension class " + extensionServiceFQCN + " ";
+            msg += extensionName != null ? "belonging to extension '" + extensionName + "' " : "";
+            msg += "failed to instantiate";
+            String emsg = e.getMessage();
+            msg += emsg != null ? ": " + emsg : "";
+            throw new UserErrorException(msg, e);
+        }
+
         Service service = (Service) o;
 
         if (!t.equals(service.getType())) {
