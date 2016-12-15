@@ -89,6 +89,8 @@ public class Main {
             File configurationFile = extractConfigurationFile(arguments);
             Configuration c = new YamlBasedConfiguration(configurationFile);
 
+            log.debug("configuration file " + configurationFile + " is syntactically correct");
+
             ld = new LoadDriverImpl("0", background);
 
             ld.init(c);

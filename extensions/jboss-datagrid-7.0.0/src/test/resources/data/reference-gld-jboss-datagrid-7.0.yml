@@ -8,14 +8,23 @@ service:
   value-size: 1024
 
   implementation:
-    name: jboss-datagrid
+    name: jboss-datagrid-7
     version: 7.0.0
+    classpath: ${JDG_HOME}/client/hotrod.jar # optional, takes precence over the libraries we ship with. if 'classpath'
+                                             # is missing, the shipped libraries will be used
+
+    #
+    # implementation-specific configuration
+    #
+    cache-container: clustered
+    cache: novaordis
     nodes:
-      localhost:11222
+      - localhost:11222
+      - localhost:11422
 
   load-strategy:
     name: read-then-write-on-miss
-    use-different-values: true
+    reuse-value: true
 
 load:
   threads: 1
