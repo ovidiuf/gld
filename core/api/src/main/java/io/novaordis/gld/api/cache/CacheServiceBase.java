@@ -23,7 +23,7 @@ import io.novaordis.gld.api.ServiceType;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/15/16
  */
-public abstract class CacheServiceBase extends ServiceBase {
+public abstract class CacheServiceBase extends ServiceBase implements CacheService {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

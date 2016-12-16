@@ -34,7 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/2/16
  */
-public class EmbeddedCacheService extends CacheServiceBase implements CacheService {
+public class EmbeddedCacheService extends CacheServiceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
