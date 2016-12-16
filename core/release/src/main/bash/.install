@@ -42,7 +42,7 @@ function make-convenience-links() {
 function create-extension-directory() {
 
     local extensions_dir=$(dirname $0)/../extensions
-    mkdir ${extensions_dir}} || { echo "failed to create extensions directory ${extensions_dir}" 1>&2; exit 1; }
+    mkdir ${extensions_dir} || { echo "failed to create extensions directory ${extensions_dir}" 1>&2; exit 1; }
 }
 
 function configure-user-environment() {
