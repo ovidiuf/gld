@@ -46,34 +46,24 @@ public abstract class ServiceTest {
     // topology --------------------------------------------------------------------------------------------------------
 
     @Test
-    public void nullLoadStrategy() throws Exception {
-
-        MockLoadDriver md = new MockLoadDriver();
-
-        //
-        // null load strategy is acceptable, the service instance can be initialized later with setLoadStrategy()
-        //
-        Service s = getServiceToTest(null, md);
-
-        assertNull(s.getLoadStrategy());
-        MockLoadStrategy mls = new MockLoadStrategy();
-        s.setLoadStrategy(mls);
-
-        assertEquals(mls, s.getLoadStrategy());
-    }
-
-    @Test
     public void identity() throws Exception {
 
-        MockLoadStrategy ms = new MockLoadStrategy();
-        MockLoadDriver md = new MockLoadDriver();
-
-        Service s = getServiceToTest(ms, md);
+        Service s = getServiceToTest();
 
         LoadStrategy ls = s.getLoadStrategy();
+        assertNull(ls);
+
+        MockLoadStrategy ms = new MockLoadStrategy();
+        s.setLoadStrategy(ms);
+        ls = s.getLoadStrategy();
         assertEquals(ms, ls);
 
         LoadDriver ld = s.getLoadDriver();
+        assertNull(ld);
+
+        MockLoadDriver md = new MockLoadDriver();
+        s.setLoadDriver(md);
+        ld = s.getLoadDriver();
         assertEquals(md, ld);
     }
 
@@ -82,11 +72,7 @@ public abstract class ServiceTest {
     @Test
     public void start_MissingLoadStrategy() throws Exception {
 
-        MockLoadStrategy ms = new MockLoadStrategy();
-        MockLoadDriver md = new MockLoadDriver();
-
-        Service s = getServiceToTest(ms, md);
-        s.setLoadStrategy(null);
+        Service s = getServiceToTest();
 
         assertNull(s.getLoadStrategy());
 
@@ -178,10 +164,13 @@ public abstract class ServiceTest {
     @Test
     public void loadStrategyLifecycleIsCorrelatedToTheServiceLifecycle() throws Exception {
 
+        Service s = getServiceToTest();
+
         MockLoadStrategy ms = new MockLoadStrategy();
         MockLoadDriver md = new MockLoadDriver();
 
-        Service s = getServiceToTest(ms, md);
+        s.setLoadStrategy(ms);
+        s.setLoadDriver(md);
 
         s.start();
 
@@ -201,7 +190,7 @@ public abstract class ServiceTest {
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected abstract Service getServiceToTest(LoadStrategy s, LoadDriver d) throws Exception;
+    protected abstract Service getServiceToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

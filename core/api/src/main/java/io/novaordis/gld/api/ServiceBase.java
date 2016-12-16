@@ -43,6 +43,14 @@ public abstract class ServiceBase implements Service {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
+     * No argument constructor to be used by reflection instantiation of subclasess.
+     */
+    public ServiceBase() {
+
+        this(null, null);
+    }
+
+    /**
      * @param loadStrategy - null is acceptable, the Service instance may be initialized later with setLoadStrategy().
      * @param loadDriver - null is acceptable, the Service instance may be initialized later with setLoadDriver().
      * @@exception IllegalArgumentException on null load strategy.

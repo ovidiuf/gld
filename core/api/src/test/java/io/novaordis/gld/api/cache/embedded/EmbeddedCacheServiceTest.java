@@ -40,9 +40,9 @@ public class EmbeddedCacheServiceTest extends ServiceTest {
     // Package protected -----------------------------------------------------------------------------------------------
 
     @Override
-    protected Service getServiceToTest(LoadStrategy s, LoadDriver d) throws Exception {
+    protected Service getServiceToTest() throws Exception {
 
-        return new EmbeddedCacheService(s, d);
+        return new EmbeddedCacheService();
     }
 
     // Protected -------------------------------------------------------------------------------------------------------
