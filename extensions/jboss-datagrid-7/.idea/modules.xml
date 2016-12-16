@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/jboss-datagrid-7.iml" filepath="$PROJECT_DIR$/jboss-datagrid-7.iml" />
+      <module fileurl="file://$PROJECT_DIR$/main/jboss-datagrid-7.iml" filepath="$PROJECT_DIR$/main/jboss-datagrid-7.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jboss-datagrid-7-gld-extension.iml" filepath="$PROJECT_DIR$/jboss-datagrid-7-gld-extension.iml" />
+      <module fileurl="file://$PROJECT_DIR$/release/release.iml" filepath="$PROJECT_DIR$/release/release.iml" />
     </modules>
   </component>
 </project>
