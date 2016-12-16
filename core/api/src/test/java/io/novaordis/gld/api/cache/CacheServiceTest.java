@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.cache.embedded;
+package io.novaordis.gld.api.cache;
 
-import io.novaordis.gld.api.cache.CacheServiceTest;
+import io.novaordis.gld.api.ServiceTest;
+import io.novaordis.gld.api.ServiceType;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 12/15/16
  */
-public class EmbeddedCacheServiceTest extends CacheServiceTest {
+public abstract class CacheServiceTest extends ServiceTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,15 +38,21 @@ public class EmbeddedCacheServiceTest extends CacheServiceTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // Package protected -----------------------------------------------------------------------------------------------
+    // Tests -----------------------------------------------------------------------------------------------------------
 
-    @Override
-    protected EmbeddedCacheService getServiceToTest() throws Exception {
+    @Test
+    public void getType() throws Exception {
 
-        return new EmbeddedCacheService();
+        CacheService s = getServiceToTest();
+        assertEquals(ServiceType.cache, s.getType());
     }
 
+    // Package protected -----------------------------------------------------------------------------------------------
+
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected abstract CacheService getServiceToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -13,6 +13,7 @@ function main() {
 
     link-to-installation-directory
     make-convenience-links
+    create-extension-directory
     configure-user-environment
     ${remove_older_releases} && remove-older-releases
 }
@@ -28,7 +29,7 @@ function link-to-installation-directory() {
     fi
 
     (cd $(dirname $0)/../..; ln -s ./${release_directory} ${link_name}) || \
-        { "failed to link to ${release_directory}" 1>&2; exit 1; }
+        { echo "failed to link to ${release_directory}" 1>&2; exit 1; }
 }
 
 function make-convenience-links() {
@@ -36,6 +37,12 @@ function make-convenience-links() {
     for i in build install release; do
         (cd $(dirname $0); ln -s ./nort ${i}) || { echo "failed to link as ${i}" 1>&2; exit 1; }
     done
+}
+
+function create-extension-directory() {
+
+    local extensions_dir=$(dirname $0)/../extensions
+    mkdir ${extensions_dir}} || { echo "failed to create extensions directory ${extensions_dir}" 1>&2; exit 1; }
 }
 
 function configure-user-environment() {
@@ -65,4 +72,4 @@ function remove-older-releases() {
     done
 }
 
-main $@
+main
