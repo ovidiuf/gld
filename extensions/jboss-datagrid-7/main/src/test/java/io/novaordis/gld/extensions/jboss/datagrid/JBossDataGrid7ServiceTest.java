@@ -52,6 +52,16 @@ public class JBossDatagrid7ServiceTest {
         assertEquals(JBossDatagrid7Service.class.getName(), fqcn);
     }
 
+    // identity --------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void identity() throws Exception {
+
+        JBossDatagrid7Service s = new JBossDatagrid7Service();
+
+
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

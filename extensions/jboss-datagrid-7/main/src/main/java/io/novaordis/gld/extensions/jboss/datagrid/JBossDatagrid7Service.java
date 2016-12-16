@@ -16,11 +16,8 @@
 
 package io.novaordis.gld.extensions.jboss.datagrid;
 
-import io.novaordis.gld.api.LoadDriver;
-import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.ServiceBase;
-import io.novaordis.gld.api.ServiceType;
-import io.novaordis.gld.api.cache.CacheService;
+
+import io.novaordis.gld.api.cache.CacheServiceBase;
 
 import java.util.Set;
 
@@ -28,7 +25,7 @@ import java.util.Set;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/14/16
  */
-public class JBossDatagrid7Service extends ServiceBase implements CacheService {
+public class JBossDatagrid7Service extends CacheServiceBase {
 
 
     // Constants -------------------------------------------------------------------------------------------------------
@@ -38,17 +35,6 @@ public class JBossDatagrid7Service extends ServiceBase implements CacheService {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    protected JBossDatagrid7Service(LoadStrategy loadStrategy, LoadDriver loadDriver) {
-
-        super(loadStrategy, loadDriver);
-    }
-
-    // Service implementation ------------------------------------------------------------------------------------------
-
-    public ServiceType getType() {
-        throw new RuntimeException("getType() NOT YET IMPLEMENTED");
-    }
 
     // CacheService implementation -------------------------------------------------------------------------------------
 
