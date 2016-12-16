@@ -16,14 +16,12 @@
 
 package io.novaordis.gld.api.cache.embedded;
 
-import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.ServiceBase;
 import io.novaordis.gld.api.ServiceType;
 import io.novaordis.gld.api.cache.CacheService;
+import io.novaordis.gld.api.cache.CacheServiceBase;
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.ContentType;
 import io.novaordis.gld.api.todiscard.Node;
-import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.utilities.UserErrorException;
 
 import java.util.List;
@@ -36,7 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/2/16
  */
-public class EmbeddedCacheService extends ServiceBase implements CacheService {
+public class EmbeddedCacheService extends CacheServiceBase implements CacheService {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -53,14 +51,6 @@ public class EmbeddedCacheService extends ServiceBase implements CacheService {
      */
     @SuppressWarnings("unused")
     public EmbeddedCacheService() {
-
-        this(null, null);
-    }
-
-    public EmbeddedCacheService(LoadStrategy loadStrategy, LoadDriver loadDriver) {
-
-        super(loadStrategy, loadDriver);
-
         this.cache = new ConcurrentHashMap<>();
     }
 

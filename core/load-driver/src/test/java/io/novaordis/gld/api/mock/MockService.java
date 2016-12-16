@@ -16,8 +16,6 @@
 
 package io.novaordis.gld.api.mock;
 
-import io.novaordis.gld.api.LoadDriver;
-import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.ServiceBase;
 import io.novaordis.gld.api.ServiceType;
@@ -57,12 +55,6 @@ public class MockService extends ServiceBase {
 
     public MockService() {
 
-        this(null, null);
-    }
-
-    public MockService(LoadStrategy loadStrategy, LoadDriver loadDriver) {
-
-        super(loadStrategy, loadDriver);
         perThreadInvocationCount = new ConcurrentHashMap<>();
         executedOperations = new ArrayList<>();
     }
