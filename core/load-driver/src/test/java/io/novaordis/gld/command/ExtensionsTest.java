@@ -17,10 +17,14 @@
 package io.novaordis.gld.command;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -29,6 +33,8 @@ import static org.junit.Assert.assertNotNull;
 public class ExtensionsTest extends CommandTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(ExtensionsTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -52,6 +58,23 @@ public class ExtensionsTest extends CommandTest {
 
         Extensions v = getCommandToTest();
         v.execute();
+    }
+
+    // extractExtensionInfoFromClasspath() --------------------------------------------------------------------------------
+
+    @Test
+    public void extractExtensionInfoFromClasspath_Null() throws Exception {
+
+        try {
+            Extensions.extractExtensionInfoFromClasspath(null);
+            fail("should throw exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("null classpath", msg);
+        }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

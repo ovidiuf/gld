@@ -16,7 +16,6 @@
 
 package io.novaordis.gld.command;
 
-import io.novaordis.utilities.version.VersionUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,20 +36,24 @@ public class Extensions implements Command {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    // Attributes ------------------------------------------------------------------------------------------------------
+    // Package protected status ----------------------------------------------------------------------------------------
 
-    // Constructors ----------------------------------------------------------------------------------------------------
+    /**
+     * Scans the class path and extracts as much extension information as it can.
+     *
+     * @return a list of ExtensionInfo instances. May return an empty list, but never null.
+     *
+     * @exception IllegalArgumentException if it gets a null classpath
+     */
+    static List<ExtensionInfo> extractExtensionInfoFromClasspath(String classpath) {
 
-    // Command implementation ------------------------------------------------------------------------------------------
+        log.debug("extracting extension info from classpath " + classpath);
 
-    @Override
-    public void execute() {
+        if (classpath == null) {
+            throw new IllegalArgumentException("null classpath");
+        }
 
-        List<ExtensionInfo> extensionInfos = new ArrayList<>();
-
-        //
-        // read the classpath
-        //
+        List<ExtensionInfo> result = new ArrayList<>();
 
         //
         // identify the extension jars
@@ -68,6 +71,36 @@ public class Extensions implements Command {
         // read version
         //
 
+        return result;
+    }
+
+    // Attributes ------------------------------------------------------------------------------------------------------
+
+    // Constructors ----------------------------------------------------------------------------------------------------
+
+    // Command implementation ------------------------------------------------------------------------------------------
+
+    @Override
+    public void execute() {
+
+        //
+        // read the classpath
+        //
+
+        String javaClassPathPropertyName = "java.class.path";
+        String classPath = System.getProperty(javaClassPathPropertyName);
+
+        if (classPath == null) {
+
+            throw new IllegalStateException("could not find '" + javaClassPathPropertyName + "' property");
+        }
+
+        //
+        // identify the extension jars
+        //
+
+        List<ExtensionInfo> extensionInfos = extractExtensionInfoFromClasspath(classPath);
+
         if (extensionInfos.isEmpty()) {
 
             System.out.println("no extensions installed");
@@ -75,7 +108,7 @@ public class Extensions implements Command {
         else {
             for (ExtensionInfo ei : extensionInfos) {
 
-                String s = "";
+                String s = ei.getExtensionName() + " " + ei.getExtensionVersion();
                 System.out.println(s);
             }
         }

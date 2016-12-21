@@ -20,7 +20,7 @@ package io.novaordis.gld.command;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/21/16
  */
-public class ExtensionInfo {
+public class ExtensionInfoTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,15 +32,7 @@ public class ExtensionInfo {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public String getExtensionName() {
-
-        return "?";
-    }
-
-    public String getExtensionVersion() {
-
-        return "?";
-    }
+    // Tests -----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
