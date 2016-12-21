@@ -11,7 +11,11 @@
 
     <files>
         <file>
+            <!--
+                Needs the extension name replaced
+            -->
             <source>./src/main/bash/.install</source>
+            <filtered>true</filtered>
             <outputDirectory>bin</outputDirectory>
             <fileMode>0755</fileMode>
         </file>
