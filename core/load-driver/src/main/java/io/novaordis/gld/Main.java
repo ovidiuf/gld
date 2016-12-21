@@ -19,11 +19,11 @@ package io.novaordis.gld;
 import io.novaordis.gld.api.configuration.Configuration;
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.configuration.YamlBasedConfiguration;
+import io.novaordis.gld.command.Command;
 import io.novaordis.gld.driver.LoadDriverImpl;
 import io.novaordis.gld.driver.Util;
 import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.env.EnvironmentVariableProvider;
-import io.novaordis.utilities.version.VersionUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,22 +51,23 @@ public class Main {
 
         List<String> arguments = new ArrayList<>(Arrays.asList(args));
 
-        int exitCode;
-
         //
         // attempt to handle first the commands that do not need a load driver instance
         //
 
-        if ((exitCode = displayVersion(arguments)) >= 0) {
+        Command c = Command.toCommand(arguments);
 
-            System.exit(exitCode);
+        if (c != null) {
+
+            c.execute();
+            System.exit(0);
         }
 
         //
         // instantiate the load driver instance and execute the life cycle
         //
 
-        exitCode = loadDriverLifeCycle(arguments);
+        int exitCode = loadDriverLifeCycle(arguments);
         System.exit(exitCode);
 
     }
@@ -256,29 +257,6 @@ public class Main {
         }
 
         throw new UserErrorException("invalid " + optionLiteral + " value: \"" + s + "\"");
-    }
-
-    /**
-     * @return a zero exit code if the version was found and displayed successfully, a non-zero positive exit code
-     * in case of a failure, and a negative exit code if there was no version display request
-     */
-    static int displayVersion(List<String> arguments) {
-
-        for(String s: arguments) {
-
-            if ("version".equals(s)) {
-
-                String version = VersionUtilities.getVersion();
-                String releaseDate = VersionUtilities.getReleaseDate();
-
-                System.out.println("version " + version);
-                System.out.println("release date " + releaseDate);
-
-                return 0;
-            }
-        }
-
-        return -1;
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------

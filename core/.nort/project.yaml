@@ -1,0 +1,15 @@
+#
+# gld release configuration 
+#
+qualification:
+
+  os.command.to.get.installed.version: gld version
+
+build:
+
+publish:
+  local.artifact.repository.root: ${M2}
+
+install:
+  installation.directory: ${RUNTIME_DIR}
+
