@@ -25,10 +25,7 @@
                           finalName impacts only the locally built artifact, 
                           not the name of the artifact that gets deployed in the repository.
                     -->
-                    <!--
                     <finalName>jboss-datagrid-7-${project.version}</finalName>
-                    -->
-                    <finalName>jboss-datagrid-7</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
                         <descriptor>src/assembly/release.xml</descriptor>

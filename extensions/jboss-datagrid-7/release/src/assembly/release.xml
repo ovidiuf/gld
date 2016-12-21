@@ -9,9 +9,17 @@
 
     <includeBaseDirectory>true</includeBaseDirectory>
 
+    <files>
+        <file>
+            <source>./src/main/bash/.install</source>
+            <outputDirectory>bin</outputDirectory>
+            <fileMode>0755</fileMode>
+        </file>
+    </files>
+
     <dependencySets>
         <dependencySet>
-            <outputDirectory>./</outputDirectory>
+            <outputDirectory>.</outputDirectory>
         </dependencySet>
     </dependencySets>
 
