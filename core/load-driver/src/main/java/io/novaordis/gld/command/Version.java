@@ -17,6 +17,8 @@
 package io.novaordis.gld.command;
 
 import io.novaordis.utilities.version.VersionUtilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -28,6 +30,8 @@ public class Version implements Command {
 
     public static final String LITERAL = "version";
 
+    private static final Logger log = LoggerFactory.getLogger(Version.class);
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
@@ -38,6 +42,8 @@ public class Version implements Command {
 
     @Override
     public void execute() {
+
+        log.debug("executing version command");
 
         String version = VersionUtilities.getVersion();
         String releaseDate = VersionUtilities.getReleaseDate();
