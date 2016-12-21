@@ -44,6 +44,11 @@ public interface Command {
 
                 return new Version();
             }
+            else if (Extensions.LITERAL.equals(s)) {
+
+                return new Extensions();
+            }
+
         }
 
         return null;
