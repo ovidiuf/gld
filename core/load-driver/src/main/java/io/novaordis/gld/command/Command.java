@@ -16,8 +16,6 @@
 
 package io.novaordis.gld.command;
 
-import io.novaordis.utilities.UserErrorException;
-
 import java.util.List;
 
 /**

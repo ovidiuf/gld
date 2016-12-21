@@ -16,70 +16,19 @@
 
 package io.novaordis.gld.command;
 
-import io.novaordis.utilities.version.VersionUtilities;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/21/16
  */
-public class Extensions implements Command {
+public class ExtensionInfo {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    public static final String LITERAL = "extensions";
-
-    private static final Logger log = LoggerFactory.getLogger(Extensions.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    // Command implementation ------------------------------------------------------------------------------------------
-
-    @Override
-    public void execute() {
-
-        List<ExtensionInfo> extensionInfos = new ArrayList<>();
-
-        //
-        // read the classpath
-        //
-
-        //
-        // identify the extension jars
-        //
-
-        //
-        // infer the implementation class
-        //
-
-        //
-        // instantiate it
-        //
-
-        //
-        // read version
-        //
-
-        if (extensionInfos.isEmpty()) {
-
-            System.out.println("no extensions installed");
-        }
-        else {
-            for (ExtensionInfo ei : extensionInfos) {
-
-                String s = "";
-                System.out.println(s);
-            }
-        }
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
