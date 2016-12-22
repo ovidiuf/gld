@@ -17,7 +17,12 @@
 package io.novaordis.gld.extensions.jboss.datagrid;
 
 import io.novaordis.gld.api.cache.CacheServiceBase;
+import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.version.VersionUtilities;
+import org.infinispan.client.hotrod.RemoteCache;
+import org.infinispan.client.hotrod.RemoteCacheManager;
+import org.infinispan.client.hotrod.configuration.Configuration;
+import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,21 +59,61 @@ public class JBossDatagrid7Service extends CacheServiceBase {
         return VersionUtilities.getVersion(EXTENSION_VERSION_METADATA_FILE_NAME);
     }
 
+    @Override
+    public void start() throws Exception {
+
+        super.start();
+
+        String host = "localhost";
+        int port = 11222;
+        String cacheName = null;
+
+        Configuration c = new ConfigurationBuilder().addServer().host(host).port(port).build();
+
+        RemoteCacheManager remoteCacheManager = new RemoteCacheManager(c);
+
+        RemoteCache cache;
+
+        if (cacheName == null) {
+
+            cache = remoteCacheManager.getCache();
+        }
+        else {
+
+            cache = remoteCacheManager.getCache(cacheName);
+        }
+
+        if (cache == null) {
+
+            throw new UserErrorException("no such cache: " + cacheName);
+        }
+    }
+
+    @Override
+    public void stop() {
+
+        super.stop();
+    }
+
     // CacheService implementation -------------------------------------------------------------------------------------
 
     public String get(String key) throws Exception {
+
         throw new RuntimeException("get() NOT YET IMPLEMENTED");
     }
 
     public void put(String key, String value) throws Exception {
+
         throw new RuntimeException("put() NOT YET IMPLEMENTED");
     }
 
     public void remove(String key) throws Exception {
+
         throw new RuntimeException("remove() NOT YET IMPLEMENTED");
     }
 
     public Set<String> keys() throws Exception {
+
         throw new RuntimeException("keys() NOT YET IMPLEMENTED");
     }
 

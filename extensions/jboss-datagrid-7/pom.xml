@@ -8,16 +8,30 @@
 
     <groupId>io.novaordis.gld.extensions.jboss-datagrid-7</groupId>
     <artifactId>jboss-datagrid-7-gld-extension</artifactId>
-    <version>1.0.0-SNAPSHOT-9</version>
+    <version>1.0.0-SNAPSHOT-10</version>
     <packaging>pom</packaging>
 
     <properties>
-
 
         <!--
             The official extension name
         -->
         <extension.name>jboss-datagrid-7</extension.name>
+
+        <!--
+            Dependencies
+        -->
+
+        <gld.api.version>1.0.0-SNAPSHOT-25</gld.api.version>
+        <novaordis.utilities.version>4.4.0-SNAPSHOT-6</novaordis.utilities.version>
+        <jdg.infinspan.client.hotrod.version>8.3.0.Final-redhat-1</jdg.infinspan.client.hotrod.version>
+        <slf4j.version>1.7.6</slf4j.version>
+
+        <!--
+            End of Dependencies
+        -->
+
+        <jboss.datagrid.version>7.0.0</jboss.datagrid.version>
 
         <source.java.version>1.8</source.java.version>
         <target.java.version>1.8</target.java.version>
@@ -26,16 +40,18 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>MM/dd/yy</maven.build.timestamp.format>
         <release_date>${maven.build.timestamp}</release_date>
-
-        <!--
-            Dependency versions
-        -->
-
-        <slf4j.version>1.7.6</slf4j.version>
-        <novaordis.utilities.version>4.4.0-SNAPSHOT-6</novaordis.utilities.version>
-        <gld.api.version>1.0.0-SNAPSHOT-25</gld.api.version>
-
     </properties>
+
+    <repositories>
+        <repository>
+            <id>jboss-eap-repository</id>
+            <url>file:///Users/ovidiu/runtime/jboss-eap-7.0.0.GA-maven-repository/maven-repository</url>
+        </repository>
+        <repository>
+            <id>jboss-datagrid-repository</id>
+            <url>file:///Users/ovidiu/runtime/jboss-datagrid-${jboss.datagrid.version}-maven-repository/maven-repository</url>
+        </repository>
+    </repositories>
 
     <modules>
         <module>main</module>
@@ -44,9 +60,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
+            <groupId>io.novaordis.gld</groupId>
+            <artifactId>gld-api</artifactId>
+            <version>${gld.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -56,17 +72,38 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
-            <groupId>io.novaordis.gld</groupId>
-            <artifactId>gld-api</artifactId>
-            <version>${gld.api.version}</version>
-            <scope>provided</scope>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-client-hotrod</artifactId>
+            <version>${jdg.infinspan.client.hotrod.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-commons</artifactId>
+            <version>${jdg.infinspan.client.hotrod.version}</version>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-query-dsl</artifactId>
+            <version>${jdg.infinspan.client.hotrod.version}</version>
+        </dependency>
+        -->
+
     </dependencies>
 
     <build>

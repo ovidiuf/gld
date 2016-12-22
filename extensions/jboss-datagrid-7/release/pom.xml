@@ -9,7 +9,7 @@
     <parent>
         <groupId>io.novaordis.gld.extensions.jboss-datagrid-7</groupId>
         <artifactId>jboss-datagrid-7-gld-extension</artifactId>
-        <version>1.0.0-SNAPSHOT-9</version>
+        <version>1.0.0-SNAPSHOT-10</version>
     </parent>
 
     <artifactId>release</artifactId>
@@ -22,8 +22,8 @@
                 <version>2.6</version>
                 <configuration>
                     <!--
-                          finalName impacts only the locally built artifact, 
-                          not the name of the artifact that gets deployed in the repository.
+                          finalName impacts only the locally built artifact, not the name of the artifact that gets
+                          deployed in the repository.
                     -->
                     <finalName>${extension.name}-${project.version}</finalName>
                     <appendAssemblyId>false</appendAssemblyId>

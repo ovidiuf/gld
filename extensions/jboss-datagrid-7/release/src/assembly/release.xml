@@ -22,9 +22,28 @@
     </files>
 
     <dependencySets>
+
+        <!--
+            We place the integration library into the root directory of the extension ZIP file
+        -->
         <dependencySet>
             <outputDirectory>.</outputDirectory>
+            <includes>
+                <include>io.novaordis.gld.extensions.jboss-datagrid-7:*</include>
+            </includes>
         </dependencySet>
+
+        <!--
+            We place the service external dependencies under a sub-directory whose name is the version we ship
+            dependencies for. We do that by including everything, except the integration library.
+        -->
+        <dependencySet>
+            <outputDirectory>${jboss.datagrid.version}</outputDirectory>
+            <excludes>
+                <exclude>io.novaordis.gld.extensions.jboss-datagrid-7:*</exclude>
+            </excludes>
+        </dependencySet>
+
     </dependencySets>
 
 </assembly>
