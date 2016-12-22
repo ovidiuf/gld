@@ -16,9 +16,10 @@
 
 package io.novaordis.gld.extensions.jboss.datagrid;
 
-
 import io.novaordis.gld.api.cache.CacheServiceBase;
 import io.novaordis.utilities.version.VersionUtilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
@@ -30,10 +31,9 @@ public class JBossDatagrid7Service extends CacheServiceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    //
-    // will be filtered by Maven and replaced with the current version
-    //
-    public static final String VERSION = "${project.version}";
+    private static final Logger log = LoggerFactory.getLogger(JBossDatagrid7Service.class);
+
+    public static final String EXTENSION_VERSION_METADATA_FILE_NAME = "jboss-datagrid-7-extension-version";
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -41,12 +41,17 @@ public class JBossDatagrid7Service extends CacheServiceBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public JBossDatagrid7Service() {
+
+        log.debug(this + " constructed");
+    }
+
     // Overrides -------------------------------------------------------------------------------------------------------
 
     @Override
     public String getVersion() {
 
-        return VERSION;
+        return VersionUtilities.getVersion(EXTENSION_VERSION_METADATA_FILE_NAME);
     }
 
     // CacheService implementation -------------------------------------------------------------------------------------

@@ -17,10 +17,12 @@
 package io.novaordis.gld.extensions.jboss.datagrid;
 
 import io.novaordis.gld.api.ServiceFactory;
-import io.novaordis.gld.api.configuration.ImplementationConfiguration;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -29,6 +31,8 @@ import static org.junit.Assert.assertEquals;
 public class JBossDatagrid7ServiceTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(JBossDatagrid7ServiceTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -58,8 +62,24 @@ public class JBossDatagrid7ServiceTest {
     public void identity() throws Exception {
 
         JBossDatagrid7Service s = new JBossDatagrid7Service();
+    }
 
+    // version ---------------------------------------------------------------------------------------------------------
 
+    @Test
+    public void version() throws Exception {
+
+        JBossDatagrid7Service s = new JBossDatagrid7Service();
+
+        String version = s.getVersion();
+
+        log.info(version);
+
+        assertNotNull(version);
+
+        String mavenInjectedProjectVersion = System.getProperty("maven.injected.project.version");
+        assertNotNull(mavenInjectedProjectVersion);
+        assertEquals(mavenInjectedProjectVersion, version);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
