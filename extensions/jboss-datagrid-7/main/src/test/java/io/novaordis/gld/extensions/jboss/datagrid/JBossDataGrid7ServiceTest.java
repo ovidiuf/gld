@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.extensions.jboss.datagrid;
 
+import io.novaordis.gld.api.ServiceFactory;
 import io.novaordis.gld.api.configuration.ImplementationConfiguration;
 import org.junit.Test;
 
@@ -46,8 +47,7 @@ public class JBossDatagrid7ServiceTest {
 
         String extensionName = "jboss-datagrid-7";
 
-        String fqcn = ImplementationConfiguration.
-                extensionNameToExtensionServiceFullyQualifiedClassName(extensionName, null);
+        String fqcn = ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName(extensionName);
 
         assertEquals(JBossDatagrid7Service.class.getName(), fqcn);
     }

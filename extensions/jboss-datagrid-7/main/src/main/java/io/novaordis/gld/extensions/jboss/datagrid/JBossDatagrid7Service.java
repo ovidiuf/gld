@@ -18,6 +18,7 @@ package io.novaordis.gld.extensions.jboss.datagrid;
 
 
 import io.novaordis.gld.api.cache.CacheServiceBase;
+import io.novaordis.utilities.version.VersionUtilities;
 
 import java.util.Set;
 
@@ -27,14 +28,26 @@ import java.util.Set;
  */
 public class JBossDatagrid7Service extends CacheServiceBase {
 
-
     // Constants -------------------------------------------------------------------------------------------------------
+
+    //
+    // will be filtered by Maven and replaced with the current version
+    //
+    public static final String VERSION = "${project.version}";
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    // Overrides -------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String getVersion() {
+
+        return VERSION;
+    }
 
     // CacheService implementation -------------------------------------------------------------------------------------
 
