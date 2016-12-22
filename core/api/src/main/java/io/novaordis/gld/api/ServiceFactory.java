@@ -35,6 +35,8 @@ public class ServiceFactory {
 
     private static final Logger log = LoggerFactory.getLogger(ServiceFactory.class);
 
+    public static final String EMBEDDED_MARKER = "embedded";
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     /**
@@ -44,19 +46,28 @@ public class ServiceFactory {
      * The common pattern is to use the "io.novaordis.gld.extensions" package root, and then subsequently
      * add sub-packages based on name. Version information, if any, is appended to the name of the class.
      *
+     * Several service name ("embedded-cache", "embedded-jms", and in general "embedded-<service-type>") are special
+     * in that they shortcut the entire mechanism and return well-defined embedded services.
+     *
      * Example: jboss-datagrid-7 generates "io.novaordis.gld.extensions.jboss.datagrid.JBossDatagrid7Service"
      */
-    static String extensionNameToExtensionServiceFullyQualifiedClassName(
-            String extensionName, ServiceType serviceType) throws UserErrorException {
+    public static String extensionNameToExtensionServiceFullyQualifiedClassName(String extensionName)
+            throws UserErrorException {
 
-        if ("embedded".equals(extensionName)) {
+        if (extensionName.startsWith("embedded-")) {
 
-            if (ServiceType.cache.equals(serviceType)) {
+            //
+            // special services shortcut
+            //
+
+            String serviceType = extensionName.substring("embedded-".length());
+
+            if (ServiceType.cache.name().equals(serviceType)) {
 
                 return EmbeddedCacheService.class.getName();
             }
 
-            throw new RuntimeException("NOT YET IMPLEMENTED " + serviceType);
+            throw new RuntimeException("NOT YET IMPLEMENTED embedded " + serviceType);
         }
 
         String packageName = "io.novaordis.gld.extensions";
@@ -130,16 +141,26 @@ public class ServiceFactory {
         if (extensionServiceFQCN == null) {
 
             //
-            // try name, as the class name is not avaialbe
+            // try name, as the class name is not available
             //
 
             extensionName = ic.getExtensionName();
 
             //
-            // attempt to build a fully qualified class name based on the extension name, and then attempt to instantiate it
+            // handle special extension names
             //
 
-            extensionServiceFQCN = extensionNameToExtensionServiceFullyQualifiedClassName(extensionName, t);
+            if (EMBEDDED_MARKER.equals(extensionName)) {
+
+                extensionName += "-" + t.name();
+            }
+
+            //
+            // attempt to build a fully qualified class name based on the extension name, and then attempt to
+            // instantiate it
+            //
+
+            extensionServiceFQCN = extensionNameToExtensionServiceFullyQualifiedClassName(extensionName);
         }
 
         log.debug("attempting to load Service implementation class " + extensionServiceFQCN);

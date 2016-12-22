@@ -71,6 +71,8 @@ public interface Service {
 
     ServiceType getType();
 
+    String getVersion();
+
     // to deplete ------------------------------------------------------------------------------------------------------
 
     void setConfiguration(Configuration c);

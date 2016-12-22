@@ -60,9 +60,7 @@ public class ServiceFactoryTest {
         MockLoadStrategy ms = new MockLoadStrategy();
         MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
 
-        sc.setImplementationConfigurationMap(buildImplementationConfigMap(
-                "embedded",
-                null));
+        sc.setImplementationConfigurationMap(buildImplementationConfigMap(ServiceFactory.EMBEDDED_MARKER, null));
 
         Service service = ServiceFactory.buildInstance(sc, ms, md);
 
@@ -178,17 +176,14 @@ public class ServiceFactoryTest {
     @Test
     public void extensionNameToExtensionServiceFullyQualifiedClassName_EmbeddedCache() throws Exception {
 
-        String fqcn = ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName(
-                "embedded", ServiceType.cache);
-
+        String fqcn = ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName("embedded-cache");
         assertEquals(EmbeddedCacheService.class.getName(), fqcn);
     }
 
     @Test
     public void extensionNameToExtensionServiceFullyQualifiedClassName_RegularExtension() throws Exception {
 
-        String fqcn = ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName(
-                "jboss-datagrid", null);
+        String fqcn = ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName("jboss-datagrid");
 
         String expected = "io.novaordis.gld.extensions.jboss.datagrid.JBossDatagridService";
         assertEquals(expected, fqcn);
@@ -198,8 +193,7 @@ public class ServiceFactoryTest {
     public void extensionNameToExtensionServiceFullyQualifiedClassName_RegularExtension_MajorVersion()
             throws Exception {
 
-        String fqcn = ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName(
-                "jboss-datagrid-7", null);
+        String fqcn = ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName("jboss-datagrid-7");
 
         String expected = "io.novaordis.gld.extensions.jboss.datagrid.JBossDatagrid7Service";
         assertEquals(expected, fqcn);
@@ -209,8 +203,7 @@ public class ServiceFactoryTest {
     public void extensionNameToExtensionServiceFullyQualifiedClassName_RegularExtension_MajorAndMinorVersion()
             throws Exception {
 
-        String fqcn = ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName(
-                "jboss-datagrid-7.8", null);
+        String fqcn = ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName("jboss-datagrid-7.8");
 
         String expected = "io.novaordis.gld.extensions.jboss.datagrid.JBossDatagrid78Service";
         assertEquals(expected, fqcn);
@@ -222,7 +215,7 @@ public class ServiceFactoryTest {
 
         try {
 
-            ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName("7a", null);
+            ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName("7a");
             fail("should throw exception");
         }
         catch(UserErrorException e) {
@@ -239,7 +232,7 @@ public class ServiceFactoryTest {
 
         try {
 
-            ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName("a-2b-c", null);
+            ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName("a-2b-c");
             fail("should throw exception");
         }
         catch(UserErrorException e) {

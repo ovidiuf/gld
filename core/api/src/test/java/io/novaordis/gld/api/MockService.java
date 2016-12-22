@@ -18,6 +18,7 @@ package io.novaordis.gld.api;
 
 import io.novaordis.gld.api.todiscard.*;
 import io.novaordis.gld.api.todiscard.Configuration;
+import io.novaordis.utilities.NotYetImplementedException;
 import io.novaordis.utilities.UserErrorException;
 
 import java.util.List;
@@ -94,6 +95,11 @@ public class MockService implements Service {
     public ServiceType getType() {
 
         return type;
+    }
+
+    @Override
+    public String getVersion() {
+        throw new NotYetImplementedException("getVersion() NOT YET IMPLEMENTED");
     }
 
     @Override

@@ -20,6 +20,7 @@ import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.ContentType;
 import io.novaordis.gld.api.todiscard.Node;
 import io.novaordis.utilities.UserErrorException;
+import io.novaordis.utilities.version.VersionUtilities;
 
 import java.util.List;
 
@@ -124,6 +125,17 @@ public abstract class ServiceBase implements Service {
     public boolean isStarted() {
 
         return started;
+    }
+
+    /**
+     * Uses the VersionUtilities versioning mechanism.
+     *
+     * @{linktourl https://kb.novaordis.com/index.php/Nova_Ordis_Utilities_Version_Metadata_Handling#Build_Infrastructure_Configuration}
+     */
+    @Override
+    public String getVersion() {
+
+        return VersionUtilities.getVersion();
     }
 
     // execution -------------------------------------------------------------------------------------------------------
