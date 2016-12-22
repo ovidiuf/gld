@@ -28,18 +28,49 @@ public class ExtensionInfo {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String extensionName;
+    private String extensionVersion;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    /**
+     * @exception IllegalArgumentException on null extension name
+     */
+    public ExtensionInfo(String extensionName) {
+
+        if (extensionName == null) {
+
+            throw new IllegalArgumentException("null extension name");
+        }
+
+        this.extensionName = extensionName;
+        this.extensionVersion = null;
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    /**
+     * Never return null.
+     */
     public String getExtensionName() {
 
-        return "?";
+        return extensionName;
     }
 
     public String getExtensionVersion() {
 
-        return "?";
+        return extensionVersion;
+    }
+
+    public void setExtensionVersion(String s) {
+
+        this.extensionVersion = s;
+    }
+
+    @Override
+    public String toString() {
+
+        return getExtensionName();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

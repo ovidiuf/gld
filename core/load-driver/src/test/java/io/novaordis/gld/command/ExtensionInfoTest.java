@@ -16,6 +16,14 @@
 
 package io.novaordis.gld.command;
 
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/21/16
@@ -23,6 +31,8 @@ package io.novaordis.gld.command;
 public class ExtensionInfoTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(ExtensionInfoTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -33,6 +43,33 @@ public class ExtensionInfoTest {
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Tests -----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void identity() throws Exception {
+
+        ExtensionInfo ei = new ExtensionInfo("test");
+        assertEquals("test", ei.getExtensionName());
+        assertNull(ei.getExtensionVersion());
+
+        ei.setExtensionVersion("1.2.3");
+        assertEquals("1.2.3", ei.getExtensionVersion());
+    }
+
+    @Test
+    public void constructor_NullArgument() throws Exception {
+
+        try {
+
+            new ExtensionInfo(null);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("null extension name", msg);
+        }
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
