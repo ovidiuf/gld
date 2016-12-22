@@ -173,6 +173,83 @@ public class ServiceFactoryTest {
         assertEquals(msrv, msrv.getLoadStrategy().getService());
     }
 
+    // extensionNameToExtensionServiceFullyQualifiedClassName() --------------------------------------------------------
+
+    @Test
+    public void extensionNameToExtensionServiceFullyQualifiedClassName_EmbeddedCache() throws Exception {
+
+        String fqcn = ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName(
+                "embedded", ServiceType.cache);
+
+        assertEquals(EmbeddedCacheService.class.getName(), fqcn);
+    }
+
+    @Test
+    public void extensionNameToExtensionServiceFullyQualifiedClassName_RegularExtension() throws Exception {
+
+        String fqcn = ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName(
+                "jboss-datagrid", null);
+
+        String expected = "io.novaordis.gld.extensions.jboss.datagrid.JBossDatagridService";
+        assertEquals(expected, fqcn);
+    }
+
+    @Test
+    public void extensionNameToExtensionServiceFullyQualifiedClassName_RegularExtension_MajorVersion()
+            throws Exception {
+
+        String fqcn = ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName(
+                "jboss-datagrid-7", null);
+
+        String expected = "io.novaordis.gld.extensions.jboss.datagrid.JBossDatagrid7Service";
+        assertEquals(expected, fqcn);
+    }
+
+    @Test
+    public void extensionNameToExtensionServiceFullyQualifiedClassName_RegularExtension_MajorAndMinorVersion()
+            throws Exception {
+
+        String fqcn = ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName(
+                "jboss-datagrid-7.8", null);
+
+        String expected = "io.novaordis.gld.extensions.jboss.datagrid.JBossDatagrid78Service";
+        assertEquals(expected, fqcn);
+    }
+
+    @Test
+    public void extensionNameToExtensionServiceFullyQualifiedClassName_InvalidName_StartsWithNumber()
+            throws Exception {
+
+        try {
+
+            ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName("7a", null);
+            fail("should throw exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("invalid extension name '7a', extension name component starts with a number", msg);
+        }
+    }
+
+    @Test
+    public void extensionNameToExtensionServiceFullyQualifiedClassName_InvalidName_StartsWithNumber2()
+            throws Exception {
+
+        try {
+
+            ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName("a-2b-c", null);
+            fail("should throw exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("invalid extension name 'a-2b-c', extension name component starts with a number", msg);
+        }
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
