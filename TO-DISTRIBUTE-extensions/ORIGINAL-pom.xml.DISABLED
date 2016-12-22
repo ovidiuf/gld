@@ -26,14 +26,6 @@
     <version>1.0.4-SNAPSHOT-4</version>
 
     <repositories>
-        <repository>
-            <id>jboss-eap-7.0.0.GA-maven</id>
-            <url>file:///Users/ovidiu/runtime/jboss-eap-7.0.0.GA-maven-repository/maven-repository</url>
-        </repository>
-        <repository>
-            <id>jboss-datagrid-7.0-maven</id>
-            <url>file:///Users/ovidiu/runtime/jboss-datagrid-7.0.0-maven-repository/maven-repository</url>
-        </repository>
         <!--
         <repository>
             <id>jboss-datagrid-6.5.1-maven-repository</id>
@@ -61,10 +53,6 @@
         <jdg.infinspan.client.hotrod.version>6.3.1.Final-redhat-1</jdg.infinspan.client.hotrod.version>
         -->
 
-        <!--
-            JDG 7.0
-        -->
-        <jdg.infinspan.client.hotrod.version>8.3.0.Final-redhat-1</jdg.infinspan.client.hotrod.version>
     </properties>
 
 
@@ -190,20 +178,6 @@
         <dependency>
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-client-hotrod</artifactId>
-            <version>${jdg.infinspan.client.hotrod.version}</version>
-        </dependency>
-
-        <!--
-            Needed by JDG 7
-        -->
-        <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-commons</artifactId>
-            <version>${jdg.infinspan.client.hotrod.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-query-dsl</artifactId>
             <version>${jdg.infinspan.client.hotrod.version}</version>
         </dependency>
 

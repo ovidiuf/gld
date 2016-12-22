@@ -251,16 +251,5 @@ public class InfinispanService extends CacheServiceBase {
         this.cache = cache;
     }
 
-    // Private ---------------------------------------------------------------------------------------------------------
-
-    private void insureStarted() throws IllegalStateException
-    {
-        if (!isStarted())
-        {
-            throw new IllegalStateException(this + " not started");
-        }
-    }
-
-    // Inner classes ---------------------------------------------------------------------------------------------------
 
 }
