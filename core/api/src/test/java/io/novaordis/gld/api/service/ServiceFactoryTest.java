@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.service;
 
+import io.novaordis.gld.api.MockLoadDriver;
+import io.novaordis.gld.api.MockService;
 import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
 import io.novaordis.gld.api.cache.load.MockLoadStrategy;
 import io.novaordis.gld.api.cache.embedded.EmbeddedCacheService;

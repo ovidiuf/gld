@@ -17,7 +17,7 @@
 package io.novaordis.gld.api.todiscard;
 
 import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.service.Service;
 import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.time.Duration;
 

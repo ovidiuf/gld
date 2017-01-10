@@ -18,7 +18,7 @@ package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.service.Service;
 import io.novaordis.gld.driver.console.CommandLineConsole;
 import io.novaordis.gld.api.sampler.Sampler;
 import io.novaordis.utilities.time.Duration;

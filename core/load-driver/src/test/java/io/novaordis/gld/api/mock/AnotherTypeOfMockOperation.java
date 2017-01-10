@@ -18,7 +18,7 @@ package io.novaordis.gld.api.mock;
 
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.service.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

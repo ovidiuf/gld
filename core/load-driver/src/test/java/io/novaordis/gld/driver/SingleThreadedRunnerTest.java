@@ -17,7 +17,7 @@
 package io.novaordis.gld.driver;
 
 import io.novaordis.gld.api.KeyProvider;
-import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.service.Service;
 import io.novaordis.gld.api.cache.CacheServiceConfiguration;
 import io.novaordis.gld.api.cache.load.WriteThenReadLoadStrategy;
 import io.novaordis.gld.api.cache.operation.Write;
@@ -25,7 +25,7 @@ import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.gld.api.mock.MockCacheService;
 import io.novaordis.gld.api.mock.MockCleanupOperation;
 import io.novaordis.gld.api.mock.MockKeyStore;

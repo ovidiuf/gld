@@ -17,6 +17,7 @@
 package io.novaordis.gld.api;
 
 import io.novaordis.gld.api.configuration.Configuration;
+import io.novaordis.gld.api.service.Service;
 import io.novaordis.gld.api.sampler.Sampler;
 
 /**

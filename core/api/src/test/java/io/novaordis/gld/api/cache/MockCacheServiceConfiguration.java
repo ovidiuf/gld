@@ -18,7 +18,7 @@ package io.novaordis.gld.api.cache;
 
 import io.novaordis.gld.api.configuration.MockServiceConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.service.ServiceType;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>

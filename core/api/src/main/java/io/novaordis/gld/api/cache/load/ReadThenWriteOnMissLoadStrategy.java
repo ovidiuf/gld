@@ -21,7 +21,7 @@ import io.novaordis.gld.api.LoadStrategyBase;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.RandomContentGenerator;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.gld.api.cache.CacheServiceConfiguration;
 import io.novaordis.gld.api.cache.operation.Read;
 import io.novaordis.gld.api.cache.operation.Write;

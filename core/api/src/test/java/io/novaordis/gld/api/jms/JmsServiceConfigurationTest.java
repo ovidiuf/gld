@@ -17,7 +17,7 @@
 package io.novaordis.gld.api.jms;
 
 import io.novaordis.gld.api.configuration.ServiceConfigurationTest;
-import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.service.ServiceType;
 
 import java.io.File;
 import java.util.Map;

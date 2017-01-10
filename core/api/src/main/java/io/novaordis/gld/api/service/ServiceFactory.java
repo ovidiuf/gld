@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.service;
 
+import io.novaordis.gld.api.LoadDriver;
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.cache.embedded.EmbeddedCacheService;
 import io.novaordis.gld.api.configuration.ImplementationConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;

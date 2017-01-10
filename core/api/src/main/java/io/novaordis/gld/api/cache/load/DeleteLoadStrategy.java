@@ -19,7 +19,7 @@ package io.novaordis.gld.api.cache.load;
 import io.novaordis.gld.api.KeyProvider;
 import io.novaordis.gld.api.LoadStrategyBase;
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.gld.api.cache.CacheServiceConfiguration;
 import io.novaordis.gld.api.cache.operation.Delete;
 import io.novaordis.gld.api.configuration.LoadConfiguration;

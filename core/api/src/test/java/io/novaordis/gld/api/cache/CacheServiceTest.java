@@ -16,8 +16,8 @@
 
 package io.novaordis.gld.api.cache;
 
-import io.novaordis.gld.api.ServiceTest;
-import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.service.ServiceTest;
+import io.novaordis.gld.api.service.ServiceType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

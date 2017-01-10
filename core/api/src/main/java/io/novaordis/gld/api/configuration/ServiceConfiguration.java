@@ -16,7 +16,7 @@
 
 package io.novaordis.gld.api.configuration;
 
-import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.utilities.UserErrorException;
 
 /**

@@ -16,8 +16,8 @@
 
 package io.novaordis.gld.command;
 
-import io.novaordis.gld.api.Service;
-import io.novaordis.gld.api.ServiceFactory;
+import io.novaordis.gld.api.service.Service;
+import io.novaordis.gld.api.service.ServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -16,6 +16,8 @@
 
 package io.novaordis.gld.api;
 
+import io.novaordis.gld.api.service.Service;
+
 /**
  * A generic operation that will be executed against the target service.
  *

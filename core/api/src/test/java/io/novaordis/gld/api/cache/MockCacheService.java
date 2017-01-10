@@ -17,7 +17,7 @@
 package io.novaordis.gld.api.cache;
 
 import io.novaordis.gld.api.MockService;
-import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.service.ServiceType;
 
 import java.util.HashMap;
 import java.util.Map;

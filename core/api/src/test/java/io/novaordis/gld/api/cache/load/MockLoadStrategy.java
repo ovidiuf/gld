@@ -17,12 +17,12 @@
 package io.novaordis.gld.api.cache.load;
 
 import io.novaordis.gld.api.KeyProvider;
-import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.service.Service;
 import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.gld.api.cache.CacheServiceConfiguration;
 import io.novaordis.utilities.UserErrorException;
 import org.slf4j.Logger;

@@ -19,7 +19,7 @@ package io.novaordis.gld.api.statistics;
 import io.novaordis.utilities.ac.Collector;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.service.Service;
 import io.novaordis.gld.api.cache.operation.Read;
 import io.novaordis.gld.api.todiscard.RedisFailure;
 import io.novaordis.gld.api.todiscard.SystemStatistics;

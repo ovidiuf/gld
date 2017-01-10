@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.service;
 
+import io.novaordis.gld.api.LoadDriver;
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.ContentType;
 import io.novaordis.gld.api.todiscard.Node;
@@ -24,7 +26,10 @@ import io.novaordis.utilities.UserErrorException;
 import java.util.List;
 
 /**
+ * The abstract representation of a target gld can send load to. A service is characterized by its type (cache,  jms,
+ * http, etc).
  *
+ * @see ServiceType
  */
 public interface Service {
 

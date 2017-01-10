@@ -16,14 +16,9 @@
 
 package io.novaordis.gld.driver.todeplete.command;
 
-import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.LoadStrategyFactory;
-import io.novaordis.gld.api.Service;
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.ContentType;
-import io.novaordis.gld.driver.MultiThreadedRunnerImpl;
-import io.novaordis.gld.driver.Util;
 import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.time.Duration;
 

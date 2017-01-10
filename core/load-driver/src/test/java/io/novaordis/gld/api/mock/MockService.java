@@ -17,8 +17,8 @@
 package io.novaordis.gld.api.mock;
 
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.ServiceBase;
-import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.service.ServiceBase;
+import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.ContentType;
 import io.novaordis.gld.api.todiscard.Node;

@@ -19,7 +19,7 @@ package io.novaordis.gld.api.mock.load;
 import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.LoadStrategyFactory;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.service.ServiceType;
 
 /**
  * Named MockLdLoadStrategyFactory instead of MockLoadStrategyFactory to avoid non-obviously clashes with the API

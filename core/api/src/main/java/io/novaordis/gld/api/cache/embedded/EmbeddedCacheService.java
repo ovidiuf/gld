@@ -16,8 +16,7 @@
 
 package io.novaordis.gld.api.cache.embedded;
 
-import io.novaordis.gld.api.ServiceType;
-import io.novaordis.gld.api.cache.CacheService;
+import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.gld.api.cache.CacheServiceBase;
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.ContentType;

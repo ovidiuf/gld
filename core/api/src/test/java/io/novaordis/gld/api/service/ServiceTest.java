@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.service;
 
+import io.novaordis.gld.api.LoadDriver;
+import io.novaordis.gld.api.LoadStrategy;
+import io.novaordis.gld.api.MockLoadDriver;
 import io.novaordis.gld.api.mock.load.MockLoadStrategy;
 import org.junit.Test;
 import org.slf4j.Logger;

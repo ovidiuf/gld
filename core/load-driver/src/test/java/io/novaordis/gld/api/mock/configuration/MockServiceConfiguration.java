@@ -20,7 +20,7 @@ import io.novaordis.gld.api.configuration.ImplementationConfiguration;
 import io.novaordis.gld.api.configuration.ImplementationConfigurationImpl;
 import io.novaordis.gld.api.configuration.LowLevelConfigurationBase;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.gld.api.mock.MockService;
 import io.novaordis.gld.api.mock.load.MockLdLoadStrategyFactory;
 import io.novaordis.utilities.UserErrorException;

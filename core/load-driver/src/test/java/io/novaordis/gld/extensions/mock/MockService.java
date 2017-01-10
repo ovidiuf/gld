@@ -18,8 +18,8 @@ package io.novaordis.gld.extensions.mock;
 
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.Service;
-import io.novaordis.gld.api.ServiceType;
+import io.novaordis.gld.api.service.Service;
+import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.gld.api.todiscard.ContentType;
 import io.novaordis.gld.api.todiscard.Node;

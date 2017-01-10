@@ -16,6 +16,8 @@
 
 package io.novaordis.gld.api;
 
+import io.novaordis.gld.api.service.Service;
+import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.gld.api.todiscard.*;
 import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.utilities.NotYetImplementedException;

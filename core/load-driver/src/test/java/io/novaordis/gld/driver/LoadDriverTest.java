@@ -19,7 +19,7 @@ package io.novaordis.gld.driver;
 import io.novaordis.gld.api.KeyStore;
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.Runner;
-import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.service.Service;
 import io.novaordis.gld.api.mock.MockKeyStore;
 import io.novaordis.gld.api.mock.configuration.MockConfiguration;
 import io.novaordis.gld.api.mock.configuration.MockLoadConfiguration;

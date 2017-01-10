@@ -18,6 +18,8 @@ package io.novaordis.gld.api;
 
 import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
+import io.novaordis.gld.api.service.Service;
+import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.utilities.UserErrorException;
 
 import java.util.Iterator;

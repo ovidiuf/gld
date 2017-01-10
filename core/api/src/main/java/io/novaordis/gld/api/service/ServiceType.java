@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api;
+package io.novaordis.gld.api.service;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>

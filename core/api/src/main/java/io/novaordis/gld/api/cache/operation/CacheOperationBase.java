@@ -17,7 +17,7 @@
 package io.novaordis.gld.api.cache.operation;
 
 import io.novaordis.gld.api.OperationBase;
-import io.novaordis.gld.api.Service;
+import io.novaordis.gld.api.service.Service;
 import io.novaordis.gld.api.cache.CacheService;
 
 /**
