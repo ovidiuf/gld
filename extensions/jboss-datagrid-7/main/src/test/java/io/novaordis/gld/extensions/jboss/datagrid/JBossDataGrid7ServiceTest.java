@@ -16,7 +16,7 @@
 
 package io.novaordis.gld.extensions.jboss.datagrid;
 
-import io.novaordis.gld.api.ServiceFactory;
+import io.novaordis.gld.api.service.ServiceFactory;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
