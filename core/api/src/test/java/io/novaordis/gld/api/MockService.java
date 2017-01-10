@@ -16,14 +16,11 @@
 
 package io.novaordis.gld.api;
 
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.service.Service;
 import io.novaordis.gld.api.service.ServiceType;
-import io.novaordis.gld.api.todiscard.*;
-import io.novaordis.gld.api.todiscard.Configuration;
 import io.novaordis.utilities.NotYetImplementedException;
 import io.novaordis.utilities.UserErrorException;
-
-import java.util.List;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -79,6 +76,11 @@ public class MockService implements Service {
     }
 
     @Override
+    public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {
+        throw new NotYetImplementedException("configure() NOT YET IMPLEMENTED");
+    }
+
+    @Override
     public void start() throws Exception {
         throw new RuntimeException("start() NOT YET IMPLEMENTED");
     }
@@ -102,26 +104,6 @@ public class MockService implements Service {
     @Override
     public String getVersion() {
         throw new NotYetImplementedException("getVersion() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void setConfiguration(Configuration c) {
-        throw new RuntimeException("setConfiguration() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void setTarget(List<Node> nodes) {
-        throw new RuntimeException("setTarget() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void configure(List<String> commandLineArguments) throws UserErrorException {
-        throw new RuntimeException("configure() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public ContentType getContentType() {
-        throw new RuntimeException("getContentType() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

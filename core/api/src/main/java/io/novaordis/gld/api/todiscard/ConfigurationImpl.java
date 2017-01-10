@@ -770,9 +770,6 @@ public class ConfigurationImpl implements Configuration {
                 service = (Service) c.newInstance();
             }
 
-            service.setConfiguration(configuration);
-            service.setTarget(nodes);
-            service.configure(commandLineArguments);
             return service;
         }
 

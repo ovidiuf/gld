@@ -18,13 +18,7 @@ package io.novaordis.gld.api.service;
 
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.todiscard.Configuration;
-import io.novaordis.gld.api.todiscard.ContentType;
-import io.novaordis.gld.api.todiscard.Node;
-import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.version.VersionUtilities;
-
-import java.util.List;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -140,33 +134,7 @@ public abstract class ServiceBase implements Service {
         return VersionUtilities.getVersion();
     }
 
-    // execution -------------------------------------------------------------------------------------------------------
-
-    // to deplete ------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void setConfiguration(Configuration c) {
-        throw new RuntimeException("setConfiguration() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void setTarget(List<Node> nodes) {
-        throw new RuntimeException("setTarget() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void configure(List<String> commandLineArguments) throws UserErrorException {
-        throw new RuntimeException("configure() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public ContentType getContentType() {
-        throw new RuntimeException("getContentType() NOT YET IMPLEMENTED");
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
-
-    // topology --------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 

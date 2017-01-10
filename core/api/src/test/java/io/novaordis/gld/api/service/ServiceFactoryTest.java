@@ -16,10 +16,8 @@
 
 package io.novaordis.gld.api.service;
 
-import io.novaordis.gld.api.MockLoadDriver;
 import io.novaordis.gld.api.MockService;
 import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
-import io.novaordis.gld.api.cache.load.MockLoadStrategy;
 import io.novaordis.gld.api.cache.embedded.EmbeddedCacheService;
 import io.novaordis.gld.api.configuration.ImplementationConfiguration;
 import io.novaordis.utilities.UserErrorException;
@@ -31,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 /**
@@ -58,31 +57,20 @@ public class ServiceFactoryTest {
     @Test
     public void buildInstance_ImplementationIsAConventionalName() throws Exception {
 
-        MockLoadDriver md = new MockLoadDriver();
-        MockLoadStrategy ms = new MockLoadStrategy();
         MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
 
         sc.setImplementationConfigurationMap(buildImplementationConfigMap(ServiceFactory.EMBEDDED_MARKER, null));
 
-        Service service = ServiceFactory.buildInstance(sc, ms, md);
+        Service service = ServiceFactory.buildInstance(sc);
 
         EmbeddedCacheService lcs = (EmbeddedCacheService)service;
 
-        assertEquals(md, lcs.getLoadDriver());
-        assertEquals(ms, lcs.getLoadStrategy());
-
-        //
-        // service - load strategy relationship
-        //
-        assertEquals(lcs, lcs.getLoadStrategy().getService());
+        assertNotNull(lcs);
     }
 
     @Test
-    public void buildInstance_ImplementationIsAFullyQualifiedClassName_ClassNotFound()
-            throws Exception {
+    public void buildInstance_ImplementationIsAFullyQualifiedClassName_ClassNotFound() throws Exception {
 
-        MockLoadDriver md = new MockLoadDriver();
-        MockLoadStrategy ms = new MockLoadStrategy();
         MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
         sc.setImplementationConfigurationMap(buildImplementationConfigMap(
                 null,
@@ -90,7 +78,7 @@ public class ServiceFactoryTest {
 
         try {
 
-            ServiceFactory.buildInstance(sc, ms, md);
+            ServiceFactory.buildInstance(sc);
             fail("should throw exception");
         }
         catch(UserErrorException e) {
@@ -106,8 +94,6 @@ public class ServiceFactoryTest {
     public void buildInstance_ImplementationIsAFullyQualifiedClassName_ImplementationIsNotAService()
             throws Exception {
 
-        MockLoadDriver md = new MockLoadDriver();
-        MockLoadStrategy ms = new MockLoadStrategy();
         MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
         sc.setImplementationConfigurationMap(buildImplementationConfigMap(
                 null,
@@ -115,7 +101,7 @@ public class ServiceFactoryTest {
 
         try {
 
-            ServiceFactory.buildInstance(sc, ms, md);
+            ServiceFactory.buildInstance(sc);
             fail("should throw exception");
         }
         catch(UserErrorException e) {
@@ -130,8 +116,6 @@ public class ServiceFactoryTest {
     public void buildInstance_ImplementationIsAFullyQualifiedClassName_ImplementationNotOfCorrectType()
             throws Exception {
 
-        MockLoadDriver md = new MockLoadDriver();
-        MockLoadStrategy ms = new MockLoadStrategy();
         MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
         sc.setImplementationConfigurationMap(buildImplementationConfigMap(
                 null,
@@ -139,7 +123,7 @@ public class ServiceFactoryTest {
 
         try {
 
-            ServiceFactory.buildInstance(sc, ms, md);
+            ServiceFactory.buildInstance(sc);
             fail("should throw exception");
         }
         catch(UserErrorException e) {
@@ -153,24 +137,15 @@ public class ServiceFactoryTest {
     @Test
     public void buildInstance_ImplementationIsAFullyQualifiedClassName() throws Exception {
 
-        MockLoadDriver md = new MockLoadDriver();
-        MockLoadStrategy ms = new MockLoadStrategy();
         MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
         sc.setImplementationConfigurationMap(buildImplementationConfigMap(
                 null,
                 "io.novaordis.gld.api.cache.MockCacheService"));
 
-        Service service = ServiceFactory.buildInstance(sc, ms, md);
+        Service service = ServiceFactory.buildInstance(sc);
 
-        MockService msrv = (MockService)service;
-
-        assertEquals(md, msrv.getLoadDriver());
-        assertEquals(ms, msrv.getLoadStrategy());
-
-        //
-        // service - load strategy relationship
-        //
-        assertEquals(msrv, msrv.getLoadStrategy().getService());
+        MockService ms = (MockService)service;
+        assertNotNull(ms);
     }
 
     // extensionNameToExtensionServiceFullyQualifiedClassName() --------------------------------------------------------

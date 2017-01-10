@@ -16,14 +16,12 @@
 
 package io.novaordis.gld.api.cache.embedded;
 
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.gld.api.cache.CacheServiceBase;
-import io.novaordis.gld.api.todiscard.Configuration;
-import io.novaordis.gld.api.todiscard.ContentType;
-import io.novaordis.gld.api.todiscard.Node;
+import io.novaordis.utilities.NotYetImplementedException;
 import io.novaordis.utilities.UserErrorException;
 
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -56,6 +54,12 @@ public class EmbeddedCacheService extends CacheServiceBase {
     // Service implementation ------------------------------------------------------------------------------------------
 
     @Override
+    public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {
+
+        throw new NotYetImplementedException("configure() NOT YET IMPLEMENTED");
+    }
+
+    @Override
     public void start() throws Exception {
 
         super.start();
@@ -81,26 +85,6 @@ public class EmbeddedCacheService extends CacheServiceBase {
     }
 
     // execution -------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void setConfiguration(Configuration c) {
-        throw new RuntimeException("setConfiguration() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void setTarget(List<Node> nodes) {
-        throw new RuntimeException("setTarget() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void configure(List<String> commandLineArguments) throws UserErrorException {
-        throw new RuntimeException("configure() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public ContentType getContentType() {
-        throw new RuntimeException("getContentType() NOT YET IMPLEMENTED");
-    }
 
     @Override
     public String get(String key) throws Exception {

@@ -24,9 +24,9 @@ import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.LoadStrategyFactory;
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.service.Service;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.gld.api.service.ServiceFactory;
+import io.novaordis.gld.api.extension.ExtensionInfrastructure;
+import io.novaordis.gld.api.service.Service;
 import io.novaordis.gld.api.configuration.StoreConfiguration;
 import io.novaordis.gld.api.store.KeyStoreFactory;
 import io.novaordis.gld.api.sampler.Sampler;
@@ -128,14 +128,26 @@ public class LoadDriverImpl implements LoadDriver {
         // which is accessible with LoadStrategy.getKeyProvider()
         //
 
-        LoadStrategy ls = LoadStrategyFactory.build(serviceConfiguration, loadConfiguration);
+        LoadStrategy loadStrategy = LoadStrategyFactory.build(serviceConfiguration, loadConfiguration);
 
         //
-        // service initialization and configuration - it also establishes service - load strategy bidirectional
+        // service initialization and configuration; it also establishes service - load strategy bidirectional
         // relationship
         //
 
-        this.service = ServiceFactory.buildInstance(serviceConfiguration, ls, this);
+        this.service = ExtensionInfrastructure.initializeExtensionService(serviceConfiguration);
+
+        //
+        // at this point the service is instantiated and configured, initialize the reference relationships
+        //
+
+        service.setLoadStrategy(loadStrategy);
+        service.setLoadDriver(this);
+        loadStrategy.setService(service);
+
+        //
+        // establish service - load strategy bidirectional relationship
+        //
 
         //
         // load configuration
@@ -147,7 +159,7 @@ public class LoadDriverImpl implements LoadDriver {
         // register operations
         //
 
-        Set<Class<? extends Operation>> operations = ls.getOperationTypes();
+        Set<Class<? extends Operation>> operations = loadStrategy.getOperationTypes();
         operations.forEach(sampler::registerOperation);
 
         long singleThreadedRunnerSleepMs = -1L;

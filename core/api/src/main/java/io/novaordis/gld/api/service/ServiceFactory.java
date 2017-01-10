@@ -16,8 +16,6 @@
 
 package io.novaordis.gld.api.service;
 
-import io.novaordis.gld.api.LoadDriver;
-import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.cache.embedded.EmbeddedCacheService;
 import io.novaordis.gld.api.configuration.ImplementationConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
@@ -126,12 +124,9 @@ public class ServiceFactory {
     }
 
     /**
-     * The implementation also establishes the Service - LoadStrategy bidirectional relationship.
-     *
-     * @exception UserErrorException on any instantiation exception, with human friendly error message
+     * @exception UserErrorException on any instantiation exception, with human-friendly error message
      */
-    public static Service buildInstance(ServiceConfiguration sc, LoadStrategy loadStrategy, LoadDriver loadDriver)
-            throws UserErrorException {
+    public static Service buildInstance(ServiceConfiguration sc) throws UserErrorException {
 
         ServiceType t = sc.getType();
 
@@ -216,19 +211,6 @@ public class ServiceFactory {
 
             throw new UserErrorException(extensionServiceFQCN + " is not a " + t + " Service");
         }
-
-        //
-        // install dependencies
-        //
-
-        service.setLoadStrategy(loadStrategy);
-        service.setLoadDriver(loadDriver);
-
-        //
-        // establish Service - Load Strategy bidirectional relationship
-        //
-
-        loadStrategy.setService(service);
 
         return service;
     }

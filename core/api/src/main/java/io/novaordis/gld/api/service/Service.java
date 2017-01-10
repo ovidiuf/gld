@@ -18,12 +18,8 @@ package io.novaordis.gld.api.service;
 
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.todiscard.Configuration;
-import io.novaordis.gld.api.todiscard.ContentType;
-import io.novaordis.gld.api.todiscard.Node;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.utilities.UserErrorException;
-
-import java.util.List;
 
 /**
  * The abstract representation of a target gld can send load to. A service is characterized by its type (cache,  jms,
@@ -52,6 +48,11 @@ public interface Service {
     // lifecycle -------------------------------------------------------------------------------------------------------
 
     /**
+     * Initialize internal state based on the external service configuration.
+     */
+    void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException;
+
+    /**
      * If the internal lifecycle components are installed, the will be started recursively.
      *
      * Starting an already started service should throw IllegalStateException.
@@ -77,24 +78,5 @@ public interface Service {
     ServiceType getType();
 
     String getVersion();
-
-    // to deplete ------------------------------------------------------------------------------------------------------
-
-    void setConfiguration(Configuration c);
-
-    void setTarget(List<Node> nodes);
-
-    /**
-     * @param commandLineArguments command line arguments (whatever is left after the upper layer processes upper level
-     *                             arguments) that may contain configuration relevant to the service. The service is
-     *                             supposed to recognize them, extract them configure itself with them and remove them
-     *                             from the list. Arguments relevant to the service will be removed from the list when
-     *                             the method is done.
-     *
-     * @exception UserErrorException on invalid data specified by user. Contains a human readable message.
-     */
-    void configure(List<String> commandLineArguments) throws UserErrorException;
-
-    ContentType getContentType();
 
 }

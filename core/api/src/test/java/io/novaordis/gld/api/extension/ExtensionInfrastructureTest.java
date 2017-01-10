@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.driver;
+package io.novaordis.gld.api.extension;
 
-import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.mock.configuration.MockConfiguration;
+import io.novaordis.gld.api.configuration.MockServiceConfiguration;
 import io.novaordis.gld.api.service.Service;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/2/16
+ * @since 1/10/17
  */
-public class LoadDriverImplTest extends LoadDriverTest {
+public class ExtensionInfrastructureTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -42,32 +42,24 @@ public class LoadDriverImplTest extends LoadDriverTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
+    // initializeExtensionService() -----------------------------------------------------------------------
+
     @Test
-    public void service_LoadStrategy_LoadDriver_Relationships() throws Exception {
+    public void instantiateAndConfigureExtensionService() throws Exception {
 
-        MockConfiguration mc = new MockConfiguration();
+        MockServiceConfiguration mc = new MockServiceConfiguration();
 
-        LoadDriverImpl d = getLoadDriverToTest();
+        Service s = ExtensionInfrastructure.initializeExtensionService(mc);
 
-        d.init(mc);
+        assertFalse(s.isStarted());
+        assertNull(s.getLoadStrategy());
+        assertNull(s.getLoadDriver());
 
-        Service s = d.getService();
-
-        assertEquals(d, s.getLoadDriver());
-
-        LoadStrategy ls = s.getLoadStrategy();
-        assertNotNull(ls);
-
-        assertEquals(s, ls.getService());
+        fail("return here, more state assertions");
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    @Override
-    protected LoadDriverImpl getLoadDriverToTest() throws Exception {
-
-        return new LoadDriverImpl("test", true);
-    }
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
