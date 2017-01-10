@@ -204,6 +204,8 @@ public abstract class LoadDriverTest {
     @Test
     public void init_run_sequence_UnsuccessfulRun_SomeComponentsFailToStop() throws Exception {
 
+        log.info("init_run_sequence_UnsuccessfulRun_SomeComponentsFailToStop() ---");
+
         LoadDriver ld = getLoadDriverToTest();
 
         MockConfiguration mc = new MockConfiguration();
