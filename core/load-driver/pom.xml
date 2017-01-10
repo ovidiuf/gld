@@ -25,7 +25,7 @@
     <parent>
         <groupId>io.novaordis.gld</groupId>
         <artifactId>GLD-CORE</artifactId>
-        <version>1.0.0-SNAPSHOT-29</version>
+        <version>1.0.0-SNAPSHOT-30</version>
     </parent>
 
     <artifactId>gld-load-driver</artifactId>
