@@ -17,6 +17,7 @@
 package io.novaordis.gld.extensions.jboss.datagrid;
 
 import io.novaordis.gld.api.cache.CacheServiceBase;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.version.VersionUtilities;
 import org.infinispan.client.hotrod.RemoteCache;
@@ -57,6 +58,12 @@ public class JBossDatagrid7Service extends CacheServiceBase {
     public String getVersion() {
 
         return VersionUtilities.getVersion(EXTENSION_VERSION_METADATA_FILE_NAME);
+    }
+
+    @Override
+    public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {
+
+        log.debug(this + " configured");
     }
 
     @Override
