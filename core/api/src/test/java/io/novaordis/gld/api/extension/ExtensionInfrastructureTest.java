@@ -16,13 +16,18 @@
 
 package io.novaordis.gld.api.extension;
 
+import io.novaordis.gld.api.configuration.ImplementationConfiguration;
 import io.novaordis.gld.api.configuration.MockServiceConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.service.Service;
+import io.novaordis.gld.extensions.mock.MockService;
 import org.junit.Test;
 
+import java.util.HashMap;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -42,12 +47,16 @@ public class ExtensionInfrastructureTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
-    // initializeExtensionService() -----------------------------------------------------------------------
+    // initializeExtensionService() ------------------------------------------------------------------------------------
 
     @Test
     public void instantiateAndConfigureExtensionService() throws Exception {
 
         MockServiceConfiguration mc = new MockServiceConfiguration();
+        mc.setImplementationConfigurationMap(new HashMap<>());
+        mc.set("mock",
+                ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL,
+                ImplementationConfiguration.EXTENSION_NAME_LABEL);
 
         Service s = ExtensionInfrastructure.initializeExtensionService(mc);
 
@@ -55,7 +64,7 @@ public class ExtensionInfrastructureTest {
         assertNull(s.getLoadStrategy());
         assertNull(s.getLoadDriver());
 
-        fail("return here, more state assertions");
+        assertEquals(mc, ((MockService) s).getConfigurationInstanceWeWereConfiguredWith());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

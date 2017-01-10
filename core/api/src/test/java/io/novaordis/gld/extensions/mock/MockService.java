@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import io.novaordis.utilities.UserErrorException;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/21/16
+ * @since 1/10/17
  */
 public class MockService implements Service {
 
@@ -34,58 +34,41 @@ public class MockService implements Service {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    private static boolean failToInstantiate;
-    private static String version;
-
-    static {
-
-        failToInstantiate = false;
-        version = null;
-    }
-
-    public static void configureToFailToInstantiate() {
-
-        failToInstantiate = true;
-    }
-
-    public static void reset() {
-
-        failToInstantiate = false;
-        version = null;
-    }
-
-    public static void setVersion(String s) {
-
-        version = s;
-    }
-
     // Attributes ------------------------------------------------------------------------------------------------------
+
+    private boolean started;
+    private ServiceConfiguration serviceConfiguration;
+    private LoadStrategy loadStrategy;
+    private LoadDriver loadDriver;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockService() {
 
-        if (failToInstantiate) {
-
-            throw new RuntimeException("SYNTHETIC");
-        }
+        this.started = false;
+        this.serviceConfiguration = null;
+        this.loadStrategy = null;
+        this.loadDriver = null;
     }
 
-    // Service implementation // Constructors --------------------------------------------------------------------------
+    // Service implementation ------------------------------------------------------------------------------------------
 
     @Override
     public LoadDriver getLoadDriver() {
-        throw new NotYetImplementedException("getLoadDriver() NOT YET IMPLEMENTED");
+
+        return loadDriver;
     }
 
     @Override
     public void setLoadDriver(LoadDriver d) {
+
         throw new NotYetImplementedException("setLoadDriver() NOT YET IMPLEMENTED");
     }
 
     @Override
     public LoadStrategy getLoadStrategy() {
-        throw new NotYetImplementedException("getLoadStrategy() NOT YET IMPLEMENTED");
+
+        return loadStrategy;
     }
 
     @Override
@@ -95,12 +78,14 @@ public class MockService implements Service {
 
     @Override
     public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {
-        throw new NotYetImplementedException("configure() NOT YET IMPLEMENTED");
+
+        this.serviceConfiguration = serviceConfiguration;
     }
 
     @Override
     public void start() throws Exception {
-        throw new NotYetImplementedException("start() NOT YET IMPLEMENTED");
+
+        this.started = true;
     }
 
     @Override
@@ -110,21 +95,30 @@ public class MockService implements Service {
 
     @Override
     public boolean isStarted() {
-        throw new NotYetImplementedException("isStarted() NOT YET IMPLEMENTED");
+
+        return started;
     }
 
     @Override
     public ServiceType getType() {
-        throw new NotYetImplementedException("getType() NOT YET IMPLEMENTED");
+
+        return ServiceType.mock;
     }
 
     @Override
     public String getVersion() {
-
-        return version;
+        throw new NotYetImplementedException("getVersion() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    /**
+     * May return null if we weren't configured yet.
+     */
+    public ServiceConfiguration getConfigurationInstanceWeWereConfiguredWith() {
+
+        return serviceConfiguration;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

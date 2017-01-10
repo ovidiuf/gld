@@ -45,7 +45,7 @@ public class MockServiceConfiguration extends LowLevelConfigurationBase implemen
         this(new HashMap<>());
     }
 
-    public MockServiceConfiguration(Map<String, Object> raw) {
+    public MockServiceConfiguration(Map<String, Object> raw)  {
 
         super(raw, new File(System.getProperty("basedir")));
         this.serviceType = ServiceType.mock;

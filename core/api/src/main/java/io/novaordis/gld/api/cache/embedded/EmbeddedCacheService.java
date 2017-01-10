@@ -19,8 +19,9 @@ package io.novaordis.gld.api.cache.embedded;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.gld.api.cache.CacheServiceBase;
-import io.novaordis.utilities.NotYetImplementedException;
 import io.novaordis.utilities.UserErrorException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,6 +35,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class EmbeddedCacheService extends CacheServiceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(EmbeddedCacheService.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -56,7 +59,7 @@ public class EmbeddedCacheService extends CacheServiceBase {
     @Override
     public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {
 
-        throw new NotYetImplementedException("configure() NOT YET IMPLEMENTED");
+        log.info(this + " was mock configured");
     }
 
     @Override

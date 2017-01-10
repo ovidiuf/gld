@@ -17,11 +17,10 @@
 package io.novaordis.gld.api.mock;
 
 import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.service.ServiceBase;
 import io.novaordis.gld.api.service.ServiceType;
-import io.novaordis.gld.api.todiscard.Configuration;
-import io.novaordis.gld.api.todiscard.ContentType;
-import io.novaordis.gld.api.todiscard.Node;
+import io.novaordis.utilities.NotYetImplementedException;
 import io.novaordis.utilities.UserErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +65,12 @@ public class MockService extends ServiceBase {
     //
 
     @Override
+    public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {
+
+        log.info(this + " was mock configured");
+    }
+
+    @Override
     public void start() throws Exception {
 
         wasStarted = true;
@@ -95,30 +100,6 @@ public class MockService extends ServiceBase {
     //
     // we rely on the subclass' setLoadStrategy(...)
     //
-
-    @Override
-    public void setConfiguration(Configuration c)
-    {
-        throw new RuntimeException("setConfiguration() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void setTarget(List<Node> nodes)
-    {
-        throw new RuntimeException("setTarget() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void configure(List<String> commandLineArguments) throws UserErrorException
-    {
-        throw new RuntimeException("init() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public ContentType getContentType()
-    {
-        throw new RuntimeException("getContentType() NOT YET IMPLEMENTED");
-    }
 
     @Override
     public ServiceType getType() {
