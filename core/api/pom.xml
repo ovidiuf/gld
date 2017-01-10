@@ -25,11 +25,29 @@
     <parent>
         <groupId>io.novaordis.gld</groupId>
         <artifactId>GLD-CORE</artifactId>
-        <version>1.0.0-SNAPSHOT-27</version>
+        <version>1.0.0-SNAPSHOT-28</version>
     </parent>
 
     <artifactId>gld-api</artifactId>
     <packaging>jar</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <dependency>
