@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -163,6 +164,24 @@ public class JBossDatagrid7Service extends CacheServiceBase {
     public List<HotRodEndpointAddress> getNodes() {
 
         return nodes;
+    }
+
+    @Override
+    public String toString() {
+
+        String s = "";
+
+        for(Iterator<HotRodEndpointAddress> i = getNodes().iterator(); i.hasNext(); ) {
+
+            s += i.next();
+
+            if (i.hasNext()) {
+
+                s += ", ";
+            }
+        }
+
+        return s;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
