@@ -52,15 +52,23 @@ public class JBossDatagrid7Service extends CacheServiceBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    //
+    // cache manager factory was made pluggable for testing only
+    //
+    private CacheManagerFactory cacheManagerFactory;
+
     private List<HotRodEndpointAddress> nodes;
     private String cacheContainerName;
     private String cacheName;
+
+    private RemoteCache cache;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public JBossDatagrid7Service() {
 
         this.nodes = new ArrayList<>();
+
         log.debug(this + " constructed");
     }
 
@@ -98,11 +106,30 @@ public class JBossDatagrid7Service extends CacheServiceBase {
             addNode(n);
         }
 
+        try {
+
+            this.cacheManagerFactory = RemoteCacheManager::new;
+        }
+        catch(Throwable t) {
+
+            throw new UserErrorException(t);
+        }
+
         log.debug(this + " configured");
     }
 
     @Override
-    public void start() throws Exception {
+    public synchronized void start() throws Exception {
+
+        if (isStarted()) {
+
+            //
+            // noop
+            //
+            log.debug(this + " already started");
+
+            return;
+        }
 
         super.start();
 
@@ -113,18 +140,16 @@ public class JBossDatagrid7Service extends CacheServiceBase {
 
         try {
 
-            ConfigurationBuilder infinispanConfigBuilder = new ConfigurationBuilder();
+            ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
 
             for (HotRodEndpointAddress n : nodes) {
 
-                infinispanConfigBuilder.addServer().host(n.getHost()).port(n.getPort());
+                configurationBuilder.addServer().host(n.getHost()).port(n.getPort());
             }
 
-            Configuration infinispanConfiguration = infinispanConfigBuilder.build();
+            Configuration infinispanConfiguration = configurationBuilder.build();
 
-            RemoteCacheManager remoteCacheManager = new RemoteCacheManager(infinispanConfiguration);
-
-            RemoteCache cache;
+            RemoteCacheManager remoteCacheManager = cacheManagerFactory.buildCacheManager(infinispanConfiguration);
 
             if (cacheName == null) {
 
@@ -146,14 +171,41 @@ public class JBossDatagrid7Service extends CacheServiceBase {
         }
         catch (Throwable e) {
 
-            throw new UserErrorException(e);
+            throw new UserErrorException("failed to start jboss datagrid 7 service", e);
         }
     }
 
     @Override
-    public void stop() {
+    public synchronized boolean isStarted() {
+
+        return cache != null;
+    }
+
+    @Override
+    public synchronized void stop() {
+
+        if (!isStarted()) {
+
+            //
+            // noop
+            //
+            log.debug(this + " already stopped");
+            return;
+        }
 
         super.stop();
+
+        try {
+
+            cache.stop();
+            cache.getRemoteCacheManager().stop();
+            cache = null;
+        }
+        catch(Throwable t) {
+
+            log.warn("failed to stop cache " + cache);
+            log.debug("cache stop failure cause", t);;
+        }
     }
 
     // CacheService implementation -------------------------------------------------------------------------------------
@@ -216,6 +268,22 @@ public class JBossDatagrid7Service extends CacheServiceBase {
     void addNode(HotRodEndpointAddress n) {
 
         nodes.add(n);
+    }
+
+    /**
+     * For testing only.
+     */
+    void setCacheManagerFactory(CacheManagerFactory cacheManagerFactory) {
+
+        this.cacheManagerFactory = cacheManagerFactory;
+    }
+
+    /**
+     * May return null.
+     */
+    RemoteCache getCache() {
+
+        return cache;
     }
 
     // Protected -------------------------------------------------------------------------------------------------------

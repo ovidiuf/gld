@@ -70,7 +70,8 @@ public class MockLoadStrategy implements LoadStrategy {
 
     @Override
     public void stop() {
-        throw new NotYetImplementedException("stop() NOT YET IMPLEMENTED");
+
+        started = false;
     }
 
     @Override

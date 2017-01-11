@@ -18,6 +18,7 @@ package io.novaordis.gld.extensions.jboss.datagrid;
 
 import io.novaordis.gld.api.service.ServiceFactory;
 import io.novaordis.utilities.UserErrorException;
+import org.infinispan.client.hotrod.RemoteCache;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -201,15 +204,87 @@ public class JBossDatagrid7ServiceTest {
     }
 
     @Test
-    public void start() throws Exception {
+    public void start_GenericFailure() throws Exception {
 
         JBossDatagrid7Service s = new JBossDatagrid7Service();
         s.setLoadStrategy(new MockLoadStrategy());
         s.addNode(new HotRodEndpointAddress("mock-host"));
 
+        final MockRemoteCacheManager mcb = new MockRemoteCacheManager();
+        s.setCacheManagerFactory(infinispanConfiguration -> mcb);
+
+        //
+        // make the mock configuration builder break with a random failure
+        //
+
+        RuntimeException re = new RuntimeException("SYNTHETIC");
+
+        mcb.makeFail("getCache", re);
+
+        try {
+
+            s.start();
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("failed to start jboss datagrid 7 service: RuntimeException SYNTHETIC", msg);
+            Throwable cause = e.getOriginalCause();
+            assertEquals(re, cause);
+        }
+    }
+
+    // lifecycle -------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void lifecycle() throws Exception {
+
+        JBossDatagrid7Service s = new JBossDatagrid7Service();
+        MockLoadStrategy ms = new MockLoadStrategy();
+        s.setLoadStrategy(ms);
+        s.addNode(new HotRodEndpointAddress("mock-host"));
+
+        //
+        // mocks insure that all goes smoothly
+        //
+
+        final MockRemoteCacheManager mcb = new MockRemoteCacheManager();
+        s.setCacheManagerFactory(infinispanConfiguration -> mcb);
+
+        assertFalse(ms.isStarted());
+
+        assertFalse(s.isStarted());
+
         s.start();
 
-        log.info(".");
+        assertTrue(s.isStarted());
+
+        //
+        // test idempotency
+        //
+        s.start();
+
+        RemoteCache c = s.getCache();
+
+        assertNotNull(c);
+
+        assertTrue(c instanceof MockRemoteCache);
+
+        assertTrue(ms.isStarted());
+
+        s.stop();
+
+        assertFalse(s.isStarted());
+
+        //
+        // test idempotency
+        //
+        s.stop();
+
+        assertNull(s.getCache());
+
+        assertFalse(ms.isStarted());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

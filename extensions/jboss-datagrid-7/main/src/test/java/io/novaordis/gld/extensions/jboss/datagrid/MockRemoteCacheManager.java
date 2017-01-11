@@ -17,14 +17,14 @@
 package io.novaordis.gld.extensions.jboss.datagrid;
 
 import io.novaordis.utilities.NotYetImplementedException;
-import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
-import org.infinispan.client.hotrod.configuration.ServerConfigurationBuilder;
+import org.infinispan.client.hotrod.RemoteCache;
+import org.infinispan.client.hotrod.RemoteCacheManager;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/11/17
  */
-public class MockRemoteCacheManager extends ConfigurationBuilder {
+public class MockRemoteCacheManager extends RemoteCacheManager {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,36 +32,66 @@ public class MockRemoteCacheManager extends ConfigurationBuilder {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private RuntimeException addServerFailureCause;
+    private boolean started;
+    private RuntimeException getCacheFailureCause;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public MockRemoteCacheManager() {
+
+        this.started = false;
+    }
+
     // Overrides -------------------------------------------------------------------------------------------------------
 
+    @SuppressWarnings("unchecked")
     @Override
-    public ServerConfigurationBuilder addServer() {
+    public RemoteCache getCache() {
 
-        if (addServerFailureCause != null) {
+        if (getCacheFailureCause != null) {
 
-            throw addServerFailureCause;
+            throw getCacheFailureCause;
         }
 
-        return super.addServer();
+        return new MockRemoteCache(this);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public RemoteCache getCache(String cacheName) {
+
+        if (getCacheFailureCause != null) {
+
+            throw getCacheFailureCause;
+        }
+
+        return new MockRemoteCache(this);
+    }
+
+    @Override
+    public void start() {
+
+        this.started = true;
+    }
+
+    @Override
+    public void stop() {
+
+        this.started = false;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
     public void makeFail(String methodName, RuntimeException cause) {
 
-        if ("addServer".equals(methodName)) {
+        if ("getCache".equals(methodName)) {
 
-            addServerFailureCause = cause;
+            getCacheFailureCause = cause;
         }
         else {
 
             throw new NotYetImplementedException("we don't know how to make fail " + methodName + "(...)");
         }
-
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
