@@ -17,6 +17,7 @@
 package io.novaordis.gld.api.configuration;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,13 +33,25 @@ public interface LowLevelConfiguration {
     // Public ----------------------------------------------------------------------------------------------------------
 
     /**
-     * Walks the internal storage following the specified path and returns the value found in the map entry that
-     * matches the path. If there is no path match, returns null. If the value is not null and does not match the
-     * requested type, the method throws IllegalStateException.
+     * Walks the internal storage following the specified path and returns raw configuration map fragment found at the
+     * end of the path. May return an empty map, but never null.
      *
-     * @exception IllegalStateException if the value is not null and does not match the requested type.
+     * For the no argument form (get()), the method is guaranteed to return the actual raw storage implementation,
+     * and not a copy.
+     *
+     * @exception IllegalStateException if the value at the end of the path is not a raw sub-map, but a value of a
+     * specific type.
      */
-    <T> T get(Class<? extends T> type, String ... path);
+    Map<String, Object> get(String ... path);
+
+    /**
+     * Walks the internal storage following the specified path and returns the list found at the end of the path.
+     * The end of the patch cannot be reached, the method returns an empty list. If the element at the end of the path
+     * exists, but it is not a list, we throw IllegalStateException.
+     *
+     * @exception IllegalStateException if the value at the end of the path exists and it is not a list.
+     */
+     List<Object> getList(String ... path);
 
     /**
      * Attempt to map the given path onto the low level configuration map managed by this instance and return the
@@ -56,18 +69,15 @@ public interface LowLevelConfiguration {
      */
     File getFile(String ... path);
 
-    /**
-     * Walks the internal storage following the specified path and returns raw configuration map fragment found at the
-     * end of the path. May return an empty map, but never null.
-     *
-     * For the no argument form (get()), the method is guaranteed to return the actual raw storage implementation,
-     * and not a copy.
-     *
-     * @exception IllegalStateException if the value at the end of the path is not a raw sub-map, but a value of a
-     * specific type.
-     */
-    Map<String, Object> get(String ... path);
 
+    /**
+     * Walks the internal storage following the specified path and returns the value found in the map entry that
+     * matches the path. If there is no path match, returns null. If the value is not null and does not match the
+     * requested type, the method throws IllegalStateException.
+     *
+     * @exception IllegalStateException if the value is not null and does not match the requested type.
+     */
+    <T> T get(Class<? extends T> type, String ... path);
 
     /**
      * @return the directory containing the configuration file this configuration was loaded from. It is necessary

@@ -22,7 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -509,6 +511,148 @@ public abstract class LowLevelConfigurationTest {
         //
 
         assertTrue(nm == m);
+    }
+
+    // getList() -------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void getList_FirstElementInPathDoesNotExist() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        List<Object> l = c.getList("no-such-top-element");
+
+        assertNotNull(l);
+        assertTrue(l.isEmpty());
+    }
+
+    @Test
+    public void getList_NoMatch_PartialMatch() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        //noinspection MismatchedQueryAndUpdateOfCollection
+        Map<String, Object> m2 = new HashMap<>();
+
+        m.put("token1", m2);
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        List<Object> l = c.getList("token1", "token2");
+        assertNotNull(l);
+        assertTrue(l.isEmpty());
+    }
+
+    @Test
+    public void getList_NoMatch_IntermediateElementNotAMap() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m2 = new HashMap<>();
+        m.put("token1", m2);
+        m2.put("token2", "a-string-not-a-map");
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        List<Object> l = c.getList("token1", "token2", "token3");
+        assertNotNull(l);
+        assertTrue(l.isEmpty());
+    }
+
+    @Test
+    public void getList_Match_NotTheExpectedType() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m2 = new HashMap<>();
+        Map<String, Object> m3 = new HashMap<>();
+        m.put("token1", m2);
+        m2.put("token2", m3);
+        m3.put("token3", 10);
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        try {
+            c.getList("token1", "token2", "token3");
+            fail("should have thrown exception");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("expected token1.token2.token3 to be a List but it is a(n) Integer: \"10\"", msg);
+        }
+    }
+
+    @Test
+    public void getList_NoSuchList() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        m.put("token1", m1);
+        m1.put("token2", new HashMap<>());
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        List<Object> l = c.getList("token1", "token2", "token3");
+
+        assertNotNull(l);
+        assertTrue(l.isEmpty());
+    }
+
+    @Test
+    public void getList_NoSuchList2() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        Map<String, Object> m2 = new HashMap<>();
+        m.put("token1", m1);
+        m1.put("token2", m2);
+        m2.put("token3", null);
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        List<Object> l = c.getList("token1", "token2", "token3");
+
+        assertNotNull(l);
+        assertTrue(l.isEmpty());
+    }
+
+    @Test
+    public void getList_Empty() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        Map<String, Object> m2 = new HashMap<>();
+        m.put("token1", m1);
+        m1.put("token2", m2);
+        m2.put("token3", new ArrayList<>());
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        List<Object> l = c.getList("token1", "token2", "token3");
+
+        assertNotNull(l);
+        assertTrue(l.isEmpty());
+    }
+
+    @Test
+    public void getList_NotEmpty() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m1 = new HashMap<>();
+        Map<String, Object> m2 = new HashMap<>();
+        List<Object> l = new ArrayList<>();
+        m.put("token1", m1);
+        m1.put("token2", m2);
+        m2.put("token3", l);
+        l.add("something");
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        List<Object> l2 = c.getList("token1", "token2", "token3");
+
+        assertNotNull(l2);
+        assertEquals(1, l2.size());
+        assertEquals("something", l2.get(0));
     }
 
     // set() -----------------------------------------------------------------------------------------------------------

@@ -20,6 +20,7 @@ import io.novaordis.utilities.NotYetImplementedException;
 import io.novaordis.utilities.UserErrorException;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -72,6 +73,11 @@ public class MockImplementationConfiguration implements ImplementationConfigurat
     @Override
     public Map<String, Object> get(String... path) {
         throw new NotYetImplementedException("get() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public List<Object> getList(String... path) {
+        throw new NotYetImplementedException("getList() NOT YET IMPLEMENTED");
     }
 
     @Override

@@ -52,6 +52,8 @@ public interface ServiceConfiguration extends LowLevelConfiguration {
     ServiceType getType() throws UserErrorException;
 
     /**
+     * @return the service configuration. Never returns null.
+     *
      * @throws UserErrorException if the implementation configuration is missing from the configuration or we encounter
      * problems while parsing it.
      */

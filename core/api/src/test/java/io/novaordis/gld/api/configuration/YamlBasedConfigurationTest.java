@@ -23,8 +23,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -74,6 +78,34 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
     }
 
     // Tests -----------------------------------------------------------------------------------------------------------
+
+    // general Yaml behavior -------------------------------------------------------------------------------------------
+
+    @Test
+    public void list() throws Exception {
+
+        String content =
+                "some-list:\n" +
+                        " - a\n" +
+                        " - b\n" +
+                        " - c\n";
+
+        ByteArrayInputStream baos = new ByteArrayInputStream(content.getBytes());
+
+        Yaml yaml = new Yaml();
+
+        Map m = (Map)yaml.load(baos);
+
+        List l = (List)m.get("some-list");
+
+        assertEquals(3, l.size());
+
+        assertEquals("a", l.get(0));
+        assertEquals("b", l.get(1));
+        assertEquals("c", l.get(2));
+    }
+
+    // constructor -----------------------------------------------------------------------------------------------------
 
     @Test
     public void missingServiceSection() throws Exception {

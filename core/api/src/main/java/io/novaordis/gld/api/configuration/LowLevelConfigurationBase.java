@@ -20,6 +20,7 @@ import io.novaordis.utilities.Files;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -181,6 +182,20 @@ public class LowLevelConfigurationBase implements LowLevelConfiguration {
         }
 
         return m;
+    }
+
+    @Override
+    public List<Object> getList(String... path) {
+
+        //noinspection unchecked
+        List<Object> list = get(List.class, path);
+
+        if (list != null) {
+
+            return list;
+        }
+
+        return Collections.emptyList();
     }
 
     @Override
