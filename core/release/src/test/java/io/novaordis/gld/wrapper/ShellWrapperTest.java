@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -57,6 +58,9 @@ public class ShellWrapperTest {
     }
 
     /**
+     * The function dynamically builds a shell wrapper that executes the function, and executes it from
+     * scratchDirectory.
+     *
      * @throws NativeExecutionException if the function execution fails with a non-zero exit code. The exception's
      * message contains the stderr content.
      */
@@ -132,6 +136,59 @@ public class ShellWrapperTest {
             assertTrue(msg.startsWith("extension directory not provided"));
         }
     }
+
+    @Test
+    public void getExtensionJars_NotADirectory() throws Exception {
+
+        assertTrue(Files.write(new File(scratchDirectory, "pseudo-extension-dir"), "..."));
+
+        try {
+
+            executeShellFunction("get-extension-jars", "pseudo-extension-dir");
+            fail("should have thrown exception");
+        }
+        catch(NativeExecutionException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.startsWith("invalid extension directory pseudo-extension-dir"));
+        }
+    }
+
+    @Test
+    public void getExtensionJars_ExtensionWithNoClientLibraries() throws Exception {
+
+        File extensionDir = new File(scratchDirectory, "mock-extension");
+        assertTrue(extensionDir.mkdir());
+
+        File mockExtensionJar = new File(extensionDir, "mock-extension-logic.jar");
+        assertTrue(Files.write(mockExtensionJar, "SYNTHETIC"));
+
+        String s = executeShellFunction("get-extension-jars", "mock-extension");
+
+        assertEquals("mock-extension/mock-extension-logic.jar\n", s);
+    }
+
+    @Test
+    public void getExtensionJars_ExtensionWithOneClientLibrary() throws Exception {
+
+        File extensionDir = new File(scratchDirectory, "mock-extension");
+        assertTrue(extensionDir.mkdir());
+
+        File mockExtensionJar = new File(extensionDir, "mock-extension-logic.jar");
+        assertTrue(Files.write(mockExtensionJar, "SYNTHETIC"));
+
+        File clientLibrariesRoot = new File(extensionDir, "1.0.0");
+        assertTrue(clientLibrariesRoot.mkdir());
+
+        File mockClientLibraryJar = new File(clientLibrariesRoot, "mock-client-library-1.jar");
+        assertTrue(Files.write(mockClientLibraryJar, "SYNTHETIC"));
+
+        String s = executeShellFunction("get-extension-jars", "mock-extension");
+
+        assertEquals("mock-extension/1.0.0/mock-client-library-1.jar:mock-extension/mock-extension-logic.jar\n", s);
+    }
+
 
     // Package protected -----------------------------------------------------------------------------------------------
 

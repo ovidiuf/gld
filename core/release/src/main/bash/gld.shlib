@@ -41,7 +41,8 @@ function build-classpath() {
 
 #
 # interprets the directory it gets as argument as an extension directory and returns the appropriate
-# JARs in a classpath fragment format
+# JARs in a classpath fragment format. The JARs include the extension logic JAR plus any client libraries
+# found in the extension directory.
 #
 function get-extension-jars() {
 
