@@ -48,11 +48,11 @@ function main() {
     done
 
     #
-    # install the new extension
+    # install the new extension and the client libraries that come with this new release
     #
 
-    echo "installing new extension ${extension_name}-${version}.jar ..."
-    cp ${release_directory}/${extension_name}-${version}.jar ${extensions_directory}/${extension_name} || exit 1
+    echo "installing new extension ${extension_name}-${version}.jar and any client libraries that come with this extension ..."
+    cp -r ${release_directory}/* ${extensions_directory}/${extension_name} || exit 1
 
     #
     #  remove the temporary installation directory
