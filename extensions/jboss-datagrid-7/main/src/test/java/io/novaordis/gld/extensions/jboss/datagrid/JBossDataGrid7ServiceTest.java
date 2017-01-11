@@ -17,12 +17,17 @@
 package io.novaordis.gld.extensions.jboss.datagrid;
 
 import io.novaordis.gld.api.service.ServiceFactory;
+import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -56,14 +61,6 @@ public class JBossDatagrid7ServiceTest {
         assertEquals(JBossDatagrid7Service.class.getName(), fqcn);
     }
 
-    // identity --------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void identity() throws Exception {
-
-        JBossDatagrid7Service s = new JBossDatagrid7Service();
-    }
-
     // version ---------------------------------------------------------------------------------------------------------
 
     @Test
@@ -80,6 +77,74 @@ public class JBossDatagrid7ServiceTest {
         String mavenInjectedProjectVersion = System.getProperty("maven.injected.project.version");
         assertNotNull(mavenInjectedProjectVersion);
         assertEquals(mavenInjectedProjectVersion, version);
+    }
+
+    // identity --------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void identity() throws Exception {
+
+        JBossDatagrid7Service s = new JBossDatagrid7Service();
+        assertTrue(s.getNodes().isEmpty());
+    }
+
+
+    // configure -------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void configure_NoNodes() throws Exception {
+
+        JBossDatagrid7Service s = new JBossDatagrid7Service();
+
+        MockServiceConfiguration mc = new MockServiceConfiguration();
+
+        try {
+
+            s.configure(mc);
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("at least one JDG node must be specified", msg);
+        }
+    }
+
+    @Test
+    public void configure_OneNode() throws Exception {
+
+        JBossDatagrid7Service s = new JBossDatagrid7Service();
+
+        MockServiceConfiguration mc = new MockServiceConfiguration();
+        MockImplementationConfiguration mic = mc.getImplementationConfiguration();
+
+        s.configure(mc);
+
+        List<HotRodEndpointAddress> nodes = s.getNodes();
+        assertEquals(1, nodes.size());
+        assertEquals("somehost", nodes.get(0).getHost());
+        assertEquals(12345, nodes.get(0).getPort());
+    }
+
+
+    @Test
+    public void configure_TwoNodes() throws Exception {
+
+        JBossDatagrid7Service s = new JBossDatagrid7Service();
+
+        MockServiceConfiguration mc = new MockServiceConfiguration();
+        MockImplementationConfiguration mic = mc.getImplementationConfiguration();
+
+        s.configure(mc);
+
+        List<HotRodEndpointAddress> nodes = s.getNodes();
+        assertEquals(2, nodes.size());
+        assertEquals("somehost", nodes.get(0).getHost());
+        assertEquals(12345, nodes.get(0).getPort());
+        assertEquals("somehost2", nodes.get(1).getHost());
+        assertEquals(12346, nodes.get(2).getPort());
+
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

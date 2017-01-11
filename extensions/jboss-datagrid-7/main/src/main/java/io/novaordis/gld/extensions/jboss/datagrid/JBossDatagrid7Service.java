@@ -17,7 +17,9 @@
 package io.novaordis.gld.extensions.jboss.datagrid;
 
 import io.novaordis.gld.api.cache.CacheServiceBase;
+import io.novaordis.gld.api.configuration.ImplementationConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
+import io.novaordis.utilities.NotYetImplementedException;
 import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.version.VersionUtilities;
 import org.infinispan.client.hotrod.RemoteCache;
@@ -27,6 +29,8 @@ import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -41,14 +45,20 @@ public class JBossDatagrid7Service extends CacheServiceBase {
 
     public static final String EXTENSION_VERSION_METADATA_FILE_NAME = "jboss-datagrid-7-extension-version";
 
+    public static final String NODES_LABEL = "nodes";
+
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
+
+    private List<HotRodEndpointAddress> nodes;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public JBossDatagrid7Service() {
 
+        this.nodes = new ArrayList<>();
         log.debug(this + " constructed");
     }
 
@@ -62,6 +72,17 @@ public class JBossDatagrid7Service extends CacheServiceBase {
 
     @Override
     public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {
+
+        ImplementationConfiguration ic = serviceConfiguration.getImplementationConfiguration();
+
+        List nodes = ic.getList(NODES_LABEL);
+
+        if (nodes.isEmpty()) {
+
+            throw new UserErrorException("at least one JDG node must be specified");
+        }
+
+
 
         log.debug(this + " configured");
     }
@@ -125,6 +146,11 @@ public class JBossDatagrid7Service extends CacheServiceBase {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public List<HotRodEndpointAddress> getNodes() {
+
+        throw new NotYetImplementedException("getNodes()");
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

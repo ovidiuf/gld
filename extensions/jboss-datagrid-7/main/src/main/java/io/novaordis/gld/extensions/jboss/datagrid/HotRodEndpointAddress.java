@@ -24,13 +24,53 @@ public class HotRodEndpointAddress {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    public static final int DEFAULT_HOTROD_PORT = 11222;
+    public static final String DEFAULT_HOST = "localhost";
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String host;
+    private int port;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public HotRodEndpointAddress() {
+
+        this(null, null);
+    }
+
+    public HotRodEndpointAddress(String host, Integer port) {
+
+        if (host == null) {
+
+            this.host = DEFAULT_HOST;
+        }
+
+        if (port == null) {
+
+            this.port = DEFAULT_HOTROD_PORT;
+        }
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
+
+    /**
+     * @return the host name or the default "localhost"
+     */
+    public String getHost() {
+
+        return host;
+    }
+
+    /**
+     * @return the port name or the default (11222).
+     */
+    public int getPort() {
+
+        return port;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
