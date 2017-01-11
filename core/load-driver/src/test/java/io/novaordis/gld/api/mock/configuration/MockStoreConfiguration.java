@@ -18,9 +18,11 @@ package io.novaordis.gld.api.mock.configuration;
 
 import io.novaordis.gld.api.configuration.StoreConfiguration;
 import io.novaordis.gld.api.mock.MockKeyStore;
+import io.novaordis.utilities.NotYetImplementedException;
 import io.novaordis.utilities.UserErrorException;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,7 +49,7 @@ public class MockStoreConfiguration implements StoreConfiguration {
 
     @Override
     public <T> T get(Class<? extends T> type, String... path) {
-        throw new RuntimeException("get() NOT YET IMPLEMENTED");
+        throw new NotYetImplementedException("get() NOT YET IMPLEMENTED");
     }
 
     @Override
@@ -61,8 +63,13 @@ public class MockStoreConfiguration implements StoreConfiguration {
     }
 
     @Override
+    public List<Object> getList(String... path) {
+        throw new NotYetImplementedException("getList() NOT YET IMPLEMENTED");
+    }
+
+    @Override
     public File getConfigurationDirectory() {
-        throw new RuntimeException("getConfigurationDirectory() NOT YET IMPLEMENTED");
+        throw new NotYetImplementedException("getConfigurationDirectory() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
