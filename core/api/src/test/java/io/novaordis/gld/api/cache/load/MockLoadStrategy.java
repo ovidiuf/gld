@@ -60,6 +60,8 @@ public class MockLoadStrategy implements LoadStrategy {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private boolean started;
+
     private Service service;
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -124,17 +126,20 @@ public class MockLoadStrategy implements LoadStrategy {
 
     @Override
     public void start() throws Exception {
-        throw new RuntimeException("start() NOT YET IMPLEMENTED");
+
+        started = true;
     }
 
     @Override
     public boolean isStarted() {
-        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
+
+        return started;
     }
 
     @Override
     public void stop() {
-        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
+
+        started = false;
     }
 
     @Override

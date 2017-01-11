@@ -94,75 +94,38 @@ public abstract class ServiceTest {
 
     }
 
-//    @Test
-//    public void lifeCycle() throws Exception {
-//
-//        Service s = getServiceToTest(new MockConfiguration(), Collections.singletonList(getTestNode()));
-//
-//        assertFalse(s.isStarted());
-//
-//        s.start();
-//
-//        assertTrue(s.isStarted());
-//
-//        // starting an already started service instance should throw IllegalStateException
-//
-//        try {
-//
-//            s.start();
-//            fail("should fail with IllegalStateException");
-//        }
-//        catch(IllegalStateException e) {
-//            log.info(e.getMessage());
-//        }
-//
-//        assertTrue(s.isStarted());
-//
-//        s.stop();
-//
-//        assertFalse(s.isStarted());
-//
-//        // stopping an already started stopped instance should be a noop
-//
-//        s.stop();
-//
-//        assertFalse(s.isStarted());
-//    }
+    @Test
+    public void lifeCycle() throws Exception {
 
-//    @Test
-//    public void cannotPerformIfNotStarted() throws Exception {
-//
-//        Service s = getServiceToTest(new MockConfiguration(), Collections.singletonList(getTestNode()));
-//
-//        assertFalse(s.isStarted());
-//
-//        try {
-//
-//            s.perform(new MockOperation());
-//            fail("should fail with IllegalStateException because the service is not started");
-//        }
-//        catch(IllegalStateException e) {
-//            log.info(e.getMessage());
-//        }
-//    }
+        Service s = getServiceToTest();
 
-//    @Test
-//    public void configureIgnoresArgumentsThatDoNotBelongToService() throws Exception {
-//
-//        Service s = getServiceToTest(new MockConfiguration(), Collections.singletonList(getTestNode()));
-//
-//        List<String> arguments = Arrays.asList(
-//            "--this-argument-surely-is-not-interesting-to-the-service",
-//            "apples",
-//            "--this-argument-is-also-not-interesting-to-the-service",
-//            "oranges"
-//            );
-//
-//        s.configure(arguments);
-//
-//        // make sure no arguments were removed from list
-//        assertEquals(4, arguments.size());
-//    }
+        MockLoadStrategy mls = new MockLoadStrategy();
+        s.setLoadStrategy(mls);
+
+        assertFalse(s.isStarted());
+
+        s.start();
+
+        assertTrue(s.isStarted());
+
+        // idempotence: starting an already started service instance, it should be a noop
+
+        s.start();
+
+        assertTrue(s.isStarted());
+
+        assertTrue(mls.isStarted());
+
+        s.stop();
+
+        assertFalse(s.isStarted());
+
+        // idempotence:  stopping an already started stopped instance should be a noop
+
+        s.stop();
+
+        assertFalse(s.isStarted());
+    }
 
     @Test
     public void loadStrategyLifecycleIsCorrelatedToTheServiceLifecycle() throws Exception {

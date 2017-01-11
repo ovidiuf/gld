@@ -35,7 +35,7 @@ public abstract class ServiceBase implements Service {
     private LoadDriver loadDriver;
     private LoadStrategy loadStrategy;
 
-    private static boolean started;
+    private boolean started;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -43,6 +43,8 @@ public abstract class ServiceBase implements Service {
      * No argument constructor to be used by reflection instantiation of sub-classes
      */
     public ServiceBase() {
+
+        this.started = false;
     }
 
     // Service implementation ------------------------------------------------------------------------------------------
@@ -81,7 +83,7 @@ public abstract class ServiceBase implements Service {
     @Override
     public void start() throws Exception {
 
-        if (started) {
+        if (isStarted()) {
 
             return;
         }
@@ -103,7 +105,7 @@ public abstract class ServiceBase implements Service {
     @Override
     public void stop() {
 
-        if (!started) {
+        if (!isStarted()) {
 
             return;
         }
