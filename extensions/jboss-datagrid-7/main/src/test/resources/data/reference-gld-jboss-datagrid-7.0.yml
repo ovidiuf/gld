@@ -7,6 +7,8 @@
 #
 #  gld -c ~/projects/gld/extensions/jboss-datagrid-7/main/src/test/resources/data/reference-gld-jboss-datagrid-7.0.yml
 #
+# The reference/example configuration/example is available here:
+# https://kb.novaordis.com/index.php/Jboss-datagrid-7_Gld_Extension
 #
 #
 service:
