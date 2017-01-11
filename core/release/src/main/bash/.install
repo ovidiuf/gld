@@ -12,7 +12,6 @@ release_directory=$(basename $(cd $(dirname $0)/..; pwd))
 function main() {
 
     link-to-installation-directory
-    make-convenience-links
     create-extension-directory
     configure-user-environment
     ${remove_older_releases} && remove-older-releases
@@ -30,13 +29,6 @@ function link-to-installation-directory() {
 
     (cd $(dirname $0)/../..; ln -s ./${release_directory} ${link_name}) || \
         { echo "failed to link to ${release_directory}" 1>&2; exit 1; }
-}
-
-function make-convenience-links() {
-
-    for i in build install release; do
-        (cd $(dirname $0); ln -s ./nort ${i}) || { echo "failed to link as ${i}" 1>&2; exit 1; }
-    done
 }
 
 function create-extension-directory() {
