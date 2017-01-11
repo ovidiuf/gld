@@ -1,0 +1,90 @@
+#!/bin/bash
+
+function build-classpath() {
+
+    #
+    # add the JARs from lib
+    #
+
+    local lib_dir=$(dirname $0)/../lib
+
+    [ -d ${lib_dir} ] || { echo "[error]: library directory ${lib_dir} not found" 1>&2; exit 1; }
+
+    local classpath="";
+
+    for i in $(find ${lib_dir} -name *.jar); do
+        [ -z "${classpath}" ] && classpath=${i} || classpath=${classpath}:${i}
+    done
+
+    [ -z "${classpath}" ] && { echo "[error]: no jar files found in ${lib_dir}" 1>&2; exit 1; }
+
+    local extensions_dir=$(dirname $0)/../extensions
+
+    [ -d ${extensions_dir} ] || { echo "[error]: extension directory ${extensions_dir} not found" 1>&2; exit 1; }
+
+    #
+    # add the extension JARs
+    #
+
+    for i in $(find ${extensions_dir} -mindepth 1 -maxdepth 1 -type d); do
+        classpath="${classpath}:$(get-extension-jars ${i})" || exit 1
+    done
+
+    #
+    # place the directory itself (and the log4j.xml) at the front of the classpath
+    #
+
+    classpath="${lib_dir}:${classpath}"
+
+    echo ${classpath}
+}
+
+#
+# interprets the directory it gets as argument as an extension directory and returns the appropriate
+# JARs in a classpath fragment format
+#
+function get-extension-jars() {
+
+    local extension_dir=$1
+
+    [ -z "${extension_dir}" ] && { echo "extension directory not provided" 1>&2; exit 1; }
+    [ -d "${extension_dir}" ] || { echo "invalid extension directory ${extension_dir}" 1>&2; exit 1; }
+
+    #
+    # add the extension jar from the root of the extension directory earlier on the classpath
+    #
+
+    local extension_classpath
+
+    for i in $(find ${extension_dir} -name *.jar); do
+        [ -z "${extension_classpath}" ] && \
+            extension_classpath=${i} || \
+            extension_classpath=${extension_classpath}:${i}
+    done
+
+    echo ${extension_classpath}
+}
+
+function main() {
+
+    local debug=""
+    local args=""
+
+    while [ -n "$1" ]; do
+
+        if [ "$1" = "-d" -o "$1" = "--debug" ]; then
+            debug="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
+        else
+            [ -z "${args}" ] && args=$1 || args="${args} $1"
+        fi
+        shift
+    done
+
+    local classpath
+    classpath=$(build-classpath) || exit 1
+
+    java ${debug} -cp ${classpath} io.novaordis.gld.Main ${args}
+
+}
+
+main $@
