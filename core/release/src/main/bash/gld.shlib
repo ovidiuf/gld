@@ -86,5 +86,3 @@ function main() {
     java ${debug} -cp ${classpath} io.novaordis.gld.Main ${args}
 
 }
-
-main $@
