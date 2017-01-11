@@ -1,5 +1,9 @@
 #!/bin/bash
 
-lib=$(dirname $0)/gld.shlib; [ -f ${lib} ] && . ${lib} || { echo "shell library file ${lib} not found" 1>&2; exit 1; }
+lib=$(dirname $0)/gld.shlib
+
+[ ! -f ${lib} ] && { echo "shell library file ${lib} not found" 1>&2; exit 1; }
+
+. ${lib}
 
 main $@
