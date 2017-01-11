@@ -78,6 +78,9 @@ public abstract class ServiceBase implements Service {
     // lifecycle -------------------------------------------------------------------------------------------------------
 
     /**
+     * <b><Important/b> Subclasses are advised to invoke super.start() in their start() overrides to insure the state
+     * maintained at this level is correctly managed.
+     *
      * @throws IllegalStateException on inconsistent state.
      */
     @Override
@@ -102,6 +105,10 @@ public abstract class ServiceBase implements Service {
         started = true;
     }
 
+    /**
+     * <b><Important/b> Subclasses are advised to invoke super.stop() in their stop() overrides to insure the state
+     * maintained at this level is correctly managed.
+     */
     @Override
     public void stop() {
 
