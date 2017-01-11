@@ -19,7 +19,6 @@ package io.novaordis.gld.extensions.jboss.datagrid;
 import io.novaordis.gld.api.cache.CacheServiceBase;
 import io.novaordis.gld.api.configuration.ImplementationConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.utilities.NotYetImplementedException;
 import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.version.VersionUtilities;
 import org.infinispan.client.hotrod.RemoteCache;
@@ -75,14 +74,25 @@ public class JBossDatagrid7Service extends CacheServiceBase {
 
         ImplementationConfiguration ic = serviceConfiguration.getImplementationConfiguration();
 
-        List nodes = ic.getList(NODES_LABEL);
+        List<Object> list = ic.getList(NODES_LABEL);
 
-        if (nodes.isEmpty()) {
+        if (list.isEmpty()) {
 
             throw new UserErrorException("at least one JDG node must be specified");
         }
 
+        for(Object o: list) {
 
+            if (!(o instanceof String)) {
+
+                throw new UserErrorException(
+                        "'" + NODES_LABEL + "' should be a String list, but it was found to contain " +
+                                o.getClass().getSimpleName() + "s");
+            }
+
+            String nodeSpecification = (String)o;
+            nodes.add(new HotRodEndpointAddress(nodeSpecification));
+        }
 
         log.debug(this + " configured");
     }
@@ -147,9 +157,12 @@ public class JBossDatagrid7Service extends CacheServiceBase {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    /**
+     * @return the actual storage. May return an empty list, but never null.
+     */
     public List<HotRodEndpointAddress> getNodes() {
 
-        throw new NotYetImplementedException("getNodes()");
+        return nodes;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

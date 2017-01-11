@@ -16,6 +16,8 @@
 
 package io.novaordis.gld.extensions.jboss.datagrid;
 
+import io.novaordis.utilities.UserErrorException;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/10/17
@@ -29,6 +31,83 @@ public class HotRodEndpointAddress {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
+    // Package protected static ----------------------------------------------------------------------------------------
+
+    /**
+     * @return the host part form a "host[:port]" string endpoint specification. May return null.
+     */
+    static String extractHost(String s) throws UserErrorException {
+
+        if (s == null) {
+
+            return null;
+        }
+
+        int i = s.indexOf(':');
+
+        if (i == -1) {
+
+            return s;
+        }
+
+        if (i == s.length() - 1) {
+
+            throw new UserErrorException("missing port information");
+        }
+
+        return s.substring(0, i);
+    }
+
+    /**
+     * Does not perform port boundary validation.
+     *
+     * @return the integer part form a "host[:port]" string endpoint specification. May return null.
+     *
+     * @see HotRodEndpointAddress#validatePort(int)
+     */
+    static Integer extractPort(String s) throws UserErrorException {
+
+        if (s == null) {
+
+            return null;
+        }
+
+        int i = s.indexOf(':');
+
+        if (i == -1) {
+
+            return null;
+        }
+
+        if (i == s.length() - 1) {
+
+            throw new UserErrorException("missing port information");
+        }
+
+        s = s.substring(i + 1);
+
+        try {
+
+            return Integer.parseInt(s);
+        }
+        catch(Exception e) {
+
+            throw new UserErrorException("invalid port value \""+ s + "\"");
+        }
+    }
+
+    /**
+     * Perform port boundary validation and throw exception if the port has an invalid value.
+     */
+    static void validatePort(int port) throws UserErrorException {
+
+        if (port <= 0 || port >= 65536) {
+
+            throw new UserErrorException("invalid port value " + port);
+        }
+
+    }
+
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private String host;
@@ -36,21 +115,38 @@ public class HotRodEndpointAddress {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public HotRodEndpointAddress() {
+    public HotRodEndpointAddress() throws UserErrorException {
 
         this(null, null);
     }
 
-    public HotRodEndpointAddress(String host, Integer port) {
+    /**
+     * @param hostAndPort endpoint address in the format host[:port]
+     */
+    public HotRodEndpointAddress(String hostAndPort) throws UserErrorException {
+
+        this(extractHost(hostAndPort), extractPort(hostAndPort));
+    }
+
+    public HotRodEndpointAddress(String host, Integer port) throws UserErrorException  {
 
         if (host == null) {
 
             this.host = DEFAULT_HOST;
         }
+        else {
+
+            this.host = host;
+        }
 
         if (port == null) {
 
             this.port = DEFAULT_HOTROD_PORT;
+        }
+        else {
+
+            validatePort(port);
+            this.port = port;
         }
     }
 
@@ -70,6 +166,12 @@ public class HotRodEndpointAddress {
     public int getPort() {
 
         return port;
+    }
+
+    @Override
+    public String toString() {
+
+        return host + ":" + port;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -21,6 +21,9 @@ import io.novaordis.utilities.NotYetImplementedException;
 import io.novaordis.utilities.UserErrorException;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +39,14 @@ public class MockImplementationConfiguration implements ImplementationConfigurat
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private Map<String, Object> content;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public MockImplementationConfiguration() {
+
+        this.content = new HashMap<>();
+    }
 
     // ImplementationConfiguration implementation ----------------------------------------------------------------------
 
@@ -68,7 +78,21 @@ public class MockImplementationConfiguration implements ImplementationConfigurat
 
     @Override
     public List<Object> getList(String... path) {
-        throw new NotYetImplementedException("getList() NOT YET IMPLEMENTED");
+
+        if (path.length == 1 && JBossDatagrid7Service.NODES_LABEL.equals(path[0])) {
+
+            Object o = content.get(path[0]);
+
+            if (o == null) {
+
+                return Collections.emptyList();
+            }
+
+            //noinspection unchecked
+            return (List<Object>)o;
+        }
+
+        throw new NotYetImplementedException("getList() NOT YET IMPLEMENTED for " + Arrays.asList(path));
     }
 
     @Override
@@ -77,6 +101,13 @@ public class MockImplementationConfiguration implements ImplementationConfigurat
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public void setNodes(List<Object> nodes) {
+
+        content.put(JBossDatagrid7Service.NODES_LABEL, nodes);
+
+
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

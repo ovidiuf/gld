@@ -22,6 +22,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -112,12 +115,42 @@ public class JBossDatagrid7ServiceTest {
     }
 
     @Test
+    public void configure_InvalidContent() throws Exception {
+
+        JBossDatagrid7Service s = new JBossDatagrid7Service();
+
+        MockServiceConfiguration mc = new MockServiceConfiguration();
+
+        MockImplementationConfiguration mic = mc.getImplementationConfiguration();
+
+        List<Object> content = new ArrayList<>();
+        content.add("somehost:12345");
+        content.add(1);
+
+        mic.setNodes(content);
+
+        try {
+
+            s.configure(mc);
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("'nodes' should be a String list, but it was found to contain Integers", msg);
+        }
+    }
+
+    @Test
     public void configure_OneNode() throws Exception {
 
         JBossDatagrid7Service s = new JBossDatagrid7Service();
 
         MockServiceConfiguration mc = new MockServiceConfiguration();
         MockImplementationConfiguration mic = mc.getImplementationConfiguration();
+
+        mic.setNodes(Collections.singletonList("somehost:12345"));
 
         s.configure(mc);
 
@@ -136,6 +169,8 @@ public class JBossDatagrid7ServiceTest {
         MockServiceConfiguration mc = new MockServiceConfiguration();
         MockImplementationConfiguration mic = mc.getImplementationConfiguration();
 
+        mic.setNodes(Arrays.asList("somehost:12345", "somehost2:12346"));
+
         s.configure(mc);
 
         List<HotRodEndpointAddress> nodes = s.getNodes();
@@ -143,8 +178,7 @@ public class JBossDatagrid7ServiceTest {
         assertEquals("somehost", nodes.get(0).getHost());
         assertEquals(12345, nodes.get(0).getPort());
         assertEquals("somehost2", nodes.get(1).getHost());
-        assertEquals(12346, nodes.get(2).getPort());
-
+        assertEquals(12346, nodes.get(1).getPort());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
