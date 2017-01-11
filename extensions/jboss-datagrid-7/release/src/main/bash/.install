@@ -53,6 +53,7 @@ function main() {
 
     echo "installing new extension ${extension_name}-${version}.jar and any client libraries that come with this extension ..."
     cp -r ${release_directory}/* ${extensions_directory}/${extension_name} || exit 1
+    rm -r ${extensions_directory}/${extension_name}/bin
 
     #
     #  remove the temporary installation directory
