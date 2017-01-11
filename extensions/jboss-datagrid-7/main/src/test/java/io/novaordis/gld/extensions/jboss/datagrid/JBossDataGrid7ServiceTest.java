@@ -91,7 +91,6 @@ public class JBossDatagrid7ServiceTest {
         assertTrue(s.getNodes().isEmpty());
     }
 
-
     // configure -------------------------------------------------------------------------------------------------------
 
     @Test
@@ -160,7 +159,6 @@ public class JBossDatagrid7ServiceTest {
         assertEquals(12345, nodes.get(0).getPort());
     }
 
-
     @Test
     public void configure_TwoNodes() throws Exception {
 
@@ -179,6 +177,39 @@ public class JBossDatagrid7ServiceTest {
         assertEquals(12345, nodes.get(0).getPort());
         assertEquals("somehost2", nodes.get(1).getHost());
         assertEquals(12346, nodes.get(1).getPort());
+    }
+
+    // start -----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void start_NoNodes() throws Exception {
+
+        JBossDatagrid7Service s = new JBossDatagrid7Service();
+        s.setLoadStrategy(new MockLoadStrategy());
+
+        try {
+
+            s.start();
+            fail("should throw IllegalStateException, service not configured");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("unconfigured jboss datagrid 7 service: no nodes", msg);
+        }
+    }
+
+    @Test
+    public void start() throws Exception {
+
+        JBossDatagrid7Service s = new JBossDatagrid7Service();
+        s.setLoadStrategy(new MockLoadStrategy());
+        s.addNode(new HotRodEndpointAddress("mock-host"));
+
+        s.start();
+
+        log.info(".");
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

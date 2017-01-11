@@ -179,10 +179,10 @@ public class LoadDriverImpl implements LoadDriver {
         try {
 
             //
-            // start the dependent lifecycle services the start the runner, then enter the main control loop
+            // start the dependent lifecycle instances the start the runner, then enter the main control loop
             //
 
-            startLifeCycleServices();
+            startLifeCycleInstances();
 
             runner.run();
 
@@ -267,11 +267,14 @@ public class LoadDriverImpl implements LoadDriver {
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    void startLifeCycleServices() throws Exception {
+    void startLifeCycleInstances() throws Exception {
 
         service.start(); // this will start internal lifecycle components, recursively.
+
         sampler.start();
+
         if (keyStore != null) {
+
             keyStore.start();
         }
     }

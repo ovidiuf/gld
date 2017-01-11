@@ -53,6 +53,8 @@ public class JBossDatagrid7Service extends CacheServiceBase {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private List<HotRodEndpointAddress> nodes;
+    private String cacheContainerName;
+    private String cacheName;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -92,7 +94,8 @@ public class JBossDatagrid7Service extends CacheServiceBase {
             }
 
             String nodeSpecification = (String)o;
-            nodes.add(new HotRodEndpointAddress(nodeSpecification));
+            HotRodEndpointAddress n = new HotRodEndpointAddress(nodeSpecification);
+            addNode(n);
         }
 
         log.debug(this + " configured");
@@ -103,28 +106,47 @@ public class JBossDatagrid7Service extends CacheServiceBase {
 
         super.start();
 
-        String host = "localhost";
-        int port = 11222;
-        String cacheName = null;
+        if (nodes.isEmpty()) {
 
-        Configuration c = new ConfigurationBuilder().addServer().host(host).port(port).build();
-
-        RemoteCacheManager remoteCacheManager = new RemoteCacheManager(c);
-
-        RemoteCache cache;
-
-        if (cacheName == null) {
-
-            cache = remoteCacheManager.getCache();
-        }
-        else {
-
-            cache = remoteCacheManager.getCache(cacheName);
+            throw new IllegalStateException(this + ": no nodes");
         }
 
-        if (cache == null) {
+        try {
 
-            throw new UserErrorException("no such cache: " + cacheName);
+            ConfigurationBuilder infinispanConfigBuilder = new ConfigurationBuilder();
+
+            for (HotRodEndpointAddress n : nodes) {
+
+                infinispanConfigBuilder.addServer().host(n.getHost()).port(n.getPort());
+            }
+
+            Configuration infinispanConfiguration = infinispanConfigBuilder.build();
+
+            RemoteCacheManager remoteCacheManager = new RemoteCacheManager(infinispanConfiguration);
+
+            RemoteCache cache;
+
+            if (cacheName == null) {
+
+                cache = remoteCacheManager.getCache();
+
+            } else {
+
+                cache = remoteCacheManager.getCache(cacheName);
+            }
+
+            if (cache == null) {
+
+                throw new Exception("no such cache: " + cacheName);
+            }
+        }
+        catch (UserErrorException e) {
+
+            throw e;
+        }
+        catch (Throwable e) {
+
+            throw new UserErrorException(e);
         }
     }
 
@@ -169,6 +191,11 @@ public class JBossDatagrid7Service extends CacheServiceBase {
     @Override
     public String toString() {
 
+        if (nodes.isEmpty()) {
+
+            return "unconfigured jboss datagrid 7 service";
+        }
+
         String s = "";
 
         for(Iterator<HotRodEndpointAddress> i = getNodes().iterator(); i.hasNext(); ) {
@@ -185,6 +212,11 @@ public class JBossDatagrid7Service extends CacheServiceBase {
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
+
+    void addNode(HotRodEndpointAddress n) {
+
+        nodes.add(n);
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

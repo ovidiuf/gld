@@ -55,12 +55,13 @@ public interface Service {
     /**
      * If the internal lifecycle components are installed, the will be started recursively.
      *
-     * Starting an already started service should throw IllegalStateException.
+     * Starting an already started service should be a noop.
      *
-     * @throws IllegalStateException on attempt to start an already started service instance.
      * @throws IllegalStateException on attempt to start an incompletely configured service (for example, a service
      * without a load strategy) or a service with an inconsistent state.
-     * @throws UserErrorException contains a human readable message. Thrown on incomplete command line configuration.
+     *
+     * @throws UserErrorException contains a human readable message. Thrown on incomplete command line configuration,
+     * or any error condition that can be addressed with user intervention.
      */
     void start() throws Exception;
 
