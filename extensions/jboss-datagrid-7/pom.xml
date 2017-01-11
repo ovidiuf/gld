@@ -8,7 +8,7 @@
 
     <groupId>io.novaordis.gld.extensions.jboss-datagrid-7</groupId>
     <artifactId>jboss-datagrid-7-gld-extension</artifactId>
-    <version>1.0.0-SNAPSHOT-15</version>
+    <version>1.0.0-SNAPSHOT-16</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -22,7 +22,7 @@
             Dependencies
         -->
 
-        <gld.api.version>1.0.0-SNAPSHOT-31</gld.api.version>
+        <gld.api.version>1.0.0-SNAPSHOT-34</gld.api.version>
         <novaordis.utilities.version>4.4.0-SNAPSHOT-6</novaordis.utilities.version>
         <jdg.infinspan.client.hotrod.version>8.3.0.Final-redhat-1</jdg.infinspan.client.hotrod.version>
         <slf4j.version>1.7.6</slf4j.version>
@@ -78,25 +78,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
-        <!--
-            Only for testing, we don't want to ship with a specific binding.
-        -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-
-
-
 
         <dependency>
             <groupId>org.infinispan</groupId>
@@ -114,9 +95,29 @@
         <dependency>
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-query-dsl</artifactId>
-            <version>${jdg.infinspan.client.hotrod.version}</version>
+            <version>${jdg.infinispan.client.hotrod.version}</version>
         </dependency>
         -->
+
+        <!--
+            Testing dependencies
+        -->
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+        <!--
+            Only for testing, we don't want to ship with a specific binding.
+        -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
