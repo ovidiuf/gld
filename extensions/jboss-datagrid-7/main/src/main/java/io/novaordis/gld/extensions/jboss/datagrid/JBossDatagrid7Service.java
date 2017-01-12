@@ -63,6 +63,10 @@ public class JBossDatagrid7Service extends CacheServiceBase {
     private CacheManagerFactory cacheManagerFactory;
 
     private List<HotRodEndpointAddress> nodes;
+
+    //
+    // null means "default cache"
+    //
     private String cacheName;
 
     private RemoteCache cache;
@@ -103,6 +107,10 @@ public class JBossDatagrid7Service extends CacheServiceBase {
             throw new UserErrorException("at least one JDG node must be specified");
         }
 
+        //
+        // nodes
+        //
+
         for(Object o: list) {
 
             if (!(o instanceof String)) {
@@ -115,6 +123,19 @@ public class JBossDatagrid7Service extends CacheServiceBase {
             String nodeSpecification = (String)o;
             HotRodEndpointAddress n = new HotRodEndpointAddress(nodeSpecification);
             addNode(n);
+        }
+
+        //
+        // cache name - also turn invalid values in UserErrorExceptions
+        //
+
+        try {
+
+            this.cacheName = ic.get(String.class, CACHE_NAME_LABEL);
+
+        } catch (Exception e) {
+
+            throw new UserErrorException(e);
         }
 
         try {
@@ -225,28 +246,30 @@ public class JBossDatagrid7Service extends CacheServiceBase {
 
         checkStarted();
 
-        throw new RuntimeException("get() NOT YET IMPLEMENTED");
+        return (String)cache.get(key);
     }
 
     public void put(String key, String value) throws Exception {
 
         checkStarted();
 
-        throw new RuntimeException("put() NOT YET IMPLEMENTED");
+        //noinspection unchecked
+        cache.put(key, value);
     }
 
     public void remove(String key) throws Exception {
 
         checkStarted();
 
-        throw new RuntimeException("remove() NOT YET IMPLEMENTED");
+        cache.remove(key);
     }
 
     public Set<String> keys() throws Exception {
 
         checkStarted();
 
-        throw new RuntimeException("keys() NOT YET IMPLEMENTED");
+        //noinspection unchecked
+        return cache.keySet();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -260,9 +283,23 @@ public class JBossDatagrid7Service extends CacheServiceBase {
     }
 
     /**
-     * @return the cache name. May return null, which means "default cache".
+     * @return the cache name.
+     *
+     * If the instance was configured but not started, a null value means "default cache".
+     *
+     * After the instance was started successfully, and thus a cache retrieved, the method will never return null,
+     * as there cannot be a no-name cache.
      */
     public String getCacheName() {
+
+        if (cache != null) {
+
+            //
+            // "real" name takes precedence
+            //
+
+            return cache.getName();
+        }
 
         return cacheName;
     }
@@ -286,6 +323,15 @@ public class JBossDatagrid7Service extends CacheServiceBase {
                 s += ", ";
             }
         }
+
+        String n = getCacheName();
+
+        if (n == null) {
+
+            n = "DEFAULT CACHE";
+        }
+
+        s += " (" + n + ")";
 
         return s;
     }

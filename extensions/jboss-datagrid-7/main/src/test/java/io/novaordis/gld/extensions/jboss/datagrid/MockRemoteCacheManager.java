@@ -41,7 +41,6 @@ public class MockRemoteCacheManager extends RemoteCacheManager {
 
     private boolean started;
     private RuntimeException getCacheFailureCause;
-
     private Map<String, MockRemoteCache> caches;
 
 
@@ -51,7 +50,7 @@ public class MockRemoteCacheManager extends RemoteCacheManager {
 
         this.started = false;
         this.caches = new HashMap<>();
-        this.caches.put(DEFAULT_CACHE_NAME, new MockRemoteCache(this));
+        this.caches.put(DEFAULT_CACHE_NAME, new MockRemoteCache(DEFAULT_CACHE_NAME, this));
     }
 
     // Overrides -------------------------------------------------------------------------------------------------------
@@ -95,11 +94,15 @@ public class MockRemoteCacheManager extends RemoteCacheManager {
             return;
         }
 
-        for(MockRemoteCache mc: caches.values()) {
+        if (caches != null) {
 
-            mc.start();
-            assertTrue(mc.isStarted());
+            for (MockRemoteCache mc : caches.values()) {
+
+                mc.start();
+                assertTrue(mc.isStarted());
+            }
         }
+
 
         this.started = true;
     }
@@ -135,8 +138,14 @@ public class MockRemoteCacheManager extends RemoteCacheManager {
         }
     }
 
-    public void setCache(String cacheName, MockRemoteCache mc) {
+    public void setCache(MockRemoteCache mc) {
 
+        String cacheName = mc.getName();
+
+        if (cacheName == null) {
+
+            throw new IllegalArgumentException("cache has null name");
+        }
         mc.setRemoteCacheManager(this);
         caches.put(cacheName, mc);
     }

@@ -17,21 +17,19 @@
 package io.novaordis.gld.extensions.jboss.datagrid;
 
 import io.novaordis.gld.api.configuration.ImplementationConfiguration;
+import io.novaordis.gld.api.configuration.LowLevelConfigurationBase;
 import io.novaordis.utilities.NotYetImplementedException;
 import io.novaordis.utilities.UserErrorException;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/10/17
  */
-public class MockImplementationConfiguration implements ImplementationConfiguration {
+public class MockImplementationConfiguration extends LowLevelConfigurationBase implements ImplementationConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -39,13 +37,11 @@ public class MockImplementationConfiguration implements ImplementationConfigurat
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Map<String, Object> content;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockImplementationConfiguration() {
 
-        this.content = new HashMap<>();
+        super(new HashMap<>(), new File("."));
     }
 
     // ImplementationConfiguration implementation ----------------------------------------------------------------------
@@ -61,55 +57,16 @@ public class MockImplementationConfiguration implements ImplementationConfigurat
         throw new NotYetImplementedException("getExtensionClass() NOT YET IMPLEMENTED");
     }
 
-    @Override
-    public <T> T get(Class<? extends T> type, String... path) {
-        throw new NotYetImplementedException("get() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public File getFile(String... path) {
-        throw new NotYetImplementedException("getFile() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Map<String, Object> get(String... path) {
-        throw new NotYetImplementedException("get() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public List<Object> getList(String... path) {
-
-        if (path.length == 1 && JBossDatagrid7Service.NODES_LABEL.equals(path[0])) {
-
-            Object o = content.get(path[0]);
-
-            if (o == null) {
-
-                return Collections.emptyList();
-            }
-
-            //noinspection unchecked
-            return (List<Object>)o;
-        }
-
-        throw new NotYetImplementedException("getList() NOT YET IMPLEMENTED for " + Arrays.asList(path));
-    }
-
-    @Override
-    public File getConfigurationDirectory() {
-        throw new NotYetImplementedException("getConfigurationDirectory() NOT YET IMPLEMENTED");
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
     public void setNodes(List<Object> nodes) {
 
-        content.put(JBossDatagrid7Service.NODES_LABEL, nodes);
+        set(nodes, JBossDatagrid7Service.NODES_LABEL);
     }
 
-    public void setCacheName(String cacheName) {
+    public void setCacheName(Object cacheName) {
 
-        content.put(JBossDatagrid7Service.CACHE_NAME_LABEL, cacheName);
+        set(cacheName, JBossDatagrid7Service.CACHE_NAME_LABEL);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -194,11 +194,14 @@ public class JBossDatagrid7ServiceTest {
 
         s.configure(mc);
 
+        //
+        // the service will use the default cache, as defined by Infinispan
+        //
         assertNull(s.getCacheName());
     }
 
     @Test
-    public void configure_DefaultCacheName() throws Exception {
+    public void configure_SomeCacheName() throws Exception {
 
         JBossDatagrid7Service s = new JBossDatagrid7Service();
 
@@ -206,15 +209,15 @@ public class JBossDatagrid7ServiceTest {
         MockImplementationConfiguration mic = mc.getImplementationConfiguration();
         mic.setNodes(Collections.singletonList("somehost:12345"));
 
-        mic.setCacheName("default");
+        mic.setCacheName("Something");
 
         s.configure(mc);
 
-        assertEquals("default", s.getCacheName());
+        assertEquals("Something", s.getCacheName());
     }
 
     @Test
-    public void configure_DefaultCacheName_DifferentCapitalization() throws Exception {
+    public void configure_InvalidCacheName() throws Exception {
 
         JBossDatagrid7Service s = new JBossDatagrid7Service();
 
@@ -222,27 +225,19 @@ public class JBossDatagrid7ServiceTest {
         MockImplementationConfiguration mic = mc.getImplementationConfiguration();
         mic.setNodes(Collections.singletonList("somehost:12345"));
 
-        mic.setCacheName("DEFAULT");
+        mic.setCacheName(4);
 
-        s.configure(mc);
+        try {
 
-        assertEquals("DEFAULT", s.getCacheName());
-    }
+            s.configure(mc);
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
 
-    @Test
-    public void configure_NonDefaultCacheName() throws Exception {
-
-        JBossDatagrid7Service s = new JBossDatagrid7Service();
-
-        MockServiceConfiguration mc = new MockServiceConfiguration();
-        MockImplementationConfiguration mic = mc.getImplementationConfiguration();
-        mic.setNodes(Collections.singletonList("somehost:12345"));
-
-        mic.setCacheName("Test-Cache");
-
-        s.configure(mc);
-
-        assertEquals("Test-Cache", s.getCacheName());
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("IllegalStateException expected cache to be a String but it is a(n) Integer: \"4\"", msg);
+        }
     }
 
     // start -----------------------------------------------------------------------------------------------------------
@@ -322,6 +317,8 @@ public class JBossDatagrid7ServiceTest {
 
         assertFalse(s.isStarted());
 
+        assertNull(s.getCacheName());
+
         s.start();
 
         assertTrue(s.isStarted());
@@ -336,6 +333,8 @@ public class JBossDatagrid7ServiceTest {
         assertNotNull(c);
 
         assertTrue(c instanceof MockRemoteCache);
+
+        assertEquals(MockRemoteCacheManager.DEFAULT_CACHE_NAME, s.getCacheName());
 
         assertTrue(ms.isStarted());
 
@@ -361,18 +360,20 @@ public class JBossDatagrid7ServiceTest {
     @Test
     public void lifecycle_SpecificCacheName() throws Exception {
 
+        String cacheName = "test-cache";
+
         MockLoadStrategy ms = new MockLoadStrategy();
         JBossDatagrid7Service s = new JBossDatagrid7Service(ms);
         s.addNode(new HotRodEndpointAddress("mock-host"));
-        s.setCacheName("test-cache");
+        s.setCacheName(cacheName);
 
         //
         // mocks insure that all goes smoothly
         //
 
-        MockRemoteCache mc = new MockRemoteCache();
+        MockRemoteCache mc = new MockRemoteCache(cacheName);
         final MockRemoteCacheManager mcb = new MockRemoteCacheManager();
-        mcb.setCache("test-cache", mc);
+        mcb.setCache(mc);
         s.setCacheManagerFactory(infinispanConfiguration -> mcb);
 
         //
@@ -382,6 +383,8 @@ public class JBossDatagrid7ServiceTest {
         assertFalse(ms.isStarted());
 
         assertFalse(s.isStarted());
+
+        assertEquals("test-cache", s.getCacheName());
 
         s.start();
 
@@ -398,6 +401,8 @@ public class JBossDatagrid7ServiceTest {
 
         assertTrue(ms.isStarted());
 
+        assertEquals("test-cache", s.getCacheName());
+
         s.stop();
 
         assertFalse(s.isStarted());
@@ -411,7 +416,6 @@ public class JBossDatagrid7ServiceTest {
 
         assertFalse(ms.isStarted());
     }
-
 
     // cache operations ------------------------------------------------------------------------------------------------
 

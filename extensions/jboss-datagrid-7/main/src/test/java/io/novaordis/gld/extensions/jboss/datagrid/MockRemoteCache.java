@@ -28,6 +28,7 @@ import org.infinispan.commons.util.CloseableIterator;
 import org.infinispan.query.dsl.Query;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -45,20 +46,25 @@ public class MockRemoteCache implements RemoteCache {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String name;
     private MockRemoteCacheManager manager;
     private boolean started;
 
+    private Map storage;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockRemoteCache() {
+    public MockRemoteCache(String name) {
 
-        this(null);
+        this(name, null);
     }
 
-    public MockRemoteCache(MockRemoteCacheManager manager) {
+    public MockRemoteCache(String name, MockRemoteCacheManager manager) {
 
+        this.name = name;
         this.manager = manager;
         this.started = false;
+        this.storage = new HashMap<>();
     }
 
     // RemoteCache implementation --------------------------------------------------------------------------------------
@@ -145,13 +151,15 @@ public class MockRemoteCache implements RemoteCache {
 
     @Override
     public Object get(Object key) {
-        throw new NotYetImplementedException("get() NOT YET IMPLEMENTED");
+
+        return storage.get(key);
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     public Set keySet() {
-        throw new NotYetImplementedException("keySet() NOT YET IMPLEMENTED");
+
+        return storage.keySet();
     }
 
     @SuppressWarnings("NullableProblems")
@@ -168,7 +176,8 @@ public class MockRemoteCache implements RemoteCache {
 
     @Override
     public String getName() {
-        throw new NotYetImplementedException("getName() NOT YET IMPLEMENTED");
+
+        return name;
     }
 
     @Override
@@ -178,7 +187,9 @@ public class MockRemoteCache implements RemoteCache {
 
     @Override
     public Object put(Object key, Object value) {
-        throw new NotYetImplementedException("put() NOT YET IMPLEMENTED");
+
+        //noinspection unchecked
+        return storage.put(key, value);
     }
 
     @Override
@@ -233,7 +244,8 @@ public class MockRemoteCache implements RemoteCache {
 
     @Override
     public Object remove(Object key) {
-        throw new NotYetImplementedException("remove() NOT YET IMPLEMENTED");
+
+        return storage.remove(key);
     }
 
     @Override
