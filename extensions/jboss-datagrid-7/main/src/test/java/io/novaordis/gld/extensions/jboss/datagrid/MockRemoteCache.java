@@ -50,6 +50,11 @@ public class MockRemoteCache implements RemoteCache {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public MockRemoteCache() {
+
+        this(null);
+    }
+
     public MockRemoteCache(MockRemoteCacheManager manager) {
 
         this.manager = manager;
@@ -143,16 +148,19 @@ public class MockRemoteCache implements RemoteCache {
         throw new NotYetImplementedException("get() NOT YET IMPLEMENTED");
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public Set keySet() {
         throw new NotYetImplementedException("keySet() NOT YET IMPLEMENTED");
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public Collection values() {
         throw new NotYetImplementedException("values() NOT YET IMPLEMENTED");
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public Set<Entry> entrySet() {
         throw new NotYetImplementedException("entrySet() NOT YET IMPLEMENTED");
@@ -400,42 +408,49 @@ public class MockRemoteCache implements RemoteCache {
     }
 
     @Override
-    public CloseableIterator<Entry<Object, MetadataValue<Object>>> retrieveEntriesWithMetadata(Set segments, int batchSize) {
+    public CloseableIterator<Entry<Object, MetadataValue<Object>>> retrieveEntriesWithMetadata(
+            Set segments, int batchSize) {
         throw new NotYetImplementedException("retrieveEntriesWithMetadata() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public CloseableIterator<Entry<Object, Object>> retrieveEntriesByQuery(Query filterQuery, Set segments, int batchSize) {
+    public CloseableIterator<Entry<Object, Object>> retrieveEntriesByQuery(
+            Query filterQuery, Set segments, int batchSize) {
         throw new NotYetImplementedException("retrieveEntriesByQuery() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public CloseableIterator<Entry<Object, Object>> retrieveEntries(String filterConverterFactory, Object[] filterConverterParams, Set segments, int batchSize) {
+    public CloseableIterator<Entry<Object, Object>> retrieveEntries(
+            String filterConverterFactory, Object[] filterConverterParams, Set segments, int batchSize) {
         throw new NotYetImplementedException("retrieveEntries() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public CloseableIterator<Entry<Object, Object>> retrieveEntries(String filterConverterFactory, Set segments, int batchSize) {
+    public CloseableIterator<Entry<Object, Object>> retrieveEntries(
+            String filterConverterFactory, Set segments, int batchSize) {
         throw new NotYetImplementedException("retrieveEntries() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public Object putIfAbsent(Object key, Object value) {
+    public Object putIfAbsent(@SuppressWarnings("NullableProblems") Object key, Object value) {
         throw new NotYetImplementedException("putIfAbsent() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public boolean remove(Object key, Object value) {
+    public boolean remove(@SuppressWarnings("NullableProblems") Object key, Object value) {
         throw new NotYetImplementedException("remove() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public boolean replace(Object key, Object oldValue, Object newValue) {
+    public boolean replace(@SuppressWarnings("NullableProblems") Object key,
+                           @SuppressWarnings("NullableProblems") Object oldValue,
+                           @SuppressWarnings("NullableProblems") Object newValue) {
         throw new NotYetImplementedException("replace() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public Object replace(Object key, Object value) {
+    public Object replace(@SuppressWarnings("NullableProblems") Object key,
+                          @SuppressWarnings("NullableProblems") Object value) {
         throw new NotYetImplementedException("replace() NOT YET IMPLEMENTED");
     }
 
@@ -453,7 +468,17 @@ public class MockRemoteCache implements RemoteCache {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    public boolean isStarted() {
+
+        return started;
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
+
+    void setRemoteCacheManager(MockRemoteCacheManager mcm) {
+
+        this.manager = mcm;
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

@@ -105,8 +105,11 @@ public class MockImplementationConfiguration implements ImplementationConfigurat
     public void setNodes(List<Object> nodes) {
 
         content.put(JBossDatagrid7Service.NODES_LABEL, nodes);
+    }
 
+    public void setCacheName(String cacheName) {
 
+        content.put(JBossDatagrid7Service.CACHE_NAME_LABEL, cacheName);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

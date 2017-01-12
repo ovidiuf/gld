@@ -20,6 +20,11 @@ import io.novaordis.utilities.NotYetImplementedException;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.Assert.assertTrue;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/11/17
@@ -28,6 +33,8 @@ public class MockRemoteCacheManager extends RemoteCacheManager {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    public static final String DEFAULT_CACHE_NAME = "n46b_3hgaFG3";
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
@@ -35,11 +42,16 @@ public class MockRemoteCacheManager extends RemoteCacheManager {
     private boolean started;
     private RuntimeException getCacheFailureCause;
 
+    private Map<String, MockRemoteCache> caches;
+
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockRemoteCacheManager() {
 
         this.started = false;
+        this.caches = new HashMap<>();
+        this.caches.put(DEFAULT_CACHE_NAME, new MockRemoteCache(this));
     }
 
     // Overrides -------------------------------------------------------------------------------------------------------
@@ -53,7 +65,7 @@ public class MockRemoteCacheManager extends RemoteCacheManager {
             throw getCacheFailureCause;
         }
 
-        return new MockRemoteCache(this);
+        return caches.get(DEFAULT_CACHE_NAME);
     }
 
     @SuppressWarnings("unchecked")
@@ -65,17 +77,46 @@ public class MockRemoteCacheManager extends RemoteCacheManager {
             throw getCacheFailureCause;
         }
 
-        return new MockRemoteCache(this);
+        MockRemoteCache mc = caches.get(cacheName);
+
+        if (mc == null) {
+
+            throw new NotYetImplementedException("DON'T KNOW WHAT EXCEPTION TO THROW FOR A CACHE THAT DOES NOT EXIST");
+        }
+
+        return mc;
     }
 
     @Override
     public void start() {
+
+        if (started) {
+
+            return;
+        }
+
+        for(MockRemoteCache mc: caches.values()) {
+
+            mc.start();
+            assertTrue(mc.isStarted());
+        }
 
         this.started = true;
     }
 
     @Override
     public void stop() {
+
+        if (!started) {
+
+            return;
+        }
+
+        //noinspection Convert2streamapi
+        for(MockRemoteCache mc: caches.values()) {
+
+            mc.stop();
+        }
 
         this.started = false;
     }
@@ -92,6 +133,12 @@ public class MockRemoteCacheManager extends RemoteCacheManager {
 
             throw new NotYetImplementedException("we don't know how to make fail " + methodName + "(...)");
         }
+    }
+
+    public void setCache(String cacheName, MockRemoteCache mc) {
+
+        mc.setRemoteCacheManager(this);
+        caches.put(cacheName, mc);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

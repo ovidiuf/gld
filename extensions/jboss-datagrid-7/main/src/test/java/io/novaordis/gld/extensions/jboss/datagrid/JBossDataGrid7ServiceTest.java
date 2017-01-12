@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -182,6 +183,68 @@ public class JBossDatagrid7ServiceTest {
         assertEquals(12346, nodes.get(1).getPort());
     }
 
+    @Test
+    public void configure_NoCacheName() throws Exception {
+
+        JBossDatagrid7Service s = new JBossDatagrid7Service();
+
+        MockServiceConfiguration mc = new MockServiceConfiguration();
+        MockImplementationConfiguration mic = mc.getImplementationConfiguration();
+        mic.setNodes(Collections.singletonList("somehost:12345"));
+
+        s.configure(mc);
+
+        assertNull(s.getCacheName());
+    }
+
+    @Test
+    public void configure_DefaultCacheName() throws Exception {
+
+        JBossDatagrid7Service s = new JBossDatagrid7Service();
+
+        MockServiceConfiguration mc = new MockServiceConfiguration();
+        MockImplementationConfiguration mic = mc.getImplementationConfiguration();
+        mic.setNodes(Collections.singletonList("somehost:12345"));
+
+        mic.setCacheName("default");
+
+        s.configure(mc);
+
+        assertEquals("default", s.getCacheName());
+    }
+
+    @Test
+    public void configure_DefaultCacheName_DifferentCapitalization() throws Exception {
+
+        JBossDatagrid7Service s = new JBossDatagrid7Service();
+
+        MockServiceConfiguration mc = new MockServiceConfiguration();
+        MockImplementationConfiguration mic = mc.getImplementationConfiguration();
+        mic.setNodes(Collections.singletonList("somehost:12345"));
+
+        mic.setCacheName("DEFAULT");
+
+        s.configure(mc);
+
+        assertEquals("DEFAULT", s.getCacheName());
+    }
+
+    @Test
+    public void configure_NonDefaultCacheName() throws Exception {
+
+        JBossDatagrid7Service s = new JBossDatagrid7Service();
+
+        MockServiceConfiguration mc = new MockServiceConfiguration();
+        MockImplementationConfiguration mic = mc.getImplementationConfiguration();
+        mic.setNodes(Collections.singletonList("somehost:12345"));
+
+        mic.setCacheName("Test-Cache");
+
+        s.configure(mc);
+
+        assertEquals("Test-Cache", s.getCacheName());
+    }
+
     // start -----------------------------------------------------------------------------------------------------------
 
     @Test
@@ -240,9 +303,8 @@ public class JBossDatagrid7ServiceTest {
     @Test
     public void lifecycle() throws Exception {
 
-        JBossDatagrid7Service s = new JBossDatagrid7Service();
         MockLoadStrategy ms = new MockLoadStrategy();
-        s.setLoadStrategy(ms);
+        JBossDatagrid7Service s = new JBossDatagrid7Service(ms);
         s.addNode(new HotRodEndpointAddress("mock-host"));
 
         //
@@ -251,6 +313,10 @@ public class JBossDatagrid7ServiceTest {
 
         final MockRemoteCacheManager mcb = new MockRemoteCacheManager();
         s.setCacheManagerFactory(infinispanConfiguration -> mcb);
+
+        //
+        // no cache name is specified, we assume default cache
+        //
 
         assertFalse(ms.isStarted());
 
@@ -273,6 +339,11 @@ public class JBossDatagrid7ServiceTest {
 
         assertTrue(ms.isStarted());
 
+        //noinspection unchecked
+        c.put("test-key", "test-value");
+
+        assertEquals("test-value", c.get("test-key"));
+
         s.stop();
 
         assertFalse(s.isStarted());
@@ -285,6 +356,203 @@ public class JBossDatagrid7ServiceTest {
         assertNull(s.getCache());
 
         assertFalse(ms.isStarted());
+    }
+
+    @Test
+    public void lifecycle_SpecificCacheName() throws Exception {
+
+        MockLoadStrategy ms = new MockLoadStrategy();
+        JBossDatagrid7Service s = new JBossDatagrid7Service(ms);
+        s.addNode(new HotRodEndpointAddress("mock-host"));
+        s.setCacheName("test-cache");
+
+        //
+        // mocks insure that all goes smoothly
+        //
+
+        MockRemoteCache mc = new MockRemoteCache();
+        final MockRemoteCacheManager mcb = new MockRemoteCacheManager();
+        mcb.setCache("test-cache", mc);
+        s.setCacheManagerFactory(infinispanConfiguration -> mcb);
+
+        //
+        // no cache name is specified, we assume default cache
+        //
+
+        assertFalse(ms.isStarted());
+
+        assertFalse(s.isStarted());
+
+        s.start();
+
+        assertTrue(s.isStarted());
+
+        //
+        // test idempotency
+        //
+        s.start();
+
+        RemoteCache c = s.getCache();
+
+        assertEquals(mc, c);
+
+        assertTrue(ms.isStarted());
+
+        s.stop();
+
+        assertFalse(s.isStarted());
+
+        //
+        // test idempotency
+        //
+        s.stop();
+
+        assertNull(s.getCache());
+
+        assertFalse(ms.isStarted());
+    }
+
+
+    // cache operations ------------------------------------------------------------------------------------------------
+
+    @Test
+    public void get_NotStarted() throws Exception {
+
+        JBossDatagrid7Service s = new JBossDatagrid7Service(new MockLoadStrategy());
+        s.addNode(new HotRodEndpointAddress("mock-host"));
+        final MockRemoteCacheManager mcb = new MockRemoteCacheManager();
+        s.setCacheManagerFactory(infinispanConfiguration -> mcb);
+
+        assertFalse(s.isStarted());
+
+        try {
+
+            s.get("test-key");
+            fail("should have thrown exception");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+        }
+    }
+
+    @Test
+    public void put_NotStarted() throws Exception {
+
+        JBossDatagrid7Service s = new JBossDatagrid7Service(new MockLoadStrategy());
+        s.addNode(new HotRodEndpointAddress("mock-host"));
+        final MockRemoteCacheManager mcb = new MockRemoteCacheManager();
+        s.setCacheManagerFactory(infinispanConfiguration -> mcb);
+
+        assertFalse(s.isStarted());
+
+        try {
+
+            s.put("test-key", "test-value");
+            fail("should have thrown exception");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+        }
+    }
+
+    @Test
+    public void keys_NotStarted() throws Exception {
+
+        JBossDatagrid7Service s = new JBossDatagrid7Service(new MockLoadStrategy());
+        s.addNode(new HotRodEndpointAddress("mock-host"));
+        final MockRemoteCacheManager mcb = new MockRemoteCacheManager();
+        s.setCacheManagerFactory(infinispanConfiguration -> mcb);
+
+        assertFalse(s.isStarted());
+
+        try {
+
+            s.keys();
+            fail("should have thrown exception");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+        }
+    }
+
+    @Test
+    public void remove_NotStarted() throws Exception {
+
+        JBossDatagrid7Service s = new JBossDatagrid7Service(new MockLoadStrategy());
+        s.addNode(new HotRodEndpointAddress("mock-host"));
+        final MockRemoteCacheManager mcb = new MockRemoteCacheManager();
+        s.setCacheManagerFactory(infinispanConfiguration -> mcb);
+
+        assertFalse(s.isStarted());
+
+        try {
+
+            s.remove("test");
+            fail("should have thrown exception");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+        }
+    }
+
+    @Test
+    public void cacheOperations() throws Exception {
+
+        JBossDatagrid7Service s = new JBossDatagrid7Service(new MockLoadStrategy());
+        s.addNode(new HotRodEndpointAddress("mock-host"));
+        final MockRemoteCacheManager mcb = new MockRemoteCacheManager();
+        s.setCacheManagerFactory(infinispanConfiguration -> mcb);
+
+        s.start();
+
+        String value = s.get("test-key");
+        assertNull(value);
+
+        s.put("test-key", "test-value");
+        assertEquals("test-value", s.get("test-key"));
+
+        Set<String> keys = s.keys();
+        assertEquals(1, keys.size());
+        assertTrue(keys.contains("test-key"));
+
+        //
+        // put idempotence
+        //
+
+        s.put("test-key", "test-value");
+        assertEquals("test-value", s.get("test-key"));
+
+        keys = s.keys();
+        assertEquals(1, keys.size());
+        assertTrue(keys.contains("test-key"));
+
+        s.put("test-key-2", "test-value-2");
+        assertEquals("test-value-2", s.get("test-key-2"));
+
+        keys = s.keys();
+        assertEquals(2, keys.size());
+        assertTrue(keys.contains("test-key-2"));
+
+        s.remove("test-key");
+
+        keys = s.keys();
+        assertEquals(1, keys.size());
+        assertTrue(keys.contains("test-key-2"));
+
+        s.remove("test-key-2");
+
+        keys = s.keys();
+        assertEquals(0, keys.size());
+
+        s.stop();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

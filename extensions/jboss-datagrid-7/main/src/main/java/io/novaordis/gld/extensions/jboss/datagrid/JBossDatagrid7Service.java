@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.extensions.jboss.datagrid;
 
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.cache.CacheServiceBase;
 import io.novaordis.gld.api.configuration.ImplementationConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
@@ -34,6 +35,10 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * This version is coded under the assumption that the cache container name does not make any difference, and all that
+ * matters is the cache name. A cursory examination of the API did not seem to allow for specifying the "cache container
+ * name". If that is indeed possible, this code will have to be refactored.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/14/16
  */
@@ -46,7 +51,7 @@ public class JBossDatagrid7Service extends CacheServiceBase {
     public static final String EXTENSION_VERSION_METADATA_FILE_NAME = "jboss-datagrid-7-extension-version";
 
     public static final String NODES_LABEL = "nodes";
-
+    public static final String CACHE_NAME_LABEL = "cache";
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -58,7 +63,6 @@ public class JBossDatagrid7Service extends CacheServiceBase {
     private CacheManagerFactory cacheManagerFactory;
 
     private List<HotRodEndpointAddress> nodes;
-    private String cacheContainerName;
     private String cacheName;
 
     private RemoteCache cache;
@@ -66,6 +70,13 @@ public class JBossDatagrid7Service extends CacheServiceBase {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public JBossDatagrid7Service() {
+
+        this(null);
+    }
+
+    public JBossDatagrid7Service(LoadStrategy ls) {
+
+        setLoadStrategy(ls);
 
         this.nodes = new ArrayList<>();
 
@@ -204,7 +215,7 @@ public class JBossDatagrid7Service extends CacheServiceBase {
         catch(Throwable t) {
 
             log.warn("failed to stop cache " + cache);
-            log.debug("cache stop failure cause", t);;
+            log.debug("cache stop failure cause", t);
         }
     }
 
@@ -212,20 +223,28 @@ public class JBossDatagrid7Service extends CacheServiceBase {
 
     public String get(String key) throws Exception {
 
+        checkStarted();
+
         throw new RuntimeException("get() NOT YET IMPLEMENTED");
     }
 
     public void put(String key, String value) throws Exception {
+
+        checkStarted();
 
         throw new RuntimeException("put() NOT YET IMPLEMENTED");
     }
 
     public void remove(String key) throws Exception {
 
+        checkStarted();
+
         throw new RuntimeException("remove() NOT YET IMPLEMENTED");
     }
 
     public Set<String> keys() throws Exception {
+
+        checkStarted();
 
         throw new RuntimeException("keys() NOT YET IMPLEMENTED");
     }
@@ -238,6 +257,14 @@ public class JBossDatagrid7Service extends CacheServiceBase {
     public List<HotRodEndpointAddress> getNodes() {
 
         return nodes;
+    }
+
+    /**
+     * @return the cache name. May return null, which means "default cache".
+     */
+    public String getCacheName() {
+
+        return cacheName;
     }
 
     @Override
@@ -278,6 +305,11 @@ public class JBossDatagrid7Service extends CacheServiceBase {
         this.cacheManagerFactory = cacheManagerFactory;
     }
 
+    void setCacheName(String cacheName) {
+
+        this.cacheName = cacheName;
+    }
+
     /**
      * May return null.
      */
@@ -289,6 +321,13 @@ public class JBossDatagrid7Service extends CacheServiceBase {
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private void checkStarted() throws IllegalStateException {
+
+        if (!isStarted()) {
+            throw new IllegalStateException(this + " not started");
+        }
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 
