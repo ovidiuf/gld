@@ -32,10 +32,19 @@ public interface CacheService extends Service {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    /**
+     * @throws IllegalStateException if the service was not started (or if the start attempt failed)
+     */
     String get(String key) throws Exception;
 
+    /**
+     * @throws IllegalStateException if the service was not started (or if the start attempt failed)
+     */
     void put(String key, String value) throws Exception;
 
+    /**
+     * @throws IllegalStateException if the service was not started (or if the start attempt failed)
+     */
     void remove(String key) throws Exception;
 
     /**
@@ -43,6 +52,8 @@ public interface CacheService extends Service {
      * throw UnsupportedOperationException.
      *
      * @throws UnsupportedOperationException if the operation is not supported by the implementation.
+     *
+     * @throws IllegalStateException if the service was not started (or if the start attempt failed)
      */
     Set<String> keys() throws Exception;
 
