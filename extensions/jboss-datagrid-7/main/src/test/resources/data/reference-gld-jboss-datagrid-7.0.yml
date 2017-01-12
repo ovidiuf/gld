@@ -32,7 +32,7 @@ service:
     #
     # implementation-specific configuration
     #
-    cache: default
+    cache: novaordis
     nodes:
       - localhost:11222
       - localhost:11422
