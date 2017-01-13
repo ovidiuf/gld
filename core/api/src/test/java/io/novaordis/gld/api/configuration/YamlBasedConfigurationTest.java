@@ -27,6 +27,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 
@@ -112,10 +113,11 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
 
         File f = new File(scratchDirectory, "test.yml");
         assertTrue(Files.write(f, "# empty"));
+        YamlBasedConfiguration c = new YamlBasedConfiguration();
 
         try {
 
-            new YamlBasedConfiguration(f);
+            c.load(f);
             fail("should have thrown exception");
         }
         catch(UserErrorException e) {
@@ -137,9 +139,11 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
                         "\n" +
                         "\n"));
 
+        YamlBasedConfiguration c = new YamlBasedConfiguration();
+
         try {
 
-            new YamlBasedConfiguration(f);
+            c.load(f);
             fail("should have thrown exception");
         }
         catch(UserErrorException e) {
@@ -161,9 +165,11 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
                         "  type: no-such-service-type\n" +
                         "\n"));
 
+        YamlBasedConfiguration c = new YamlBasedConfiguration();
+
         try {
 
-            new YamlBasedConfiguration(f);
+            c.load(f);
             fail("should have thrown exception");
         }
         catch(UserErrorException e) {
@@ -184,9 +190,11 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
                         "  type: cache\n" +
                         "\n"));
 
+        YamlBasedConfiguration c = new YamlBasedConfiguration();
+
         try {
 
-            new YamlBasedConfiguration(f);
+            c.load(f);
             fail("should have thrown exception");
         }
         catch(UserErrorException e) {
@@ -213,7 +221,8 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
         //
         // we should be fine, if no store section is found, it means we don't store keys
         //
-        YamlBasedConfiguration c = new YamlBasedConfiguration(f);
+        YamlBasedConfiguration c = new YamlBasedConfiguration();
+        c.load(f);
         StoreConfiguration sc = c.getStoreConfiguration();
         assertNull(sc);
     }
@@ -232,9 +241,42 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
                         "  directory: .\n" +
                         "\n"));
 
-        YamlBasedConfiguration c = new YamlBasedConfiguration(f);
+        YamlBasedConfiguration c = new YamlBasedConfiguration();
+        c.load(f);
         StoreConfiguration sc = c.getStoreConfiguration();
         assertEquals("mock", sc.getStoreType());
+    }
+
+    @Test
+    public void noParentSpecifiedForConfigurationFile() throws Exception {
+
+        File f = new File("no-such-file.yml");
+
+        //
+        // we know there's no such file, but we want to make sure that parent directory configuration is done
+        // correctly
+        //
+
+        YamlBasedConfiguration c = new YamlBasedConfiguration();
+        assertNull(c.getConfigurationDirectory());
+
+        try {
+
+            c.load(f);
+
+        }
+        catch(FileNotFoundException e) {
+
+            //
+            // that's fine
+            //
+            log.info(e.getMessage());
+        }
+
+        //
+        // make sure the parent directory was initialized correctly
+        //
+        assertEquals(new File("."), c.getConfigurationDirectory());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -245,7 +287,9 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
         File f = new File(baseDirectory, "src/test/resources/data/reference-configuration.yml");
         assertTrue(f.isFile());
 
-        return new YamlBasedConfiguration(f);
+        YamlBasedConfiguration c = new YamlBasedConfiguration();
+        c.load(f);
+        return c;
     }
 
     // Protected -------------------------------------------------------------------------------------------------------

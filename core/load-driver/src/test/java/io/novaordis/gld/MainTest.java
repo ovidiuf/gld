@@ -16,7 +16,6 @@
 
 package io.novaordis.gld;
 
-import io.novaordis.gld.api.configuration.Configuration;
 import io.novaordis.gld.api.configuration.YamlBasedConfiguration;
 import io.novaordis.gld.api.store.HierarchicalStore;
 import io.novaordis.utilities.Files;
@@ -383,7 +382,8 @@ public class MainTest {
         // make sure the all the keys are on disk
         //
 
-        Configuration c = new YamlBasedConfiguration(f);
+        YamlBasedConfiguration c = new YamlBasedConfiguration();
+        c.load(f);
         File storageDirectory = c.getStoreConfiguration().getFile("directory");
         assertTrue(storageDirectory.isDirectory());
 

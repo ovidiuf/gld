@@ -308,8 +308,8 @@ public class SamplerImplWorkBenchTest {
     }
 
     @Test
-    public void syntheticLife_MultipleSamplesAccumulate() throws Exception
-    {
+    public void syntheticLife_MultipleSamplesAccumulate() throws Exception  {
+
         long samplingIntervalMs = 100L; // small, so we can overstep the boundaries easily
 
         // the sampling task run interval is 0, meaning no timer task will be registered
@@ -357,15 +357,15 @@ public class SamplerImplWorkBenchTest {
         long fcse = 0L;
         long fdse = 0L;
 
-        for(int i = 0; i < n; i ++)
-        {
+        for(int i = 0; i < n; i ++)  {
+
             SamplingInterval si = collectedSamplingIntervals.get(i);
 
             assertEquals(samplingIntervalMs, si.getDurationMs());
             assertEquals(si.getStartMs() + samplingIntervalMs, si.getEndMs());
 
-            if (lastStartTs != -1L)
-            {
+            if (lastStartTs != -1L) {
+
                 assertEquals(lastStartTs, si.getStartMs() - samplingIntervalMs);
             }
 
@@ -373,13 +373,13 @@ public class SamplerImplWorkBenchTest {
 
             List<String> annotations = si.getAnnotations();
 
-            if (i == 0)
-            {
+            if (i == 0) {
+
                 assertEquals(1, annotations.size());
                 assertEquals("annotation 1", annotations.get(0));
             }
-            else
-            {
+            else {
+
                 assertTrue(annotations.isEmpty());
             }
 

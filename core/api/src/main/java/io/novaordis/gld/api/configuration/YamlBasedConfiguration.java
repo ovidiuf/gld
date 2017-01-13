@@ -45,19 +45,12 @@ public class YamlBasedConfiguration implements Configuration {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private File file;
+    private File configurationDirectory;
     private ServiceConfiguration serviceConfiguration;
     private LoadConfiguration loadConfiguration;
     private StoreConfiguration storeConfiguration;
 
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    public YamlBasedConfiguration(File file) throws Exception {
-
-        this.file = file;
-
-        parse(file);
-
-    }
 
     // Configuration implementation ------------------------------------------------------------------------------------
 
@@ -81,19 +74,18 @@ public class YamlBasedConfiguration implements Configuration {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Override
-    public String toString() {
+    /**
+     * Loads the configuration from the specified file.
+     */
+    public void load(File f) throws Exception {
 
-        return file == null ? "null" : file.getAbsolutePath();
-    }
+        this.file = f;
+        this.configurationDirectory = f.getParentFile();
+        if (configurationDirectory == null) {
+            configurationDirectory = new File(".");
+        }
 
-    // Package protected -----------------------------------------------------------------------------------------------
 
-    // Protected -------------------------------------------------------------------------------------------------------
-
-    // Private ---------------------------------------------------------------------------------------------------------
-
-    private void parse(File file) throws Exception {
 
         InputStream is = null;
 
@@ -102,8 +94,6 @@ public class YamlBasedConfiguration implements Configuration {
             is = new BufferedInputStream(new FileInputStream(file));
 
             Yaml yaml = new Yaml();
-
-            File configurationDirectory = file.getParentFile();
 
             Map topLevelConfigurationMap = (Map)yaml.load(is);
 
@@ -171,6 +161,26 @@ public class YamlBasedConfiguration implements Configuration {
             }
         }
     }
+
+    @Override
+    public String toString() {
+
+        return file == null ? "null" : file.getAbsolutePath();
+    }
+
+    // Package protected -----------------------------------------------------------------------------------------------
+
+    /**
+     * Never return null.
+     */
+    File getConfigurationDirectory() {
+
+        return configurationDirectory;
+    }
+
+    // Protected -------------------------------------------------------------------------------------------------------
+
+    // Private ---------------------------------------------------------------------------------------------------------
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

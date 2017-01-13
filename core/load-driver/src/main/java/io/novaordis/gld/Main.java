@@ -16,7 +16,6 @@
 
 package io.novaordis.gld;
 
-import io.novaordis.gld.api.configuration.Configuration;
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.configuration.YamlBasedConfiguration;
 import io.novaordis.gld.command.Command;
@@ -88,7 +87,8 @@ public class Main {
 
             boolean background = extractBackgroundSetting(arguments);
             File configurationFile = extractConfigurationFile(arguments);
-            Configuration c = new YamlBasedConfiguration(configurationFile);
+            YamlBasedConfiguration c = new YamlBasedConfiguration();
+            c.load(configurationFile);
 
             log.debug("configuration file " + configurationFile + " is syntactically correct");
 
