@@ -44,3 +44,7 @@ service:
 load:
   threads: 1
   operations: 10000
+
+output:
+  statistics:
+      file: test.csv
