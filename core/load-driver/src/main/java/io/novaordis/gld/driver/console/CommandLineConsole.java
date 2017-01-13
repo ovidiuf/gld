@@ -52,6 +52,9 @@ public class CommandLineConsole implements Runnable {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    /**
+     * @param sampler may be null
+     */
     public CommandLineConsole(MultiThreadedRunner multiThreadedRunner, Sampler sampler) {
 
         this.multiThreadedRunner = multiThreadedRunner;

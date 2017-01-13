@@ -24,8 +24,10 @@ import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.LoadStrategyFactory;
 import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.configuration.OutputConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.extension.ExtensionInfrastructure;
+import io.novaordis.gld.api.sampler.SamplerConfiguration;
 import io.novaordis.gld.api.service.Service;
 import io.novaordis.gld.api.configuration.StoreConfiguration;
 import io.novaordis.gld.api.store.KeyStoreFactory;
@@ -122,6 +124,7 @@ public class LoadDriverImpl implements LoadDriver {
         ServiceConfiguration serviceConfiguration = c.getServiceConfiguration();
         LoadConfiguration loadConfiguration = c.getLoadConfiguration();
         StoreConfiguration storeConfiguration = c.getStoreConfiguration();
+        OutputConfiguration outputConfiguration = c.getOutputConfiguration();
 
         //
         // load strategy instantiation and installation; the load strategy usually initializes the key provider,
@@ -146,21 +149,33 @@ public class LoadDriverImpl implements LoadDriver {
         loadStrategy.setService(service);
 
         //
-        // establish service - load strategy bidirectional relationship
+        // initialize the sampler and configure statistics output, if any.
         //
 
-        //
-        // load configuration
-        //
+        SamplerConfiguration sc =
+                outputConfiguration == null ? null : outputConfiguration.getSamplerConfiguration();
 
-        this.sampler = new SamplerImpl();
+        if (sc != null) {
 
-        //
-        // register operations
-        //
+            //
+            // there is configuration, it means we want statistics
+            //
 
-        Set<Class<? extends Operation>> operations = loadStrategy.getOperationTypes();
-        operations.forEach(sampler::registerOperation);
+            this.sampler = new SamplerImpl();
+
+            //
+            // configure the sampler
+            //
+
+            this.sampler.configure(sc);
+
+            //
+            // register operations to be sampled
+            //
+
+            Set<Class<? extends Operation>> operations = loadStrategy.getOperationTypes();
+            operations.forEach(sampler::registerOperation);
+        }
 
         long singleThreadedRunnerSleepMs = -1L;
 

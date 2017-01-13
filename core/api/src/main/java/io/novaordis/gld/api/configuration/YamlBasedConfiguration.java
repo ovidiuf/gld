@@ -19,6 +19,7 @@ package io.novaordis.gld.api.configuration;
 import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.gld.api.cache.CacheServiceConfigurationImpl;
 import io.novaordis.gld.api.jms.JmsServiceConfigurationImpl;
+import io.novaordis.utilities.NotYetImplementedException;
 import io.novaordis.utilities.UserErrorException;
 import org.yaml.snakeyaml.Yaml;
 
@@ -49,6 +50,7 @@ public class YamlBasedConfiguration implements Configuration {
     private ServiceConfiguration serviceConfiguration;
     private LoadConfiguration loadConfiguration;
     private StoreConfiguration storeConfiguration;
+    private OutputConfiguration outputConfiguration;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -70,6 +72,12 @@ public class YamlBasedConfiguration implements Configuration {
     public StoreConfiguration getStoreConfiguration() {
 
         return storeConfiguration;
+    }
+
+    @Override
+    public OutputConfiguration getOutputConfiguration() {
+
+        throw new NotYetImplementedException("getOutputConfiguration() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

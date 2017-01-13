@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,16 @@
 
 package io.novaordis.gld.api.configuration;
 
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import static org.junit.Assert.assertNotNull;
+import java.io.File;
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/4/16
  */
-public abstract class ConfigurationTest {
+public class OutputConfigurationImplTest extends OutputConfigurationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = LoggerFactory.getLogger(ConfigurationTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -42,37 +37,16 @@ public abstract class ConfigurationTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
-    @Test
-    public void constructor() throws Exception {
-
-        Configuration c = getConfigurationToTest();
-
-        ServiceConfiguration sc = c.getServiceConfiguration();
-        assertNotNull(sc);
-
-        LoadConfiguration ldc = c.getLoadConfiguration();
-        assertNotNull(ldc);
-
-        //
-        // the store configuration may or may not be null, but the call must not fail
-        //
-
-        StoreConfiguration stc = c.getStoreConfiguration();
-        log.info("" + stc);
-
-        //
-        // the output configuration may or may not be null, but the call must not fail
-        //
-
-        OutputConfiguration oc = c.getOutputConfiguration();
-        log.info("" + oc);
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
-    // Protected -------------------------------------------------------------------------------------------------------
+    @Override
+    protected OutputConfigurationImpl getConfigurationToTest(
+            Map<String, Object> rawMap, File configurationDirectory) throws Exception {
 
-    protected abstract Configuration getConfigurationToTest() throws Exception;
+        return new OutputConfigurationImpl(rawMap, configurationDirectory);
+    }
+
+    // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
 

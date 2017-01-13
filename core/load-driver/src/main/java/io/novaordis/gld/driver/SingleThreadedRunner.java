@@ -55,7 +55,9 @@ public class SingleThreadedRunner implements Runnable {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
-     * @param sampler may be null.
+     * @param sampler the (already configured) sampler that samples operations and asynchronously pushes statistics
+     *                to its consumers. May be null, which means we only want to generate load, but we're not interested
+     *                in statistics.
      * @param keyStore may be null, if the configuration did not specify one.
      * @param durationExpired an AtomicBoolean that will externally set to "true" if the overall time allocated to the
      *                        run expired. If the run is not time-limited, the boolean will never become "true".
@@ -72,10 +74,6 @@ public class SingleThreadedRunner implements Runnable {
 
         if (barrier == null) {
             throw new IllegalArgumentException("null barrier");
-        }
-
-        if (sampler == null)  {
-            throw new IllegalArgumentException("null sampler");
         }
 
         if (durationExpired == null)  {
@@ -221,9 +219,13 @@ public class SingleThreadedRunner implements Runnable {
             finally {
 
                 //
-                // sampler is never null, the constructor insures that
+                // if there is a sampler, record the operation, otherwise it means we're not interested in statistics
                 //
-                sampler.record(t0Ms, t0, t1, op, ex);
+
+                if (sampler != null) {
+
+                    sampler.record(t0Ms, t0, t1, op, ex);
+                }
 
                 if (singleThreadedRunnerSleepMs > 0) {
 

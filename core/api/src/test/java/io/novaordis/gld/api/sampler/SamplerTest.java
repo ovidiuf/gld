@@ -36,8 +36,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public abstract class SamplerTest
-{
+public abstract class SamplerTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = LoggerFactory.getLogger(SamplerTest.class);
@@ -49,6 +49,8 @@ public abstract class SamplerTest
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // Tests -----------------------------------------------------------------------------------------------------------
 
     @Test
     public void lifecycle() throws Exception {
@@ -376,7 +378,6 @@ public abstract class SamplerTest
         assertFalse(sampler.registerMetric(SystemCpuLoad.class));
     }
 
-
     @Test
     public void registerAndReadMetrics() throws Exception {
 
@@ -451,6 +452,20 @@ public abstract class SamplerTest
 
         assertTrue(consumer1.wasStopped());
         assertTrue(consumer2.wasStopped());
+    }
+
+    // configure() -----------------------------------------------------------------------------------------------------
+
+    @Test
+    public void configure() throws Exception {
+
+        Sampler s = getSamplerToTest();
+
+        MockSamplerConfiguration mc = new MockSamplerConfiguration();
+
+        s.configure(mc);
+
+        fail("return here for more testing");
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

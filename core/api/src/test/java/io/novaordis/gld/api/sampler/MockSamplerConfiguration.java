@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.configuration;
+package io.novaordis.gld.api.sampler;
 
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.novaordis.gld.api.configuration.LowLevelConfigurationBase;
 
-import static org.junit.Assert.assertNotNull;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 1/12/17
  */
-public abstract class ConfigurationTest {
+public class MockSamplerConfiguration extends LowLevelConfigurationBase implements SamplerConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = LoggerFactory.getLogger(ConfigurationTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -38,41 +36,20 @@ public abstract class ConfigurationTest {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Public ----------------------------------------------------------------------------------------------------------
+    public MockSamplerConfiguration() {
 
-    // Tests -----------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void constructor() throws Exception {
-
-        Configuration c = getConfigurationToTest();
-
-        ServiceConfiguration sc = c.getServiceConfiguration();
-        assertNotNull(sc);
-
-        LoadConfiguration ldc = c.getLoadConfiguration();
-        assertNotNull(ldc);
-
-        //
-        // the store configuration may or may not be null, but the call must not fail
-        //
-
-        StoreConfiguration stc = c.getStoreConfiguration();
-        log.info("" + stc);
-
-        //
-        // the output configuration may or may not be null, but the call must not fail
-        //
-
-        OutputConfiguration oc = c.getOutputConfiguration();
-        log.info("" + oc);
+        this(new HashMap<>());
     }
+
+    public MockSamplerConfiguration(Map<String, Object> raw) {
+        super(raw, new File("."));
+    }
+
+    // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    protected abstract Configuration getConfigurationToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

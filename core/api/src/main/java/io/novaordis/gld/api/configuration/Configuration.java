@@ -51,6 +51,11 @@ public interface Configuration {
      */
     StoreConfiguration getStoreConfiguration();
 
+    /**
+     * May return null, it means there's no explicit output configuration, default should be used.
+     */
+    OutputConfiguration getOutputConfiguration();
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

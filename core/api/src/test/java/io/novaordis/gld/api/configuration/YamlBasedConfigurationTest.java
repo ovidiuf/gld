@@ -248,6 +248,28 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
     }
 
     @Test
+    public void outputConfiguration() throws Exception {
+
+        fail("return here");
+
+//        File f = new File(scratchDirectory, "test.yml");
+//        assertTrue(Files.write(f,
+//                "service:\n" +
+//                        "  type: cache\n" +
+//                        "load:\n" +
+//                        "  threads: 1\n" +
+//                        "store:\n" +
+//                        "  type: mock\n" +
+//                        "  directory: .\n" +
+//                        "\n"));
+//
+//        YamlBasedConfiguration c = new YamlBasedConfiguration();
+//        c.load(f);
+//        StoreConfiguration sc = c.getStoreConfiguration();
+//        assertEquals("mock", sc.getStoreType());
+    }
+
+    @Test
     public void noParentSpecifiedForConfigurationFile() throws Exception {
 
         File f = new File("no-such-file.yml");

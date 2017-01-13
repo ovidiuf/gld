@@ -18,6 +18,8 @@ package io.novaordis.gld.api.sampler;
 
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.sampler.metrics.Metric;
+import io.novaordis.utilities.NotYetImplementedException;
+import io.novaordis.utilities.UserErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -182,10 +184,10 @@ public class SamplerImpl extends TimerTask implements Sampler {
     }
 
     @Override
-    public void setSamplingTaskRunIntervalMs(long ms)
-    {
-        if (isStarted())
-        {
+    public void setSamplingTaskRunIntervalMs(long ms) {
+
+        if (isStarted()) {
+
             throw new IllegalStateException("can't modify the sampling task run interval after the sampler was started");
         }
 
@@ -198,6 +200,12 @@ public class SamplerImpl extends TimerTask implements Sampler {
     public long getSamplingTaskRunIntervalMs()
     {
         return samplingTaskRunIntervalMs;
+    }
+
+    @Override
+    public void configure(SamplerConfiguration configuration) throws UserErrorException {
+
+        throw new NotYetImplementedException("configure() NOT YET IMPLEMENTED");
     }
 
     @Override
@@ -219,21 +227,15 @@ public class SamplerImpl extends TimerTask implements Sampler {
         return counter;
     }
 
-    /**
-     * @see Sampler#getCounter(Class)
-     */
     @Override
     public Counter getCounter(Class operationType)
     {
         return counters.get(operationType);
     }
 
-    /**
-     * @see Sampler#registerConsumer(SamplingConsumer)
-     */
     @Override
-    public synchronized boolean registerConsumer(SamplingConsumer consumer)
-    {
+    public synchronized boolean registerConsumer(SamplingConsumer consumer) {
+
         return consumers.add(consumer);
     }
 
@@ -243,9 +245,6 @@ public class SamplerImpl extends TimerTask implements Sampler {
         return consumers;
     }
 
-    /**
-     * @see Sampler#registerMetric(Class)
-     */
     @Override
     public boolean registerMetric(Class<? extends Metric> metricType)
     {
@@ -253,19 +252,16 @@ public class SamplerImpl extends TimerTask implements Sampler {
     }
 
     @Override
-    public void annotate(String line)
-    {
+    public void annotate(String line) {
+
         annotations.add(line);
 
         if (debug) { log.debug(this + " annotated with '" + line + "'"); }
     }
 
-    /**
-     * @see Sampler#record(long, long, long, Operation, Throwable...)
-     */
     @Override
-    public void record(long t0Ms, long t0Nano, long t1Nano, Operation op, Throwable... t)
-    {
+    public void record(long t0Ms, long t0Nano, long t1Nano, Operation op, Throwable... t) {
+
         if (!started)
         {
             throw new IllegalStateException(this + " not started");
@@ -390,15 +386,14 @@ public class SamplerImpl extends TimerTask implements Sampler {
                 // the ongoing task execution is the last task execution that will ever be performed by this timer.
                 //
 
-                if (samplingTimer == null) {
+                if (samplingTimer != null) {
 
                     //
-                    // stop executed before this
+                    // we guard agains null because stop may have executed before this
                     //
-                    return;
+
+                    samplingTimer.cancel();
                 }
-                
-                samplingTimer.cancel();
             }
         }
     }

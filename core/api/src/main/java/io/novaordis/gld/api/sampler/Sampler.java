@@ -18,6 +18,7 @@ package io.novaordis.gld.api.sampler;
 
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.sampler.metrics.Metric;
+import io.novaordis.utilities.UserErrorException;
 
 import java.util.List;
 
@@ -31,30 +32,33 @@ import java.util.List;
  *
  *      Sampler s = new SamplerImpl();
  *
- * 2. Register all operation types this sampler is supposed to sample.
+ * 2. Configure it based on external configuration (this may internally register consumers, as suggested by
+ *    operation 5. below)
+ *
+ * 3. Register all operation types this sampler is supposed to sample.
  *
  *      s.registerOperation(Send.class);
  *      s.registerOperation(Receive.class);
  *
- * 3. Register the system-wide metrics we want to sample
+ * 4. Register the system-wide metrics we want to sample
  *
  *      s.registerMetric(...);
  *      s.registerMetric(...);
  *      ...
  *
- * 4. Register all sample consumers.
+ * 5. Register all sample consumers.
  *
  *      s.registerConsumer(...);
  *
- * 5. Configure the sampling interval:
+ * 6. Configure the sampling interval:
  *
  *      s.setSamplingIntervalMs(...);
  *
- * 6. Start the sampler.
+ * 7. Start the sampler.
  *
  *      s.start();
  *
- * 7. Send operations into it:
+ * 8. Send operations into it:
  *
  *      s.record(...)
  *
@@ -68,31 +72,11 @@ import java.util.List;
  * After stopping the sampler, all operation registrations are lost.
  */
 public interface Sampler {
-    /**
-     * Sets the sampling interval. Implementations may accept or not changing the sampling interval after the
-     * sampler was started. The documentation should describe the behavior.
-     *
-     * Note that the sampling task run interval *must* be smaller than the sampling interval, otherwise we cannot
-     * generate samples at the required resolution.
-     *
-     * @see Sampler#setSamplingTaskRunIntervalMs(long);
-     */
-    void setSamplingIntervalMs(long ms);
-
-    long getSamplingIntervalMs();
 
     /**
-     * Sets the sampling task run interval. Implementations may accept or not changing the sampling interval after the
-     * sampler was started. The documentation should describe the behavior.
-     *
-     * Note that the sampling task run interval *must* be smaller than the sampling interval, otherwise we cannot
-     * generate samples at the required resolution.
-     *
-     * @see Sampler#setSamplingIntervalMs(long);
+     * Initialize internal state based on the external configuration.
      */
-    void setSamplingTaskRunIntervalMs(long ms);
-
-    long getSamplingTaskRunIntervalMs();
+    void configure(SamplerConfiguration configuration) throws UserErrorException;
 
     /**
      * Registers an operation to sample. Operations cannot be registered after the sampler was started. The idea
@@ -111,20 +95,6 @@ public interface Sampler {
      * @return whether consumer was successfully added or not.
      */
     boolean registerConsumer(SamplingConsumer consumer);
-
-    /**
-     * @return registered consumers, in the order in which they were registered.
-     */
-    List<SamplingConsumer> getConsumers();
-
-    /**
-     * Registers a system-wide metric type. Values for this metric will be generated and included with each sampling
-     * interval.
-     *
-     * @return true if the metric was successfully registered. A reason *not* to successfully register a metric would
-     * be if the metric was already registered.
-     */
-    boolean registerMetric(Class<? extends Metric> metricType);
 
     /**
      * Starts the sampler. Once started, the sampler will continuously and regularly produce samples each
@@ -178,6 +148,46 @@ public interface Sampler {
      * @see Sampler#registerOperation(Class)
      */
     void record(long t0Ms, long t0Nano, long t1Nano, Operation op, Throwable... t);
+
+    /**
+     * Sets the sampling interval. Implementations may accept or not changing the sampling interval after the
+     * sampler was started. The documentation should describe the behavior.
+     *
+     * Note that the sampling task run interval *must* be smaller than the sampling interval, otherwise we cannot
+     * generate samples at the required resolution.
+     *
+     * @see Sampler#setSamplingTaskRunIntervalMs(long);
+     */
+    void setSamplingIntervalMs(long ms);
+
+    long getSamplingIntervalMs();
+
+    /**
+     * Sets the sampling task run interval. Implementations may accept or not changing the sampling interval after the
+     * sampler was started. The documentation should describe the behavior.
+     *
+     * Note that the sampling task run interval *must* be smaller than the sampling interval, otherwise we cannot
+     * generate samples at the required resolution.
+     *
+     * @see Sampler#setSamplingIntervalMs(long);
+     */
+    void setSamplingTaskRunIntervalMs(long ms);
+
+    long getSamplingTaskRunIntervalMs();
+
+    /**
+     * @return registered consumers, in the order in which they were registered.
+     */
+    List<SamplingConsumer> getConsumers();
+
+    /**
+     * Registers a system-wide metric type. Values for this metric will be generated and included with each sampling
+     * interval.
+     *
+     * @return true if the metric was successfully registered. A reason *not* to successfully register a metric would
+     * be if the metric was already registered.
+     */
+    boolean registerMetric(Class<? extends Metric> metricType);
 
     /**
      * Annotate the statistics, using the current time stamp.

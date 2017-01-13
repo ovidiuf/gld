@@ -67,6 +67,9 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
+     * @param sampler the (already configured) sampler that samples operations and asynchronously pushes statistics
+     *                to its consumers. May be null, which means we only want to generate load, but we're not interested
+     *                in statistics.
      * @param keyStore may be null, if the configuration did not specify one.
      * @param background if true, the load driver runs in the background, detached from the controlling terminal,
      *                   so the runner must avoid interacting with stdout, stderr and stdin.
@@ -267,12 +270,14 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
 
         if (sampler == null) {
 
-            throw new IllegalStateException("null sampler");
+            log.debug("there is no sampler, which means the runner will generate load but not statistics");
         }
+        else {
 
-        if (!sampler.isStarted()) {
+            if (!sampler.isStarted()) {
 
-            throw new IllegalStateException("sampler " + sampler + " not started");
+                throw new IllegalStateException("sampler " + sampler + " not started");
+            }
         }
     }
 

@@ -27,8 +27,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class SamplerConfigurator
-{
+public class SamplerConfigurator {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     public static final long DEFAULT_SAMPLING_TASK_RUN_INTERVAL_MS = 250L;
@@ -39,12 +39,12 @@ public class SamplerConfigurator
     /**
      * @param outputFile may be null
      */
-    public static Sampler getSampler(String outputFile, String label) throws Exception
-    {
+    public static Sampler getSampler(String outputFile, String label) throws Exception {
+
         Sampler result;
 
-        if (label == null || "csv".equals(label))
-        {
+        if (label == null || "csv".equals(label)) {
+
             result = new SamplerImpl(DEFAULT_SAMPLING_TASK_RUN_INTERVAL_MS, DEFAULT_SAMPLING_INTERVAL_MS);
 
             result.registerMetric(TotalPhysicalMemorySize.class);
@@ -52,17 +52,17 @@ public class SamplerConfigurator
             result.registerMetric(SystemCpuLoad.class);
             result.registerMetric(SystemLoadAverage.class);
 
-            if (outputFile != null)
-            {
+            if (outputFile != null) {
+
                 // if we specify an output file, it means we will write the statistics into that file
                 PrintWriter filePrintWriter;
 
-                try
-                {
+                try {
+
                     filePrintWriter = new PrintWriter(new FileWriter(outputFile));
                 }
-                catch(IOException e)
-                {
+                catch(IOException e) {
+
                     throw new UserErrorException(
                         "cannot write file " + outputFile + ", it is either a directory or wrong permissions are in place", e);
                 }
@@ -75,12 +75,11 @@ public class SamplerConfigurator
             // can't register any operations yet, as we don't know what service we're sampling at this point, so
             // we will register them when we know, and the we will start the sampler
         }
-        else if ("none".equals(label))
-        {
+        else if ("none".equals(label)) {
             result = null;
         }
-        else
-        {
+        else {
+
             throw new UserErrorException("unknown statistics type '" + label + "'");
         }
 
@@ -91,8 +90,7 @@ public class SamplerConfigurator
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    private SamplerConfigurator()
-    {
+    private SamplerConfigurator() {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
