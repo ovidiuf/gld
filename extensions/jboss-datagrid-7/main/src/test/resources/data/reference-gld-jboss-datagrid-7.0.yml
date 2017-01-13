@@ -43,3 +43,4 @@ service:
 
 load:
   threads: 1
+  operations: 10000

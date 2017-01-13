@@ -9,7 +9,7 @@
     <parent>
         <groupId>io.novaordis.gld.extensions.jboss-datagrid-7</groupId>
         <artifactId>jboss-datagrid-7-gld-extension</artifactId>
-        <version>1.0.0-SNAPSHOT-20</version>
+        <version>1.0.0-SNAPSHOT-21</version>
     </parent>
 
     <artifactId>jboss-datagrid-7</artifactId>
