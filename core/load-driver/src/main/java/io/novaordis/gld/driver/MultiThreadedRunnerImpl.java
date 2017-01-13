@@ -44,7 +44,7 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private int threadCount;
-    private boolean isBackground;
+    private boolean background;
     private long singleThreadedRunnerSleepMs;
     private Duration duration;
 
@@ -68,15 +68,18 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
 
     /**
      * @param keyStore may be null, if the configuration did not specify one.
+     * @param background if true, the load driver runs in the background, detached from the controlling terminal,
+     *                   so the runner must avoid interacting with stdout, stderr and stdin.
+     *
      */
     public MultiThreadedRunnerImpl(Service service, Sampler sampler, KeyStore keyStore,
-                                   int threadCount, boolean isBackground, long singleThreadedRunnerSleepMs) {
+                                   int threadCount, boolean background, long singleThreadedRunnerSleepMs) {
 
         this.service = service;
         this.loadStrategy = service.getLoadStrategy();
         this.threadCount = threadCount;
         this.sampler = sampler;
-        this.isBackground = isBackground;
+        this.background = background;
         this.singleThreadedRunnerSleepMs = singleThreadedRunnerSleepMs;
         this.keyStore = keyStore;
 
@@ -104,7 +107,7 @@ public class MultiThreadedRunnerImpl implements MultiThreadedRunner {
 
             checkPreconditions();
 
-            if (isBackground) {
+            if (background) {
 
                 //
                 // unlatch the exit guard, exit when the threads are done

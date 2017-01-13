@@ -169,8 +169,14 @@ public class LoadDriverImpl implements LoadDriver {
             this.keyStore = KeyStoreFactory.build(storeConfiguration);
         }
 
-        this.runner = new MultiThreadedRunnerImpl(
-                service, sampler, keyStore, loadConfiguration.getThreadCount(), background, singleThreadedRunnerSleepMs);
+        this.runner =
+                new MultiThreadedRunnerImpl(
+                        service,
+                        sampler,
+                        keyStore,
+                        loadConfiguration.getThreadCount(),
+                        background,
+                        singleThreadedRunnerSleepMs);
     }
 
     @Override
