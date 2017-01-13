@@ -116,13 +116,13 @@ public class SamplerImpl extends TimerTask implements Sampler {
 
         samplingTimer = new Timer("Sampling Thread", true);
 
-        if (samplingTaskRunIntervalMs <= 0)
-        {
+        if (samplingTaskRunIntervalMs <= 0) {
+
             log.warn("the sampling task run interval is " + (samplingTaskRunIntervalMs == 0 ? "0" : "negative") +
                 ", no sampling tasks will run");
         }
-        else
-        {
+        else {
+
             // the run interval is larger than 0, schedule sampling tasks ...
             samplingTimer.scheduleAtFixedRate(this, samplingTaskRunIntervalMs, samplingTaskRunIntervalMs);
         }
@@ -290,17 +290,19 @@ public class SamplerImpl extends TimerTask implements Sampler {
     // TimerTask implementation ----------------------------------------------------------------------------------------
 
     @Override
-    public void run()
-    {
+    public void run() {
+
         runCounter ++;
         long thisRunTimestamp = System.currentTimeMillis();
 
-        try
-        {
-            if (current == null)
-            {
+        try {
+
+            if (current == null) {
+
+                //
                 // there was no sampling interval built yet, set it to be on a round second mark, preceding but as
                 // close as possible to this run timestamp
+                //
                 long siTs = (thisRunTimestamp / 1000) * 1000L;
                 current = new SamplingIntervalImpl(siTs, samplingIntervalMs, counters.keySet());
 
@@ -309,70 +311,93 @@ public class SamplerImpl extends TimerTask implements Sampler {
 
             if (debug) { log.debug("run " + runCounter + ": sampling task executing" + (lastRunTimestamp == -1 ? "" : ", collecting statistics from last " + (thisRunTimestamp - lastRunTimestamp) + " ms")); }
 
+            //
             // we need to collect and reset counters and annotations irrespective of whether run falls within the
             // current sampling interval or outside it; since we don't have a precise way of determining when exactly
-            // the records have been made (we actually do, but it'd be too expensive and not worth it, in the grand
-            // scheme of things), we allocate the counter values and the annotations to the current sample. If we
-            // overshoot, with more than one sample, the current sample will be extrapolated anyway. If we fall within
-            // the next sample, oh well ...
+            // the records have been made (we actually do, but it'd be too expensive and not worth it), we allocate the
+            // counter values and the annotations to the current sample. If we overshoot, with more than one sample, the
+            // current sample will be extrapolated anyway. If we fall within the next sample, oh well ...
+            //
 
             collectAndResetCountersAndAnnotations();
 
-            if (!stopping && (thisRunTimestamp - current.getStartMs() < samplingIntervalMs))
-            {
+            if (!stopping && (thisRunTimestamp - current.getStartMs() < samplingIntervalMs)) {
+
+                //
                 // not ready to wrap up the current sampling interval, we're done for the time being - this only happens
                 // if we're not stopping. If we're stopping, we must collect the remaining stats so we go beyond this
                 // point
+                //
                 return;
             }
 
+            //
             // we're right on the edge of the sampling interval, we went beyond it or we're stopping
+            //
 
             current.setMetrics(SamplingIntervalUtil.snapshotMetrics(metricTypes));
 
             SamplingInterval last = current;
 
+            //
             // if more than one sample has accumulated, extrapolate values across multiple samples and send all of them
             // to consumers (although, for a sampling run interval smaller than the sampling interval, multiple samples
             // is an unlikely occurrence)
+            //
 
+            //
             // pastCurrent can be negative if we're the first and the last run
+            //
             long pastCurrent = thisRunTimestamp - current.getEndMs();
             int n = pastCurrent < 0 ? 0 : (int)(pastCurrent / samplingIntervalMs);
 
             if (debug) { log.debug("we are " + pastCurrent + " ms past the last recording sampling interval end, we will generate " + (n + 1) + " full sampling interval(s)"); }
 
+            //
             // extrapolate the statistics collected in current over n + 1 intervals (n + the last recorded one).
+            //
             SamplingInterval[] intervals = SamplingIntervalUtil.extrapolate(last, n);
 
             sendSamplingIntervalsToConsumers(intervals);
 
+            //
             // initialize a new sampling interval, but only if we're not stopping
-            if (!stopping)
-            {
+            //
+            if (!stopping) {
+
                 long newCurrentStart = last.getEndMs() + n * samplingIntervalMs;
                 current = new SamplingIntervalImpl(newCurrentStart, samplingIntervalMs, counters.keySet());
-                if (debug)
-                {
+                if (debug) {
                     log.debug("current sampling interval " + current);
                 }
             }
         }
-        catch(Throwable t)
-        {
+        catch(Throwable t) {
+
             log.warn(this + "'s sampling thread failed", t);
         }
-        finally
-        {
+        finally {
+
             lastRunTimestamp = thisRunTimestamp;
 
-            if (stopping)
-            {
+            if (stopping) {
+
                 log.debug(this + " is stopping, this is the last sampling task run");
 
+                //
                 // cancel the timer, no further tasks will be scheduled. From javadoc: Note that calling this method
                 // from within the run method of a timer task that was invoked by this timer absolutely guarantees that
                 // the ongoing task execution is the last task execution that will ever be performed by this timer.
+                //
+
+                if (samplingTimer == null) {
+
+                    //
+                    // stop executed before this
+                    //
+                    return;
+                }
+                
                 samplingTimer.cancel();
             }
         }
