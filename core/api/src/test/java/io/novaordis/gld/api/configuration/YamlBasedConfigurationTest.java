@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.configuration;
 
+import io.novaordis.gld.api.sampler.SamplerConfiguration;
 import io.novaordis.utilities.Files;
 import io.novaordis.utilities.UserErrorException;
 import org.junit.After;
@@ -32,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -192,19 +194,17 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
 
         YamlBasedConfiguration c = new YamlBasedConfiguration();
 
-        try {
+        c.load(f);
 
-            c.load(f);
-            fail("should have thrown exception");
-        }
-        catch(UserErrorException e) {
+        LoadConfiguration lc = c.getLoadConfiguration();
 
-            String msg = e.getMessage();
-            log.info(msg);
-            assertTrue(msg.matches(
-                    "'" + YamlBasedConfiguration.LOAD_SECTION_LABEL +
-                            "' section empty or missing from configuration file .*test.yml"));
-        }
+        assertNotNull(lc);
+
+        //
+        // default behavior
+        //
+        assertEquals(LoadConfiguration.DEFAULT_THREAD_COUNT, lc.getThreadCount());
+        assertNull(lc.getOperations());
     }
 
     @Test
@@ -250,23 +250,23 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
     @Test
     public void outputConfiguration() throws Exception {
 
-        fail("return here");
+        File f = new File(scratchDirectory, "test.yml");
+        assertTrue(Files.write(f,
+                "service:\n" +
+                        "  type: cache\n" +
+                        "  implementation:\n" +
+                        "    name: embedded\n" +
+                        "output:\n" +
+                        "  statistics:\n" +
+                        "    file: test.csv\n" +
+                        "\n"));
 
-//        File f = new File(scratchDirectory, "test.yml");
-//        assertTrue(Files.write(f,
-//                "service:\n" +
-//                        "  type: cache\n" +
-//                        "load:\n" +
-//                        "  threads: 1\n" +
-//                        "store:\n" +
-//                        "  type: mock\n" +
-//                        "  directory: .\n" +
-//                        "\n"));
-//
-//        YamlBasedConfiguration c = new YamlBasedConfiguration();
-//        c.load(f);
-//        StoreConfiguration sc = c.getStoreConfiguration();
-//        assertEquals("mock", sc.getStoreType());
+        YamlBasedConfiguration c = new YamlBasedConfiguration();
+        c.load(f);
+
+        OutputConfiguration oc = c.getOutputConfiguration();
+        SamplerConfiguration sc = oc.getSamplerConfiguration();
+        assertNotNull(sc);
     }
 
     @Test

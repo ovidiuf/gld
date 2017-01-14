@@ -42,7 +42,8 @@ public interface Configuration {
     ServiceConfiguration getServiceConfiguration();
 
     /**
-     * Never returns null, if the load configuration is missing, configuration parsing section will throw exception.
+     * Never returns null, if the load configuration is missing from the configuration file, the method returns
+     * a non-null LoadConfiguration instance containing defaults (which is most likely threads = 1).
      */
     LoadConfiguration getLoadConfiguration();
 

@@ -19,6 +19,7 @@ package io.novaordis.gld.api.configuration;
 import io.novaordis.utilities.UserErrorException;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -31,6 +32,25 @@ public class LoadConfigurationImpl extends LowLevelConfigurationBase
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
+
+    public static LoadConfiguration getDefaultConfiguration(File configurationDirectory) {
+
+        Map<String, Object> raw = new HashMap<>();
+
+        raw.put(THREAD_COUNT_LABEL, DEFAULT_THREAD_COUNT);
+
+        try {
+
+            return new LoadConfigurationImpl(raw, configurationDirectory);
+        }
+        catch(Exception e) {
+
+            //
+            // not supposed to happen
+            //
+            throw new IllegalArgumentException(e);
+        }
+    }
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
@@ -79,7 +99,7 @@ public class LoadConfigurationImpl extends LowLevelConfigurationBase
 
         String label = LoadConfiguration.OPERATION_COUNT_LABEL;
 
-        Integer i = null;
+        Integer i;
 
         try {
 

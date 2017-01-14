@@ -19,7 +19,6 @@ package io.novaordis.gld.api.configuration;
 import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.gld.api.cache.CacheServiceConfigurationImpl;
 import io.novaordis.gld.api.jms.JmsServiceConfigurationImpl;
-import io.novaordis.utilities.NotYetImplementedException;
 import io.novaordis.utilities.UserErrorException;
 import org.yaml.snakeyaml.Yaml;
 
@@ -40,6 +39,7 @@ public class YamlBasedConfiguration implements Configuration {
     public static final String SERVICE_SECTION_LABEL = "service";
     public static final String LOAD_SECTION_LABEL = "load";
     public static final String STORE_SECTION_LABEL = "store";
+    public static final String OUTPUT_SECTION_LABEL = "output";
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -77,7 +77,7 @@ public class YamlBasedConfiguration implements Configuration {
     @Override
     public OutputConfiguration getOutputConfiguration() {
 
-        throw new NotYetImplementedException("getOutputConfiguration() NOT YET IMPLEMENTED");
+        return outputConfiguration;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -108,15 +108,18 @@ public class YamlBasedConfiguration implements Configuration {
             Map<String, Object> serviceConfigurationMap = null;
             Map<String, Object> loadConfigurationMap = null;
             Map<String, Object> storeConfigurationMap = null;
+            Map<String, Object> outputConfigurationMap = null;
 
             if (topLevelConfigurationMap != null) {
 
                 //noinspection unchecked
                 serviceConfigurationMap = (Map<String, Object>)topLevelConfigurationMap.get(SERVICE_SECTION_LABEL);
                 //noinspection unchecked
-                loadConfigurationMap = (Map<String, Object>) topLevelConfigurationMap.get(LOAD_SECTION_LABEL);
+                loadConfigurationMap = (Map<String, Object>)topLevelConfigurationMap.get(LOAD_SECTION_LABEL);
                 //noinspection unchecked
-                storeConfigurationMap = (Map<String, Object>) topLevelConfigurationMap.get(STORE_SECTION_LABEL);
+                storeConfigurationMap = (Map<String, Object>)topLevelConfigurationMap.get(STORE_SECTION_LABEL);
+                //noinspection unchecked
+                outputConfigurationMap = (Map<String, Object>)topLevelConfigurationMap.get(OUTPUT_SECTION_LABEL);
             }
 
             if (serviceConfigurationMap == null) {
@@ -150,16 +153,27 @@ public class YamlBasedConfiguration implements Configuration {
 
             if (loadConfigurationMap == null) {
 
-                throw new UserErrorException(
-                        "'" + LOAD_SECTION_LABEL + "' section empty or missing from configuration file " + file);
-            }
+                //
+                // load defaults
+                //
 
-            loadConfiguration = new LoadConfigurationImpl(loadConfigurationMap, configurationDirectory);
+                loadConfiguration = LoadConfigurationImpl.getDefaultConfiguration(configurationDirectory);
+            }
+            else {
+
+                loadConfiguration = new LoadConfigurationImpl(loadConfigurationMap, configurationDirectory);
+            }
 
             if (storeConfigurationMap != null) {
 
                 storeConfiguration = new StoreConfigurationImpl(storeConfigurationMap, configurationDirectory);
             }
+
+            if (outputConfigurationMap != null) {
+
+                outputConfiguration = new OutputConfigurationImpl(outputConfigurationMap, configurationDirectory);
+            }
+
         }
         finally {
 

@@ -16,8 +16,13 @@
 
 package io.novaordis.gld.api.configuration;
 
+import org.junit.Test;
+
 import java.io.File;
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -36,6 +41,17 @@ public class LoadConfigurationImplTest extends LoadConfigurationTest {
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Tests -----------------------------------------------------------------------------------------------------------
+
+    // default load configuration --------------------------------------------------------------------------------------
+
+    @Test
+    public void defaultLoadConfiguration() throws Exception {
+
+        LoadConfiguration c = LoadConfigurationImpl.getDefaultConfiguration(new File("."));
+
+        assertEquals(1, c.getThreadCount());
+        assertNull(c.getOperations());
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
