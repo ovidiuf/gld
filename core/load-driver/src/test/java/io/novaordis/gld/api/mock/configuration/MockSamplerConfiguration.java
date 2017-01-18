@@ -16,20 +16,21 @@
 
 package io.novaordis.gld.api.mock.configuration;
 
-import io.novaordis.gld.api.configuration.OutputConfiguration;
+import io.novaordis.gld.api.configuration.LowLevelConfigurationBase;
 import io.novaordis.gld.api.sampler.SamplerConfiguration;
-import io.novaordis.utilities.NotYetImplementedException;
 import io.novaordis.utilities.UserErrorException;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/9/16
+ * @since 1/12/17
  */
-public class MockOutputConfiguration implements OutputConfiguration {
+public class MockSamplerConfiguration extends LowLevelConfigurationBase implements SamplerConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -37,49 +38,76 @@ public class MockOutputConfiguration implements OutputConfiguration {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private MockSamplerConfiguration samplerConfiguration;
+    private int samplingInterval;
+    private int samplingTaskRunInterval;
+    private File file;
+    private List<String> metrics;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockOutputConfiguration() {
+    public MockSamplerConfiguration() {
 
-        this.samplerConfiguration = new MockSamplerConfiguration();
+        this(new HashMap<>());
     }
 
-    // OutputConfiguration implementation ------------------------------------------------------------------------------
+    public MockSamplerConfiguration(Map<String, Object> raw) {
 
-    @Override
-    public <T> T get(Class<? extends T> type, String... path) {
-        throw new NotYetImplementedException("get() NOT YET IMPLEMENTED");
+        super(raw, new File("."));
+
+        this.samplingTaskRunInterval = 1;
+        this.samplingInterval = 2;
+        setFile(new File("/dev/null"));
+        this.metrics = Collections.emptyList();
     }
 
-    @Override
-    public File getFile(String... path) {
-        throw new RuntimeException("getFile() NOT YET IMPLEMENTED");
-    }
+    // SamplerConfiguration implementation -----------------------------------------------------------------------------
 
     @Override
-    public Map<String, Object> get(String... path) {
-        throw new RuntimeException("get() NOT YET IMPLEMENTED");
-    }
+    public String getFormat() {
 
-    @Override
-    public List<Object> getList(String... path) {
-        throw new NotYetImplementedException("getList() NOT YET IMPLEMENTED");
+        return "csv";
     }
 
     @Override
-    public File getConfigurationDirectory() {
-        throw new NotYetImplementedException("getConfigurationDirectory() NOT YET IMPLEMENTED");
+    public File getFile() throws UserErrorException {
+
+        return file;
     }
 
     @Override
-    public SamplerConfiguration getSamplerConfiguration() throws UserErrorException {
+    public int getSamplingInterval() {
 
-        return samplerConfiguration;
+        return samplingInterval;
+    }
+
+    @Override
+    public int getSamplingTaskRunInterval() {
+
+        return samplingTaskRunInterval;
+    }
+
+    @Override
+    public List<String> getMetrics() {
+
+        return metrics;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public void setSamplingInterval(int i) {
+
+        this.samplingInterval = i;
+    }
+
+    public void setSamplingTaskRunInterval(int i) {
+
+        this.samplingTaskRunInterval = i;
+    }
+
+    public void setFile(File f) {
+
+        this.file = f;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

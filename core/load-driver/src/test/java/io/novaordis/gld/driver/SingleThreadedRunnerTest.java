@@ -94,18 +94,16 @@ public class SingleThreadedRunnerTest {
     @Test
     public void nullSampler() throws Exception {
 
-        try  {
+        final Sampler sampler = null;
 
-            new SingleThreadedRunner(
-                    "TEST", new MockService(), new MockLdLoadStrategy(), null, new CyclicBarrier(1),
-                    new AtomicBoolean(false), -1L, new MockKeyStore());
+        //
+        // null sampler is OK
+        //
+        SingleThreadedRunner r = new SingleThreadedRunner(
+                "TEST", new MockService(), new MockLdLoadStrategy(), sampler, new CyclicBarrier(1),
+                new AtomicBoolean(false), -1L, new MockKeyStore());
 
-            fail("should fail with IllegalArgumentException, null sampler");
-        }
-        catch(IllegalArgumentException e) {
-
-            log.info(e.getMessage());
-        }
+        assertNull(r.getSampler());
     }
 
     @Test
@@ -114,7 +112,7 @@ public class SingleThreadedRunnerTest {
         try {
 
             new SingleThreadedRunner(
-                "TEST", new MockService(), new MockLdLoadStrategy(), new SamplerImpl(), null,
+                    "TEST", new MockService(), new MockLdLoadStrategy(), new SamplerImpl(), null,
                     new AtomicBoolean(false), -1L, new MockKeyStore());
 
             fail("should fail with IllegalArgumentException, null barrier");
