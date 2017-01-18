@@ -17,9 +17,12 @@
 package io.novaordis.gld.api.sampler;
 
 import io.novaordis.gld.api.configuration.LowLevelConfigurationBase;
+import io.novaordis.utilities.NotYetImplementedException;
+import io.novaordis.utilities.UserErrorException;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,6 +46,33 @@ public class MockSamplerConfiguration extends LowLevelConfigurationBase implemen
 
     public MockSamplerConfiguration(Map<String, Object> raw) {
         super(raw, new File("."));
+    }
+
+    // SamplerConfiguration implementation -----------------------------------------------------------------------------
+
+    @Override
+    public String getFormat() {
+        throw new NotYetImplementedException("getFormat() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public File getFile() throws UserErrorException {
+        throw new NotYetImplementedException("getFile() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public int getSamplingInterval() {
+        throw new NotYetImplementedException("getSamplingInterval() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public int getSamplingTaskRunInterval() {
+        throw new NotYetImplementedException("getSamplingTaskRunInterval() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public List<String> getMetrics() {
+        throw new NotYetImplementedException("getMetrics() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

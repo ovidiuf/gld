@@ -19,8 +19,11 @@ package io.novaordis.gld.driver;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.sampler.Counter;
 import io.novaordis.gld.api.sampler.Sampler;
+import io.novaordis.gld.api.sampler.SamplerConfiguration;
 import io.novaordis.gld.api.sampler.SamplingConsumer;
 import io.novaordis.gld.api.sampler.metrics.Metric;
+import io.novaordis.utilities.NotYetImplementedException;
+import io.novaordis.utilities.UserErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,6 +81,11 @@ public class MockSampler implements Sampler {
     @Override
     public long getSamplingTaskRunIntervalMs() {
         throw new RuntimeException("getSamplingTaskRunIntervalMs() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void configure(SamplerConfiguration configuration) throws UserErrorException {
+        throw new NotYetImplementedException("configure() NOT YET IMPLEMENTED");
     }
 
     @Override

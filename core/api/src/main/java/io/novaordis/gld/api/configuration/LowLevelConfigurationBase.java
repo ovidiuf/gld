@@ -184,6 +184,10 @@ public class LowLevelConfigurationBase implements LowLevelConfiguration {
         return m;
     }
 
+    /**
+     * TODO next time I need a list of a specific type, implement
+     * List<T> getList(Class<? extends T> type, String... path)
+     */
     @Override
     public List<Object> getList(String... path) {
 

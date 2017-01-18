@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,20 @@
 
 package io.novaordis.gld.api.mock.configuration;
 
-import io.novaordis.gld.api.configuration.Configuration;
-import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.configuration.OutputConfiguration;
-import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.gld.api.configuration.StoreConfiguration;
+import io.novaordis.gld.api.sampler.SamplerConfiguration;
+import io.novaordis.utilities.NotYetImplementedException;
+import io.novaordis.utilities.UserErrorException;
+
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/9/16
  */
-public class MockConfiguration implements Configuration {
+public class MockOutputConfiguration implements OutputConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,45 +37,38 @@ public class MockConfiguration implements Configuration {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private MockServiceConfiguration serviceConfiguration;
-    private MockLoadConfiguration loadConfiguration;
-    private MockStoreConfiguration storeConfiguration;
-    private MockOutputConfiguration outputConfiguration;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockConfiguration() throws Exception {
-
-        serviceConfiguration = new MockServiceConfiguration();
-        loadConfiguration = new MockLoadConfiguration();
-        storeConfiguration = new MockStoreConfiguration();
-        outputConfiguration = new MockOutputConfiguration();
-    }
-
-    // Configuration implementation ------------------------------------------------------------------------------------
+    // OutputConfiguration implementation ------------------------------------------------------------------------------
 
     @Override
-    public ServiceConfiguration getServiceConfiguration() {
-
-        return serviceConfiguration;
+    public <T> T get(Class<? extends T> type, String... path) {
+        throw new NotYetImplementedException("get() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public LoadConfiguration getLoadConfiguration() {
-
-        return loadConfiguration;
+    public File getFile(String... path) {
+        throw new RuntimeException("getFile() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public StoreConfiguration getStoreConfiguration() {
-
-        return storeConfiguration;
+    public Map<String, Object> get(String... path) {
+        throw new RuntimeException("get() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public OutputConfiguration getOutputConfiguration() {
+    public List<Object> getList(String... path) {
+        throw new NotYetImplementedException("getList() NOT YET IMPLEMENTED");
+    }
 
-        return outputConfiguration;
+    @Override
+    public File getConfigurationDirectory() {
+        throw new NotYetImplementedException("getConfigurationDirectory() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public SamplerConfiguration getSamplerConfiguration() throws UserErrorException {
+        throw new NotYetImplementedException("getSamplerConfiguration() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
