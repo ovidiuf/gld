@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -124,6 +125,36 @@ public abstract class LoadDriverTest {
         assertFalse(service.isStarted());
         assertFalse(service.getLoadStrategy().isStarted());
         assertFalse(service.getLoadStrategy().getKeyProvider().isStarted());
+    }
+
+    @Test
+    public void run_NoSampler() throws Exception {
+
+        LoadDriver ld = getLoadDriverToTest();
+
+        MockConfiguration mc = new MockConfiguration();
+
+        //
+        // We're installing a LoadStrategy that produces zero operations and gets depleted immediately - this will
+        // make the runner finnish immediately, and successfully
+        //
+        ((MockLoadConfiguration)mc.getLoadConfiguration()).setOperations(0);
+
+        //
+        // null output configuration
+        //
+        mc.setOutputConfiguration(null);
+
+        assertNull(ld.getSampler());
+
+        ld.init(mc);
+
+        //
+        // we're not interested in when this run ends, just that run() completes successfully
+        //
+        ld.run();
+
+        assertNull(ld.getSampler());
     }
 
     @Test

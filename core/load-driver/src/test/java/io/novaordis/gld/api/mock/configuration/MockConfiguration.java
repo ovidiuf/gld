@@ -77,6 +77,11 @@ public class MockConfiguration implements Configuration {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    public void setOutputConfiguration(MockOutputConfiguration oc) {
+
+        this.outputConfiguration = oc;
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

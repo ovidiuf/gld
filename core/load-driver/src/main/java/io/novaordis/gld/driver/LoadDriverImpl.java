@@ -292,7 +292,10 @@ public class LoadDriverImpl implements LoadDriver {
 
         service.start(); // this will start internal lifecycle components, recursively.
 
-        sampler.start();
+        if (sampler != null) {
+
+            sampler.start();
+        }
 
         if (keyStore != null) {
 
