@@ -31,7 +31,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class SamplerImplTest extends SamplerTest {
 
@@ -237,14 +236,6 @@ public class SamplerImplTest extends SamplerTest {
         assertEquals(2L + 4L, cvs.getFailureCumulatedDurationNano(SocketException.class));
         assertEquals(1L, cvs.getFailureCount(ConnectException.class));
         assertEquals(6L, cvs.getFailureCumulatedDurationNano(ConnectException.class));
-    }
-
-    @Test
-    public void phaseOutSamplerConfiguratorAndReuseTheLogicinSampleImplConfigure() throws Exception {
-
-        Sampler s = SamplerConfigurator.getSampler("/dev/null", "csv");
-
-        fail("MIGRATE SamplerConfigurator.getSampler(() and get rid of SamplerConfigurator");
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

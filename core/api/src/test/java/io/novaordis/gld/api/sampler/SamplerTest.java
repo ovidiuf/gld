@@ -23,10 +23,17 @@ import io.novaordis.gld.api.sampler.metrics.Metric;
 import io.novaordis.gld.api.sampler.metrics.SystemCpuLoad;
 import io.novaordis.gld.api.sampler.metrics.SystemLoadAverage;
 import io.novaordis.gld.api.sampler.metrics.TotalPhysicalMemorySize;
+import io.novaordis.gld.api.statistics.CSVFormatter;
+import io.novaordis.utilities.UserErrorException;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -46,9 +53,29 @@ public abstract class SamplerTest {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    protected File scratchDirectory;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Before
+    public void before() throws Exception {
+
+        String projectBaseDirName = System.getProperty("basedir");
+        scratchDirectory = new File(projectBaseDirName, "target/test-scratch");
+        assertTrue(scratchDirectory.isDirectory());
+    }
+
+    @After
+    public void after() throws Exception {
+
+        //
+        // scratch directory cleanup
+        //
+
+        assertTrue(io.novaordis.utilities.Files.rmdir(scratchDirectory, false));
+    }
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
@@ -461,11 +488,84 @@ public abstract class SamplerTest {
 
         Sampler s = getSamplerToTest();
 
+        File file = new File(scratchDirectory, "test.csv");
+        assertFalse(file.isFile());
+
         MockSamplerConfiguration mc = new MockSamplerConfiguration();
+        mc.setSamplingInterval(2222);
+        mc.setSamplingTaskRunInterval(333);
+        mc.setFile(file);
+        mc.setMetrics(Arrays.asList(
+                "TotalPhysicalMemorySize", "FreePhysicalMemorySize", "SystemCpuLoad", "SystemLoadAverage"));
 
         s.configure(mc);
 
-        fail("return here for more testing");
+        assertEquals(2222, s.getSamplingIntervalMs());
+        assertEquals(333, s.getSamplingTaskRunIntervalMs());
+        assertTrue(file.isFile());
+
+        Set<Class<? extends Metric>> metricTypes = s.getMetricTypes();
+        assertEquals(4, metricTypes.size());
+        assertTrue(metricTypes.contains(TotalPhysicalMemorySize.class));
+        assertTrue(metricTypes.contains(FreePhysicalMemorySize.class));
+        assertTrue(metricTypes.contains(SystemCpuLoad.class));
+        assertTrue(metricTypes.contains(SystemLoadAverage.class));
+
+        List<SamplingConsumer> consumers = s.getConsumers();
+        assertEquals(1, consumers.size());
+        CSVFormatter c = (CSVFormatter)consumers.get(0);
+        assertNotNull(c);
+    }
+
+    @Test
+    public void configure_InvalidMetric() throws Exception {
+
+        Sampler s = getSamplerToTest();
+
+        File file = new File(scratchDirectory, "test.csv");
+
+        MockSamplerConfiguration mc = new MockSamplerConfiguration();
+        mc.setFile(file);
+        mc.setMetrics(Collections.singletonList("NoSuchMetric"));
+
+        try {
+
+            s.configure(mc);
+            fail("should have thrown exception");
+
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("invalid metric type NoSuchMetric", msg);
+        }
+    }
+
+    @Test
+    public void configure_AttemptToWriteADirectory() throws Exception {
+
+        File d = new File(scratchDirectory, "test-dir");
+        assertTrue(d.mkdir());
+        assertTrue(d.isDirectory());
+
+        MockSamplerConfiguration mc = new MockSamplerConfiguration();
+        mc.setFile(d);
+
+        Sampler s = getSamplerToTest();
+
+        try {
+
+            s.configure(mc);
+            fail("should have thrown exception");
+
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("cannot write file .*, it is either a directory or wrong permissions are in place"));
+        }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -17,7 +17,6 @@
 package io.novaordis.gld.api.sampler;
 
 import io.novaordis.gld.api.configuration.LowLevelConfigurationBase;
-import io.novaordis.utilities.NotYetImplementedException;
 import io.novaordis.utilities.UserErrorException;
 
 import java.io.File;
@@ -37,6 +36,11 @@ public class MockSamplerConfiguration extends LowLevelConfigurationBase implemen
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private int samplingInterval;
+    private int samplingTaskRunInterval;
+    private File file;
+    private List<String> metrics;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockSamplerConfiguration() {
@@ -45,37 +49,66 @@ public class MockSamplerConfiguration extends LowLevelConfigurationBase implemen
     }
 
     public MockSamplerConfiguration(Map<String, Object> raw) {
+
         super(raw, new File("."));
+
+        this.samplingTaskRunInterval = 1;
+        this.samplingInterval = 2;
     }
 
     // SamplerConfiguration implementation -----------------------------------------------------------------------------
 
     @Override
     public String getFormat() {
-        throw new NotYetImplementedException("getFormat() NOT YET IMPLEMENTED");
+
+        return "csv";
     }
 
     @Override
     public File getFile() throws UserErrorException {
-        throw new NotYetImplementedException("getFile() NOT YET IMPLEMENTED");
+
+        return file;
     }
 
     @Override
     public int getSamplingInterval() {
-        throw new NotYetImplementedException("getSamplingInterval() NOT YET IMPLEMENTED");
+
+        return samplingInterval;
     }
 
     @Override
     public int getSamplingTaskRunInterval() {
-        throw new NotYetImplementedException("getSamplingTaskRunInterval() NOT YET IMPLEMENTED");
+
+        return samplingTaskRunInterval;
     }
 
     @Override
     public List<String> getMetrics() {
-        throw new NotYetImplementedException("getMetrics() NOT YET IMPLEMENTED");
+
+        return metrics;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public void setSamplingInterval(int i) {
+
+        this.samplingInterval = i;
+    }
+
+    public void setSamplingTaskRunInterval(int i) {
+
+        this.samplingTaskRunInterval = i;
+    }
+
+    public void setFile(File f) {
+
+        this.file = f;
+    }
+
+    public void setMetrics(List<String> ms) {
+
+        this.metrics = ms;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

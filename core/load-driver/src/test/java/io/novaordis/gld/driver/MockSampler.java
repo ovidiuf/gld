@@ -111,6 +111,11 @@ public class MockSampler implements Sampler {
     }
 
     @Override
+    public Set<Class<? extends Metric>> getMetricTypes() {
+        throw new NotYetImplementedException("getMetricTypes() NOT YET IMPLEMENTED");
+    }
+
+    @Override
     public void start() {
         started = true;
         wasStarted = true;

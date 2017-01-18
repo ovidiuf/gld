@@ -18,14 +18,20 @@ package io.novaordis.gld.api.sampler;
 
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.sampler.metrics.Metric;
+import io.novaordis.gld.api.statistics.CSVFormatter;
 import io.novaordis.utilities.NotYetImplementedException;
 import io.novaordis.utilities.UserErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,9 +45,6 @@ public class SamplerImpl extends TimerTask implements Sampler {
 
     private static final Logger log = LoggerFactory.getLogger(SamplerImpl.class);
     private static final boolean debug = log.isDebugEnabled();
-
-    public static final long DEFAULT_SAMPLING_TASK_RUN_INTERVAL_MS = 500L;
-    public static final long DEFAULT_SAMPLING_INTERVAL_MS = 1000L;
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -71,7 +74,8 @@ public class SamplerImpl extends TimerTask implements Sampler {
 
     public SamplerImpl() {
 
-        this(DEFAULT_SAMPLING_TASK_RUN_INTERVAL_MS, DEFAULT_SAMPLING_INTERVAL_MS);
+        this(SamplerConfiguration.DEFAULT_SAMPLING_TASK_RUN_INTERVAL,
+                SamplerConfiguration.DEFAULT_SAMPLING_INTERVAL_MS);
     }
 
     public SamplerImpl(long samplingTaskRunIntervalMs, long samplingIntervalMs) {
@@ -89,10 +93,65 @@ public class SamplerImpl extends TimerTask implements Sampler {
         this.metricTypes = new HashSet<>();
 
         log.debug(this + " created, sampling task run interval " + samplingTaskRunIntervalMs +
-            " ms, sampling interval " + samplingIntervalMs + " ms");
+                " ms, sampling interval " + samplingIntervalMs + " ms");
     }
 
     // Sampler implementation ------------------------------------------------------------------------------------------
+
+    @Override
+    public void configure(SamplerConfiguration sc) throws UserErrorException {
+
+        String format = sc.getFormat();
+
+        if (!"csv".equals(format)) {
+
+            throw new NotYetImplementedException("DO NOT KNOW HOW TO HANDLE " + format + " SAMPLER FORMAT");
+        }
+
+        setSamplingTaskRunIntervalMs(sc.getSamplingTaskRunInterval());
+        setSamplingIntervalMs(sc.getSamplingInterval());
+
+        File outputFile = sc.getFile();
+        PrintWriter filePrintWriter;
+
+        try {
+
+            filePrintWriter = new PrintWriter(new FileWriter(outputFile));
+        }
+        catch(IOException e) {
+
+            throw new UserErrorException(
+                    "cannot write file " + outputFile + ", it is either a directory or wrong permissions are in place", e);
+        }
+
+        SamplingConsumer csvFileWriter = new CSVFormatter(filePrintWriter);
+        registerConsumer(csvFileWriter);
+
+        List<String> metrics = sc.getMetrics();
+
+        String ms = null;
+
+        try {
+
+            for (String metric : metrics) {
+
+                ms = metric;
+                String fqcn = "io.novaordis.gld.api.sampler.metrics." + ms;
+                //noinspection unchecked
+                Class<? extends Metric> metricType = (Class<? extends Metric>) Class.forName(fqcn);
+                registerMetric(metricType);
+            }
+        }
+        catch (Exception e) {
+
+            throw new UserErrorException("invalid metric type " + ms, e);
+        }
+
+        //
+        // can't register any operations yet, as we don't know what service we're sampling at this point, so
+        // we will register them when we know, and the we will start the sampler
+        //
+    }
 
     @Override
     public synchronized void start() {
@@ -104,7 +163,7 @@ public class SamplerImpl extends TimerTask implements Sampler {
         if (samplingTimer != null) {
 
             throw new IllegalStateException(
-                "a stopped sampler is supposed to have a null timer, and this one doesn't: " + samplingTimer);
+                    "a stopped sampler is supposed to have a null timer, and this one doesn't: " + samplingTimer);
         }
 
         if (counters.isEmpty()) {
@@ -121,7 +180,7 @@ public class SamplerImpl extends TimerTask implements Sampler {
         if (samplingTaskRunIntervalMs <= 0) {
 
             log.warn("the sampling task run interval is " + (samplingTaskRunIntervalMs == 0 ? "0" : "negative") +
-                ", no sampling tasks will run");
+                    ", no sampling tasks will run");
         }
         else {
 
@@ -203,12 +262,6 @@ public class SamplerImpl extends TimerTask implements Sampler {
     }
 
     @Override
-    public void configure(SamplerConfiguration configuration) throws UserErrorException {
-
-        throw new NotYetImplementedException("configure() NOT YET IMPLEMENTED");
-    }
-
-    @Override
     public synchronized Counter registerOperation(Class<? extends Operation> operationType) {
 
         if (isStarted()) {
@@ -228,8 +281,8 @@ public class SamplerImpl extends TimerTask implements Sampler {
     }
 
     @Override
-    public Counter getCounter(Class operationType)
-    {
+    public Counter getCounter(Class operationType) {
+
         return counters.get(operationType);
     }
 
@@ -240,15 +293,24 @@ public class SamplerImpl extends TimerTask implements Sampler {
     }
 
     @Override
-    public List<SamplingConsumer> getConsumers()
-    {
+    public List<SamplingConsumer> getConsumers() {
+
         return consumers;
     }
 
     @Override
-    public boolean registerMetric(Class<? extends Metric> metricType)
-    {
+    public boolean registerMetric(Class<? extends Metric> metricType) {
+
         return metricTypes.add(metricType);
+    }
+
+    /**
+     * @return the actual storage.
+     */
+    @Override
+    public Set<Class<? extends Metric>> getMetricTypes() {
+
+        return metricTypes;
     }
 
     @Override
@@ -262,8 +324,8 @@ public class SamplerImpl extends TimerTask implements Sampler {
     @Override
     public void record(long t0Ms, long t0Nano, long t1Nano, Operation op, Throwable... t) {
 
-        if (!started)
-        {
+        if (!started) {
+
             throw new IllegalStateException(this + " not started");
         }
 
@@ -274,10 +336,10 @@ public class SamplerImpl extends TimerTask implements Sampler {
 
         Counter counter = counters.get(op.getClass());
 
-        if (counter == null)
-        {
+        if (counter == null) {
+
             throw new IllegalArgumentException(
-                "no operation of type " + op.getClass() + " was registered with this sampler before startup");
+                    "no operation of type " + op.getClass() + " was registered with this sampler before startup");
         }
 
         counter.update(t0Ms, t0Nano, t1Nano, t);
@@ -460,9 +522,9 @@ public class SamplerImpl extends TimerTask implements Sampler {
         if (samplingIntervalMs <= samplingTaskRunIntervalMs)
         {
             throw new IllegalArgumentException(
-                "the sampling task run interval (" + samplingTaskRunIntervalMs +
-                    " ms) must be strictly smaller than sampling interval (" + samplingIntervalMs +
-                    " ms) to insure desired resolution");
+                    "the sampling task run interval (" + samplingTaskRunIntervalMs +
+                            " ms) must be strictly smaller than sampling interval (" + samplingIntervalMs +
+                            " ms) to insure desired resolution");
         }
     }
 

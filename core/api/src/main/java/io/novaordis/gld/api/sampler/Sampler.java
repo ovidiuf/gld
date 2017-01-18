@@ -21,6 +21,7 @@ import io.novaordis.gld.api.sampler.metrics.Metric;
 import io.novaordis.utilities.UserErrorException;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * A fixed-interval sampler. Once started, the sampler will continuously and regularly produce samples each
@@ -188,6 +189,8 @@ public interface Sampler {
      * be if the metric was already registered.
      */
     boolean registerMetric(Class<? extends Metric> metricType);
+
+    Set<Class<? extends Metric>> getMetricTypes();
 
     /**
      * Annotate the statistics, using the current time stamp.
