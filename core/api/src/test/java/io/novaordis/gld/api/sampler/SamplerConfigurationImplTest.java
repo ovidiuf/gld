@@ -14,29 +14,18 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.configuration;
-
-import io.novaordis.gld.api.sampler.SamplerConfiguration;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package io.novaordis.gld.api.sampler;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/8/16
+ * @since 1/18/17
  */
-public abstract class OutputConfigurationTest extends LowLevelConfigurationTest {
+public class SamplerConfigurationImplTest extends SamplerConfigurationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = LoggerFactory.getLogger(OutputConfigurationTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -48,38 +37,14 @@ public abstract class OutputConfigurationTest extends LowLevelConfigurationTest 
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
-    @Test
-    public void getSamplerConfiguration_Null() throws Exception {
-
-        Map<String, Object> raw = new HashMap<>();
-        raw.put(OutputConfiguration.SAMPLER_CONFIGURATION_LABEL, new HashMap<>());
-        //noinspection unchecked
-        ((Map<String, Object>)raw.get(OutputConfiguration.SAMPLER_CONFIGURATION_LABEL)).put("something", "somethingelse");
-        OutputConfiguration oc = getConfigurationToTest(raw, new File("."));
-
-        SamplerConfiguration sc = oc.getSamplerConfiguration();
-
-        assertNotNull(sc);
-
-        log.debug(".");
-    }
-
-    @Test
-    public void getSamplerConfiguration_NotNull() throws Exception {
-
-        Map<String, Object> raw = new HashMap<>();
-        OutputConfiguration oc = getConfigurationToTest(raw, new File("."));
-
-        SamplerConfiguration sc = oc.getSamplerConfiguration();
-
-        assertNull(sc);
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     @Override
-    protected abstract OutputConfiguration getConfigurationToTest(
-            Map<String, Object> rawMap, File configurationDirectory) throws Exception;
+    protected SamplerConfiguration getSamplerConfigurationToTest(
+            Map<String, Object> rawMap, File configurationDirectory) throws Exception {
+
+        return new SamplerConfigurationImpl(rawMap, configurationDirectory);
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

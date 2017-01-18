@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.configuration;
+package io.novaordis.gld.api.sampler;
 
-import io.novaordis.gld.api.sampler.SamplerConfiguration;
-import io.novaordis.gld.api.sampler.SamplerConfigurationImpl;
-import io.novaordis.utilities.UserErrorException;
+import io.novaordis.gld.api.configuration.LowLevelConfigurationBase;
 
 import java.io.File;
 import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 1/18/17
  */
-public class OutputConfigurationImpl extends LowLevelConfigurationBase implements OutputConfiguration {
+public class SamplerConfigurationImpl extends LowLevelConfigurationBase implements SamplerConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -38,32 +36,17 @@ public class OutputConfigurationImpl extends LowLevelConfigurationBase implement
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
-     * @param rawMap the raw map as extracted from the YAML file from the section corresponding to this type of
-     *            configuration.
+     * @param raw
      * @param configurationDirectory represents the directory the configuration file the map was extracted from lives
      *                               in. It is needed to resolve the configuration elements that are relative file
      *                               paths. All relative file paths will be resolved relatively to the directory that
      *                               contains the configuration file. The directory must exist, otherwise the
      *                               constructor will fail with IllegalArgumentException.
+     * @throws IllegalArgumentException if the configuration file directory is not null, it does not exist or
+     *                                  it is not a directory.
      */
-    public OutputConfigurationImpl(Map<String, Object> rawMap, File configurationDirectory) throws Exception {
-
-        super(rawMap, configurationDirectory);
-    }
-
-    // OutputConfiguration implementation ------------------------------------------------------------------------------
-
-    @Override
-    public SamplerConfiguration getSamplerConfiguration() throws UserErrorException {
-
-        Map<String, Object> m = get(OutputConfiguration.SAMPLER_CONFIGURATION_LABEL);
-
-        if (m.isEmpty()) {
-
-            return null;
-        }
-
-        return new SamplerConfigurationImpl(m, getConfigurationDirectory());
+    public SamplerConfigurationImpl(Map<String, Object> raw, File configurationDirectory) {
+        super(raw, configurationDirectory);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
