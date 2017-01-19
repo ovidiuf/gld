@@ -16,6 +16,8 @@
 
 package io.novaordis.gld.extensions.jboss.datagrid.common;
 
+import io.novaordis.utilities.NotYetImplementedException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -81,6 +83,12 @@ public class MockInfinispanCache implements InfinispanCache {
     public Set<String> keys() throws Exception {
 
         return storage.keySet();
+    }
+
+    @Override
+    public Object getDelegate() {
+
+        throw new NotYetImplementedException("getDelegate() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

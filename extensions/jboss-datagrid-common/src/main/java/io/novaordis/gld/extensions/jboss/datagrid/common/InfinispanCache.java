@@ -40,4 +40,11 @@ public interface InfinispanCache {
 
     Set<String> keys() throws Exception;
 
+    /**
+     * Give de-typed access to the underlying delegate. Usually a RemoteCache. We don't type the access to avoid
+     * declaring a dependency on client libraries. The implementation modules, which have access to the actual types,
+     * will cast.
+     */
+    Object getDelegate();
+
 }
