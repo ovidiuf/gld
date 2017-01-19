@@ -19,6 +19,7 @@ package io.novaordis.gld.extensions.jboss.datagrid.common;
 import io.novaordis.gld.api.cache.CacheServiceBase;
 import io.novaordis.gld.api.configuration.ImplementationConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
+import io.novaordis.gld.api.service.ServiceFactory;
 import io.novaordis.utilities.UserErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,16 @@ public abstract class JBossDatagridServiceBase extends CacheServiceBase {
     public static final String CACHE_NAME_LABEL = "cache";
 
     // Static ----------------------------------------------------------------------------------------------------------
+
+    /**
+     * We are exposing this as a static JBossDatagridServiceBase method because we don't want to make the extension
+     * modules directly dependent on io.novaordis.gld.api.service.ServiceFactory (API).
+     */
+    public static String extensionNameToExtensionServiceFullyQualifiedClassName(String extensionName)
+            throws UserErrorException {
+
+        return ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName(extensionName);
+    }
 
     // Attributes ------------------------------------------------------------------------------------------------------
 

@@ -519,6 +519,15 @@ public abstract class JBossDatagridServiceBaseTest {
         s.stop();
     }
 
+    // extensionNameToExtensionServiceFullyQualifiedClassName() --------------------------------------------------------
+
+    @Test
+    public void extensionNameToExtensionServiceFullyQualifiedClassName() throws Exception {
+
+        String s = JBossDatagridServiceBase.extensionNameToExtensionServiceFullyQualifiedClassName("blah-blah-blah");
+        assertEquals("io.novaordis.gld.extensions.blah.blah.blah.BlahBlahBlahService", s);
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     protected abstract JBossDatagridServiceBase getJBossDatagridServiceBaseToTest() throws Exception;
