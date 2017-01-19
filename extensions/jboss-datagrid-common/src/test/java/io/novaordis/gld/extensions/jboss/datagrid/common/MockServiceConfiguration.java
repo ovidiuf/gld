@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.extensions.jboss.datagrid;
+package io.novaordis.gld.extensions.jboss.datagrid.common;
 
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.service.ServiceType;
@@ -27,7 +27,7 @@ import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 1/10/17
+ * @since 1/19/17
  */
 public class MockServiceConfiguration implements ServiceConfiguration {
 

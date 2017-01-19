@@ -19,6 +19,7 @@
         -->
 
         <novaordis.utilities.version>4.4.0-SNAPSHOT-8</novaordis.utilities.version>
+        <gld.api.version>1.0.0-SNAPSHOT-36</gld.api.version>
         <slf4j.version>1.7.6</slf4j.version>
 
         <!--
@@ -35,6 +36,12 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>io.novaordis.gld</groupId>
+            <artifactId>gld-api</artifactId>
+            <version>${gld.api.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>io.novaordis.utilities</groupId>
             <artifactId>novaordis-utilities</artifactId>

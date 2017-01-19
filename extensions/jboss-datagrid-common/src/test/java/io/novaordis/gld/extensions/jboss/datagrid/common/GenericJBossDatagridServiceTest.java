@@ -14,22 +14,13 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.extensions.jboss.datagrid;
-
-import io.novaordis.gld.api.configuration.ImplementationConfiguration;
-import io.novaordis.gld.api.configuration.LowLevelConfigurationBase;
-import io.novaordis.utilities.NotYetImplementedException;
-import io.novaordis.utilities.UserErrorException;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
+package io.novaordis.gld.extensions.jboss.datagrid.common;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 1/10/17
+ * @since 1/19/17
  */
-public class MockImplementationConfiguration extends LowLevelConfigurationBase implements ImplementationConfiguration {
+public class GenericJBossDatagridServiceTest extends JBossDatagridServiceBaseTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -39,37 +30,16 @@ public class MockImplementationConfiguration extends LowLevelConfigurationBase i
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockImplementationConfiguration() {
-
-        super(new HashMap<>(), new File("."));
-    }
-
-    // ImplementationConfiguration implementation ----------------------------------------------------------------------
-
-
-    @Override
-    public String getExtensionName() throws UserErrorException {
-        throw new NotYetImplementedException("getExtensionName() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public String getExtensionClass() throws UserErrorException {
-        throw new NotYetImplementedException("getExtensionClass() NOT YET IMPLEMENTED");
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public void setNodes(List<Object> nodes) {
-
-        set(nodes, JBossDatagrid7Service.NODES_LABEL);
-    }
-
-    public void setCacheName(Object cacheName) {
-
-        set(cacheName, JBossDatagrid7Service.CACHE_NAME_LABEL);
-    }
+    // Tests -----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
+
+    @Override
+    protected JBossDatagridServiceBase getJBossDatagridServiceBaseToTest() throws Exception {
+        return new GenericJBossDatagridService();
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

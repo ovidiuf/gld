@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.extensions.jboss.datagrid;
+package io.novaordis.gld.extensions.jboss.datagrid.common;
 
 import io.novaordis.gld.api.KeyProvider;
 import io.novaordis.gld.api.LoadStrategy;
@@ -29,7 +29,7 @@ import java.util.Set;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 1/11/17
+ * @since 1/19/17
  */
 public class MockLoadStrategy implements LoadStrategy {
 
