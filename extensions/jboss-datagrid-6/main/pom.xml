@@ -7,8 +7,8 @@
     <name>GLD Extension for JBoss Data Grid 6 Integration Library</name>
 
     <parent>
-        <groupId>io.novaordis.gld.extensions.jboss-datagrid-6</groupId>
-        <artifactId>jboss-datagrid-6-gld-extension</artifactId>
+        <groupId>io.novaordis.gld.extensions.jboss-datagrid</groupId>
+        <artifactId>jboss-datagrid-6-root</artifactId>
         <version>1.0.0-SNAPSHOT-3</version>
     </parent>
 

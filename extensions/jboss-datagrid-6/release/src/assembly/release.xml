@@ -30,7 +30,7 @@
         <dependencySet>
             <outputDirectory>.</outputDirectory>
             <includes>
-                <include>io.novaordis.gld.extensions.jboss-datagrid-6:*</include>
+                <include>io.novaordis.gld.extensions.jboss-datagrid:*</include>
             </includes>
         </dependencySet>
 
@@ -41,7 +41,7 @@
         <dependencySet>
             <outputDirectory>${jboss.datagrid.version}</outputDirectory>
             <excludes>
-                <exclude>io.novaordis.gld.extensions.jboss-datagrid-6:*</exclude>
+                <exclude>io.novaordis.gld.extensions.jboss-datagrid:*</exclude>
             </excludes>
         </dependencySet>
 
