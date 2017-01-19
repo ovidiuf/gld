@@ -121,6 +121,8 @@ public class LoadDriverImpl implements LoadDriver {
     @Override
     public void init(Configuration c) throws Exception {
 
+        log.debug("initializing load driver " + this);
+
         ServiceConfiguration serviceConfiguration = c.getServiceConfiguration();
         LoadConfiguration loadConfiguration = c.getLoadConfiguration();
         StoreConfiguration storeConfiguration = c.getStoreConfiguration();

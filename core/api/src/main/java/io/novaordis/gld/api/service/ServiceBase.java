@@ -19,6 +19,8 @@ package io.novaordis.gld.api.service;
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.utilities.version.VersionUtilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -27,6 +29,8 @@ import io.novaordis.utilities.version.VersionUtilities;
 public abstract class ServiceBase implements Service {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(ServiceBase.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -61,6 +65,8 @@ public abstract class ServiceBase implements Service {
     public void setLoadDriver(LoadDriver d) {
 
         this.loadDriver = d;
+
+        log.debug(this + " was linked to the load driver " + d);
     }
 
     @Override
@@ -73,6 +79,8 @@ public abstract class ServiceBase implements Service {
     public void setLoadStrategy(LoadStrategy s) {
 
         this.loadStrategy = s;
+
+        log.debug(this + " was configured with the load strategy " + s);
     }
 
     // lifecycle -------------------------------------------------------------------------------------------------------
@@ -103,6 +111,8 @@ public abstract class ServiceBase implements Service {
         loadStrategy.start();
 
         started = true;
+
+        log.debug(this + " started");
     }
 
     /**

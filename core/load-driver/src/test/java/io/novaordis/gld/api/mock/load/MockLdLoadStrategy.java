@@ -73,7 +73,8 @@ public class MockLdLoadStrategy implements LoadStrategy {
 
     private KeyProvider keyProvider;
 
-    private CountDownLatch latch;
+    private CountDownLatch nextFirstInvocationLatch;
+    private CountDownLatch nextBlockLatch;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -97,6 +98,8 @@ public class MockLdLoadStrategy implements LoadStrategy {
         // we create an internal key provider
         //
         keyProvider = new MockKeyProvider();
+
+        nextFirstInvocationLatch = new CountDownLatch(1);
     }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
@@ -163,6 +166,8 @@ public class MockLdLoadStrategy implements LoadStrategy {
         }
 
         started = true;
+
+        log.info(this + " started");
     }
 
     @Override
@@ -213,7 +218,6 @@ public class MockLdLoadStrategy implements LoadStrategy {
             return null;
         }
 
-
         if (remainingOperations != null) {
 
             if (remainingOperations.getAndDecrement() <= 0) {
@@ -221,10 +225,12 @@ public class MockLdLoadStrategy implements LoadStrategy {
             }
         }
 
-        if (latch != null) {
+        nextFirstInvocationLatch.countDown();
+
+        if (nextBlockLatch != null) {
 
             log.info("blocking on latch ...");
-            latch.await();
+            nextBlockLatch.await();
         }
 
         MockOperation mo = new MockOperation();
@@ -258,19 +264,19 @@ public class MockLdLoadStrategy implements LoadStrategy {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public int getRemainingOperations()
-    {
-        int i = remainingOperations.get();
-
-        // the counter is decremented under 0, and that has "0" semantics
-
-        if (i < 0)
-        {
-            i = 0;
-        }
-
-        return i;
-    }
+//    public int getRemainingOperations() {
+//
+//        int i = remainingOperations.get();
+//
+//        // the counter is decremented under 0, and that has "0" semantics
+//
+//        if (i < 0) {
+//
+//            i = 0;
+//        }
+//
+//        return i;
+//    }
 
     @Override
     public String toString() {
@@ -289,6 +295,8 @@ public class MockLdLoadStrategy implements LoadStrategy {
     public void recordLifecycleComponentState() {
 
         this.recordLifecycleComponentState = true;
+
+        log.info(this + " was configured to record lifecycle component state");
     }
 
     public boolean[] getComponentStarted() {
@@ -296,9 +304,22 @@ public class MockLdLoadStrategy implements LoadStrategy {
         return componentStarted;
     }
 
-    public void blockIndefinitely() {
+    /**
+     * Do not block right now, when the method is invoked, but later, during the next() invocation.
+     */
+    public void blockIndefinitelyDuringTheInvocationOfNext() {
 
-        this.latch = new CountDownLatch(1);
+        this.nextBlockLatch = new CountDownLatch(1);
+
+        log.info(this + " was configured to block indefinitely during next() invocation");
+
+    }
+
+    public void waitUntilFirstInvocationOfNext() throws InterruptedException {
+
+        log.info("waiting for the first invocation of next() ...");
+
+        nextFirstInvocationLatch.await();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

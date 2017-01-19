@@ -54,8 +54,8 @@ public class MockSamplerConfiguration extends LowLevelConfigurationBase implemen
 
         super(raw, new File("."));
 
-        this.samplingTaskRunInterval = 1;
-        this.samplingInterval = 2;
+        this.samplingTaskRunInterval = DEFAULT_SAMPLING_TASK_RUN_INTERVAL_MS;
+        this.samplingInterval = DEFAULT_SAMPLING_INTERVAL_MS;
         setFile(new File("/dev/null"));
         this.metrics = Collections.emptyList();
     }

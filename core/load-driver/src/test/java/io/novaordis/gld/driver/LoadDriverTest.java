@@ -178,7 +178,7 @@ public abstract class LoadDriverTest {
 
         MockLdLoadStrategy mls = (MockLdLoadStrategy)service.getLoadStrategy();
         mls.recordLifecycleComponentState();
-        mls.blockIndefinitely();
+        mls.blockIndefinitelyDuringTheInvocationOfNext();
 
         //
         // init() does not start anything
@@ -255,7 +255,7 @@ public abstract class LoadDriverTest {
 
         MockLdLoadStrategy mls = (MockLdLoadStrategy)service.getLoadStrategy();
         mls.recordLifecycleComponentState();
-        mls.blockIndefinitely();
+        mls.blockIndefinitelyDuringTheInvocationOfNext();
 
         //
         // init() does not start anything
@@ -283,7 +283,10 @@ public abstract class LoadDriverTest {
 
         try {
 
+            log.info("initiating load driver run() ...");
+
             ld.run();
+
             fail("should have thrown exception");
         }
         catch(InterruptedException e) {
@@ -291,6 +294,11 @@ public abstract class LoadDriverTest {
             String msg = e.getMessage();
             log.info(msg);
         }
+
+        //
+        // wait until the first operation is requested from the load strategy
+        //
+        mls.waitUntilFirstInvocationOfNext();
 
         //
         // verify lifecycle-enabled component state when the first load strategy next() was called

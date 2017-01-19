@@ -21,6 +21,8 @@ import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.service.Service;
 import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.utilities.UserErrorException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -28,6 +30,8 @@ import java.util.Map;
 public abstract class LoadStrategyBase implements LoadStrategy {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(LoadStrategyBase.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -61,6 +65,8 @@ public abstract class LoadStrategyBase implements LoadStrategy {
         }
 
         started = true;
+
+        log.debug(this + " started");
     }
 
     @Override

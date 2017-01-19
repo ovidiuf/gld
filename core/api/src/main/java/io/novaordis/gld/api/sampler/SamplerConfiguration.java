@@ -42,7 +42,7 @@ public interface SamplerConfiguration extends LowLevelConfiguration {
     int DEFAULT_SAMPLING_INTERVAL_MS = 1000;
 
     String SAMPLING_TASK_RUN_INTERVAL_LABEL = "sampling-task-run-interval";
-    int DEFAULT_SAMPLING_TASK_RUN_INTERVAL = 250;
+    int DEFAULT_SAMPLING_TASK_RUN_INTERVAL_MS = 250;
 
     String METRICS_LABEL = "metrics";
 

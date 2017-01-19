@@ -73,7 +73,7 @@ public class SamplerImpl extends TimerTask implements Sampler {
 
     public SamplerImpl() {
 
-        this(SamplerConfiguration.DEFAULT_SAMPLING_TASK_RUN_INTERVAL,
+        this(SamplerConfiguration.DEFAULT_SAMPLING_TASK_RUN_INTERVAL_MS,
                 SamplerConfiguration.DEFAULT_SAMPLING_INTERVAL_MS);
     }
 
@@ -99,6 +99,8 @@ public class SamplerImpl extends TimerTask implements Sampler {
 
     @Override
     public void configure(SamplerConfiguration sc) throws UserErrorException {
+
+        log.debug("configuring " + this);
 
         String format = sc.getFormat();
 
@@ -150,6 +152,8 @@ public class SamplerImpl extends TimerTask implements Sampler {
         // can't register any operations yet, as we don't know what service we're sampling at this point, so
         // we will register them when we know, and the we will start the sampler
         //
+
+        log.debug(this + " configured");
     }
 
     @Override
@@ -205,7 +209,7 @@ public class SamplerImpl extends TimerTask implements Sampler {
             return;
         }
 
-        log.debug(this + " stopping");
+        log.debug(this + " stopping ...");
 
         // cancel all tasks, less the one that is currently executing.
         samplingTimer.cancel();
@@ -220,6 +224,8 @@ public class SamplerImpl extends TimerTask implements Sampler {
 
         samplingTimer = null;
         started = false;
+
+        log.debug(this + " stopped");
     }
 
     @Override
@@ -569,22 +575,21 @@ public class SamplerImpl extends TimerTask implements Sampler {
         }
     }
 
-    private void stopConsumers()
-    {
-        if (consumers == null)
-        {
+    private void stopConsumers() {
+
+        if (consumers == null) {
             return;
         }
 
-        for (SamplingConsumer c : consumers)
-        {
-            try
-            {
+        for (SamplingConsumer c : consumers) {
+
+            try {
+
                 log.debug(this + " attempting to stop " + c);
                 c.stop();
             }
-            catch (Throwable t)
-            {
+            catch (Throwable t) {
+
                 // protect ourselves against malfunctioning consumers
                 log.warn("sampling consumer " + c + " failed to handle stop gracefully", t);
             }

@@ -89,7 +89,7 @@ public class SamplerConfigurationImpl extends LowLevelConfigurationBase implemen
     public int getSamplingTaskRunInterval() {
 
         Integer i = get(Integer.class, SAMPLING_TASK_RUN_INTERVAL_LABEL);
-        i = i == null ? DEFAULT_SAMPLING_TASK_RUN_INTERVAL : i;
+        i = i == null ? DEFAULT_SAMPLING_TASK_RUN_INTERVAL_MS : i;
         return i;
     }
 

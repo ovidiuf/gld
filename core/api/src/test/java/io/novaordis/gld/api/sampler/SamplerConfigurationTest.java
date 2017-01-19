@@ -105,7 +105,7 @@ public abstract class SamplerConfigurationTest {
         assertEquals(SamplerConfiguration.DEFAULT_SAMPLING_INTERVAL_MS, c.getSamplingInterval());
         assertEquals(SamplerConfiguration.DEFAULT_FORMAT, c.getFormat());
         assertEquals(new File("./test.csv"), c.getFile());
-        assertEquals(SamplerConfiguration.DEFAULT_SAMPLING_TASK_RUN_INTERVAL, c.getSamplingTaskRunInterval());
+        assertEquals(SamplerConfiguration.DEFAULT_SAMPLING_TASK_RUN_INTERVAL_MS, c.getSamplingTaskRunInterval());
         assertTrue(c.getMetrics().isEmpty());
     }
 
