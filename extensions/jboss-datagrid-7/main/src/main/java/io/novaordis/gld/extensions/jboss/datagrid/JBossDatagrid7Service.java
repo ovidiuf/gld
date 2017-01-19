@@ -308,7 +308,7 @@ public class JBossDatagrid7Service extends CacheServiceBase {
     @Override
     public String toString() {
 
-        if (nodes.isEmpty()) {
+        if (nodes == null || nodes.isEmpty()) {
 
             return "unconfigured jboss datagrid 7 service";
         }
