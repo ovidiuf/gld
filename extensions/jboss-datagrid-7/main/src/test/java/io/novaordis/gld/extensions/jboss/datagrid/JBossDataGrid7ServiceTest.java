@@ -17,6 +17,7 @@
 package io.novaordis.gld.extensions.jboss.datagrid;
 
 import io.novaordis.gld.api.service.ServiceFactory;
+import io.novaordis.gld.extensions.jboss.datagrid.common.HotRodEndpointAddress;
 import io.novaordis.utilities.UserErrorException;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.junit.Test;

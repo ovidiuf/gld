@@ -20,6 +20,7 @@ import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.cache.CacheServiceBase;
 import io.novaordis.gld.api.configuration.ImplementationConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
+import io.novaordis.gld.extensions.jboss.datagrid.common.HotRodEndpointAddress;
 import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.version.VersionUtilities;
 import org.infinispan.client.hotrod.RemoteCache;
