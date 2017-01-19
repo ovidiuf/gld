@@ -24,12 +24,12 @@
     <dependencySets>
 
         <!--
-            We place the integration library into the root directory of the extension ZIP file
+            We place the integration libraries into the root directory of the extension ZIP file
         -->
         <dependencySet>
             <outputDirectory>.</outputDirectory>
             <includes>
-                <include>io.novaordis.gld.extensions.jboss-datagrid-7:*</include>
+                <include>io.novaordis.gld.extensions.jboss-datagrid:*</include>
             </includes>
         </dependencySet>
 
@@ -40,7 +40,7 @@
         <dependencySet>
             <outputDirectory>${jboss.datagrid.version}</outputDirectory>
             <excludes>
-                <exclude>io.novaordis.gld.extensions.jboss-datagrid-7:*</exclude>
+                <exclude>io.novaordis.gld.extensions.jboss-datagrid:*</exclude>
             </excludes>
         </dependencySet>
 

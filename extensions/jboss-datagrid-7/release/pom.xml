@@ -7,12 +7,12 @@
     <name>GLD Extension for JBoss Data Grid 7 Release Module</name>
 
     <parent>
-        <groupId>io.novaordis.gld.extensions.jboss-datagrid-7</groupId>
-        <artifactId>jboss-datagrid-7-gld-extension</artifactId>
+        <groupId>io.novaordis.gld.extensions.jboss-datagrid</groupId>
+        <artifactId>jboss-datagrid-7-root</artifactId>
         <version>1.0.0-SNAPSHOT-24</version>
     </parent>
 
-    <artifactId>release</artifactId>
+    <artifactId>jboss-datagrid-7-release</artifactId>
     <packaging>pom</packaging>
 
     <build>
@@ -46,7 +46,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.novaordis.gld.extensions.jboss-datagrid-7</groupId>
+            <groupId>io.novaordis.gld.extensions.jboss-datagrid</groupId>
             <artifactId>jboss-datagrid-7</artifactId>
             <version>${project.version}</version>
         </dependency>
