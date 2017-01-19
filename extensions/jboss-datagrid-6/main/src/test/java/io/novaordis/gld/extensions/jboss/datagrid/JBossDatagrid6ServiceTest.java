@@ -16,23 +16,22 @@
 
 package io.novaordis.gld.extensions.jboss.datagrid;
 
-import io.novaordis.gld.api.cache.CacheServiceBase;
-import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.utilities.NotYetImplementedException;
-import io.novaordis.utilities.UserErrorException;
-import io.novaordis.utilities.version.VersionUtilities;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Set;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/19/17
  */
-public class JBossDatagrid6Service extends CacheServiceBase {
+public class JBossDatagrid6ServiceTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    public static final String EXTENSION_VERSION_METADATA_FILE_NAME = "jboss-datagrid-6-extension-version";;
+    private static final Logger log = LoggerFactory.getLogger(JBossDatagrid6ServiceTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -40,40 +39,27 @@ public class JBossDatagrid6Service extends CacheServiceBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // CacheServiceBase overrides --------------------------------------------------------------------------------------
-
-    @Override
-    public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {
-        throw new NotYetImplementedException("configure() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public String get(String key) throws Exception {
-        throw new NotYetImplementedException("get() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void put(String key, String value) throws Exception {
-        throw new NotYetImplementedException("put() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void remove(String key) throws Exception {
-        throw new NotYetImplementedException("remove() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Set<String> keys() throws Exception {
-        throw new NotYetImplementedException("keys() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public String getVersion() {
-
-        return VersionUtilities.getVersion(EXTENSION_VERSION_METADATA_FILE_NAME);
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // Tests -----------------------------------------------------------------------------------------------------------
+
+    // version ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void version() throws Exception {
+
+        JBossDatagrid6Service s = new JBossDatagrid6Service();
+
+        String version = s.getVersion();
+
+        log.info(version);
+
+        assertNotNull(version);
+
+        String mavenInjectedProjectVersion = System.getProperty("maven.injected.project.version");
+        assertNotNull(mavenInjectedProjectVersion);
+        assertEquals(mavenInjectedProjectVersion, version);
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
