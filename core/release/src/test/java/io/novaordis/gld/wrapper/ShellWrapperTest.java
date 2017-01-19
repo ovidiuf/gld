@@ -189,6 +189,24 @@ public class ShellWrapperTest {
         assertEquals("mock-extension/1.0.0/mock-client-library-1.jar:mock-extension/mock-extension-logic.jar\n", s);
     }
 
+    @Test
+    public void getExtensionJars_TwoExtensionJars() throws Exception {
+
+        File extensionDir = new File(scratchDirectory, "mock-extension");
+        assertTrue(extensionDir.mkdir());
+
+        File mockExtensionJar = new File(extensionDir, "mock-extension-logic.jar");
+        assertTrue(Files.write(mockExtensionJar, "SYNTHETIC"));
+
+        File mockExtensionJar2 = new File(extensionDir, "mock-extension-logic-2.jar");
+        assertTrue(Files.write(mockExtensionJar2, "SYNTHETIC"));
+
+        String s = executeShellFunction("get-extension-jars", "mock-extension");
+
+        assertTrue(s.contains("mock-extension/mock-extension-logic.jar"));
+        assertTrue(s.contains("mock-extension/mock-extension-logic-2.jar"));
+        assertTrue(s.contains(":"));
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
