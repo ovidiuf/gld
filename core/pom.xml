@@ -24,7 +24,7 @@
 
     <groupId>io.novaordis.gld</groupId>
     <artifactId>GLD-CORE</artifactId>
-    <version>1.0.0-SNAPSHOT-40</version>
+    <version>1.0.0-SNAPSHOT-41</version>
     <packaging>pom</packaging>
 
     <properties>
