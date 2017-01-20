@@ -35,12 +35,17 @@
 
         <!--
             We place the service external dependencies under a sub-directory whose name is the version we ship
-            dependencies for. We do that by including everything, except the integration library.
+            dependencies for. We do that by including mostly everything, except the integration library, and the
+            dependencies of io.novaordis.gld.extensions.jboss-datagrid:jboss-datagrid-common, which was NOT declared as
+            <provided> because we needed its dependencies during compilation and testing. Those libraries, which are
+            the GLD API and *its* dependencies, will already be available in the runtime.
         -->
         <dependencySet>
             <outputDirectory>${jboss.datagrid.version}</outputDirectory>
             <excludes>
                 <exclude>io.novaordis.gld.extensions.jboss-datagrid:*</exclude>
+                <exclude>io.novaordis.gld:*</exclude>
+                <exclude>org.yaml:snakeyaml</exclude>
             </excludes>
         </dependencySet>
 
