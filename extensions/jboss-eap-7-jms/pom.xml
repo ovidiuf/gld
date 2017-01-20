@@ -1,0 +1,191 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <name>GLD Extension for JBoss EAP 7 JMS</name>
+
+    <groupId>io.novaordis.gld.extensions.jboss-eap-jms</groupId>
+    <artifactId>jboss-eap-7-root</artifactId>
+    <version>1.0.0-SNAPSHOT-1</version>
+    <packaging>pom</packaging>
+
+    <properties>
+
+        <!--
+            The official extension name
+        -->
+        <extension.name>jboss-eap-7-jms</extension.name>
+
+        <!--
+            Dependencies
+        -->
+
+        <gld.api.version>1.1.0</gld.api.version>
+        <novaordis.utilities.version>4.4.0</novaordis.utilities.version>
+        <slf4j.version>1.7.6</slf4j.version>
+        <!--
+        <jdg.infinspan.client.hotrod.version>8.3.0.Final-redhat-1</jdg.infinspan.client.hotrod.version>
+        -->
+
+        <!--
+            End of Dependencies
+        -->
+
+        <jboss.eap.version>7.0.0</jboss.eap.version>
+
+        <source.java.version>1.8</source.java.version>
+        <target.java.version>1.8</target.java.version>
+        <test.scratch.directory>target/test-scratch</test.scratch.directory>
+        <test.log.directory>target</test.log.directory>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.build.timestamp.format>MM/dd/yy</maven.build.timestamp.format>
+        <release_date>${maven.build.timestamp}</release_date>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>jboss-eap-repository</id>
+            <url>file:///Users/ovidiu/runtime/jboss-eap-7.0.0.GA-maven-repository/maven-repository</url>
+        </repository>
+        <repository>
+            <id>jboss-datagrid-repository</id>
+            <url>file:///Users/ovidiu/runtime/jboss-datagrid-${jboss.datagrid.version}-maven-repository/maven-repository</url>
+        </repository>
+    </repositories>
+
+    <modules>
+        <module>main</module>
+        <module>release</module>    
+    </modules> 
+
+    <dependencies>
+        <dependency>
+            <groupId>io.novaordis.gld.core</groupId>
+            <artifactId>gld-api</artifactId>
+            <version>${gld.api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.novaordis.utilities</groupId>
+            <artifactId>novaordis-utilities</artifactId>
+            <version>${novaordis.utilities.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-client-hotrod</artifactId>
+            <version>${jdg.infinspan.client.hotrod.version}</version>
+        </dependency>
+        -->
+
+        <!--
+            Testing Dependencies
+        -->
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+        <!--
+            Only for testing, we don't want to ship with a specific binding.
+        -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--
+            End of Testing Dependencies
+        -->
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <source>${source.java.version}</source>
+                    <target>${target.java.version}</target>
+                    <debug>true</debug>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant</artifactId>
+                        <version>1.7.0</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <phase>generate-test-resources</phase>
+                        <configuration>
+                            <tasks>
+                                <mkdir dir="${test.scratch.directory}"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>-Xmx512m</argLine>
+                    <systemProperties>
+                        <property>
+                            <name>test.log.directory</name>
+                            <value>${test.log.directory}</value>
+                        </property>
+                        <property>
+                            <name>test.scratch.directory</name>
+                            <value>${test.scratch.directory}</value>
+                        </property>
+                        <property>
+                            <name>maven.injected.project.version</name>
+                            <value>${project.version}</value>
+                        </property>
+                    </systemProperties>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,48 @@
+#
+# A sample GLD configuration file that configures the load driver to send traffic into a JBoss DataGrid 7 instance
+#
+# Can be used right away, and it assumes there is a JDG 7 instance listening hotrod on localhost:11222 (and possibly
+# on localhost:11422, though the example should work even if it does not listen on the second port). The instance
+# must have been previously configured with a "novaordis" cache under the "clustered" cache container:
+#
+#  gld -c ~/projects/gld/extensions/jboss-datagrid-7/main/src/test/resources/data/reference-gld-jboss-datagrid-7.0.yml
+#
+# The reference/example configuration/example is available here:
+# https://kb.novaordis.com/index.php/Jboss-datagrid-7_Gld_Extension
+#
+#
+service:
+
+  type: jms
+  message-size: 1024
+
+  implementation:
+    name: jboss-eap-7-jms
+    version: 7.0.4
+
+
+     # 'classpath' is optional; if specified, it takes precedence
+     # over the libraries we ship with. if 'classpath' is missing,
+     # or the JAR(s) cannot be loaded, we will use the shipped
+     # libraries
+
+    classpath: ${JDG_HOME}/client/hotrod.jar
+
+    #
+    # implementation-specific configuration
+    #
+    nodes:
+      - localhost:11222
+      - localhost:11422
+
+  load-strategy:
+    name: read-then-write-on-miss
+    reuse-value: true
+
+load:
+  threads: 1
+  operations: 10000
+
+output:
+  statistics:
+      file: test.csv
