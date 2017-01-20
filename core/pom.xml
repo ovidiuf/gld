@@ -23,7 +23,7 @@
     <name>Generic Load Driver</name>
 
     <groupId>io.novaordis.gld</groupId>
-    <artifactId>GLD-CORE</artifactId>
+    <artifactId>gld-core</artifactId>
     <version>1.0.0-SNAPSHOT-41</version>
     <packaging>pom</packaging>
 
