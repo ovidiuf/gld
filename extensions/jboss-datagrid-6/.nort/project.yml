@@ -7,6 +7,7 @@ build:
 
 publish:
   local.artifact.repository.root: ${M2}
+  release.tag: jboss-datagrid-6-release-${current.version}
 
 install:
   installation.directory: ${RUNTIME_DIR}/gld/extensions

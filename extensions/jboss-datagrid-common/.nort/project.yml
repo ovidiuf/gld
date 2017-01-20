@@ -1,0 +1,4 @@
+
+
+publish:
+  release.tag: jboss-datagrid-common-release-${current.version}
