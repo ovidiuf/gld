@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: io.novaordis.gld.core:gld-api:1.0.1-SNAPSHOT-1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/api/pom.xml!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/api/gld-api-1.0.1-SNAPSHOT-1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/api/gld-api-1.0.1-SNAPSHOT-1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
