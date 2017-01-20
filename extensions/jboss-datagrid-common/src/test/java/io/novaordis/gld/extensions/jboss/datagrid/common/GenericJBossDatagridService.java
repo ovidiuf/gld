@@ -59,7 +59,7 @@ public class GenericJBossDatagridService extends JBossDatagridServiceBase {
             return new MockInfinispanCache(DEFAULT_CACHE_NAME);
         }
         else {
-            
+
             return new MockInfinispanCache(cn);
         }
     }
