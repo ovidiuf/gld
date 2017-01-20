@@ -1,0 +1,7 @@
+target
+.idea/workspace.xml
+*.iws
+.DS_Store
+~$*.docx
+.~*odg#
+
