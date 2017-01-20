@@ -22,7 +22,7 @@
             Dependencies
         -->
 
-        <gld.extension.jboss.datagrid.common.version>1.0.0-SNAPSHOT-9</gld.extension.jboss.datagrid.common.version>
+        <gld.extension.jboss.datagrid.common.version>1.0.0-SNAPSHOT-11</gld.extension.jboss.datagrid.common.version>
         <novaordis.utilities.version>4.4.0-SNAPSHOT-8</novaordis.utilities.version>
         <slf4j.version>1.7.6</slf4j.version>
         <jdg.infinspan.client.hotrod.version>8.3.0.Final-redhat-1</jdg.infinspan.client.hotrod.version>

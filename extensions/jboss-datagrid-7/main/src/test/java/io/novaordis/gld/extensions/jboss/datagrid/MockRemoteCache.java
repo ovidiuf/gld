@@ -54,11 +54,6 @@ public class MockRemoteCache implements RemoteCache {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockRemoteCache(String name) {
-
-        this(name, null);
-    }
-
     public MockRemoteCache(String name, MockRemoteCacheManager manager) {
 
         this.name = name;
@@ -71,6 +66,7 @@ public class MockRemoteCache implements RemoteCache {
 
     @Override
     public boolean removeWithVersion(Object key, long version) {
+
         throw new NotYetImplementedException("removeWithVersion() NOT YET IMPLEMENTED");
     }
 
@@ -476,6 +472,12 @@ public class MockRemoteCache implements RemoteCache {
     public void stop() {
 
         this.started = false;
+    }
+
+    @Override
+    public String toString() {
+
+        return "MockRemoteCache[" + getName() + "]";
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

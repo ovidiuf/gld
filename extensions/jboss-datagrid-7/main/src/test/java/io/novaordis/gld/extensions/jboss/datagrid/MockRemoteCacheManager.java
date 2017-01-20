@@ -19,6 +19,7 @@ package io.novaordis.gld.extensions.jboss.datagrid;
 import io.novaordis.utilities.NotYetImplementedException;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
+import org.infinispan.client.hotrod.configuration.Configuration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,14 +44,16 @@ public class MockRemoteCacheManager extends RemoteCacheManager {
     private RuntimeException getCacheFailureCause;
     private Map<String, MockRemoteCache> caches;
 
+    private Configuration infinispanConfiguration;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockRemoteCacheManager() {
+    public MockRemoteCacheManager(Configuration infinispanConfiguration) {
 
         this.started = false;
         this.caches = new HashMap<>();
         this.caches.put(DEFAULT_CACHE_NAME, new MockRemoteCache(DEFAULT_CACHE_NAME, this));
+        this.infinispanConfiguration = infinispanConfiguration;
     }
 
     // Overrides -------------------------------------------------------------------------------------------------------
@@ -148,6 +151,11 @@ public class MockRemoteCacheManager extends RemoteCacheManager {
         }
         mc.setRemoteCacheManager(this);
         caches.put(cacheName, mc);
+    }
+
+    public Configuration getConfiguration() {
+
+        return infinispanConfiguration;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

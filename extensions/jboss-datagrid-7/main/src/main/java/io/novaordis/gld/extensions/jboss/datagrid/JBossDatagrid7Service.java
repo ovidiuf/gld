@@ -48,7 +48,20 @@ public class JBossDatagrid7Service extends JBossDatagridServiceBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private CacheManagerFactory cacheManagerFactory;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public JBossDatagrid7Service() {
+
+        super();
+
+        //
+        // initialize the cacheManagerFactory with the default
+        //
+
+        this.cacheManagerFactory = RemoteCacheManager::new;
+    }
 
     // Overrides -------------------------------------------------------------------------------------------------------
 
@@ -74,7 +87,7 @@ public class JBossDatagrid7Service extends JBossDatagridServiceBase {
 
             Configuration infinispanConfiguration = configurationBuilder.build();
 
-            RemoteCacheManager remoteCacheManager = new RemoteCacheManager(infinispanConfiguration);
+            RemoteCacheManager remoteCacheManager = cacheManagerFactory.buildCacheManager(infinispanConfiguration);
 
             String cn = getCacheName();
 
@@ -130,7 +143,17 @@ public class JBossDatagrid7Service extends JBossDatagridServiceBase {
 
     // Package protected -----------------------------------------------------------------------------------------------
 
+    void setCacheManagerFactory(CacheManagerFactory cacheManagerFactory) {
+
+        this.cacheManagerFactory = cacheManagerFactory;
+    }
+
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected void addNode(HotRodEndpointAddress a) {
+
+        super.addNode(a);
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 
