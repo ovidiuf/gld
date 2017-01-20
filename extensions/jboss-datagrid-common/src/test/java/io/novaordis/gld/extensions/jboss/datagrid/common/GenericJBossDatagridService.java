@@ -52,8 +52,16 @@ public class GenericJBossDatagridService extends JBossDatagridServiceBase {
             throw configureAndStartInfinispanCacheException;
         }
 
+        String cn = getCacheName();
 
-        return new MockInfinispanCache(DEFAULT_CACHE_NAME);
+        if (cn == null) {
+
+            return new MockInfinispanCache(DEFAULT_CACHE_NAME);
+        }
+        else {
+            
+            return new MockInfinispanCache(cn);
+        }
     }
 
     @Override

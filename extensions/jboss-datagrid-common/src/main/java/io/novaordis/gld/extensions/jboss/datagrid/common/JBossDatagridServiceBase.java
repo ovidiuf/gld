@@ -170,6 +170,7 @@ public abstract class JBossDatagridServiceBase extends CacheServiceBase {
 
         super.stop();
         stopInfinispanCache(cache);
+        cache = null;
     }
 
     // CacheService implementation -------------------------------------------------------------------------------------

@@ -334,11 +334,6 @@ public abstract class JBossDatagridServiceBaseTest {
         // mocks insure that all goes smoothly
         //
 
-//        MockRemoteCache mc = new MockRemoteCache(cacheName);
-//        final MockRemoteCacheManager mcb = new MockRemoteCacheManager();
-//        mcb.setCache(mc);
-//        s.setCacheManagerFactory(infinispanConfiguration -> mcb);
-
         //
         // no cache name is specified, we assume default cache
         //
@@ -359,6 +354,8 @@ public abstract class JBossDatagridServiceBaseTest {
         s.start();
 
         InfinispanCache c = s.getCache();
+
+        assertNotNull(c);
 
         assertTrue(ms.isStarted());
 
