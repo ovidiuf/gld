@@ -277,17 +277,17 @@ public abstract class JBossDatagridServiceBase extends CacheServiceBase {
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    void addNode(HotRodEndpointAddress n) {
-
-        nodes.add(n);
-    }
-
     void setCacheName(String s) {
 
         this.cacheName = s;
     }
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected void addNode(HotRodEndpointAddress n) {
+
+        nodes.add(n);
+    }
 
     protected  abstract InfinispanCache configureAndStartInfinispanCache() throws Exception;
 
