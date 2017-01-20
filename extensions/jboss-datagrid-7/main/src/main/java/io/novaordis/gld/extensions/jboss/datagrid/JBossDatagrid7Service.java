@@ -16,11 +16,9 @@
 
 package io.novaordis.gld.extensions.jboss.datagrid;
 
-import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.cache.CacheServiceBase;
-import io.novaordis.gld.api.configuration.ImplementationConfiguration;
-import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.extensions.jboss.datagrid.common.HotRodEndpointAddress;
+import io.novaordis.gld.extensions.jboss.datagrid.common.InfinispanCache;
+import io.novaordis.gld.extensions.jboss.datagrid.common.JBossDatagridServiceBase;
 import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.version.VersionUtilities;
 import org.infinispan.client.hotrod.RemoteCache;
@@ -30,11 +28,6 @@ import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 /**
  * This version is coded under the assumption that the cache container name does not make any difference, and all that
  * matters is the cache name. A cursory examination of the API did not seem to allow for specifying the "cache container
@@ -43,7 +36,7 @@ import java.util.Set;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/14/16
  */
-public class JBossDatagrid7Service extends CacheServiceBase {
+public class JBossDatagrid7Service extends JBossDatagridServiceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -51,42 +44,11 @@ public class JBossDatagrid7Service extends CacheServiceBase {
 
     public static final String EXTENSION_VERSION_METADATA_FILE_NAME = "jboss-datagrid-7-extension-version";
 
-    public static final String NODES_LABEL = "nodes";
-    public static final String CACHE_NAME_LABEL = "cache";
-
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    //
-    // cache manager factory was made pluggable for testing only
-    //
-    private CacheManagerFactory cacheManagerFactory;
-
-    private List<HotRodEndpointAddress> nodes;
-
-    //
-    // null means "default cache"
-    //
-    private String cacheName;
-
-    private RemoteCache cache;
-
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    public JBossDatagrid7Service() {
-
-        this(null);
-    }
-
-    public JBossDatagrid7Service(LoadStrategy ls) {
-
-        setLoadStrategy(ls);
-
-        this.nodes = new ArrayList<>();
-
-        log.debug(this + " constructed");
-    }
 
     // Overrides -------------------------------------------------------------------------------------------------------
 
@@ -96,107 +58,43 @@ public class JBossDatagrid7Service extends CacheServiceBase {
         return VersionUtilities.getVersion(EXTENSION_VERSION_METADATA_FILE_NAME);
     }
 
-    @Override
-    public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {
-
-        ImplementationConfiguration ic = serviceConfiguration.getImplementationConfiguration();
-
-        List<Object> list = ic.getList(NODES_LABEL);
-
-        if (list.isEmpty()) {
-
-            throw new UserErrorException("at least one JDG node must be specified");
-        }
-
-        //
-        // nodes
-        //
-
-        for(Object o: list) {
-
-            if (!(o instanceof String)) {
-
-                throw new UserErrorException(
-                        "'" + NODES_LABEL + "' should be a String list, but it was found to contain " +
-                                o.getClass().getSimpleName() + "s");
-            }
-
-            String nodeSpecification = (String)o;
-            HotRodEndpointAddress n = new HotRodEndpointAddress(nodeSpecification);
-            addNode(n);
-        }
-
-        //
-        // cache name - also turn invalid values in UserErrorExceptions
-        //
-
-        try {
-
-            this.cacheName = ic.get(String.class, CACHE_NAME_LABEL);
-
-        } catch (Exception e) {
-
-            throw new UserErrorException(e);
-        }
-
-        try {
-
-            this.cacheManagerFactory = RemoteCacheManager::new;
-        }
-        catch(Throwable t) {
-
-            throw new UserErrorException(t);
-        }
-
-        log.debug(this + " configured");
-    }
+    // JBossDatagridServiceBase overrides ------------------------------------------------------------------------------
 
     @Override
-    public synchronized void start() throws Exception {
-
-        if (isStarted()) {
-
-            //
-            // noop
-            //
-            log.debug(this + " already started");
-
-            return;
-        }
-
-        super.start();
-
-        if (nodes.isEmpty()) {
-
-            throw new IllegalStateException(this + ": no nodes");
-        }
+    public InfinispanCache configureAndStartInfinispanCache() throws UserErrorException {
 
         try {
 
             ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
 
-            for (HotRodEndpointAddress n : nodes) {
+            for (HotRodEndpointAddress n : getNodes()) {
 
                 configurationBuilder.addServer().host(n.getHost()).port(n.getPort());
             }
 
             Configuration infinispanConfiguration = configurationBuilder.build();
 
-            RemoteCacheManager remoteCacheManager = cacheManagerFactory.buildCacheManager(infinispanConfiguration);
+            RemoteCacheManager remoteCacheManager = new RemoteCacheManager(infinispanConfiguration);
 
-            if (cacheName == null) {
+            String cn = getCacheName();
 
-                cache = remoteCacheManager.getCache();
+            RemoteCache rc;
+
+            if (cn == null) {
+
+                rc = remoteCacheManager.getCache();
 
             } else {
 
-                cache = remoteCacheManager.getCache(cacheName);
+                rc = remoteCacheManager.getCache(cn);
             }
 
-            if (cache == null) {
+            if (rc == null) {
 
-                throw new Exception("no such cache: " + cacheName);
+                throw new Exception("no such cache: " + cn);
             }
+
+            return new InfinispanCacheImpl(rc);
         }
         catch (UserErrorException e) {
 
@@ -206,32 +104,19 @@ public class JBossDatagrid7Service extends CacheServiceBase {
 
             throw new UserErrorException("failed to start jboss datagrid 7 service", e);
         }
+
     }
 
     @Override
-    public synchronized boolean isStarted() {
-
-        return cache != null;
-    }
-
-    @Override
-    public synchronized void stop() {
-
-        if (!isStarted()) {
-
-            //
-            // noop
-            //
-            log.debug(this + " already stopped");
-            return;
-        }
-
-        super.stop();
+    protected void stopInfinispanCache(InfinispanCache cache) {
 
         try {
 
-            cache.stop();
-            cache.getRemoteCacheManager().stop();
+            Object delegate = cache.getDelegate();
+            RemoteCache remoteCache = (RemoteCache)delegate;
+
+            remoteCache.stop();
+            remoteCache.getRemoteCacheManager().stop();
             cache = null;
         }
         catch(Throwable t) {
@@ -241,140 +126,13 @@ public class JBossDatagrid7Service extends CacheServiceBase {
         }
     }
 
-    // CacheService implementation -------------------------------------------------------------------------------------
-
-    public String get(String key) throws Exception {
-
-        checkStarted();
-
-        return (String)cache.get(key);
-    }
-
-    public void put(String key, String value) throws Exception {
-
-        checkStarted();
-
-        //noinspection unchecked
-        cache.put(key, value);
-    }
-
-    public void remove(String key) throws Exception {
-
-        checkStarted();
-
-        cache.remove(key);
-    }
-
-    public Set<String> keys() throws Exception {
-
-        checkStarted();
-
-        //noinspection unchecked
-        return cache.keySet();
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
-    /**
-     * @return the actual storage. May return an empty list, but never null.
-     */
-    public List<HotRodEndpointAddress> getNodes() {
-
-        return nodes;
-    }
-
-    /**
-     * @return the cache name.
-     *
-     * If the instance was configured but not started, a null value means "default cache".
-     *
-     * After the instance was started successfully, and thus a cache retrieved, the method will never return null,
-     * as there cannot be a no-name cache.
-     */
-    public String getCacheName() {
-
-        if (cache != null) {
-
-            //
-            // "real" name takes precedence
-            //
-
-            return cache.getName();
-        }
-
-        return cacheName;
-    }
-
-    @Override
-    public String toString() {
-
-        if (nodes == null || nodes.isEmpty()) {
-
-            return "unconfigured jboss datagrid 7 service";
-        }
-
-        String s = "";
-
-        for(Iterator<HotRodEndpointAddress> i = getNodes().iterator(); i.hasNext(); ) {
-
-            s += i.next();
-
-            if (i.hasNext()) {
-
-                s += ", ";
-            }
-        }
-
-        String n = getCacheName();
-
-        if (n == null) {
-
-            n = "DEFAULT CACHE";
-        }
-
-        s += " (" + n + ")";
-
-        return s;
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
-
-    void addNode(HotRodEndpointAddress n) {
-
-        nodes.add(n);
-    }
-
-    /**
-     * For testing only.
-     */
-    void setCacheManagerFactory(CacheManagerFactory cacheManagerFactory) {
-
-        this.cacheManagerFactory = cacheManagerFactory;
-    }
-
-    void setCacheName(String cacheName) {
-
-        this.cacheName = cacheName;
-    }
-
-    /**
-     * May return null.
-     */
-    RemoteCache getCache() {
-
-        return cache;
-    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
-
-    private void checkStarted() throws IllegalStateException {
-
-        if (!isStarted()) {
-            throw new IllegalStateException(this + " not started");
-        }
-    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

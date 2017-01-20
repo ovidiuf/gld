@@ -9,9 +9,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: io.novaordis.gld:gld-api:1.0.0-SNAPSHOT-36" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.yaml:snakeyaml:1.17" level="project" />
-    <orderEntry type="library" name="Maven: io.novaordis.gld.extensions.jboss-datagrid:jboss-datagrid-common:1.0.0-SNAPSHOT-1" level="project" />
+    <orderEntry type="library" name="Maven: io.novaordis.gld.extensions.jboss-datagrid:jboss-datagrid-common:1.0.0-SNAPSHOT-9" level="project" />
+    <orderEntry type="library" name="Maven: io.novaordis.gld:gld-api:1.0.0-SNAPSHOT-40" level="project" />
+    <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.17" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.novaordis.utilities:novaordis-utilities:4.4.0-SNAPSHOT-8" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: log4j:log4j:1.2.16" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.slf4j:slf4j-api:1.7.6" level="project" />
