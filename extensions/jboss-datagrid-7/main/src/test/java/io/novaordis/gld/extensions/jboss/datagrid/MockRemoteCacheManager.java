@@ -41,7 +41,6 @@ public class MockRemoteCacheManager extends RemoteCacheManager {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private boolean started;
-    private RuntimeException getCacheFailureCause;
     private Map<String, MockRemoteCache> caches;
 
     private Configuration infinispanConfiguration;
@@ -62,22 +61,12 @@ public class MockRemoteCacheManager extends RemoteCacheManager {
     @Override
     public RemoteCache getCache() {
 
-        if (getCacheFailureCause != null) {
-
-            throw getCacheFailureCause;
-        }
-
         return caches.get(DEFAULT_CACHE_NAME);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public RemoteCache getCache(String cacheName) {
-
-        if (getCacheFailureCause != null) {
-
-            throw getCacheFailureCause;
-        }
 
         MockRemoteCache mc = caches.get(cacheName);
 
@@ -128,30 +117,6 @@ public class MockRemoteCacheManager extends RemoteCacheManager {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public void makeFail(String methodName, RuntimeException cause) {
-
-        if ("getCache".equals(methodName)) {
-
-            getCacheFailureCause = cause;
-        }
-        else {
-
-            throw new NotYetImplementedException("we don't know how to make fail " + methodName + "(...)");
-        }
-    }
-
-    public void setCache(MockRemoteCache mc) {
-
-        String cacheName = mc.getName();
-
-        if (cacheName == null) {
-
-            throw new IllegalArgumentException("cache has null name");
-        }
-        mc.setRemoteCacheManager(this);
-        caches.put(cacheName, mc);
-    }
 
     public Configuration getConfiguration() {
 
