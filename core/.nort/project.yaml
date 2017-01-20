@@ -3,7 +3,7 @@
 #
 qualification:
 
-  os.command.to.get.installed.version: gld version
+#  os.command.to.get.installed.version: gld version
 
 build:
 
