@@ -89,7 +89,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
 
             String msg = e.getMessage();
             log.info(e.getMessage());
-            assertTrue(msg.matches("'key-size' is not an integer"));
+            assertTrue(msg.matches("'key-size' is not an integer.*"));
 
             IllegalStateException e2 = (IllegalStateException)e.getCause();
             String msg2 = e2.getMessage();
@@ -152,7 +152,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
 
             String msg = e.getMessage();
             log.info(e.getMessage());
-            assertTrue(msg.matches("'value-size' is not an integer"));
+            assertTrue(msg.matches("'value-size' is not an integer.*"));
 
             IllegalStateException e2 = (IllegalStateException)e.getCause();
             String msg2 = e2.getMessage();

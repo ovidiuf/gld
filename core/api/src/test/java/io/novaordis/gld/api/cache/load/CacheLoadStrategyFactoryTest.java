@@ -91,7 +91,7 @@ public class CacheLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("class io.novaordis.gld.api.cache.load.SurelyThereIsNoSuchLoadStrategy not found", msg);
+            assertEquals("ClassNotFoundException io.novaordis.gld.api.cache.load.SurelyThereIsNoSuchLoadStrategy", msg);
         }
     }
 

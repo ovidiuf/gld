@@ -30,6 +30,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -85,8 +86,8 @@ public class ServiceFactoryTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("extension class i.am.sure.there.is.no.such.Class not found, make sure the corresponding extension was installed",
-                    msg);
+            assertTrue(msg.matches(
+                    "extension class i.am.sure.there.is.no.such.Class not found, make sure the corresponding extension was installed.*"));
         }
     }
 

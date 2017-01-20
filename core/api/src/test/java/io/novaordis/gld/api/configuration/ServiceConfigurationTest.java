@@ -134,7 +134,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
 
             String msg = e.getMessage();
             log.info(msg);
-            Assert.assertTrue(msg.matches("unknown service type 'no-such-type'"));
+            Assert.assertTrue(msg.matches("unknown service type 'no-such-type'.*"));
             Throwable t = e.getCause();
             assertNotNull(t);
         }
@@ -197,7 +197,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("'" + ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL + "' not a map", msg);
+            assertTrue(msg.matches("'" + ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL + "' not a map.*"));
 
             IllegalStateException e2 = (IllegalStateException)e.getCause();
             assertNotNull(e2);
@@ -270,7 +270,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
 
             String msg = e.getMessage();
             log.info(msg);
-            Assert.assertTrue(msg.matches("'load-strategy' not a map"));
+            Assert.assertTrue(msg.matches("'load-strategy' not a map.*"));
 
             IllegalStateException e2 = (IllegalStateException)e.getCause();
             String msg2 = e2.getMessage();

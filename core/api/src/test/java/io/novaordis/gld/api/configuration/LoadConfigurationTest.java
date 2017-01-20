@@ -69,7 +69,7 @@ public abstract class LoadConfigurationTest extends LowLevelConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("'" + LoadConfiguration.THREAD_COUNT_LABEL + "' not an integer", msg);
+            assertTrue(msg.matches("'" + LoadConfiguration.THREAD_COUNT_LABEL + "' not an integer.*"));
 
             IllegalStateException e2 = (IllegalStateException)e.getCause();
             String msg2 = e2.getMessage();
@@ -120,7 +120,7 @@ public abstract class LoadConfigurationTest extends LowLevelConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals( "'" + LoadConfiguration.OPERATION_COUNT_LABEL + "' not a long", msg);
+            assertTrue(msg.matches("'" + LoadConfiguration.OPERATION_COUNT_LABEL + "' not a long.*"));
 
             IllegalStateException e2 = (IllegalStateException)e.getCause();
             String msg2 = e2.getMessage();
@@ -136,7 +136,7 @@ public abstract class LoadConfigurationTest extends LowLevelConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("'" + LoadConfiguration.OPERATION_COUNT_LABEL + "' not a long", msg);
+            assertTrue(msg.matches("'" + LoadConfiguration.OPERATION_COUNT_LABEL + "' not a long.*"));
 
             IllegalStateException e2 = (IllegalStateException)e.getCause();
             String msg2 = e2.getMessage();
@@ -152,7 +152,7 @@ public abstract class LoadConfigurationTest extends LowLevelConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("'" + LoadConfiguration.OPERATION_COUNT_LABEL + "' not a long", msg);
+            assertTrue(msg.matches("'" + LoadConfiguration.OPERATION_COUNT_LABEL + "' not a long.*"));
 
             IllegalStateException e2 = (IllegalStateException)e.getCause();
             String msg2 = e2.getMessage();
@@ -176,7 +176,7 @@ public abstract class LoadConfigurationTest extends LowLevelConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("'" + LoadConfiguration.REQUEST_COUNT_LABEL + "' not a long", msg);
+            assertTrue(msg.matches("'" + LoadConfiguration.REQUEST_COUNT_LABEL + "' not a long.*"));
 
             IllegalStateException e2 = (IllegalStateException)e.getCause();
             String msg2 = e2.getMessage();
@@ -192,7 +192,7 @@ public abstract class LoadConfigurationTest extends LowLevelConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("'" + LoadConfiguration.REQUEST_COUNT_LABEL + "' not a long", msg);
+            assertTrue(msg.matches("'" + LoadConfiguration.REQUEST_COUNT_LABEL + "' not a long.*"));
 
             IllegalStateException e2 = (IllegalStateException)e.getCause();
             String msg2 = e2.getMessage();
@@ -208,7 +208,7 @@ public abstract class LoadConfigurationTest extends LowLevelConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("'" + LoadConfiguration.REQUEST_COUNT_LABEL + "' not a long",  msg);
+            assertTrue(msg.matches("'" + LoadConfiguration.REQUEST_COUNT_LABEL + "' not a long.*"));
 
             IllegalStateException e2 = (IllegalStateException)e.getCause();
             String msg2 = e2.getMessage();
@@ -232,7 +232,7 @@ public abstract class LoadConfigurationTest extends LowLevelConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("'" + LoadConfiguration.MESSAGE_COUNT_LABEL + "' not a long", msg);
+            assertTrue(msg.matches("'" + LoadConfiguration.MESSAGE_COUNT_LABEL + "' not a long.*"));
 
             IllegalStateException e2 = (IllegalStateException)e.getCause();
             String msg2 = e2.getMessage();
@@ -248,7 +248,7 @@ public abstract class LoadConfigurationTest extends LowLevelConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("'" + LoadConfiguration.MESSAGE_COUNT_LABEL + "' not a long", msg);
+            assertTrue(msg.matches("'" + LoadConfiguration.MESSAGE_COUNT_LABEL + "' not a long.*"));
 
             IllegalStateException e2 = (IllegalStateException)e.getCause();
             String msg2 = e2.getMessage();
@@ -264,7 +264,7 @@ public abstract class LoadConfigurationTest extends LowLevelConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("'" + LoadConfiguration.MESSAGE_COUNT_LABEL + "' not a long", msg);
+            assertTrue(msg.matches("'" + LoadConfiguration.MESSAGE_COUNT_LABEL + "' not a long.*"));
 
             IllegalStateException e2 = (IllegalStateException)e.getCause();
             String msg2 = e2.getMessage();

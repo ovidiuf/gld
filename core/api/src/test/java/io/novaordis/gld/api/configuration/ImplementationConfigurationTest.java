@@ -99,7 +99,7 @@ public abstract class ImplementationConfigurationTest extends LowLevelConfigurat
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("expected name to be a String but it is a(n) Integer: \"2\"", msg);
+            assertEquals("IllegalStateException expected name to be a String but it is a(n) Integer: \"2\"", msg);
 
             IllegalStateException e2 = (IllegalStateException)e.getCause();
             assertNotNull(e2);
@@ -133,7 +133,7 @@ public abstract class ImplementationConfigurationTest extends LowLevelConfigurat
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("expected class to be a String but it is a(n) Integer: \"2\"", msg);
+            assertEquals("IllegalStateException expected class to be a String but it is a(n) Integer: \"2\"", msg);
 
             IllegalStateException e2 = (IllegalStateException)e.getCause();
             assertNotNull(e2);

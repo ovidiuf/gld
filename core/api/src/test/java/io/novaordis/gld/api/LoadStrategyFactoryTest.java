@@ -104,9 +104,10 @@ public abstract class LoadStrategyFactoryTest {
         }
         catch(UserErrorException e) {
 
-            assertEquals(
-                    "failed to instantiate a load strategy factory corresponding to class I.am.sure.this.class.does.not.exist",
-                    e.getMessage());
+            String msg = e.getMessage();
+
+            assertTrue(msg.matches(
+                    "failed to instantiate a load strategy factory corresponding to class I.am.sure.this.class.does.not.exist.*"));
 
             ClassNotFoundException e2 = (ClassNotFoundException)e.getCause();
             assertNotNull(e2);
@@ -173,7 +174,7 @@ public abstract class LoadStrategyFactoryTest {
             String msg = e.getMessage();
             log.info(msg);
             assertTrue(msg.matches(
-                    "failed to instantiate a load strategy factory corresponding to a service of type unknown"));
+                    "failed to instantiate a load strategy factory corresponding to a service of type unknown.*"));
             Throwable t = e.getCause();
             assertTrue(t instanceof ClassNotFoundException);
         }

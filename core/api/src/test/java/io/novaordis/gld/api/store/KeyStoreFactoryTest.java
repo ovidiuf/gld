@@ -28,6 +28,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -100,7 +101,7 @@ public class KeyStoreFactoryTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("unknown key store type \"i-am-sure-there-is-no-such-store-type\"", msg);
+            assertTrue(msg.matches("unknown key store type \"i-am-sure-there-is-no-such-store-type\".*"));
 
             ClassNotFoundException cause = (ClassNotFoundException)e.getCause();
             assertNotNull(cause);

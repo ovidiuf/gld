@@ -54,7 +54,7 @@ public class ClassLoadingUtilitiesTest extends Assert {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertTrue(msg.matches("class io\\.novaordis\\.gld\\.api\\.nosuchpackage\\.WinningStrategy not found"));
+            assertEquals("ClassNotFoundException io.novaordis.gld.api.nosuchpackage.WinningStrategy", msg);
 
             Throwable t = e.getCause();
             assertTrue(t instanceof ClassNotFoundException);
@@ -76,7 +76,7 @@ public class ClassLoadingUtilitiesTest extends Assert {
             String msg = e.getMessage();
             log.info(msg);
             assertTrue(msg.matches(
-                    "io\\.novaordis\\.gld\\.api\\.mockpackage\\.WinningStrategy does not implement interface io.novaordis.gld.api.MockInterface2"));
+                    "io\\.novaordis\\.gld\\.api\\.mockpackage\\.WinningStrategy does not implement interface io.novaordis.gld.api.MockInterface2.*"));
 
             Throwable t = e.getCause();
             assertTrue(t instanceof ClassCastException);

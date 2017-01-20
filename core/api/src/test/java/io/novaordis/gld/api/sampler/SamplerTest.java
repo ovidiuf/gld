@@ -538,7 +538,7 @@ public abstract class SamplerTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("invalid metric type NoSuchMetric", msg);
+            assertTrue(msg.matches("invalid metric type NoSuchMetric.*"));
         }
     }
 
@@ -564,7 +564,7 @@ public abstract class SamplerTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertTrue(msg.matches("cannot write file .*, it is either a directory or wrong permissions are in place"));
+            assertTrue(msg.matches("cannot write file .*, it is either a directory or wrong permissions are in place.*"));
         }
     }
 

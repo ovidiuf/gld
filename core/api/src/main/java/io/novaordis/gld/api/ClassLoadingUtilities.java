@@ -52,7 +52,7 @@ public class ClassLoadingUtilities {
         }
         catch(Throwable t) {
 
-            throw new UserErrorException("class " + fullyQualifiedClassName + " not found", t);
+            throw new UserErrorException(t);
         }
 
         T result;
