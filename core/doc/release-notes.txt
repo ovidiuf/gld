@@ -1,4 +1,0 @@
-
-Initial release. Provides support for independent extensions. Extensions available so far:
-* jboss-datagrid-6
-* jboss-datagrid-7
