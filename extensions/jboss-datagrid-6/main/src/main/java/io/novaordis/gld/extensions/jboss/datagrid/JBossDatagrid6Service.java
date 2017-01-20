@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,56 +16,54 @@
 
 package io.novaordis.gld.extensions.jboss.datagrid;
 
-import io.novaordis.gld.api.cache.CacheServiceBase;
-import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.utilities.NotYetImplementedException;
+import io.novaordis.gld.extensions.jboss.datagrid.common.HotRodEndpointAddress;
+import io.novaordis.gld.extensions.jboss.datagrid.common.InfinispanCache;
+import io.novaordis.gld.extensions.jboss.datagrid.common.JBossDatagridServiceBase;
 import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.version.VersionUtilities;
-
-import java.util.Set;
+import org.infinispan.client.hotrod.RemoteCache;
+import org.infinispan.client.hotrod.RemoteCacheManager;
+import org.infinispan.client.hotrod.configuration.Configuration;
+import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
+ * This version is coded under the assumption that the cache container name does not make any difference, and all that
+ * matters is the cache name. A cursory examination of the API did not seem to allow for specifying the "cache container
+ * name". If that is indeed possible, this code will have to be refactored.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 1/19/17
+ * @since 12/14/16
  */
-public class JBossDatagrid6Service extends CacheServiceBase {
+public class JBossDatagrid6Service extends JBossDatagridServiceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    public static final String EXTENSION_VERSION_METADATA_FILE_NAME = "jboss-datagrid-6-extension-version";;
+    private static final Logger log = LoggerFactory.getLogger(JBossDatagrid6Service.class);
+
+    public static final String EXTENSION_VERSION_METADATA_FILE_NAME = "jboss-datagrid-6-extension-version";
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private CacheManagerFactory cacheManagerFactory;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // CacheServiceBase overrides --------------------------------------------------------------------------------------
+    public JBossDatagrid6Service() {
 
-    @Override
-    public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {
-        throw new NotYetImplementedException("configure() NOT YET IMPLEMENTED");
+        super();
+
+        //
+        // initialize the cacheManagerFactory with the default
+        //
+
+        this.cacheManagerFactory = RemoteCacheManager::new;
     }
 
-    @Override
-    public String get(String key) throws Exception {
-        throw new NotYetImplementedException("get() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void put(String key, String value) throws Exception {
-        throw new NotYetImplementedException("put() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void remove(String key) throws Exception {
-        throw new NotYetImplementedException("remove() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Set<String> keys() throws Exception {
-        throw new NotYetImplementedException("keys() NOT YET IMPLEMENTED");
-    }
+    // Overrides -------------------------------------------------------------------------------------------------------
 
     @Override
     public String getVersion() {
@@ -73,11 +71,89 @@ public class JBossDatagrid6Service extends CacheServiceBase {
         return VersionUtilities.getVersion(EXTENSION_VERSION_METADATA_FILE_NAME);
     }
 
+    // JBossDatagridServiceBase overrides ------------------------------------------------------------------------------
+
+    @Override
+    public InfinispanCache configureAndStartInfinispanCache() throws UserErrorException {
+
+        try {
+
+            ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+
+            for (HotRodEndpointAddress n : getNodes()) {
+
+                configurationBuilder.addServer().host(n.getHost()).port(n.getPort());
+            }
+
+            Configuration infinispanConfiguration = configurationBuilder.build();
+
+            RemoteCacheManager remoteCacheManager = cacheManagerFactory.buildCacheManager(infinispanConfiguration);
+
+            String cn = getCacheName();
+
+            RemoteCache rc;
+
+            if (cn == null) {
+
+                rc = remoteCacheManager.getCache();
+
+            } else {
+
+                rc = remoteCacheManager.getCache(cn);
+            }
+
+            if (rc == null) {
+
+                throw new Exception("no such cache: " + cn);
+            }
+
+            return new InfinispanCacheImpl(rc);
+        }
+        catch (UserErrorException e) {
+
+            throw e;
+        }
+        catch (Throwable e) {
+
+            throw new UserErrorException("failed to start jboss datagrid 7 service", e);
+        }
+
+    }
+
+    @Override
+    protected void stopInfinispanCache(InfinispanCache cache) {
+
+        try {
+
+            Object delegate = cache.getDelegate();
+            RemoteCache remoteCache = (RemoteCache)delegate;
+
+            remoteCache.stop();
+            remoteCache.getRemoteCacheManager().stop();
+            cache = null;
+        }
+        catch(Throwable t) {
+
+            log.warn("failed to stop cache " + cache);
+            log.debug("cache stop failure cause", t);
+        }
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
+    void setCacheManagerFactory(CacheManagerFactory cacheManagerFactory) {
+
+        this.cacheManagerFactory = cacheManagerFactory;
+    }
+
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected void addNode(HotRodEndpointAddress a) {
+
+        super.addNode(a);
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

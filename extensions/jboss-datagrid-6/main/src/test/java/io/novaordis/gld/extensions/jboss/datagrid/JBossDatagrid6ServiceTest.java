@@ -16,9 +16,16 @@
 
 package io.novaordis.gld.extensions.jboss.datagrid;
 
+import io.novaordis.gld.extensions.jboss.datagrid.common.HotRodEndpointAddress;
+import io.novaordis.gld.extensions.jboss.datagrid.common.InfinispanCache;
+import io.novaordis.gld.extensions.jboss.datagrid.common.JBossDatagridServiceBase;
+import org.infinispan.client.hotrod.configuration.Configuration;
+import org.infinispan.client.hotrod.configuration.ServerConfiguration;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -43,6 +50,18 @@ public class JBossDatagrid6ServiceTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
+    // fully qualified class name inference based on extension name ----------------------------------------------------
+
+    @Test
+    public void fullyQualifiedClassNameInference() throws Exception {
+
+        String extensionName = "jboss-datagrid-6";
+
+        String fqcn = JBossDatagridServiceBase.extensionNameToExtensionServiceFullyQualifiedClassName(extensionName);
+
+        assertEquals(JBossDatagrid6Service.class.getName(), fqcn);
+    }
+
     // version ---------------------------------------------------------------------------------------------------------
 
     @Test
@@ -60,6 +79,35 @@ public class JBossDatagrid6ServiceTest {
         assertNotNull(mavenInjectedProjectVersion);
         assertEquals(mavenInjectedProjectVersion, version);
     }
+
+    // configureAndStartInfinispanCache() ------------------------------------------------------------------------------
+
+    @Test
+    public void configureAndStartInfinispanCache() throws Exception {
+
+        JBossDatagrid6Service s = new JBossDatagrid6Service();
+        s.addNode(new HotRodEndpointAddress("mock-host:22333"));
+
+        MockCacheManagerFactory mcmf = new MockCacheManagerFactory();
+        s.setCacheManagerFactory(mcmf);
+
+        InfinispanCache ic = s.configureAndStartInfinispanCache();
+
+        MockRemoteCache mc = (MockRemoteCache)ic.getDelegate();
+        assertNotNull(mc);
+
+        assertEquals(MockRemoteCacheManager.DEFAULT_CACHE_NAME, mc.getName());
+
+        MockRemoteCacheManager mcm = (MockRemoteCacheManager)mc.getRemoteCacheManager();
+        Configuration infinispanConfiguration = mcm.getConfiguration();
+
+        List<ServerConfiguration> scs = infinispanConfiguration.servers();
+        assertEquals(1, scs.size());
+        ServerConfiguration sc = scs.get(0);
+        assertEquals("mock-host", sc.host());
+        assertEquals(22333, sc.port());
+    }
+
 
     // Package protected -----------------------------------------------------------------------------------------------
 

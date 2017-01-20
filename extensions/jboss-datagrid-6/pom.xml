@@ -8,7 +8,7 @@
 
     <groupId>io.novaordis.gld.extensions.jboss-datagrid</groupId>
     <artifactId>jboss-datagrid-6-root</artifactId>
-    <version>1.0.0-SNAPSHOT-3</version>
+    <version>1.0.0-SNAPSHOT-4</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -22,19 +22,25 @@
             Dependencies
         -->
 
-        <gld.api.version>1.0.0-SNAPSHOT-36</gld.api.version>
+        <!--
+            This is the module containing common target-related functionality,
+            which can be shared among extensions corresponding to different
+            target versions. The dependence on the API is not declared directly
+            but through this module.
+        -->
+        <gld.extension.jboss.datagrid.common.version>1.0.0-SNAPSHOT-11</gld.extension.jboss.datagrid.common.version>
+
         <novaordis.utilities.version>4.4.0-SNAPSHOT-8</novaordis.utilities.version>
         <slf4j.version>1.7.6</slf4j.version>
-        <jdg.infinspan.client.hotrod.version>8.3.0.Final-redhat-1</jdg.infinspan.client.hotrod.version>
+        <jdg.infinispan.client.hotrod.version>6.4.1.Final-redhat-1</jdg.infinispan.client.hotrod.version>
+        <commons.pool.version>1.6.0.redhat-7</commons.pool.version>
 
         <!--
-            jboss.logging, commons pool, etc are not transitively pulled by Infinispan,
-            but Infinispan classes will complain if not in the classpath, so we're
-            pulling them explicitly.
+            commons pool, etc are not transitively pulled by Infinispan, but Infinispan
+            classes will complain if not in the classpath, so we're pulling them explicitly.
         -->
         <!--
         <jboss.logging.version>3.3.0.Final-redhat-1</jboss.logging.version>
-        <commons.pool.version>1.6.0.redhat-9</commons.pool.version>
         <jboss.marshalling.version>1.4.10.Final-redhat-3</jboss.marshalling.version>
         -->
 
@@ -56,11 +62,11 @@
     <repositories>
         <repository>
             <id>jboss-eap-repository</id>
-            <url>file:///Users/ovidiu/runtime/jboss-eap-6.4.0.GA-maven-repository/maven-repository</url>
+            <url>file:///Users/ovidiu/runtime/jboss-eap-6.4.0.GA-maven-repository</url>
         </repository>
         <repository>
             <id>jboss-datagrid-repository</id>
-            <url>file:///Users/ovidiu/runtime/jboss-datagrid-${jboss.datagrid.version}-maven-repository/maven-repository</url>
+            <url>file:///Users/ovidiu/runtime/jboss-datagrid-${jboss.datagrid.version}-maven-repository</url>
         </repository>
     </repositories>
 
@@ -71,10 +77,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.novaordis.gld</groupId>
-            <artifactId>gld-api</artifactId>
-            <version>${gld.api.version}</version>
-            <scope>provided</scope>
+            <groupId>io.novaordis.gld.extensions.jboss-datagrid</groupId>
+            <artifactId>jboss-datagrid-common</artifactId>
+            <version>${gld.extension.jboss.datagrid.common.version}</version>
+            <!--
+                Do not declare "provided", we want to ship this dependency.
+            -->
         </dependency>
         <dependency>
             <groupId>io.novaordis.utilities</groupId>
@@ -90,17 +98,24 @@
         </dependency>
 
 
-        <!--
         <dependency>
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-client-hotrod</artifactId>
-            <version>${jdg.infinspan.client.hotrod.version}</version>
+            <version>${jdg.infinispan.client.hotrod.version}</version>
         </dependency>
+        <dependency>
+            <groupId>commons-pool</groupId>
+            <artifactId>commons-pool</artifactId>
+            <version>${commons.pool.version}</version>
+        </dependency>
+
+
+        <!--
 
         <dependency>
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-commons</artifactId>
-            <version>${jdg.infinspan.client.hotrod.version}</version>
+            <version>${jdg.infinispan.client.hotrod.version}</version>
         </dependency>
         -->
 
@@ -116,11 +131,6 @@
             <version>${jboss.logging.version}</version>
         </dependency>
         <dependency>
-            <groupId>commons-pool</groupId>
-            <artifactId>commons-pool</artifactId>
-            <version>${commons.pool.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.jboss.marshalling</groupId>
             <artifactId>jboss-marshalling</artifactId>
             <version>${jboss.marshalling.version}</version>
@@ -129,11 +139,6 @@
             <groupId>org.jboss.marshalling</groupId>
             <artifactId>jboss-marshalling-river</artifactId>
             <version>${jboss.marshalling.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-query-dsl</artifactId>
-            <version>${jdg.infinspan.client.hotrod.version}</version>
         </dependency>
         -->
 
