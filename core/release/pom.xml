@@ -7,8 +7,8 @@
     <name>Generic Load Driver Release Module</name>
 
     <parent>
-        <groupId>io.novaordis.gld</groupId>
-        <artifactId>gld-core</artifactId>
+        <groupId>io.novaordis.gld.core</groupId>
+        <artifactId>root</artifactId>
         <version>1.0.1-SNAPSHOT-1</version>
     </parent>
 
@@ -94,12 +94,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.novaordis.gld</groupId>
+            <groupId>io.novaordis.gld.core</groupId>
             <artifactId>gld-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.novaordis.gld</groupId>
+            <groupId>io.novaordis.gld.core</groupId>
             <artifactId>gld-load-driver</artifactId>
             <version>${project.version}</version>
         </dependency>

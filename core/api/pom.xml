@@ -23,8 +23,8 @@
     <name>Generic Load Driver API</name>
 
     <parent>
-        <groupId>io.novaordis.gld</groupId>
-        <artifactId>gld-core</artifactId>
+        <groupId>io.novaordis.gld.core</groupId>
+        <artifactId>root</artifactId>
         <version>1.0.1-SNAPSHOT-1</version>
     </parent>
 
