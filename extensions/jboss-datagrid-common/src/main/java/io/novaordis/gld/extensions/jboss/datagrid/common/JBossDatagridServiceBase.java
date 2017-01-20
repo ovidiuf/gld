@@ -140,7 +140,14 @@ public abstract class JBossDatagridServiceBase extends CacheServiceBase {
             throw new IllegalStateException(this + ": no nodes");
         }
 
-        cache = configureAndStartInfinispanCache();
+        try {
+
+            cache = configureAndStartInfinispanCache();
+        }
+        catch(Throwable t) {
+
+            throw new UserErrorException("failed to start jboss datagrid service", t);
+        }
     }
 
     @Override
@@ -227,6 +234,14 @@ public abstract class JBossDatagridServiceBase extends CacheServiceBase {
         return cacheName;
     }
 
+    /**
+     * May return null.
+     */
+    public InfinispanCache getCache() {
+
+        return cache;
+    }
+
     @Override
     public String toString() {
 
@@ -266,9 +281,14 @@ public abstract class JBossDatagridServiceBase extends CacheServiceBase {
         nodes.add(n);
     }
 
+    void setCacheName(String s) {
+
+        this.cacheName = s;
+    }
+
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected  abstract InfinispanCache configureAndStartInfinispanCache() throws UserErrorException;
+    protected  abstract InfinispanCache configureAndStartInfinispanCache() throws Exception;
 
     protected abstract void stopInfinispanCache(InfinispanCache cache);
 

@@ -29,6 +29,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -228,163 +229,154 @@ public abstract class JBossDatagridServiceBaseTest {
         }
     }
 
-//    @Test
-//    public void start_GenericFailure() throws Exception {
-//
-//        JBossDatagridServiceBase s = getJBossDatagridServiceBaseToTest();
-//        s.setLoadStrategy(new MockLoadStrategy());
-//        s.addNode(new HotRodEndpointAddress("mock-host"));
-//
-//        final MockRemoteCacheManager mcb = new MockRemoteCacheManager();
-//        s.setCacheManagerFactory(infinispanConfiguration -> mcb);
-//
-//        //
-//        // make the mock configuration builder break with a random failure
-//        //
-//
-//        RuntimeException re = new RuntimeException("SYNTHETIC");
-//
-//        mcb.makeFail("getCache", re);
-//
-//        try {
-//
-//            s.start();
-//        }
-//        catch(UserErrorException e) {
-//
-//            String msg = e.getMessage();
-//            log.info(msg);
-//            assertEquals("failed to start jboss datagrid 7 service: RuntimeException SYNTHETIC", msg);
-//            Throwable cause = e.getOriginalCause();
-//            assertEquals(re, cause);
-//        }
-//    }
+    @Test
+    public void start_GenericFailure() throws Exception {
+
+        JBossDatagridServiceBase s = getJBossDatagridServiceBaseToTest();
+        s.setLoadStrategy(new MockLoadStrategy());
+        s.addNode(new HotRodEndpointAddress("mock-host"));
+
+        //
+        // simulate random failure of the underlying Infinispan code
+        //
+
+        RuntimeException re = new RuntimeException("SYNTHETIC");
+
+        ((GenericJBossDatagridService)s).makeConfigureAndStartInfinispanCacheFail(re);
+
+        try {
+
+            s.start();
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("failed to start jboss datagrid service: RuntimeException SYNTHETIC", msg);
+            Throwable cause = e.getOriginalCause();
+            assertEquals(re, cause);
+        }
+    }
 
     // lifecycle -------------------------------------------------------------------------------------------------------
 
-//    @Test
-//    public void lifecycle() throws Exception {
-//
-//        MockLoadStrategy ms = new MockLoadStrategy();
-//        JBossDatagridServiceBase s = getJBossDatagridServiceBaseToTest();
-//        s.setLoadStrategy(ms);
-//
-//        s.addNode(new HotRodEndpointAddress("mock-host"));
-//
-//        //
-//        // mocks insure that all goes smoothly
-//        //
-//
-//        final MockRemoteCacheManager mcb = new MockRemoteCacheManager();
-//        s.setCacheManagerFactory(infinispanConfiguration -> mcb);
-//
-//        //
-//        // no cache name is specified, we assume default cache
-//        //
-//
-//        assertFalse(ms.isStarted());
-//
-//        assertFalse(s.isStarted());
-//
-//        assertNull(s.getCacheName());
-//
-//        s.start();
-//
-//        assertTrue(s.isStarted());
-//
-//        //
-//        // test idempotency
-//        //
-//        s.start();
-//
-//        RemoteCache c = s.getCache();
-//
-//        assertNotNull(c);
-//
-//        assertTrue(c instanceof MockRemoteCache);
-//
-//        assertEquals(MockRemoteCacheManager.DEFAULT_CACHE_NAME, s.getCacheName());
-//
-//        assertTrue(ms.isStarted());
-//
-//        //noinspection unchecked
-//        c.put("test-key", "test-value");
-//
-//        assertEquals("test-value", c.get("test-key"));
-//
-//        s.stop();
-//
-//        assertFalse(s.isStarted());
-//
-//        //
-//        // test idempotency
-//        //
-//        s.stop();
-//
-//        assertNull(s.getCache());
-//
-//        assertFalse(ms.isStarted());
-//    }
-//
-//    @Test
-//    public void lifecycle_SpecificCacheName() throws Exception {
-//
-//        String cacheName = "test-cache";
-//
-//        MockLoadStrategy ms = new MockLoadStrategy();
-//        JBossDatagrid7Service s = new JBossDatagrid7Service(ms);
-//        s.addNode(new HotRodEndpointAddress("mock-host"));
-//        s.setCacheName(cacheName);
-//
-//        //
-//        // mocks insure that all goes smoothly
-//        //
-//
+    @Test
+    public void lifecycle() throws Exception {
+
+        MockLoadStrategy ms = new MockLoadStrategy();
+        JBossDatagridServiceBase s = getJBossDatagridServiceBaseToTest();
+        s.setLoadStrategy(ms);
+
+        s.addNode(new HotRodEndpointAddress("mock-host"));
+
+        //
+        // mocks insure that all goes smoothly
+        //
+
+        //
+        // no cache name is specified, we assume default cache
+        //
+
+        assertFalse(ms.isStarted());
+
+        assertFalse(s.isStarted());
+
+        assertNull(s.getCacheName());
+
+        s.start();
+
+        assertTrue(s.isStarted());
+
+        //
+        // test idempotency
+        //
+        s.start();
+
+        InfinispanCache c = s.getCache();
+
+        assertNotNull(c);
+
+        assertEquals(GenericJBossDatagridService.DEFAULT_CACHE_NAME, s.getCacheName());
+
+        assertTrue(ms.isStarted());
+
+        //noinspection unchecked
+        c.put("test-key", "test-value");
+
+        assertEquals("test-value", c.get("test-key"));
+
+        s.stop();
+
+        assertFalse(s.isStarted());
+
+        //
+        // test idempotency
+        //
+        s.stop();
+
+        assertNull(s.getCache());
+
+        assertFalse(ms.isStarted());
+    }
+
+    @Test
+    public void lifecycle_SpecificCacheName() throws Exception {
+
+        String cacheName = "test-cache";
+
+        MockLoadStrategy ms = new MockLoadStrategy();
+        JBossDatagridServiceBase s = getJBossDatagridServiceBaseToTest();
+        s.addNode(new HotRodEndpointAddress("mock-host"));
+        s.setLoadStrategy(ms);
+        s.setCacheName(cacheName);
+
+        //
+        // mocks insure that all goes smoothly
+        //
+
 //        MockRemoteCache mc = new MockRemoteCache(cacheName);
 //        final MockRemoteCacheManager mcb = new MockRemoteCacheManager();
 //        mcb.setCache(mc);
 //        s.setCacheManagerFactory(infinispanConfiguration -> mcb);
-//
-//        //
-//        // no cache name is specified, we assume default cache
-//        //
-//
-//        assertFalse(ms.isStarted());
-//
-//        assertFalse(s.isStarted());
-//
-//        assertEquals("test-cache", s.getCacheName());
-//
-//        s.start();
-//
-//        assertTrue(s.isStarted());
-//
-//        //
-//        // test idempotency
-//        //
-//        s.start();
-//
-//        RemoteCache c = s.getCache();
-//
-//        assertEquals(mc, c);
-//
-//        assertTrue(ms.isStarted());
-//
-//        assertEquals("test-cache", s.getCacheName());
-//
-//        s.stop();
-//
-//        assertFalse(s.isStarted());
-//
-//        //
-//        // test idempotency
-//        //
-//        s.stop();
-//
-//        assertNull(s.getCache());
-//
-//        assertFalse(ms.isStarted());
-//    }
+
+        //
+        // no cache name is specified, we assume default cache
+        //
+
+        assertFalse(ms.isStarted());
+
+        assertFalse(s.isStarted());
+
+        assertEquals("test-cache", s.getCacheName());
+
+        s.start();
+
+        assertTrue(s.isStarted());
+
+        //
+        // test idempotency
+        //
+        s.start();
+
+        InfinispanCache c = s.getCache();
+
+        assertTrue(ms.isStarted());
+
+        assertEquals("test-cache", s.getCacheName());
+
+        s.stop();
+
+        assertFalse(s.isStarted());
+
+        //
+        // test idempotency
+        //
+        s.stop();
+
+        assertNull(s.getCache());
+
+        assertFalse(ms.isStarted());
+    }
 
     // cache operations ------------------------------------------------------------------------------------------------
 

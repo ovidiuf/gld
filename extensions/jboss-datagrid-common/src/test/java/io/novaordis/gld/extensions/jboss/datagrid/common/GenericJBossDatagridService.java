@@ -16,7 +16,6 @@
 
 package io.novaordis.gld.extensions.jboss.datagrid.common;
 
-import io.novaordis.utilities.UserErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,18 +32,28 @@ public class GenericJBossDatagridService extends JBossDatagridServiceBase {
 
     private static final Logger log = LoggerFactory.getLogger(GenericJBossDatagridService.class);
 
+    public static final String DEFAULT_CACHE_NAME = "N2ETG-4H34W-4534H";
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
+
+    private RuntimeException configureAndStartInfinispanCacheException;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // JBossDatagridServiceBase implementation -------------------------------------------------------------------------
 
     @Override
-    protected InfinispanCache configureAndStartInfinispanCache() throws UserErrorException {
+    protected InfinispanCache configureAndStartInfinispanCache() throws Exception {
 
-        return new MockInfinispanCache("mock");
+        if (configureAndStartInfinispanCacheException != null) {
+
+            throw configureAndStartInfinispanCacheException;
+        }
+
+
+        return new MockInfinispanCache(DEFAULT_CACHE_NAME);
     }
 
     @Override
@@ -57,6 +66,11 @@ public class GenericJBossDatagridService extends JBossDatagridServiceBase {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public void makeConfigureAndStartInfinispanCacheFail(RuntimeException e) {
+
+        this.configureAndStartInfinispanCacheException = e;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
