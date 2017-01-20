@@ -1,3 +1,4 @@
 
-* introduced --console-output to redirect console output when running into background to a configurable file
-* added the possibility to specify on command line the amount of memory allocated to the driver, with --memory
+Initial release. Provides support for independent extensions. Extensions available so far:
+* jboss-datagrid-6
+* jboss-datagrid-7
