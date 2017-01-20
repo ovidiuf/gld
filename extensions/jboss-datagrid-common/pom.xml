@@ -8,7 +8,7 @@
 
     <groupId>io.novaordis.gld.extensions.jboss-datagrid</groupId>
     <artifactId>jboss-datagrid-common</artifactId>
-    <version>1.0.0-SNAPSHOT-7</version>
+    <version>1.0.0-SNAPSHOT-8</version>
 
     <packaging>jar</packaging>
 
@@ -39,7 +39,7 @@
             <groupId>io.novaordis.gld</groupId>
             <artifactId>gld-api</artifactId>
             <version>1.0.0-SNAPSHOT-40</version>
-            <scope>provided</scope>
+            <!-- <scope>provided</scope> -->
         </dependency>
         <dependency>
             <groupId>io.novaordis.utilities</groupId>
