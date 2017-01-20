@@ -296,6 +296,8 @@ public abstract class JBossDatagridServiceBaseTest {
 
         assertNotNull(c);
 
+        assertNotNull(c.getDelegate());
+
         assertEquals(GenericJBossDatagridService.DEFAULT_CACHE_NAME, s.getCacheName());
 
         assertTrue(ms.isStarted());
@@ -356,6 +358,8 @@ public abstract class JBossDatagridServiceBaseTest {
         InfinispanCache c = s.getCache();
 
         assertNotNull(c);
+
+        assertNotNull(c.getDelegate());
 
         assertTrue(ms.isStarted());
 

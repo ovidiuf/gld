@@ -43,8 +43,7 @@ public interface InfinispanCache {
     /**
      * Give de-typed access to the underlying delegate. Usually a RemoteCache. We don't type the access to avoid
      * declaring a dependency on client libraries. The implementation modules, which have access to the actual types,
-     * will cast.
+     * will cast. May return null if the instance was not initialized.
      */
     Object getDelegate();
-
 }
