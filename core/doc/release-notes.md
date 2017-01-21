@@ -1,0 +1,1 @@
+* __JMS Service Support__ added API-level support for JMS services: JmsServiceBase, etc.
