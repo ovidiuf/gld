@@ -48,7 +48,7 @@ public class JBossEap7JmsService extends JmsServiceBase {
 
     @Override
     public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {
-        
+
         throw new NotYetImplementedException("configure() NOT YET IMPLEMENTED");
     }
 
