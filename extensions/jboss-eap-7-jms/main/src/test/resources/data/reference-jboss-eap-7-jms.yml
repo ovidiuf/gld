@@ -15,6 +15,8 @@ service:
 
   type: jms
   message-size: 1024
+  queue: test-queue
+  connection-factory: SomeConnectionFactory
 
   implementation:
     name: jboss-eap-7-jms
@@ -26,22 +28,21 @@ service:
      # or the JAR(s) cannot be loaded, we will use the shipped
      # libraries
 
-    classpath: ${JDG_HOME}/client/hotrod.jar
+    classpath: ${JDG_HOME}/client/activemq.jar
 
     #
     # implementation-specific configuration
     #
-    nodes:
-      - localhost:11222
-      - localhost:11422
+    end-points:
+      - localhost:4447
+      - localhost:4448
 
   load-strategy:
-    name: read-then-write-on-miss
-    reuse-value: true
+    name: tbd
 
 load:
   threads: 1
-  operations: 10000
+  messages: 10000
 
 output:
   statistics:
