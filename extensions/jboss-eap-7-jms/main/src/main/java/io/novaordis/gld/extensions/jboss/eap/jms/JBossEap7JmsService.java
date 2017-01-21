@@ -20,6 +20,7 @@ import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.jms.JmsServiceBase;
 import io.novaordis.utilities.NotYetImplementedException;
 import io.novaordis.utilities.UserErrorException;
+import io.novaordis.utilities.version.VersionUtilities;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -29,6 +30,8 @@ public class JBossEap7JmsService extends JmsServiceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    public static final String EXTENSION_VERSION_METADATA_FILE_NAME = "jboss-eap-7-jms-extension-version";
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
@@ -36,6 +39,11 @@ public class JBossEap7JmsService extends JmsServiceBase {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // JmsServiceBase overrides ----------------------------------------------------------------------------------------
+
+    @Override
+    public String getVersion() {
+        return VersionUtilities.getVersion(EXTENSION_VERSION_METADATA_FILE_NAME);
+    }
 
     @Override
     public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {

@@ -19,8 +19,11 @@ package io.novaordis.gld.extensions.jboss.eap.jms;
 import io.novaordis.gld.api.jms.JmsServiceBase;
 import io.novaordis.gld.api.service.ServiceFactory;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -29,6 +32,8 @@ import static org.junit.Assert.assertEquals;
 public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(JBossEap7JmsServiceTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -39,6 +44,24 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Tests -----------------------------------------------------------------------------------------------------------
+
+    // version ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void version() throws Exception {
+
+        JBossEap7JmsService s = new JBossEap7JmsService();
+
+        String version = s.getVersion();
+
+        log.info(version);
+
+        assertNotNull(version);
+
+        String mavenInjectedProjectVersion = System.getProperty("maven.injected.project.version");
+        assertNotNull(mavenInjectedProjectVersion);
+        assertEquals(mavenInjectedProjectVersion, version);
+    }
 
     // extensionNameToExtensionServiceFullyQualifiedClassName() --------------------------------------------------------
 
