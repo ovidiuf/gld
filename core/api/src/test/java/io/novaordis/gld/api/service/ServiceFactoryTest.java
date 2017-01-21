@@ -205,21 +205,33 @@ public class ServiceFactoryTest {
     }
 
     @Test
-    public void extensionNameToExtensionServiceFullyQualifiedClassName_InvalidName_StartsWithNumber2()
+    public void extensionNameToExtensionServiceFullyQualifiedClassName_TokenStartsWithNumber()
             throws Exception {
 
-        try {
-
-            ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName("a-2b-c");
-            fail("should throw exception");
-        }
-        catch(UserErrorException e) {
-
-            String msg = e.getMessage();
-            log.info(msg);
-            assertEquals("invalid extension name 'a-2b-c', extension name component starts with a number", msg);
-        }
+        String fqcn =  ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName("a-2b-c");
+        String expected = "io.novaordis.gld.extensions.a.c.A2bCService";
+        assertEquals(expected, fqcn);
     }
+
+    @Test
+    public void extensionNameToExtensionServiceFullyQualifiedClassName_IntermediateTokenIsAllDigits()
+            throws Exception {
+
+        String fqcn =  ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName("alpha-beta-7-gamma");
+        String expected = "io.novaordis.gld.extensions.alpha.beta.gamma.AlphaBeta7GammaService";
+        assertEquals(expected, fqcn);
+    }
+
+    @Test
+    public void extensionNameToExtensionServiceFullyQualifiedClassName_IntermediateTokenIsAllDigits2()
+            throws Exception {
+
+        String fqcn =  ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName("alpha-beta-7.8.9-gamma");
+
+        String expected = "io.novaordis.gld.extensions.alpha.beta.gamma.AlphaBeta789GammaService";
+        assertEquals(expected, fqcn);
+    }
+
 
     // Package protected -----------------------------------------------------------------------------------------------
 

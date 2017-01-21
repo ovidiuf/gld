@@ -82,7 +82,7 @@ public class ServiceFactory {
 
             if ('0' <= firstChar && firstChar <= '9') {
 
-                if (className.isEmpty() || st.hasMoreTokens()) {
+                if (className.isEmpty()) {
 
                     //
                     // this is the first token, and a class name cannot start with a number, or is not the last token,
@@ -101,7 +101,12 @@ public class ServiceFactory {
 
                 token = token.replace(".", "");
                 className += token;
-                break;
+
+                //
+                // do not add it to the package name
+                //
+
+                continue;
             }
 
             packageName += "." + token;
