@@ -42,11 +42,13 @@ public class JBossEap7JmsService extends JmsServiceBase {
 
     @Override
     public String getVersion() {
+
         return VersionUtilities.getVersion(EXTENSION_VERSION_METADATA_FILE_NAME);
     }
 
     @Override
     public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {
+        
         throw new NotYetImplementedException("configure() NOT YET IMPLEMENTED");
     }
 
