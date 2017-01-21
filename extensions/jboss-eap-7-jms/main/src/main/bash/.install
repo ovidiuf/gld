@@ -1,1 +1,66 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
+#
+# Installation script. To be executed on initial installation or upgrade, from the bin directory.
+#
+
+#
+# this will be replaced by the assembly logic with the official extension name, declared as "extension.name" in the
+# top project POM.
+#
+extension_name=${extension.name}
+
+function main() {
+
+    local version
+    local release_directory
+    local release_directory_name
+    local extensions_directory
+
+    release_directory=$(dirname $0)/..
+    release_directory_name=$(basename $(cd $(dirname $0)/..; pwd))
+    extensions_directory=$(dirname $0)/../..
+    version=${release_directory_name#${extension_name}-}
+
+    #
+    # if the extension directory is not present, create it
+    #
+
+    if [ ! -d ${extensions_directory}/${extension_name} ]; then
+        echo "extension directory ${extensions_directory}/${extension_name} not present, creating it ..."
+        mkdir ${extensions_directory}/${extension_name}
+    fi
+
+    #
+    # verify that the specific extension version is not installed yet. If it is, fail.
+    #
+
+    [ -f ${extensions_directory}/${extension_name}/${extension_name}-${version}.jar ] && \
+        { echo "${extension_name}-${version}.jar already installed in ${extensions_directory}/${extension_name}" 1>&2; exit 1; }
+
+    #
+    # remove all extensions JARs previously installed in the extension directory
+    #
+
+    for i in $(find ${extensions_directory}/${extension_name} -name *.jar); do
+        echo "removing old extension JAR ${i} ..."
+        rm ${i} || exit 1
+    done
+
+    #
+    # install the new extension and the client libraries that come with this new release
+    #
+
+    echo "installing new extension ${extension_name}-${version}.jar and any client libraries that come with this extension ..."
+    cp -r ${release_directory}/* ${extensions_directory}/${extension_name} || exit 1
+    rm -r ${extensions_directory}/${extension_name}/bin
+
+    #
+    #  remove the temporary installation directory
+    #
+
+    echo "removing the temporary installation directory ${release_directory_name} from ${extensions_directory}..."
+    (cd ${extensions_directory}; rm -r ${release_directory_name})
+}
+
+main

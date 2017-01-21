@@ -1,0 +1,13 @@
+#
+# nort release configuration
+#
+qualification:
+
+build:
+
+publish:
+  local.artifact.repository.root: ${M2}
+  release.tag: jboss-eap-7-jms-release-${current.version}
+
+install:
+  installation.directory: ${RUNTIME_DIR}/gld/extensions

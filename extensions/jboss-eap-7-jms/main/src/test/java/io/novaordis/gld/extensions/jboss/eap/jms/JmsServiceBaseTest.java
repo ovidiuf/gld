@@ -16,11 +16,13 @@
 
 package io.novaordis.gld.extensions.jboss.eap.jms;
 
+import io.novaordis.gld.api.jms.JmsServiceBase;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/20/17
  */
-public class JmsServiceBaseTest {
+public abstract class JmsServiceBaseTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -37,6 +39,8 @@ public class JmsServiceBaseTest {
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected abstract JmsServiceBase getJmsServiceBaseToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 
