@@ -87,6 +87,8 @@ function main() {
     local classpath
     classpath=$(build-classpath) || exit 1
 
+    [ -n "${verbose_jvm_flag}" ] && echo "java ${debug} -cp ${classpath} ${verbose_jvm_flag} io.novaordis.gld.Main ${args}"
+
     java ${debug} -cp ${classpath} ${verbose_jvm_flag} io.novaordis.gld.Main ${args}
 
 }

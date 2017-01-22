@@ -23,6 +23,7 @@ import io.novaordis.gld.driver.LoadDriverImpl;
 import io.novaordis.gld.driver.Util;
 import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.env.EnvironmentVariableProvider;
+import io.novaordis.utilities.logging.StderrVerboseLogging;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +48,8 @@ public class Main {
     // Static ----------------------------------------------------------------------------------------------------------
 
     public static void main(String[] args) {
+
+        StderrVerboseLogging.init();
 
         List<String> arguments = new ArrayList<>(Arrays.asList(args));
 
