@@ -68,6 +68,7 @@ function get-extension-jars() {
 
 function main() {
 
+    local verbose_jvm_flag=""
     local debug=""
     local args=""
 
@@ -75,6 +76,8 @@ function main() {
 
         if [ "$1" = "-d" -o "$1" = "--debug" ]; then
             debug="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
+        elif [ "$1" = "-v" -o "$1" = "--verbose" ]; then
+             verbose_jvm_flag="-Dverbose=true"
         else
             [ -z "${args}" ] && args=$1 || args="${args} $1"
         fi
@@ -84,6 +87,6 @@ function main() {
     local classpath
     classpath=$(build-classpath) || exit 1
 
-    java ${debug} -cp ${classpath} io.novaordis.gld.Main ${args}
+    java ${debug} -cp ${classpath} ${verbose_jvm_flag} io.novaordis.gld.Main ${args}
 
 }

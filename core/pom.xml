@@ -33,7 +33,7 @@
             Dependencies
         -->
 
-        <novaordis.utilities.version>4.4.0</novaordis.utilities.version>
+        <novaordis.utilities.version>4.5</novaordis.utilities.version>
         <slf4j.version>1.7.6</slf4j.version>
 
 
