@@ -11,7 +11,7 @@
     <orderEntry type="module" module-name="jboss-eap-7-jms" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.novaordis.gld.core:gld-api:1.1.1-SNAPSHOT-2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.yaml:snakeyaml:1.17" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: io.novaordis.utilities:novaordis-utilities:4.4.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.novaordis.utilities:novaordis-utilities:4.5" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: log4j:log4j:1.2.16" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.slf4j:slf4j-api:1.7.6" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.11" level="project" />

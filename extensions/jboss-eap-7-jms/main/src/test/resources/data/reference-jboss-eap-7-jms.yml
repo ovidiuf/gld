@@ -15,8 +15,9 @@ service:
 
   type: jms
   message-size: 1024
-  queue: test-queue
-  connection-factory: SomeConnectionFactory
+  queue: jms/queue/novaordis
+  connection-factory: jms/RemoteConnectionFactory
+  threading-model: connection-per-thread|new-session-per-thread|reuse-session-per-thread
 
   implementation:
     name: jboss-eap-7-jms
