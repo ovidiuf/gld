@@ -204,6 +204,53 @@ public abstract class LoadStrategyFactoryTest {
         assertEquals(loadStrategyName, s.getName());
     }
 
+    @Test
+    public void buildInstance_nullOrMissingLoadStrategyName() throws Exception {
+
+        LoadStrategyFactory f = getLoadStrategyFactoryToTest();
+
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+        ServiceConfiguration sc = getCorrespondingConfigurationToTest();
+        MockServiceConfiguration msc = (MockServiceConfiguration)sc;
+        msc.setLoadStrategyName(null);
+
+        try {
+
+            f.buildInstance(sc, mlc);
+            fail("should have failed");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("missing or null '" + ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL + "' map element", msg);
+        }
+    }
+
+    @Test
+    public void buildInstance_unknownLoadStrategy() throws Exception {
+
+        LoadStrategyFactory f = getLoadStrategyFactoryToTest();
+
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+        ServiceConfiguration sc = getCorrespondingConfigurationToTest();
+        MockServiceConfiguration msc = (MockServiceConfiguration)sc;
+
+        msc.setLoadStrategyName("surely-there-is-no-such-load-strategy");
+
+        try {
+
+            f.buildInstance(msc, mlc);
+            fail("should have failed");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("ClassNotFoundException io.novaordis.gld.api.cache.load.SurelyThereIsNoSuchLoadStrategy", msg);
+        }
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

@@ -88,35 +88,7 @@ public class LoadDriverImpl implements LoadDriver {
 
     // LoadDriver implementation ---------------------------------------------------------------------------------------
 
-    @Override
-    public Service getService() {
-
-        return service;
-    }
-
-    @Override
-    public KeyStore getKeyStore() {
-
-        return keyStore;
-    }
-
-    @Override
-    public Sampler getSampler() {
-
-        return sampler;
-    }
-
-    @Override
-    public Runner getRunner() {
-
-        return runner;
-    }
-
-    @Override
-    public String getID() {
-
-        return id;
-    }
+    // lifecycle -------------------------------------------------------------------------------------------------------
 
     @Override
     public void init(Configuration c) throws Exception {
@@ -129,8 +101,8 @@ public class LoadDriverImpl implements LoadDriver {
         OutputConfiguration outputConfiguration = c.getOutputConfiguration();
 
         //
-        // load strategy instantiation and installation; the load strategy usually initializes the key provider,
-        // which is accessible with LoadStrategy.getKeyProvider()
+        // load strategy instantiation and installation; the load strategy usually initializes the key provider which is
+        // accessible with LoadStrategy.getKeyProvider()
         //
 
         LoadStrategy loadStrategy = LoadStrategyFactory.build(serviceConfiguration, loadConfiguration);
@@ -262,10 +234,42 @@ public class LoadDriverImpl implements LoadDriver {
         }
     }
 
+    // identity --------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String getID() {
+
+        return id;
+    }
+
     @Override
     public boolean background() {
 
         return background;
+    }
+
+    @Override
+    public Service getService() {
+
+        return service;
+    }
+
+    @Override
+    public KeyStore getKeyStore() {
+
+        return keyStore;
+    }
+
+    @Override
+    public Sampler getSampler() {
+
+        return sampler;
+    }
+
+    @Override
+    public Runner getRunner() {
+
+        return runner;
     }
 
     @Override

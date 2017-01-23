@@ -70,6 +70,7 @@ public interface LoadStrategyFactory {
             t = sc.getType();
 
             if (t == null) {
+
                 throw new IllegalArgumentException("null service type");
             }
 

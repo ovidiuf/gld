@@ -34,13 +34,6 @@ public interface LoadDriver {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // identity --------------------------------------------------------------------------------------------------------
-
-    /**
-     * Each load driver member of a cluster must have an unique ID.
-     */
-    String getID();
-
     // lifecycle -------------------------------------------------------------------------------------------------------
 
     /**
@@ -48,13 +41,6 @@ public interface LoadDriver {
      * passed to it.
      */
     void init(Configuration c) throws Exception;
-
-    /**
-     * @return true if the load driver is configured to run as a background process and does not interact directly
-     * with stdin/stdout/stderr. False if the load driver is configured to run in foreground and can be controlled
-     * directly from the console. The default behavior is to run in background.
-     */
-    boolean background();
 
     /**
      * The main LoadDriver instance loop.
@@ -69,6 +55,20 @@ public interface LoadDriver {
      * By the moment the Exception emerges from run(), the dependent services should be stopped already.
      */
     void run() throws Exception;
+
+    // identity --------------------------------------------------------------------------------------------------------
+
+    /**
+     * Each load driver member of a cluster must have an unique ID.
+     */
+    String getID();
+
+    /**
+     * @return true if the load driver is configured to run as a background process and does not interact directly
+     * with stdin/stdout/stderr. False if the load driver is configured to run in foreground and can be controlled
+     * directly from the console. The default behavior is to run in background.
+     */
+    boolean background();
 
     //
     // topology --------------------------------------------------------------------------------------------------------
