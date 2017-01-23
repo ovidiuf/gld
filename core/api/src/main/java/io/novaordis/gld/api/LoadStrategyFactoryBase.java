@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.cache.load;
+package io.novaordis.gld.api;
 
-import io.novaordis.gld.api.LoadStrategyFactoryBase;
+import io.novaordis.gld.api.configuration.LoadConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.service.ServiceType;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/5/16
+ * @since 1/22/17
  */
-public class CacheLoadStrategyFactory extends LoadStrategyFactoryBase {
+public abstract class LoadStrategyFactoryBase implements LoadStrategyFactory {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -36,9 +37,33 @@ public class CacheLoadStrategyFactory extends LoadStrategyFactoryBase {
     // LoadStrategyFactory implementation ------------------------------------------------------------------------------
 
     @Override
-    public ServiceType getServiceType() {
+    public LoadStrategy buildInstance(ServiceConfiguration sc, LoadConfiguration lc) throws Exception {
 
-        return ServiceType.cache;
+        String loadStrategyName = sc.getLoadStrategyName();
+
+        //
+        // loadStrategyName can't be null, because we parsed the configuration already and we would have detected
+        // the problem, but check nonetheless
+        //
+
+        if (loadStrategyName == null) {
+            throw new IllegalArgumentException(
+                    "missing or null '" + ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL + "' map element");
+        }
+
+        //
+        // infer the class name from the strategy name and attempt to instantiate
+        //
+
+        ServiceType ourServiceType = getServiceType();
+
+        String fqcn = LoadStrategyFactory.inferFullyQualifiedLoadStrategyClassName(ourServiceType, loadStrategyName);
+
+        LoadStrategy s = ClassLoadingUtilities.getInstance(LoadStrategy.class, fqcn);
+
+        s.init(sc, lc);
+
+        return s;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

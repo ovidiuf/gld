@@ -16,19 +16,14 @@
 
 package io.novaordis.gld.api.jms.load;
 
-import io.novaordis.gld.api.ClassLoadingUtilities;
-import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.LoadStrategyFactory;
-import io.novaordis.gld.api.configuration.LoadConfiguration;
-import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.gld.api.jms.JmsServiceConfiguration;
+import io.novaordis.gld.api.LoadStrategyFactoryBase;
 import io.novaordis.gld.api.service.ServiceType;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/5/16
  */
-public class JmsLoadStrategyFactory implements LoadStrategyFactory {
+public class JmsLoadStrategyFactory extends LoadStrategyFactoryBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -39,43 +34,6 @@ public class JmsLoadStrategyFactory implements LoadStrategyFactory {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // LoadStrategyFactory implementation ------------------------------------------------------------------------------
-
-    @Override
-    public LoadStrategy buildInstance(ServiceConfiguration sc, LoadConfiguration lc) throws Exception {
-
-        JmsServiceConfiguration msc = (JmsServiceConfiguration)sc;
-
-        String loadStrategyName = msc.getLoadStrategyName();
-
-        //
-        // loadStrategyName can't be null, because we parsed the configuration already and we would have detected
-        // the problem, but check nonetheless
-        //
-
-        if (loadStrategyName == null) {
-            throw new IllegalArgumentException(
-                    "missing or null '" + ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL + "' map element");
-        }
-
-        //
-        // infer the class name from the strategy name and attempt to instantiate
-        //
-
-        ServiceType ourServiceType = getServiceType();
-
-        if (!ServiceType.jms.equals(ourServiceType)) {
-            throw new IllegalStateException(
-                    "invalid service type " + ourServiceType + ", it should be " + ServiceType.jms);
-        }
-
-        String fqcn = LoadStrategyFactory.inferFullyQualifiedLoadStrategyClassName(ourServiceType, loadStrategyName);
-
-        LoadStrategy s = ClassLoadingUtilities.getInstance(LoadStrategy.class, fqcn);
-
-        s.init(sc, lc);
-
-        return s;
-    }
 
     @Override
     public ServiceType getServiceType() {
