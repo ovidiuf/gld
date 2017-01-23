@@ -247,7 +247,8 @@ public abstract class LoadStrategyFactoryTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("ClassNotFoundException io.novaordis.gld.api.cache.load.SurelyThereIsNoSuchLoadStrategy", msg);
+            assertEquals("ClassNotFoundException io.novaordis.gld.api." + f.getServiceType() +
+                    ".load.SurelyThereIsNoSuchLoadStrategy", msg);
         }
     }
 

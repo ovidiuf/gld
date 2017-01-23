@@ -63,9 +63,9 @@ public class JmsLoadStrategyFactory implements LoadStrategyFactory {
 
         ServiceType ourServiceType = getServiceType();
 
-        if (!ServiceType.cache.equals(ourServiceType)) {
+        if (!ServiceType.jms.equals(ourServiceType)) {
             throw new IllegalStateException(
-                    "invalid service type " + ourServiceType + ", it should be " + ServiceType.cache);
+                    "invalid service type " + ourServiceType + ", it should be " + ServiceType.jms);
         }
 
         String fqcn = LoadStrategyFactory.inferFullyQualifiedLoadStrategyClassName(ourServiceType, loadStrategyName);
@@ -80,7 +80,7 @@ public class JmsLoadStrategyFactory implements LoadStrategyFactory {
     @Override
     public ServiceType getServiceType() {
 
-        return ServiceType.cache;
+        return ServiceType.jms;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

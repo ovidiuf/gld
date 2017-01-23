@@ -16,16 +16,15 @@
 
 package io.novaordis.gld.api.cache.load;
 
-import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.LoadStrategyFactoryTest;
-import io.novaordis.gld.api.configuration.MockLoadConfiguration;
 import io.novaordis.gld.api.cache.CacheServiceConfiguration;
 import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
+import io.novaordis.gld.api.service.ServiceType;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -48,26 +47,10 @@ public class CacheLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
     // Tests -----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void buildInstance_DoesNotRequireConfig() throws Exception {
-
-        //
-        // we simulate a load strategy that does not require any special configuration
-        //
+    public void serviceType() throws Exception {
 
         CacheLoadStrategyFactory f = getLoadStrategyFactoryToTest();
-
-        MockLoadConfiguration mlc = new MockLoadConfiguration();
-        MockCacheServiceConfiguration mc = new MockCacheServiceConfiguration();
-
-        mc.setLoadStrategyName("mock");
-
-        LoadStrategy s = f.buildInstance(mc, mlc);
-
-        //
-        // make sure the load strategy was built without any incident
-        //
-
-        assertNotNull(s);
+        assertEquals(ServiceType.cache, f.getServiceType());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -85,6 +68,7 @@ public class CacheLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
 
         MockCacheServiceConfiguration c = new MockCacheServiceConfiguration();
         c.setLoadStrategyName("mock");
+        log.debug("returning " + c);
         return c;
     }
 
