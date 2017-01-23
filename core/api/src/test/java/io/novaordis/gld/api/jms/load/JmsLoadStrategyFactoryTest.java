@@ -16,23 +16,12 @@
 
 package io.novaordis.gld.api.jms.load;
 
-import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.LoadStrategyFactoryTest;
-import io.novaordis.gld.api.cache.CacheServiceConfiguration;
-import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
-import io.novaordis.gld.api.cache.load.CacheLoadStrategyFactory;
-import io.novaordis.gld.api.configuration.MockLoadConfiguration;
-import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.jms.JmsServiceConfiguration;
 import io.novaordis.gld.api.jms.MockJmsServiceConfiguration;
-import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -53,31 +42,6 @@ public class JmsLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Tests -----------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void buildInstance_DoesNotRequireConfig() throws Exception {
-
-        throw new RuntimeException("return here");
-
-//        //
-//        // we simulate a load strategy that does not require any special configuration
-//        //
-//
-//        CacheLoadStrategyFactory f = getLoadStrategyFactoryToTest();
-//
-//        MockLoadConfiguration mlc = new MockLoadConfiguration();
-//        MockCacheServiceConfiguration mc = new MockCacheServiceConfiguration();
-//
-//        mc.setLoadStrategyName("mock");
-//
-//        LoadStrategy s = f.buildInstance(mc, mlc);
-//
-//        //
-//        // make sure the load strategy was built without any incident
-//        //
-//
-//        assertNotNull(s);
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

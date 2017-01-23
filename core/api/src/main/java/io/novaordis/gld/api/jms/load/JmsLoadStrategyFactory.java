@@ -19,9 +19,9 @@ package io.novaordis.gld.api.jms.load;
 import io.novaordis.gld.api.ClassLoadingUtilities;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.LoadStrategyFactory;
-import io.novaordis.gld.api.cache.CacheServiceConfiguration;
 import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
+import io.novaordis.gld.api.jms.JmsServiceConfiguration;
 import io.novaordis.gld.api.service.ServiceType;
 
 /**
@@ -43,9 +43,9 @@ public class JmsLoadStrategyFactory implements LoadStrategyFactory {
     @Override
     public LoadStrategy buildInstance(ServiceConfiguration sc, LoadConfiguration lc) throws Exception {
 
-        CacheServiceConfiguration csc = (CacheServiceConfiguration)sc;
+        JmsServiceConfiguration msc = (JmsServiceConfiguration)sc;
 
-        String loadStrategyName = csc.getLoadStrategyName();
+        String loadStrategyName = msc.getLoadStrategyName();
 
         //
         // loadStrategyName can't be null, because we parsed the configuration already and we would have detected

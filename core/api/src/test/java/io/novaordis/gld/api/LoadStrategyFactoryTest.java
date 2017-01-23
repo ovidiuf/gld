@@ -251,6 +251,30 @@ public abstract class LoadStrategyFactoryTest {
         }
     }
 
+    @Test
+    public void buildInstance_DoesNotRequireConfig() throws Exception {
+
+        //
+        // we simulate a load strategy that does not require any special configuration
+        //
+
+        LoadStrategyFactory f = getLoadStrategyFactoryToTest();
+
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+        MockServiceConfiguration  msc = (MockServiceConfiguration)getCorrespondingConfigurationToTest();
+
+        msc.setLoadStrategyName("mock");
+
+        LoadStrategy s = f.buildInstance(msc, mlc);
+
+        //
+        // make sure the load strategy was built without any incident
+        //
+
+        assertNotNull(s);
+    }
+
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
