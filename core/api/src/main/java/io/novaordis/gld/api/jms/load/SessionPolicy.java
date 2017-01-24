@@ -20,18 +20,51 @@ import io.novaordis.utilities.UserErrorException;
 
 public enum SessionPolicy {
 
-    SESSION_PER_THREAD,
+    SESSION_PER_THREAD("session-per-thread"),
 
     //
     // A session is created every time an operation is about to be executed against the server, used to execute the
     // operation and then closed and discarded (this is the default in absence of an explicitly configured session
     // policy)
     //
-    SESSION_PER_OPERATION,
+    SESSION_PER_OPERATION("session-per-operation"),
     ;
 
     static SessionPolicy fromString(String s) throws UserErrorException {
 
-        throw new RuntimeException("NYE");
+        SessionPolicy[] values = SessionPolicy.values();
+        String msg = "";
+
+        for(int i = 0; i < values.length; i ++) {
+
+            SessionPolicy sp = values[i];
+
+            if (sp.getLabel().equals(s)) {
+
+                return sp;
+            }
+
+            msg += "'" + sp.getLabel() + "'";
+
+            if (i < values.length - 1) {
+
+                msg += ", ";
+            }
+        }
+
+        msg = "invalid session policy '" + s + "', valid options: " + msg;
+        throw new UserErrorException(msg);
+    }
+
+    private String label;
+
+    SessionPolicy(String label) {
+
+        this.label = label;
+    }
+
+    public String getLabel() {
+
+        return label;
     }
 }

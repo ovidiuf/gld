@@ -24,14 +24,47 @@ public enum ConnectionPolicy {
     // One connection is created at the beginning of the load run and that connection is used throughout the load run
     // (this is the default in absence of an explicitly configured session policy)
     //
-    CONNECTION_PER_RUN,
-    CONNECTION_PER_THREAD,
-    CONNECTION_PER_OPERATION,
-    CONNECTION_POOL,
+    CONNECTION_PER_RUN("connection-per-run"),
+    CONNECTION_PER_THREAD("connection-per-thread"),
+    CONNECTION_PER_OPERATION("connection-per-operation"),
+    CONNECTION_POOL("connection-pool"),
     ;
 
     static ConnectionPolicy fromString(String s) throws UserErrorException {
 
-        throw new RuntimeException("NYE");
+        ConnectionPolicy[] values = ConnectionPolicy.values();
+        String msg = "";
+
+        for(int i = 0; i < values.length; i ++) {
+
+            ConnectionPolicy cp = values[i];
+
+            if (cp.getLabel().equals(s)) {
+
+                return cp;
+            }
+
+            msg += "'" + cp.getLabel() + "'";
+
+            if (i < values.length - 1) {
+
+                msg += ", ";
+            }
+        }
+
+        msg = "invalid connection policy '" + s + "', valid options: " + msg;
+        throw new UserErrorException(msg);
+    }
+
+    private String label;
+
+    ConnectionPolicy(String label) {
+
+        this.label = label;
+    }
+
+    public String getLabel() {
+
+        return label;
     }
 }

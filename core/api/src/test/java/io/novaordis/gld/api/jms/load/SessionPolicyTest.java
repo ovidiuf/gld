@@ -63,7 +63,7 @@ public class SessionPolicyTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals(msg, "blah");
+            assertEquals("invalid session policy 'no such thing', valid options: 'session-per-thread', 'session-per-operation'", msg);
         }
     }
 

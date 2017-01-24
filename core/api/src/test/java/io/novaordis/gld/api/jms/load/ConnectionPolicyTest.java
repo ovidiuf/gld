@@ -65,7 +65,7 @@ public class ConnectionPolicyTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals(msg, "blah");
+            assertEquals("invalid connection policy 'no such thing', valid options: 'connection-per-run', 'connection-per-thread', 'connection-per-operation', 'connection-pool'", msg);
         }
     }
 
