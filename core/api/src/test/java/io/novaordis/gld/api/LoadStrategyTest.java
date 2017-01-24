@@ -30,6 +30,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -149,6 +151,20 @@ public abstract class LoadStrategyTest {
         KeyProvider p = lsb.getKeyProvider();
         assertNotNull(p);
         assertTrue(p.isStarted());
+    }
+
+    // identity and defaults -------------------------------------------------------------------------------------------
+
+    @Test
+    public void identityAndDefaults() throws Exception {
+
+        LoadStrategy ls = getLoadStrategyToTest();
+
+        // unlimited
+        assertNull(ls.getMaxOperations());
+
+        // unlimited
+        assertNull(ls.getRemainingOperations());
     }
 
     // lifecycle -------------------------------------------------------------------------------------------------------
@@ -309,56 +325,159 @@ public abstract class LoadStrategyTest {
         }
     }
 
-    // constructors ----------------------------------------------------------------------------------------------------
+    // maxOperations()/remainingOperations() ---------------------------------------------------------------------------
 
-//    @Test
-//    public void nullArguments() throws Exception {
-//
-//        LoadStrategy s = getLoadStrategyToTest(null, null, -1);
-//
-//        Configuration c = getConfigurationToTestWith();
-//
-//        s.configure(c, null, -1);
-//
-//        // we should be fine, null means no more arguments to look at
-//    }
-//
-//    @Test
-//    public void fromOutOfBounds_InferiorLimit() throws Exception {
-//
-//        LoadStrategy s = getLoadStrategyToTest(null, null, -1);
-//
-//        List<String> args = Arrays.asList("blah", "blah", "blah");
-//
-//        Configuration c = getConfigurationToTestWith();
-//
-//        try {
-//
-//            s.configure(c, args, -1);
-//            fail("should fail with ArrayIndexOutOfBoundsException because from is lower than acceptable");
-//        }
-//        catch(ArrayIndexOutOfBoundsException e) {
-//            log.info(e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void nullConfiguration() throws Exception {
-//
-//        LoadStrategy s = getLoadStrategyToTest(null, null, -1);
-//
-//        List<String> args = Arrays.asList("blah", "blah", "blah");
-//
-//        try {
-//
-//            s.configure(null, args, 1);
-//            fail("should fail with IllegalArgumentException on account of null configuration");
-//        }
-//        catch(IllegalArgumentException e) {
-//            log.info(e.getMessage());
-//        }
-//    }
-//
+    @Test
+    public void maxOperations_remainingOperations() throws Exception {
+
+        LoadStrategyBase lsb = (LoadStrategyBase)getLoadStrategyToTest();
+
+        assertNull(lsb.getMaxOperations());
+        assertNull(lsb.getRemainingOperations());
+
+        lsb.setMaxOperations(1L);
+        assertEquals(1L, lsb.getMaxOperations().longValue());
+        assertEquals(1L, lsb.getRemainingOperations().longValue());
+
+        //
+        // produce the operation
+        //
+
+        Operation o = lsb.next(null, null, false);
+
+        assertNotNull(o);
+
+        assertEquals(1L, lsb.getMaxOperations().longValue());
+        assertEquals(0L, lsb.getRemainingOperations().longValue());
+
+        //
+        // must not produce operations anymore
+        //
+
+        Operation o2 = lsb.next(null, null, false);
+
+        assertNull(o2);
+
+        assertEquals(1L, lsb.getMaxOperations().longValue());
+        assertEquals(0L, lsb.getRemainingOperations().longValue());
+    }
+
+    // next() ----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void next_Unlimited() throws Exception {
+
+        LoadStrategy ls = getLoadStrategyToTest();
+
+        assertNull(ls.getMaxOperations());
+
+        Operation o = ls.next(null, null, false);
+        assertNotNull(o);
+
+        Operation o2 = ls.next(o, null, false);
+        assertNotNull(o2);
+
+        Operation o3 = ls.next(o2, null, false);
+        assertNotNull(o3);
+    }
+
+    @Test
+    public void next_Limited() throws Exception {
+
+        LoadStrategyBase lsb = (LoadStrategyBase)getLoadStrategyToTest();
+
+        lsb.setMaxOperations(2L);
+
+        Operation o = lsb.next(null, null, false);
+        assertNotNull(o);
+
+        Operation o2 = lsb.next(o, null, false);
+        assertNotNull(o2);
+
+        Operation o3 = lsb.next(o2, null, false);
+        assertNull(o3);
+
+        Operation o4 = lsb.next(o2, null, false);
+        assertNull(o4);
+    }
+
+    @Test
+    public void next_Multithreaded_ByDefaultProducesAnUnlimitedNumberOfOperations() throws Exception {
+
+        final LoadStrategy ls = getLoadStrategyToTest();
+
+        assertNull(ls.getMaxOperations());
+
+        int threadCount = 1000;
+        int operationsRequestedPerThread = 1000;
+        final CountDownLatch latch = new CountDownLatch(threadCount);
+        final AtomicInteger producedOperationCount = new AtomicInteger(0);
+        final Exception[] exceptions = new Exception[threadCount];
+
+        for(int i = 0; i < threadCount; i ++) {
+
+            new Thread(new TestThreadContext(
+                    i, operationsRequestedPerThread, ls, exceptions, producedOperationCount, latch),
+                    "test thread " + i).start();
+        }
+
+        latch.await();
+
+        //
+        // make sure there were no exceptions
+        //
+        for(int i = 0; i < threadCount; i ++) {
+
+            if (exceptions[i] != null) {
+
+                fail("thread " + i + " generated exception: " + exceptions[i]);
+            }
+        }
+
+        int expected = threadCount * operationsRequestedPerThread;
+        int actual = producedOperationCount.get();
+        log.info("expected: " + expected + ", actual: " + actual);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void next_Multithreaded_LimitedNumberOfOperations() throws Exception {
+
+        final LoadStrategyBase ls = (LoadStrategyBase)getLoadStrategyToTest();
+
+        long operationsPerStrategy = 1000;
+        ls.setMaxOperations(operationsPerStrategy);
+
+        int threadCount = 1000;
+        final CountDownLatch latch = new CountDownLatch(threadCount);
+        final AtomicInteger producedOperationCount = new AtomicInteger(0);
+        final Exception[] exceptions = new Exception[threadCount];
+
+        for(int i = 0; i < threadCount; i ++) {
+
+            new Thread(new TestThreadContext(
+                    i, -1, ls, exceptions, producedOperationCount, latch),
+                    "test thread " + i).start();
+        }
+
+        latch.await();
+
+        //
+        // make sure there were no exceptions
+        //
+        for(int i = 0; i < threadCount; i ++) {
+
+            if (exceptions[i] != null) {
+
+                fail("thread " + i + " generated exception: " + exceptions[i]);
+            }
+        }
+
+        int actual = producedOperationCount.get();
+        log.info("expected: " + operationsPerStrategy + ", actual: " + actual);
+        assertEquals(operationsPerStrategy, actual);
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
@@ -368,5 +487,74 @@ public abstract class LoadStrategyTest {
     // Private ---------------------------------------------------------------------------------------------------------
 
     // Inner classes ---------------------------------------------------------------------------------------------------
+
+    private static class TestThreadContext implements Runnable {
+
+        private int id;
+        private long operationsRequestedPerThread;
+        private Exception[] exceptions;
+        private LoadStrategy loadStrategy;
+        private AtomicInteger producedOperationCount;
+        private CountDownLatch latch;
+
+        /**
+         * @param operationsRequestedPerThread if -1, it means we keep requesting operations until the load strategy
+         *                                     runs out.
+         */
+        public TestThreadContext(int id, long operationsRequestedPerThread, LoadStrategy ls,
+                                 Exception[] exceptions, AtomicInteger producedOperationCount, CountDownLatch latch) {
+
+            this.id = id;
+            this.operationsRequestedPerThread = operationsRequestedPerThread;
+            this.loadStrategy = ls;
+            this.exceptions = exceptions;
+            this.producedOperationCount = producedOperationCount;
+            this.latch = latch;
+        }
+
+        @Override
+        public void run() {
+
+            try {
+
+                Operation last = null;
+
+                if (operationsRequestedPerThread == -1) {
+
+                    operationsRequestedPerThread = Long.MAX_VALUE;
+                }
+
+                for (long j = 0; j < operationsRequestedPerThread; j++) {
+
+                    Operation current = loadStrategy.next(last, null, false);
+
+                    if (current == null) {
+
+                        //
+                        // the strategy ran out of operations, exit
+                        //
+
+                        return;
+                    }
+
+                    last = current;
+                    producedOperationCount.incrementAndGet();
+                }
+            }
+            catch(Exception e) {
+
+                exceptions[id] = e;
+            }
+            finally {
+
+
+                //
+                // exit after the set number of operations have been requested
+                //
+
+                latch.countDown();
+            }
+        }
+    }
 
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,69 +14,80 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.operations.jms;
+package io.novaordis.gld.api.jms.operation;
 
-import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.Service;
-import com.novaordis.gld.service.jms.JmsEndpoint;
-import com.novaordis.gld.strategy.load.jms.Destination;
-import com.novaordis.gld.strategy.load.jms.JmsLoadStrategy;
+import io.novaordis.gld.api.jms.Destination;
+import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 
+/**
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 1/23/17
+ */
+public abstract class JmsOperationBase implements JmsOperation {
 
-public abstract class JmsOperation implements Operation
-{
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private JmsLoadStrategy jmsLoadStrategy;
+    private JmsLoadStrategy loadStrategy;
+
+    private String payload;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    protected JmsOperation(JmsLoadStrategy jmsLoadStrategy)
-    {
-        this.jmsLoadStrategy = jmsLoadStrategy;
+    protected JmsOperationBase(JmsLoadStrategy loadStrategy) {
+
+        if (loadStrategy == null) {
+
+            throw new IllegalArgumentException("null load strategy");
+        }
+
+        this.loadStrategy = loadStrategy;
     }
 
-    // Operation implementation ----------------------------------------------------------------------------------------
-
-    /**
-     * @see Operation#perform(Service)
-     */
-    @Override
-    public void perform(Service s) throws Exception
-    {
-        s.perform(this);
-    }
+    // JmsOperation implementation -------------------------------------------------------------------------------------
 
     @Override
-    public JmsLoadStrategy getLoadStrategy()
-    {
-        return jmsLoadStrategy;
+    public JmsLoadStrategy getLoadStrategy() {
+
+        return loadStrategy;
     }
+
+    @Override
+    public String getKey() {
+        throw new RuntimeException("getKey() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public String getPayload() {
+
+        return payload;
+    }
+
+    @Override
+    public Destination getDestination() {
+
+        return loadStrategy.getDestination();
+    }
+
+//    /**
+//     * Externalize the job of choosing what endpoint to use for operation to JmsResourceManager.
+//     *
+//     * @see com.novaordis.gld.service.jms.JmsEndpoint
+//     * @see com.novaordis.gld.service.jms.JmsResourceManager
+//     */
+//    public abstract void perform(JmsEndpoint endpoint) throws Exception;
+
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    /**
-     * Externalize the job of choosing what endpoint to use for operation to JmsResourceManager.
-     *
-     * @see com.novaordis.gld.service.jms.JmsEndpoint
-     * @see com.novaordis.gld.service.jms.JmsResourceManager
-     */
-    public abstract void perform(JmsEndpoint endpoint) throws Exception;
-
-    public Destination getDestination()
-    {
-        return jmsLoadStrategy.getDestination();
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-//    protected javax.jms.Destination getJmsDestination(Session session) throws Exception
+    //    protected javax.jms.Destination getJmsDestination(Session session) throws Exception
 //    {
 //        Destination destination = getDestination();
 //
@@ -93,6 +104,7 @@ public abstract class JmsOperation implements Operation
 //            throw new IllegalStateException("unknown destination type " + destination);
 //        }
 //    }
+
 
     // Private ---------------------------------------------------------------------------------------------------------
 

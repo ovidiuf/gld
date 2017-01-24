@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.operations.jms;
+package io.novaordis.gld.api.jms.operation;
 
-import com.novaordis.gld.service.jms.Consumer;
-import com.novaordis.gld.service.jms.JmsEndpoint;
-import com.novaordis.gld.strategy.load.jms.Destination;
-import com.novaordis.gld.strategy.load.jms.ReceiveLoadStrategy;
+import io.novaordis.gld.api.jms.load.ReceiveLoadStrategy;
+import io.novaordis.gld.api.service.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.TextMessage;
+public class Receive extends JmsOperationBase {
 
-public class Receive extends JmsOperation
-{
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = LoggerFactory.getLogger(Receive.class);
@@ -40,42 +36,57 @@ public class Receive extends JmsOperation
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Receive(ReceiveLoadStrategy loadStrategy)
-    {
+    public Receive(ReceiveLoadStrategy loadStrategy) {
+
         super(loadStrategy);
         this.timeoutMs = loadStrategy.getTimeoutMs();
     }
 
-    // JmsOperation overrides ------------------------------------------------------------------------------------------
+    // JmsOperationBase overrides --------------------------------------------------------------------------------------
 
     @Override
-    public void perform(JmsEndpoint endpoint) throws Exception
-    {
-        Consumer consumer = (Consumer)endpoint;
-        MessageConsumer jmsConsumer = consumer.getConsumer();
+    public void perform(Service s) throws Exception {
+        throw new RuntimeException("perform() NOT YET IMPLEMENTED");
+    }
 
-        Message m;
+//    @Override
+//    public void perform(JmsEndpoint endpoint) throws Exception {
+//
+//        Consumer consumer = (Consumer)endpoint;
+//        MessageConsumer jmsConsumer = consumer.getConsumer();
+//
+//        Message m;
+//
+//        if (timeoutMs == null)
+//        {
+//            m = jmsConsumer.receive();
+//        }
+//        else
+//        {
+//            m = jmsConsumer.receive(timeoutMs);
+//        }
+//
+//        if (trace)
+//        {
+//            String messageID = m.getJMSMessageID();
+//            String textPayload = null;
+//            if (m instanceof TextMessage)
+//            {
+//                textPayload = ((TextMessage)m).getText();
+//            }
+//
+//            log.trace(messageID + ": " + (textPayload == null ? "0:null" : textPayload.length() + ":" + textPayload));
+//        }
+//    }
 
-        if (timeoutMs == null)
-        {
-            m = jmsConsumer.receive();
-        }
-        else
-        {
-            m = jmsConsumer.receive(timeoutMs);
-        }
+    @Override
+    public boolean wasPerformed() {
+        throw new RuntimeException("wasPerformed() NOT YET IMPLEMENTED");
+    }
 
-        if (trace)
-        {
-            String messageID = m.getJMSMessageID();
-            String textPayload = null;
-            if (m instanceof TextMessage)
-            {
-                textPayload = ((TextMessage)m).getText();
-            }
-
-            log.trace(messageID + ": " + (textPayload == null ? "0:null" : textPayload.length() + ":" + textPayload));
-        }
+    @Override
+    public boolean wasSuccessful() {
+        throw new RuntimeException("wasSuccessful() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -89,16 +100,17 @@ public class Receive extends JmsOperation
     }
 
     @Override
-    public String toString()
-    {
-        Destination d = getDestination();
-        String name = d.getName();
+    public String toString() {
 
-        return
-            "receive[" +
-                ((d.isQueue() ? "queue=" : "topic=") + name) +
-                (", timeout=" + (getTimeoutMs() == null ? "0" : getTimeoutMs())) + "]";
+        return "NOT YET IMPLEMENTED";
 
+//        Destination d = getDestination();
+//        String name = d.getName();
+//
+//        return
+//            "receive[" +
+//                ((d.isQueue() ? "queue=" : "topic=") + name) +
+//                (", timeout=" + (getTimeoutMs() == null ? "0" : getTimeoutMs())) + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

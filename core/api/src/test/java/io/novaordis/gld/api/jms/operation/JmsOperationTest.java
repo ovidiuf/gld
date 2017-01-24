@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,10 +14,21 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.load.jms;
+package io.novaordis.gld.api.jms.operation;
 
-public class Queue extends DestinationBase
-{
+import io.novaordis.gld.api.OperationTest;
+import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+/**
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 12/5/16
+ */
+public abstract class JmsOperationTest extends OperationTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
@@ -26,34 +37,26 @@ public class Queue extends DestinationBase
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Queue(String name)
-    {
-        super(name);
-    }
-
-    // Destination implementation --------------------------------------------------------------------------------------
-
-    @Override
-    public boolean isQueue()
-    {
-        return true;
-    }
-
-    @Override
-    public boolean isTopic()
-    {
-        return false;
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Override
-    public String toString()
-    {
-        return getName();
+    // Test ------------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void identity() throws Exception {
+
+        JmsOperation o = getOperationToTest("test");
+
+        assertEquals("test", o.getKey());
+
+        JmsLoadStrategy s = o.getLoadStrategy();
+
+        assertNotNull(s);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
+
+    @Override
+    protected abstract JmsOperation getOperationToTest(String key) throws Exception;
 
     // Protected -------------------------------------------------------------------------------------------------------
 

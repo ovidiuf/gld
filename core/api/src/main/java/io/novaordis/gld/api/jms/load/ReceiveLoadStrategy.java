@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,44 +14,84 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.jms;
+package io.novaordis.gld.api.jms.load;
 
-import io.novaordis.gld.api.configuration.ServiceConfigurationImpl;
-import io.novaordis.utilities.UserErrorException;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.jms.operation.Receive;
 
-import java.io.File;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/6/16
+ * @since 1/22/17
  */
-public class JmsServiceConfigurationImpl extends ServiceConfigurationImpl implements JmsServiceConfiguration {
+public class ReceiveLoadStrategy extends JmsLoadStrategyBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    public static final String NAME = "receive";
+
+    private static final Set<Class<? extends Operation>> OPERATION_TYPES;
+
+    static {
+
+        OPERATION_TYPES = new HashSet<>();
+        OPERATION_TYPES.add(Receive.class);
+    }
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private long timeoutMs;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public JmsServiceConfigurationImpl(Map<String, Object> rawConfiguration, File configurationDirectory)
-            throws Exception {
+    // JmsLoadStrategyBase overrides -----------------------------------------------------------------------------------
 
-        super(rawConfiguration, configurationDirectory);
+    @Override
+    public String getName() {
+
+        return NAME;
     }
 
     @Override
-    public int getMessageSize() throws UserErrorException {
-        throw new RuntimeException("getMessageSize() NOT YET IMPLEMENTED");
+    public Set<Class<? extends Operation>> getOperationTypes() {
+
+        return OPERATION_TYPES;
     }
 
-    // JmsServiceConfiguration implementation ------------------------------------------------------------------------
+    @Override
+    protected Operation nextInternal(Operation last, String lastWrittenKey, boolean runtimeShuttingDown)
+            throws Exception {
 
+        return new Receive(this);
+
+    }
     // Public ----------------------------------------------------------------------------------------------------------
 
+    public long getTimeoutMs() {
+
+        return timeoutMs;
+    }
+
+    @Override
+    public String toString() {
+
+        return "NOT YET IMPLEMENTED";
+
+//        long remainingOperations = getRemainingOperations();
+//        return "ReceiveLoadStrategy[remaining=" +
+//                (remainingOperations == Long.MAX_VALUE ? "unlimited" : remainingOperations ) + "]";
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
+
+    void setTimeoutMs(Long timeoutMs) {
+
+        this.timeoutMs = timeoutMs;
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

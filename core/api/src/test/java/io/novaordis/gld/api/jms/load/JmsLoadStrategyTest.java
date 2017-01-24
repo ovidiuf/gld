@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,28 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.jms;
+package io.novaordis.gld.api.jms.load;
 
-import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.utilities.UserErrorException;
+import io.novaordis.gld.api.LoadStrategyTest;
+import io.novaordis.gld.api.jms.Destination;
+import io.novaordis.gld.api.service.ServiceType;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/6/16
+ * @since 1/22/17
  */
-public interface JmsServiceConfiguration extends ServiceConfiguration {
+public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(JmsLoadStrategyTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -35,19 +45,47 @@ public interface JmsServiceConfiguration extends ServiceConfiguration {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    /**
-     * @return the default message size, in bytes. A specific load strategy may choose to ignore this default and use a
-     * load-strategy specific value. The configuration value is optional, if not present in the configuration file,
-     * the default value (see ServiceConfiguration.DEFAULT_VALUE_SIZE above) is used.
-     */
-    int getMessageSize() throws UserErrorException;
+    // Tests -----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void getServiceType() throws Exception {
+
+        JmsLoadStrategy ls = getLoadStrategyToTest();
+        assertEquals(ServiceType.jms, ls.getServiceType());
+        log.debug(".");
+    }
+
+    @Test
+    public void identityAndDefaults() throws Exception {
+
+        JmsLoadStrategy ls = getLoadStrategyToTest();
+
+        Destination d = ls.getDestination();
+        assertNotNull(d);
+
+        ConnectionPolicy cp = ls.getConnectionPolicy();
+        assertEquals(ConnectionPolicy.CONNECTION_PER_RUN, cp);
+
+        SessionPolicy sp = ls.getSessionPolicy();
+        assertEquals(SessionPolicy.SESSION_PER_OPERATION, sp);
+
+        //
+        // unlimited operations
+        //
+
+        assertNull(ls.getRemainingOperations());
+    }
+
+    // next() ----------------------------------------------------------------------------------------------------------
+
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
+    protected abstract JmsLoadStrategy getLoadStrategyToTest() throws Exception;
+
     // Private ---------------------------------------------------------------------------------------------------------
 
     // Inner classes ---------------------------------------------------------------------------------------------------
-
 }

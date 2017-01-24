@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,31 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.jms;
+package io.novaordis.gld.api.jms.load;
 
-import io.novaordis.gld.api.configuration.ServiceConfigurationImpl;
-import io.novaordis.utilities.UserErrorException;
+import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.jms.operation.Send;
 
-import java.io.File;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/6/16
+ * @since 1/22/17
  */
-public class JmsServiceConfigurationImpl extends ServiceConfigurationImpl implements JmsServiceConfiguration {
+public class SendLoadStrategy extends JmsLoadStrategyBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    public static final String NAME = "send";
+
+    private static final Set<Class<? extends Operation>> OPERATION_TYPES;
+
+    static {
+
+        OPERATION_TYPES = new HashSet<>();
+        OPERATION_TYPES.add(Send.class);
+    }
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -36,20 +46,39 @@ public class JmsServiceConfigurationImpl extends ServiceConfigurationImpl implem
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public JmsServiceConfigurationImpl(Map<String, Object> rawConfiguration, File configurationDirectory)
-            throws Exception {
+    // JmsLoadStrategyBase overrides -----------------------------------------------------------------------------------
 
-        super(rawConfiguration, configurationDirectory);
+    @Override
+    public String getName() {
+
+        return NAME;
     }
 
     @Override
-    public int getMessageSize() throws UserErrorException {
-        throw new RuntimeException("getMessageSize() NOT YET IMPLEMENTED");
+    public Set<Class<? extends Operation>> getOperationTypes() {
+
+        return OPERATION_TYPES;
     }
 
-    // JmsServiceConfiguration implementation ------------------------------------------------------------------------
+    @Override
+    protected Operation nextInternal(Operation last, String lastWrittenKey, boolean runtimeShuttingDown)
+            throws Exception {
+
+        return new Send(this);
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+
+        throw new RuntimeException("NYE");
+
+//        long remainingOperations = getRemainingOperations();
+//        return NAME + " (remaining=" +
+//                (remainingOperations == Long.MAX_VALUE ? "unlimited" : remainingOperations ) + "]";
+    }
+
 
     // Package protected -----------------------------------------------------------------------------------------------
 

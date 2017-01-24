@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.jms;
+package io.novaordis.gld.api.jms.load;
 
-import io.novaordis.gld.api.configuration.ServiceConfigurationImpl;
-import io.novaordis.utilities.UserErrorException;
-
-import java.io.File;
-import java.util.Map;
+import io.novaordis.gld.api.jms.Destination;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/6/16
+ * @since 1/23/17
  */
-public class JmsServiceConfigurationImpl extends ServiceConfigurationImpl implements JmsServiceConfiguration {
+public class MockJmsLoadStrategy extends MockLoadStrategy implements JmsLoadStrategy {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -36,18 +32,32 @@ public class JmsServiceConfigurationImpl extends ServiceConfigurationImpl implem
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public JmsServiceConfigurationImpl(Map<String, Object> rawConfiguration, File configurationDirectory)
-            throws Exception {
+    // JmsLoadStrategy implementation ----------------------------------------------------------------------------------
 
-        super(rawConfiguration, configurationDirectory);
+    @Override
+    public Destination getDestination() {
+        throw new RuntimeException("getDestination() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public int getMessageSize() throws UserErrorException {
-        throw new RuntimeException("getMessageSize() NOT YET IMPLEMENTED");
+    public ConnectionPolicy getConnectionPolicy() {
+        throw new RuntimeException("getConnectionPolicy() NOT YET IMPLEMENTED");
     }
 
-    // JmsServiceConfiguration implementation ------------------------------------------------------------------------
+    @Override
+    public SessionPolicy getSessionPolicy() {
+        throw new RuntimeException("getSessionPolicy() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Long getMaxOperations() {
+        throw new RuntimeException("getMaxOperations() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Long getRemainingOperations() {
+        throw new RuntimeException("getRemainingOperations() NOT YET IMPLEMENTED");
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 

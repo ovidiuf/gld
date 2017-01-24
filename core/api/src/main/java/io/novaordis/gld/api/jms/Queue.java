@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2015 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,17 +16,7 @@
 
 package io.novaordis.gld.api.jms;
 
-import io.novaordis.gld.api.configuration.ServiceConfigurationImpl;
-import io.novaordis.utilities.UserErrorException;
-
-import java.io.File;
-import java.util.Map;
-
-/**
- * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/6/16
- */
-public class JmsServiceConfigurationImpl extends ServiceConfigurationImpl implements JmsServiceConfiguration {
+public class Queue extends DestinationBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -36,20 +26,32 @@ public class JmsServiceConfigurationImpl extends ServiceConfigurationImpl implem
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public JmsServiceConfigurationImpl(Map<String, Object> rawConfiguration, File configurationDirectory)
-            throws Exception {
+    public Queue(String name)
+    {
+        super(name);
+    }
 
-        super(rawConfiguration, configurationDirectory);
+    // Destination implementation --------------------------------------------------------------------------------------
+
+    @Override
+    public boolean isQueue()
+    {
+        return true;
     }
 
     @Override
-    public int getMessageSize() throws UserErrorException {
-        throw new RuntimeException("getMessageSize() NOT YET IMPLEMENTED");
+    public boolean isTopic()
+    {
+        return false;
     }
 
-    // JmsServiceConfiguration implementation ------------------------------------------------------------------------
-
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString()
+    {
+        return getName();
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

@@ -17,7 +17,6 @@
 package io.novaordis.gld.api.http;
 
 import io.novaordis.gld.api.OperationTest;
-import io.novaordis.gld.api.jms.JmsOperation;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>

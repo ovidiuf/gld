@@ -100,53 +100,6 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
     }
 
     @Override
-    public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown) {
-
-        if (!initialized) {
-
-            throw new IllegalStateException(this + " was not initialized");
-        }
-
-        Operation result;
-
-        if (lastOperation == null) {
-
-            //
-            // start with a read
-            //
-            result = getNextRead();
-        }
-        else if (lastOperation instanceof Read) {
-
-            Read lastRead = (Read)lastOperation;
-
-            // if the last read is a hit, generate another read
-
-            if (lastRead.getValue() != null) {
-
-                result = getNextRead();
-            }
-            else {
-
-                String lastReadKey = lastRead.getKey();
-                String value = computeValue();
-                result = new Write(lastReadKey, value);
-            }
-        }
-        else if (lastOperation instanceof Write) {
-
-            // read follows a write
-            result = getNextRead();
-        }
-        else {
-
-            throw new IllegalArgumentException("unknown last operation " + lastOperation);
-        }
-
-        return result;
-    }
-
-    @Override
     public Set<Class<? extends Operation>> getOperationTypes() {
 
         return OPERATION_TYPES;
@@ -224,6 +177,55 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
         this.valueSize = cc.getValueSize();
 
         initialized = true;
+    }
+
+    @Override
+    protected Operation nextInternal(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown)
+            throws Exception {
+
+        if (!initialized) {
+
+            throw new IllegalStateException(this + " was not initialized");
+        }
+
+        Operation result;
+
+        if (lastOperation == null) {
+
+            //
+            // start with a read
+            //
+            result = getNextRead();
+        }
+        else if (lastOperation instanceof Read) {
+
+            Read lastRead = (Read)lastOperation;
+
+            // if the last read is a hit, generate another read
+
+            if (lastRead.getValue() != null) {
+
+                result = getNextRead();
+            }
+            else {
+
+                String lastReadKey = lastRead.getKey();
+                String value = computeValue();
+                result = new Write(lastReadKey, value);
+            }
+        }
+        else if (lastOperation instanceof Write) {
+
+            // read follows a write
+            result = getNextRead();
+        }
+        else {
+
+            throw new IllegalArgumentException("unknown last operation " + lastOperation);
+        }
+
+        return result;
+
     }
 
     String computeValue() {

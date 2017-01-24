@@ -14,65 +14,43 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.operations.jms;
+package io.novaordis.gld.api.jms;
 
-import com.novaordis.gld.service.jms.JmsEndpoint;
-import com.novaordis.gld.service.jms.Producer;
-import com.novaordis.gld.strategy.load.jms.SendLoadStrategy;
+public class Topic extends DestinationBase {
 
-import javax.jms.MessageProducer;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-
-public class Send extends JmsOperation
-{
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = LoggerFactory.getLogger(Send.class);
-    private static final boolean trace = log.isTraceEnabled();
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String payload;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Send(SendLoadStrategy sendLoadStrategy)
+    public Topic(String name)
     {
-        super(sendLoadStrategy);
-
-        // create the payload outside the perform() method to influence as little as possible the execution duration;
-        // in this specific case we reuse the message created by the strategy (and presumably cached), because we are
-        // not interested creating distinct message bodies, we're only interested in the payload length
-        payload = sendLoadStrategy.getMessagePayload();
+        super(name);
     }
 
-    // JmsOperation overrides ------------------------------------------------------------------------------------------
+    // Destination implementation --------------------------------------------------------------------------------------
 
     @Override
-    public void perform(JmsEndpoint endpoint) throws Exception
+    public boolean isQueue()
     {
-        Producer producerEndpoint = (Producer)endpoint;
-        Session session = producerEndpoint.getSession();
-        MessageProducer jmsProducer = producerEndpoint.getProducer();
+        return false;
+    }
 
-        TextMessage m = session.createTextMessage(payload);
-
-        if (trace) { log.trace("sending message with payload \"" + payload + "\""); }
-
-        jmsProducer.send(m);
+    @Override
+    public boolean isTopic()
+    {
+        return true;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    /**
-     * May be null.
-     */
-    public String getPayload()
+    @Override
+    public String toString()
     {
-        return payload;
+        return getName();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

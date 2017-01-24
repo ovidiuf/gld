@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2015 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,13 +16,7 @@
 
 package io.novaordis.gld.api.jms;
 
-import io.novaordis.gld.api.OperationTest;
-
-/**
- * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/5/16
- */
-public abstract class JmsOperationTest extends OperationTest {
+abstract class DestinationBase implements Destination {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -30,14 +24,24 @@ public abstract class JmsOperationTest extends OperationTest {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String name;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Public ----------------------------------------------------------------------------------------------------------
+    protected DestinationBase(String name)
+    {
+        this.name = name;
+    }
 
-    // Package protected -----------------------------------------------------------------------------------------------
+    // Destination implementation --------------------------------------------------------------------------------------
 
     @Override
-    protected abstract JmsOperation getOperationToTest(String key) throws Exception;
+    public String getName()
+    {
+        return name;
+    }
+
+    // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 

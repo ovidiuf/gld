@@ -107,99 +107,6 @@ public class WriteThenReadLoadStrategy extends LoadStrategyBase {
     }
 
     @Override
-    public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown)
-            throws Exception {
-
-        if (!initialized) {
-
-            throw new IllegalStateException(this + " was not initialized");
-        }
-
-        if (indexInSeries == -1) {
-            throw new IllegalStateException(this + " not properly configured");
-        }
-
-        // we ignore the last operation, the result come in pre-determined series
-
-        byte keyType;
-
-        if (indexInSeries == 0) {
-            keyType = read ? READ : WRITE;
-        }
-        else {
-            keyType = read ?  WRITE : READ;
-        }
-
-        String key;
-        Operation o;
-        KeyProvider keyProvider = getKeyProvider();
-
-        if (keyType == READ) {
-
-            key = keyProvider.next();
-
-            if (key == null) {
-
-                return null;
-            }
-
-            //
-            // TODO refactor below
-            //
-
-//            else if (lastWrittenKey != null) {
-//
-//                // last successfully written key - the method should be prepared for the situation the key is null.
-//                // Use this unless we have been passed a ReadOnly key keystore. A ReadOnly key keystore takes precedence.
-//
-//                key = lastWrittenKey;
-//            }
-
-            o = new Read(key);
-        }
-        else //noinspection ConstantConditions
-            if (keyType == WRITE) {
-
-                key = keyProvider.next();
-
-                if (key == null) {
-
-                    return null;
-                }
-
-                String value = computeValue();
-
-                //
-                // TODO refactor below
-                //
-//                if (keyProvider instanceof ExperimentalKeyStore) {
-//                    key = keyProvider.get();
-//
-//                    if (key == null) {
-//                        return null;
-//                    }
-//
-//                    value = ((ExperimentalKeyStore) keyProvider).getValue(key);
-//                }
-//                else {
-//
-//                    key = Util.getRandomKey(ThreadLocalRandom.current(), keySize);
-//                    value = Util.getRandomValue(ThreadLocalRandom.current(), valueSize, useDifferentValues);
-//                }
-
-                o = new Write(key, value);
-            }
-            else {
-
-                throw new IllegalArgumentException("unknown key type " +keyType);
-            }
-
-        indexInSeries = (indexInSeries + 1) % (seriesSize + 1);
-
-        return o;
-    }
-
-    @Override
     public Set<Class<? extends Operation>> getOperationTypes() {
 
         return OPERATION_TYPES;
@@ -329,6 +236,99 @@ public class WriteThenReadLoadStrategy extends LoadStrategyBase {
         this.seriesSize = readWriteRatio.getFollowUpSeriesSize();
         this.indexInSeries = 0;
         this.initialized = true;
+    }
+
+    @Override
+    protected Operation nextInternal(Operation last, String lastWrittenKey, boolean runtimeShuttingDown)
+            throws Exception {
+
+        if (!initialized) {
+
+            throw new IllegalStateException(this + " was not initialized");
+        }
+
+        if (indexInSeries == -1) {
+            throw new IllegalStateException(this + " not properly configured");
+        }
+
+        // we ignore the last operation, the result come in pre-determined series
+
+        byte keyType;
+
+        if (indexInSeries == 0) {
+            keyType = read ? READ : WRITE;
+        }
+        else {
+            keyType = read ?  WRITE : READ;
+        }
+
+        String key;
+        Operation o;
+        KeyProvider keyProvider = getKeyProvider();
+
+        if (keyType == READ) {
+
+            key = keyProvider.next();
+
+            if (key == null) {
+
+                return null;
+            }
+
+            //
+            // TODO refactor below
+            //
+
+//            else if (lastWrittenKey != null) {
+//
+//                // last successfully written key - the method should be prepared for the situation the key is null.
+//                // Use this unless we have been passed a ReadOnly key keystore. A ReadOnly key keystore takes precedence.
+//
+//                key = lastWrittenKey;
+//            }
+
+            o = new Read(key);
+        }
+        else //noinspection ConstantConditions
+            if (keyType == WRITE) {
+
+                key = keyProvider.next();
+
+                if (key == null) {
+
+                    return null;
+                }
+
+                String value = computeValue();
+
+                //
+                // TODO refactor below
+                //
+//                if (keyProvider instanceof ExperimentalKeyStore) {
+//                    key = keyProvider.get();
+//
+//                    if (key == null) {
+//                        return null;
+//                    }
+//
+//                    value = ((ExperimentalKeyStore) keyProvider).getValue(key);
+//                }
+//                else {
+//
+//                    key = Util.getRandomKey(ThreadLocalRandom.current(), keySize);
+//                    value = Util.getRandomValue(ThreadLocalRandom.current(), valueSize, useDifferentValues);
+//                }
+
+                o = new Write(key, value);
+            }
+            else {
+
+                throw new IllegalArgumentException("unknown key type " +keyType);
+            }
+
+        indexInSeries = (indexInSeries + 1) % (seriesSize + 1);
+
+        return o;
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

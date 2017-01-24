@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.strategy.load.jms;
+package io.novaordis.gld.api.jms.load;
 
-public interface Destination
-{
-    String getName();
+public enum SessionPolicy {
 
-    boolean isQueue();
+    SESSION_PER_THREAD,
 
-    boolean isTopic();
+    //
+    // A session is created every time an operation is about to be executed against the server, used to execute the
+    // operation and then closed and discarded (this is the default in absence of an explicitly configured session
+    // policy)
+    //
+    SESSION_PER_OPERATION,
+    ;
 }

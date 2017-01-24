@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.jms;
+package io.novaordis.gld.api.jms.load;
 
-import io.novaordis.gld.api.configuration.ServiceConfigurationImpl;
-import io.novaordis.utilities.UserErrorException;
+import org.junit.Test;
 
-import java.io.File;
-import java.util.Map;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/6/16
+ * @since 1/22/17
  */
-public class JmsServiceConfigurationImpl extends ServiceConfigurationImpl implements JmsServiceConfiguration {
+public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -36,24 +34,26 @@ public class JmsServiceConfigurationImpl extends ServiceConfigurationImpl implem
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public JmsServiceConfigurationImpl(Map<String, Object> rawConfiguration, File configurationDirectory)
-            throws Exception {
-
-        super(rawConfiguration, configurationDirectory);
-    }
-
-    @Override
-    public int getMessageSize() throws UserErrorException {
-        throw new RuntimeException("getMessageSize() NOT YET IMPLEMENTED");
-    }
-
-    // JmsServiceConfiguration implementation ------------------------------------------------------------------------
-
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // Tests -----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void name() throws Exception {
+
+        JmsLoadStrategyBase s = getLoadStrategyToTest();
+        assertEquals(ReceiveLoadStrategy.NAME, s.getName());
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected JmsLoadStrategyBase getLoadStrategyToTest() throws Exception {
+
+        return new SendLoadStrategy();
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

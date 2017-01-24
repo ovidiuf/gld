@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.operations.jms;
+package io.novaordis.gld.api.jms.load;
 
-import com.novaordis.gld.strategy.load.jms.JmsLoadStrategy;
 import org.junit.Test;
 
-public abstract class JmsOperationTest
-{
-    // Constants -------------------------------------------------------------------------------------------------------
+import static org.junit.Assert.assertEquals;
 
-    private static final Logger log = LoggerFactory.getLogger(JmsOperationTest.class);
+/**
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 1/22/17
+ */
+public class SendLoadStrategyTest extends JmsLoadStrategyTest {
+
+    // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -33,11 +36,24 @@ public abstract class JmsOperationTest
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    // Tests -----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void name() throws Exception {
+
+        JmsLoadStrategyBase s = getLoadStrategyToTest();
+        assertEquals(SendLoadStrategy.NAME, s.getName());
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected abstract JmsOperation getJmsOperationToTest(JmsLoadStrategy loadStrategy);
+    @Override
+    protected JmsLoadStrategyBase getLoadStrategyToTest() throws Exception {
+
+        return new SendLoadStrategy();
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

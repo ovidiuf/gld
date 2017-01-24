@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms;
+package io.novaordis.gld.api.jms;
 
-public enum EndpointPolicy
-{
-    NEW_SESSION_NEW_ENDPOINT_PER_OPERATION,
-    REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION
+public interface Destination {
+
+    String getName();
+
+    boolean isQueue();
+
+    boolean isTopic();
 }

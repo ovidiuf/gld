@@ -162,6 +162,16 @@ public class MockLoadStrategy implements LoadStrategy {
         throw new RuntimeException("setKeyProvider() NOT YET IMPLEMENTED");
     }
 
+    @Override
+    public Long getMaxOperations() {
+        throw new RuntimeException("getMaxOperations() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Long getRemainingOperations() {
+        throw new RuntimeException("getRemainingOperations() NOT YET IMPLEMENTED");
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Override

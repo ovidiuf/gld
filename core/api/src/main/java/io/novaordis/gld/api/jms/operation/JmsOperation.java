@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.jms;
+package io.novaordis.gld.api.jms.operation;
 
 import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.jms.Destination;
+import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -29,5 +31,15 @@ public interface JmsOperation extends Operation {
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    JmsLoadStrategy getLoadStrategy();
+
+    /**
+     * May be null.
+     */
+    String getPayload();
+
+    Destination getDestination();
 
 }

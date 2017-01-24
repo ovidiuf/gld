@@ -79,31 +79,6 @@ public class DeleteLoadStrategy extends LoadStrategyBase {
     }
 
     @Override
-    public Operation next(Operation lastOperation, String lastWrittenKey, boolean runtimeShuttingDown) {
-
-        if (!initialized) {
-
-            throw new IllegalStateException(this + " was not initialized");
-        }
-
-        KeyProvider kp = getKeyProvider();
-
-        if (kp == null) {
-
-            throw new IllegalStateException(this + " not configured, missing key provider");
-        }
-
-        String key = kp.next();
-
-        if (key == null) {
-
-            return null;
-        }
-
-        return new Delete(key);
-    }
-
-    @Override
     public Set<Class<? extends Operation>> getOperationTypes() {
 
         throw new RuntimeException("getOperationTypes() NOT YET IMPLEMENTED");
@@ -173,6 +148,32 @@ public class DeleteLoadStrategy extends LoadStrategyBase {
         keyProvider.start();
 
         initialized = true;
+    }
+
+    @Override
+    protected Operation nextInternal(Operation last, String lastWrittenKey, boolean runtimeShuttingDown)
+            throws Exception {
+
+        if (!initialized) {
+
+            throw new IllegalStateException(this + " was not initialized");
+        }
+
+        KeyProvider kp = getKeyProvider();
+
+        if (kp == null) {
+
+            throw new IllegalStateException(this + " not configured, missing key provider");
+        }
+
+        String key = kp.next();
+
+        if (key == null) {
+
+            return null;
+        }
+
+        return new Delete(key);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------
