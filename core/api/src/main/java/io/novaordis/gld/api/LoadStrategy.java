@@ -128,7 +128,7 @@ public interface LoadStrategy {
      *
      * @see LoadStrategy#getRemainingOperations()
      */
-    Long getMaxOperations();
+    Long getOperations();
 
     /**
      * @return the number of operations this strategy will produce from the moment the method was invoked. null means

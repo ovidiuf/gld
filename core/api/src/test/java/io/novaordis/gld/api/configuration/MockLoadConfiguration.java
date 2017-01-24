@@ -32,6 +32,8 @@ public class MockLoadConfiguration extends LowLevelConfigurationBase implements 
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private Long operations;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockLoadConfiguration() {
@@ -42,6 +44,11 @@ public class MockLoadConfiguration extends LowLevelConfigurationBase implements 
     public MockLoadConfiguration(Map<String, Object> raw) {
 
         super(raw, new File(System.getProperty("basedir")));
+
+        //
+        // default unlimited
+        //
+        this.operations = null;
     }
 
     // LoadConfiguration implementation --------------------------------------------------------------------------------
@@ -55,7 +62,7 @@ public class MockLoadConfiguration extends LowLevelConfigurationBase implements 
     public Long getOperations() {
 
         // unlimited
-        return null;
+        return operations;
     }
 
     @Override
@@ -71,6 +78,11 @@ public class MockLoadConfiguration extends LowLevelConfigurationBase implements 
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public void setMessages(long l) {
+
+        this.operations = l;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

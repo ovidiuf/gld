@@ -1,0 +1,37 @@
+#
+# reference configuration for a load driver instance
+#
+
+#
+# the target service
+#
+service:
+
+  type: jms
+
+  message-size: 1024
+
+  load-strategy:
+    name: send
+    queue: jms/queue/novaordis
+    connection-factory: jms/RemoteConnectionFactory
+    connection-policy: connection-per-run
+    session-policy: session-per-operation
+    message-size: 1025
+
+  implementation:
+    name: embedded
+#
+# load characteristics
+#
+load:
+  threads: 10
+  messages: 17
+
+#
+# key store configuration
+#
+store:
+
+  type: hierarchical
+  directory: ../../../../target/test-scratch/test-hierarchical-store # if relative, is relative to the position of the configuration file

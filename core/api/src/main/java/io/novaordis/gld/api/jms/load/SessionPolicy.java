@@ -16,6 +16,8 @@
 
 package io.novaordis.gld.api.jms.load;
 
+import io.novaordis.utilities.UserErrorException;
+
 public enum SessionPolicy {
 
     SESSION_PER_THREAD,
@@ -27,4 +29,9 @@ public enum SessionPolicy {
     //
     SESSION_PER_OPERATION,
     ;
+
+    static SessionPolicy fromString(String s) throws UserErrorException {
+
+        throw new RuntimeException("NYE");
+    }
 }

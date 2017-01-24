@@ -17,9 +17,12 @@
 package io.novaordis.gld.api.jms.load;
 
 import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.configuration.LoadConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.jms.operation.Send;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -72,13 +75,14 @@ public class SendLoadStrategy extends JmsLoadStrategyBase {
     @Override
     public String toString() {
 
-        throw new RuntimeException("NYE");
-
-//        long remainingOperations = getRemainingOperations();
-//        return NAME + " (remaining=" +
-//                (remainingOperations == Long.MAX_VALUE ? "unlimited" : remainingOperations ) + "]";
+        Long remainingOperations = getRemainingOperations();
+        return NAME + " " + (remainingOperations == null ? "unlimited" : "(remaining=" + remainingOperations + ")");
     }
 
+    @Override
+    protected void initInternal(ServiceConfiguration sc, Map<String, Object> loadStrategyRawConfig, LoadConfiguration lc) throws Exception {
+        throw new RuntimeException("initInternal() NOT YET IMPLEMENTED");
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

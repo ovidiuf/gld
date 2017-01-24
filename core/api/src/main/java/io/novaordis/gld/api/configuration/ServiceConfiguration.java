@@ -34,6 +34,8 @@ public interface ServiceConfiguration extends LowLevelConfiguration {
 
     int DEFAULT_KEY_SIZE = 12; // in characters
 
+    int DEFAULT_VALUE_SIZE = 1024; // in bytes
+
     String TYPE_LABEL = "type";
     String IMPLEMENTATION_CONFIGURATION_LABEL = "implementation";
     String LOAD_STRATEGY_CONFIGURATION_LABEL = "load-strategy";

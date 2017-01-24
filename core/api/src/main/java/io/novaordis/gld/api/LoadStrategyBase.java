@@ -229,7 +229,7 @@ public abstract class LoadStrategyBase implements LoadStrategy {
     }
 
     @Override
-    public Long getMaxOperations() {
+    public Long getOperations() {
 
         return maxOperations;
     }
@@ -273,7 +273,7 @@ public abstract class LoadStrategyBase implements LoadStrategy {
      *
      * @param maxOperations null means unlimited.
      */
-    protected void setMaxOperations(Long maxOperations) {
+    protected void setOperations(Long maxOperations) {
 
         this.maxOperations = maxOperations;
 

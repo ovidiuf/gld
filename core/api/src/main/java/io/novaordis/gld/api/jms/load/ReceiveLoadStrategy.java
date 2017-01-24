@@ -17,9 +17,12 @@
 package io.novaordis.gld.api.jms.load;
 
 import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.configuration.LoadConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.jms.operation.Receive;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -91,6 +94,12 @@ public class ReceiveLoadStrategy extends JmsLoadStrategyBase {
     void setTimeoutMs(Long timeoutMs) {
 
         this.timeoutMs = timeoutMs;
+    }
+
+    @Override
+    protected void initInternal(
+            ServiceConfiguration sc, Map<String, Object> loadStrategyRawConfig, LoadConfiguration lc) throws Exception {
+        throw new RuntimeException("initInternal() NOT YET IMPLEMENTED");
     }
 
     // Protected -------------------------------------------------------------------------------------------------------

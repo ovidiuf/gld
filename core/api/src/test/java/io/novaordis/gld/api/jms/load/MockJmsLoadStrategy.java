@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.jms.load;
 
+import io.novaordis.gld.api.jms.ConnectionFactory;
 import io.novaordis.gld.api.jms.Destination;
 
 /**
@@ -40,6 +41,11 @@ public class MockJmsLoadStrategy extends MockLoadStrategy implements JmsLoadStra
     }
 
     @Override
+    public ConnectionFactory getConnectionFactory() {
+        throw new RuntimeException("getConnectionFactory() NOT YET IMPLEMENTED");
+    }
+
+    @Override
     public ConnectionPolicy getConnectionPolicy() {
         throw new RuntimeException("getConnectionPolicy() NOT YET IMPLEMENTED");
     }
@@ -50,8 +56,18 @@ public class MockJmsLoadStrategy extends MockLoadStrategy implements JmsLoadStra
     }
 
     @Override
-    public Long getMaxOperations() {
-        throw new RuntimeException("getMaxOperations() NOT YET IMPLEMENTED");
+    public int getMessageSize() {
+        throw new RuntimeException("getMessageSize() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Long getMessages() {
+        throw new RuntimeException("getMessages() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Long getOperations() {
+        throw new RuntimeException("getOperations() NOT YET IMPLEMENTED");
     }
 
     @Override

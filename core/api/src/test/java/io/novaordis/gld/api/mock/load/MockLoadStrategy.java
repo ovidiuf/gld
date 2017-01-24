@@ -139,8 +139,8 @@ public class MockLoadStrategy implements LoadStrategy {
     }
 
     @Override
-    public Long getMaxOperations() {
-        throw new RuntimeException("getMaxOperations() NOT YET IMPLEMENTED");
+    public Long getOperations() {
+        throw new RuntimeException("getOperations() NOT YET IMPLEMENTED");
     }
 
     @Override

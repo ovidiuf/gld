@@ -17,6 +17,7 @@
 package io.novaordis.gld.api.jms;
 
 import io.novaordis.gld.api.configuration.MockServiceConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.utilities.UserErrorException;
 
@@ -32,7 +33,14 @@ public class MockJmsServiceConfiguration extends MockServiceConfiguration implem
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private int messageSize;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public MockJmsServiceConfiguration() {
+
+        this.messageSize = ServiceConfiguration.DEFAULT_VALUE_SIZE;
+    }
 
     // ServiceConfiguration implementation -----------------------------------------------------------------------------
 
@@ -44,12 +52,18 @@ public class MockJmsServiceConfiguration extends MockServiceConfiguration implem
 
     @Override
     public int getMessageSize() throws UserErrorException {
-        throw new RuntimeException("getMessageSize() NOT YET IMPLEMENTED");
+
+        return messageSize;
     }
 
     // JmsServiceConfiguration implementation --------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public void setMessageSize(int i) {
+
+        this.messageSize = i;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

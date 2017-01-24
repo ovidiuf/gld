@@ -19,8 +19,13 @@ package io.novaordis.gld.api.jms.load;
 import io.novaordis.gld.api.LoadStrategyBase;
 import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
+import io.novaordis.gld.api.jms.ConnectionFactory;
 import io.novaordis.gld.api.jms.Destination;
+import io.novaordis.gld.api.jms.JmsServiceConfiguration;
+import io.novaordis.gld.api.jms.Queue;
+import io.novaordis.gld.api.jms.Topic;
 import io.novaordis.gld.api.service.ServiceType;
+import io.novaordis.utilities.UserErrorException;
 
 import java.util.Map;
 
@@ -37,8 +42,10 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private Destination destination;
+    private ConnectionFactory connectionFactory;
     private ConnectionPolicy connectionPolicy;
     private SessionPolicy sessionPolicy;
+    private int messageSize;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -64,110 +71,123 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
     protected void init(ServiceConfiguration sc, Map<String, Object> loadStrategyRawConfig, LoadConfiguration lc)
             throws Exception {
 
+        if (!(sc instanceof JmsServiceConfiguration)) {
+
+            throw new IllegalArgumentException(sc + " not a JmsServiceConfiguration");
+        }
+
+        JmsServiceConfiguration jmsSc = (JmsServiceConfiguration)sc;
+
         //
         // process common elements
         //
 
-        throw new RuntimeException("init() NOT YET IMPLEMENTED");
+        //
+        // required queue/topic name
+        //
 
-//        /**
-//         * Parse context-relevant command line arguments and removes them from the list. If not finding the arguments
-//         * we need in the list, try the configuration second. It's not sensitive to null, null is fine and it is ignored.
-//         */
-//        private void processContextRelevantArguments(List<String> arguments, int from) throws UserErrorException
-//        {
-//            String queueName = Util.extractString("--queue", arguments, from);
-//
-//            if (queueName == null)
-//            {
-//                Properties p = getConfiguration().getConfigurationFileContent();
-//                queueName = p == null ? null : p.getProperty("queue");
-//            }
-//
-//            String topicName = Util.extractString("--topic", arguments, from);
-//
-//            if (topicName == null)
-//            {
-//                Properties p = getConfiguration().getConfigurationFileContent();
-//                topicName = p == null ? null : p.getProperty("topic");
-//            }
-//
-//            if (queueName == null && topicName == null)
-//            {
-//                throw new UserErrorException("a destination is required; use --queue|--topic <name>");
-//            }
-//
-//            if (queueName != null && topicName != null)
-//            {
-//                throw new UserErrorException("both --queue and --topic used; only one must be specified");
-//            }
-//
-//            if (queueName != null)
-//            {
-//                setDestination(new Queue(queueName));
-//            }
-//            else
-//            {
-//                setDestination(new Topic(topicName));
-//            }
-//
-//            String endpointPolicy = Util.extractString("--endpoint-policy", arguments, from);
-//
-//            if (endpointPolicy != null)
-//            {
-//                try
-//                {
-//                    this.endpointPolicy = EndpointPolicy.valueOf(endpointPolicy);
-//                }
-//                catch(Exception e)
-//                {
-//                    throw new UserErrorException(
-//                            "invalid --endpoint-policy value \"" + endpointPolicy + "\"; valid options: " +
-//                                    Arrays.asList(EndpointPolicy.values()), e);
-//                }
-//            }
-//
-//            // TODO this is fishy, refactor both here and in ReadThenWriteOnMissLoadStrategy
-//            Load load = (Load)getConfiguration().getCommand();
-//
-//            if (load != null)
-//            {
-//                Long maxOperations = load.getMaxOperations();
-//
-//                if (maxOperations == null)
-//                {
-//                    // try the configuration file
-//                    // TODO need to refactor this for a consistent command-line/configuration file approach
-//                    Properties p = getConfiguration().getConfigurationFileContent();
-//                    if (p != null)
-//                    {
-//                        String s = p.getProperty("message-count");
-//                        if (s != null)
-//                        {
-//                            maxOperations = Long.parseLong(s);
-//                        }
-//                    }
-//                }
-//
-//                if (maxOperations != null)
-//                {
-//                    remainingOperations = new AtomicLong(maxOperations);
-//                }
-//            }
-//        }
+        String queueName = (String)loadStrategyRawConfig.remove(JmsLoadStrategy.QUEUE_LABEL);
+        String topicName = (String)loadStrategyRawConfig.remove(JmsLoadStrategy.TOPIC_LABEL);
 
-//
-//
-//
-//        setMessageSize(configuration.getValueSize());
-//
-//
+        if (queueName != null && topicName != null) {
+
+            throw new UserErrorException("both a queue and a topic are specified, they should be mutually exclusive");
+        }
+
+        if (queueName != null) {
+
+            this.destination = new Queue(queueName);
+        }
+        else {
+
+            if (topicName == null) {
+
+                throw new UserErrorException("required configuration element queue|topic missing");
+            }
+
+            this.destination = new Topic(topicName);
+        }
+
+        //
+        // required connection factory
+        //
+
+        String connectionFactoryName = (String)loadStrategyRawConfig.remove(JmsLoadStrategy.CONNECTION_FACTORY_LABEL);
+
+        if (connectionFactoryName == null) {
+
+            throw new UserErrorException("required configuration element 'connection-factory' missing");
+        }
+
+        this.connectionFactory = new ConnectionFactory(connectionFactoryName);
+
+        //
+        // optional message size
+        //
+
+        Integer ms = jmsSc.get(Integer.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
+                JmsServiceConfiguration.MESSAGE_SIZE_LABEL);
+
+        if (ms != null) {
+
+            this.messageSize = ms;
+        }
+        else {
+
+            this.messageSize = jmsSc.getMessageSize();
+        }
+
+        //
+        // optional max messages
+        //
+
+        setOperations(lc.getOperations());
+
+        //
+        // optional connection policy
+        //
+
+        String cps = jmsSc.get(String.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
+                JmsLoadStrategy.CONNECTION_POLICY_LABEL);
+
+        if (cps != null) {
+
+            connectionPolicy = ConnectionPolicy.fromString(cps);
+        }
+
+        //
+        // optional session policy
+        //
+
+        String sps = jmsSc.get(String.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
+                JmsLoadStrategy.SESSION_POLICY_LABEL);
+
+        if (sps != null) {
+
+            sessionPolicy = SessionPolicy.fromString(sps);
+        }
+
+        //
+        // give the actual load strategy a chance to look for specific configuration elements
+        //
+
+        initInternal(jmsSc, loadStrategyRawConfig, lc);
+
+        //
+        // it is not required that the configuration is emptied at this point, the superclass will take care of this
+        //
     }
 
     @Override
-    public Destination getDestination()
-    {
+    public Destination getDestination() {
+
         return destination;
+    }
+
+    @Override
+    public ConnectionFactory getConnectionFactory() {
+
+        return connectionFactory;
     }
 
     @Override
@@ -181,6 +201,41 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
 
         return sessionPolicy;
     }
+
+    @Override
+    public int getMessageSize() {
+
+        return messageSize;
+    }
+
+    @Override
+    public Long getMessages() {
+
+        return getOperations();
+    }
+
+    /**
+     * Allow the strategy to provide a message payload (presumably cached) to speed the operation generation.
+     */
+    public String getMessagePayload() {
+
+        throw new RuntimeException("NYE - the Cache Load Strategy has a similar mechanism, unify");
+
+//        if (cachedMessagePayload == null)
+//        {
+//            if (messageSize <= 0)
+//            {
+//                cachedMessagePayload = "";
+//            }
+//            else
+//            {
+//                cachedMessagePayload = Util.getRandomString(new Random(System.currentTimeMillis()), messageSize, 5);
+//            }
+//        }
+//
+//        return cachedMessagePayload;
+    }
+
 
     // Public ----------------------------------------------------------------------------------------------------------
 
@@ -204,26 +259,13 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
     // Protected -------------------------------------------------------------------------------------------------------
 
     /**
-     * Allow the strategy to provide a message payload (presumably cached) to speed the operation generation.
+     * Give the actual load strategy a chance to look for specific configuration elements.
+     *
+     * @see LoadStrategyBase#init(ServiceConfiguration, Map, LoadConfiguration)
+     *
      */
-    public String getMessagePayload() {
-
-        throw new RuntimeException("NYE");
-
-//        if (cachedMessagePayload == null)
-//        {
-//            if (messageSize <= 0)
-//            {
-//                cachedMessagePayload = "";
-//            }
-//            else
-//            {
-//                cachedMessagePayload = Util.getRandomString(new Random(System.currentTimeMillis()), messageSize, 5);
-//            }
-//        }
-//
-//        return cachedMessagePayload;
-    }
+    protected abstract void initInternal(
+            ServiceConfiguration sc, Map<String, Object> loadStrategyRawConfig, LoadConfiguration lc) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

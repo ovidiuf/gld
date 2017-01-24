@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.cache;
+package io.novaordis.gld.api.jms.load;
 
-import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.utilities.UserErrorException;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/6/16
+ * @since 1/24/17
  */
-public interface CacheServiceConfiguration extends ServiceConfiguration {
+public class SessionPolicyTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    String KEY_SIZE_LABEL = "key-size";
-    String VALUE_SIZE_LABEL = "value-size";
+    private static final Logger log = LoggerFactory.getLogger(SessionPolicyTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -38,19 +42,30 @@ public interface CacheServiceConfiguration extends ServiceConfiguration {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    /**
-     * @return the default key size, in bytes. A specific load strategy may choose to ignore this default and use a
-     * load-strategy specific value. The configuration value is optional, if not present in the configuration file,
-     * the default value (see ServiceConfiguration.DEFAULT_KEY_SIZE above) is used.
-     */
-    int getKeySize() throws UserErrorException;
+    // Tests -----------------------------------------------------------------------------------------------------------
 
-    /**
-     * @return the default value size, in bytes. A specific load strategy may choose to ignore this default and use a
-     * load-strategy specific value. The configuration value is optional, if not present in the configuration file,
-     * the default value (see DEFAULT_VALUE_SIZE above) is used.
-     */
-    int getValueSize() throws UserErrorException;
+    @Test
+    public void fromString() throws Exception {
+
+        assertEquals(SessionPolicy.SESSION_PER_OPERATION, SessionPolicy.fromString("session-per-operation"));
+        assertEquals(SessionPolicy.SESSION_PER_THREAD, SessionPolicy.fromString("session-per-thread"));
+    }
+
+    @Test
+    public void fromString_InvalidValue() throws Exception {
+
+        try {
+
+            SessionPolicy.fromString("no such thing");
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals(msg, "blah");
+        }
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

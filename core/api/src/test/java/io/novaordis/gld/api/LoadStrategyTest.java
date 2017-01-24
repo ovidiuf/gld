@@ -161,7 +161,7 @@ public abstract class LoadStrategyTest {
         LoadStrategy ls = getLoadStrategyToTest();
 
         // unlimited
-        assertNull(ls.getMaxOperations());
+        assertNull(ls.getOperations());
 
         // unlimited
         assertNull(ls.getRemainingOperations());
@@ -277,16 +277,17 @@ public abstract class LoadStrategyTest {
 
         LoadStrategy s = getLoadStrategyToTest();
 
-        MockLoadConfiguration mlc = new MockLoadConfiguration();
-        MockCacheServiceConfiguration msc = new MockCacheServiceConfiguration();
+        MockServiceConfiguration msc = new MockServiceConfiguration();
+        Map<String, Object> rawLSC = new HashMap<>();
+        rawLSC.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
-        Map<String, Object> mockRawConfig = new HashMap<>();
-        mockRawConfig.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
-        msc.set(mockRawConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
 
         s.init(msc, mlc);
 
         ServiceType type = s.getServiceType();
+
         assertNotNull(type);
 
         MockService ms = new MockService();
@@ -332,11 +333,11 @@ public abstract class LoadStrategyTest {
 
         LoadStrategyBase lsb = (LoadStrategyBase)getLoadStrategyToTest();
 
-        assertNull(lsb.getMaxOperations());
+        assertNull(lsb.getOperations());
         assertNull(lsb.getRemainingOperations());
 
-        lsb.setMaxOperations(1L);
-        assertEquals(1L, lsb.getMaxOperations().longValue());
+        lsb.setOperations(1L);
+        assertEquals(1L, lsb.getOperations().longValue());
         assertEquals(1L, lsb.getRemainingOperations().longValue());
 
         //
@@ -347,7 +348,7 @@ public abstract class LoadStrategyTest {
 
         assertNotNull(o);
 
-        assertEquals(1L, lsb.getMaxOperations().longValue());
+        assertEquals(1L, lsb.getOperations().longValue());
         assertEquals(0L, lsb.getRemainingOperations().longValue());
 
         //
@@ -358,7 +359,7 @@ public abstract class LoadStrategyTest {
 
         assertNull(o2);
 
-        assertEquals(1L, lsb.getMaxOperations().longValue());
+        assertEquals(1L, lsb.getOperations().longValue());
         assertEquals(0L, lsb.getRemainingOperations().longValue());
     }
 
@@ -369,7 +370,7 @@ public abstract class LoadStrategyTest {
 
         LoadStrategy ls = getLoadStrategyToTest();
 
-        assertNull(ls.getMaxOperations());
+        assertNull(ls.getOperations());
 
         Operation o = ls.next(null, null, false);
         assertNotNull(o);
@@ -386,7 +387,7 @@ public abstract class LoadStrategyTest {
 
         LoadStrategyBase lsb = (LoadStrategyBase)getLoadStrategyToTest();
 
-        lsb.setMaxOperations(2L);
+        lsb.setOperations(2L);
 
         Operation o = lsb.next(null, null, false);
         assertNotNull(o);
@@ -406,7 +407,7 @@ public abstract class LoadStrategyTest {
 
         final LoadStrategy ls = getLoadStrategyToTest();
 
-        assertNull(ls.getMaxOperations());
+        assertNull(ls.getOperations());
 
         int threadCount = 1000;
         int operationsRequestedPerThread = 1000;
@@ -446,7 +447,7 @@ public abstract class LoadStrategyTest {
         final LoadStrategyBase ls = (LoadStrategyBase)getLoadStrategyToTest();
 
         long operationsPerStrategy = 1000;
-        ls.setMaxOperations(operationsPerStrategy);
+        ls.setOperations(operationsPerStrategy);
 
         int threadCount = 1000;
         final CountDownLatch latch = new CountDownLatch(threadCount);

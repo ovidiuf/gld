@@ -306,7 +306,7 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
     @Override
     protected YamlBasedConfiguration getConfigurationToTest() throws Exception {
 
-        File f = new File(baseDirectory, "src/test/resources/data/reference-configuration.yml");
+        File f = new File(baseDirectory, "src/test/resources/data/cache-service-reference-configuration.yml");
         assertTrue(f.isFile());
 
         YamlBasedConfiguration c = new YamlBasedConfiguration();

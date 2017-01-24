@@ -17,7 +17,9 @@
 package io.novaordis.gld.api.jms.load;
 
 import io.novaordis.gld.api.LoadStrategy;
+import io.novaordis.gld.api.jms.ConnectionFactory;
 import io.novaordis.gld.api.jms.Destination;
+import io.novaordis.gld.api.jms.JmsServiceConfiguration;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -27,11 +29,19 @@ public interface JmsLoadStrategy extends LoadStrategy {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    String QUEUE_LABEL = "queue";
+    String TOPIC_LABEL = "topic";
+    String CONNECTION_FACTORY_LABEL = "connection-factory";
+    String CONNECTION_POLICY_LABEL = "connection-policy";
+    String SESSION_POLICY_LABEL = "session-policy";
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
 
     Destination getDestination();
+
+    ConnectionFactory getConnectionFactory();
 
     /**
      * @return the connection policy employed by this load strategy. The default is CONNECTION_PER_RUN, which means
@@ -44,6 +54,21 @@ public interface JmsLoadStrategy extends LoadStrategy {
      * that one session is created for each operation, and then discarded.
      */
     SessionPolicy getSessionPolicy();
+
+    /**
+     * This is a convenience method that simply returns the value read from the service configuration, unless the
+     * load strategy chooses to override, in which case the method returns the overridden value
+     *
+     * @see JmsServiceConfiguration#getMessageSize()
+     */
+    int getMessageSize();
+
+    /**
+     * Same semantics as getOperations().
+     *
+     * @see LoadStrategy#getOperations()
+     */
+    Long getMessages();
 
 
 }

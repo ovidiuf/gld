@@ -16,6 +16,8 @@
 
 package io.novaordis.gld.api.jms.load;
 
+import io.novaordis.utilities.UserErrorException;
+
 public enum ConnectionPolicy {
 
     //
@@ -27,4 +29,9 @@ public enum ConnectionPolicy {
     CONNECTION_PER_OPERATION,
     CONNECTION_POOL,
     ;
+
+    static ConnectionPolicy fromString(String s) throws UserErrorException {
+
+        throw new RuntimeException("NYE");
+    }
 }
