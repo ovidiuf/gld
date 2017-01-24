@@ -17,6 +17,7 @@
 package io.novaordis.gld.api.jms.load;
 
 import io.novaordis.gld.api.LoadStrategyBase;
+import io.novaordis.gld.api.RandomContentGenerator;
 import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.jms.ConnectionFactory;
@@ -28,6 +29,7 @@ import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.utilities.UserErrorException;
 
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -47,12 +49,15 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
     private SessionPolicy sessionPolicy;
     private int messageSize;
 
+    private volatile String cachedMessagePayload;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public JmsLoadStrategyBase() {
 
         setConnectionPolicy(ConnectionPolicy.CONNECTION_PER_RUN);
         setSessionPolicy(SessionPolicy.SESSION_PER_OPERATION);
+        this.cachedMessagePayload = null;
     }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
@@ -214,30 +219,31 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
         return getOperations();
     }
 
+    // Public ----------------------------------------------------------------------------------------------------------
+
     /**
      * Allow the strategy to provide a message payload (presumably cached) to speed the operation generation.
      */
     public String getMessagePayload() {
 
-        throw new RuntimeException("NYE - the Cache Load Strategy has a similar mechanism, unify");
+        if (cachedMessagePayload != null) {
 
-//        if (cachedMessagePayload == null)
-//        {
-//            if (messageSize <= 0)
-//            {
-//                cachedMessagePayload = "";
-//            }
-//            else
-//            {
-//                cachedMessagePayload = Util.getRandomString(new Random(System.currentTimeMillis()), messageSize, 5);
-//            }
-//        }
-//
-//        return cachedMessagePayload;
+            return cachedMessagePayload;
+        }
+
+        if (messageSize <= 0) {
+
+            cachedMessagePayload = "";
+
+            return cachedMessagePayload;
+        }
+
+        RandomContentGenerator valueGenerator = getValueGenerator();
+
+        cachedMessagePayload = valueGenerator.getRandomString(ThreadLocalRandom.current(), messageSize);
+
+        return cachedMessagePayload;
     }
-
-
-    // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 

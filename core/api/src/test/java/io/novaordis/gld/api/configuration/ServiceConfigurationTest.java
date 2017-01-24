@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.configuration;
 
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.utilities.UserErrorException;
 import org.junit.Assert;
@@ -63,7 +64,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
         m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
         m.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         Map<String, Object> lsc = new HashMap<>();
-        lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
+        lsc.put(LoadStrategy.NAME_LABEL, "test");
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
 
         ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
@@ -77,7 +78,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
         Map<String, Object> lsc2 = (Map<String, Object>)uam.get(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
         assertNotNull(lsc2);
         assertEquals(1, lsc2.size());
-        assertEquals("test", lsc2.get(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL));
+        assertEquals("test", lsc2.get(LoadStrategy.NAME_LABEL));
     }
 
     @Test
@@ -88,7 +89,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
         m.put(ServiceConfiguration.TYPE_LABEL, ServiceType.cache.toString());
         m.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         Map<String, Object> lsc = new HashMap<>();
-        lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
+        lsc.put(LoadStrategy.NAME_LABEL, "test");
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
 
         ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
@@ -148,7 +149,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
         m.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         Map<String, Object> lsc = new HashMap<>();
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
-        lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
+        lsc.put(LoadStrategy.NAME_LABEL, "test");
 
         ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
         ServiceType type = c.getType();
@@ -218,7 +219,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
 
         Map<String, Object> lsc = new HashMap<>();
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
-        lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
+        lsc.put(LoadStrategy.NAME_LABEL, "test");
 
         ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
         Assert.assertEquals(ServiceType.valueOf(getServiceTypeToTest()), c.getType());
@@ -314,7 +315,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
 
         Map<String, Object> lsc = new HashMap<>();
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
-        lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, 1);
+        lsc.put(LoadStrategy.NAME_LABEL, 1);
 
         ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
 
@@ -341,7 +342,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
 
         Map<String, Object> lsc = new HashMap<>();
         m.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, lsc);
-        lsc.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
+        lsc.put(LoadStrategy.NAME_LABEL, "test");
 
         ServiceConfiguration c = getConfigurationToTest(m, new File(System.getProperty("basedir")));
 
@@ -349,7 +350,7 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
 
         Map<String, Object> rawConfig = c.get(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
         Assert.assertEquals(1, rawConfig.size());
-        Assert.assertEquals("test", rawConfig.get(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL));
+        Assert.assertEquals("test", rawConfig.get(LoadStrategy.NAME_LABEL));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

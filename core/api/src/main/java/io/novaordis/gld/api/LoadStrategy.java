@@ -26,6 +26,10 @@ import io.novaordis.utilities.UserErrorException;
 
 public interface LoadStrategy {
 
+    String NAME_LABEL = "name";
+    String FACTORY_CLASS_LABEL = "factory-class";
+    String REUSE_VALUE_LABEL = "reuse-value";
+
     // lifecycle -------------------------------------------------------------------------------------------------------
 
     /**
@@ -136,5 +140,30 @@ public interface LoadStrategy {
      */
     Long getRemainingOperations();
 
+    int getValueSize();
+
+    /**
+     * A load strategy can be configured to randomly generate a value only once, then reuse it for all its operations.
+     * This behavior makes sense when we are not interested in the actual values, but in the value size and the traffic
+     * volume that is associated with a certain size. Reusing values is a speed optimization, it speeds up load
+     * generation, as we don't have to repeatedly generate (possibly) long random values. To change this behavior and
+     * configure the load strategy to generate a new random value every times it needs one, set "reuse-value" to "false"
+     * in the configuration. Configuring the load strategy to not reuse values will make it somewhat slower.
+     *
+     * If the load strategy was not configured to reuse values, the method will aways return null, so the caller must be
+     * prepared to deal with this possibility, and generate the random values itself:
+     *
+     * valueGenerator.getRandomString(ThreadLocalRandom.current(), valueSize);
+     *
+     * @see LoadStrategy#isReuseValue()
+     */
+    String getReusedValue();
+
+    /**
+     * Default is true.
+     *
+     * @see LoadStrategy#getReusedValue()
+     */
+    boolean isReuseValue();
 
 }

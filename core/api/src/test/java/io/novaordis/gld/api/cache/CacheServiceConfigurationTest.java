@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.cache;
 
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfigurationTest;
 import io.novaordis.gld.api.service.ServiceType;
@@ -58,7 +59,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
         map.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         Map<String, Object> loadStrategy = new HashMap<>();
         map.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, loadStrategy);
-        loadStrategy.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
+        loadStrategy.put(LoadStrategy.NAME_LABEL, "test");
 
         CacheServiceConfiguration c = getConfigurationToTest(map, new File(System.getProperty("basedir")));
 
@@ -74,7 +75,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
         map.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         Map<String, Object> loadStrategy = new HashMap<>();
         map.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, loadStrategy);
-        loadStrategy.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
+        loadStrategy.put(LoadStrategy.NAME_LABEL, "test");
 
         map.put(CacheServiceConfiguration.KEY_SIZE_LABEL, "1024");
 
@@ -105,7 +106,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
         map.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         Map<String, Object> loadStrategy = new HashMap<>();
         map.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, loadStrategy);
-        loadStrategy.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
+        loadStrategy.put(LoadStrategy.NAME_LABEL, "test");
 
         map.put(CacheServiceConfiguration.KEY_SIZE_LABEL, 1024);
 
@@ -121,7 +122,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
         map.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         Map<String, Object> loadStrategy = new HashMap<>();
         map.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, loadStrategy);
-        loadStrategy.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
+        loadStrategy.put(LoadStrategy.NAME_LABEL, "test");
 
         CacheServiceConfiguration c = getConfigurationToTest(map, new File(System.getProperty("basedir")));
 
@@ -137,7 +138,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
         map.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         Map<String, Object> loadStrategy = new HashMap<>();
         map.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, loadStrategy);
-        loadStrategy.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
+        loadStrategy.put(LoadStrategy.NAME_LABEL, "test");
 
         map.put(CacheServiceConfiguration.VALUE_SIZE_LABEL, "1025");
 
@@ -168,7 +169,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
         map.put(ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, "embedded");
         Map<String, Object> loadStrategy = new HashMap<>();
         map.put(ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, loadStrategy);
-        loadStrategy.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "test");
+        loadStrategy.put(LoadStrategy.NAME_LABEL, "test");
 
         map.put(CacheServiceConfiguration.VALUE_SIZE_LABEL, 1025);
 

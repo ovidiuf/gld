@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.cache.load;
 
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.LoadStrategyFactory;
 import io.novaordis.gld.api.LoadStrategyTest;
 import io.novaordis.gld.api.configuration.MockLoadConfiguration;
@@ -84,7 +85,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
         MockLoadConfiguration mlc = new MockLoadConfiguration();
 
         Map<String, Object> m = new HashMap<>();
-        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        m.put(LoadStrategy.NAME_LABEL, s.getName());
         msc.set(m, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
         s.init(msc, mlc);
@@ -101,7 +102,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
         MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockServiceConfiguration sc = new MockServiceConfiguration();
         Map<String, Object> m = new HashMap<>();
-        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        m.put(LoadStrategy.NAME_LABEL, s.getName());
         m.put(ReadThenWriteOnMissLoadStrategy.REUSE_VALUE_LABEL, "true");
         sc.set(m, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
@@ -427,7 +428,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
         MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
         Map<String, Object> m = new HashMap<>();
-        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        m.put(LoadStrategy.NAME_LABEL, s.getName());
         m.put(ReadThenWriteOnMissLoadStrategy.REUSE_VALUE_LABEL, true);
         sc.set(m, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
@@ -453,7 +454,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
         MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockCacheServiceConfiguration sc = new MockCacheServiceConfiguration();
         Map<String, Object> m = new HashMap<>();
-        m.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        m.put(LoadStrategy.NAME_LABEL, s.getName());
         m.put(ReadThenWriteOnMissLoadStrategy.REUSE_VALUE_LABEL, false);
         sc.set(m, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
@@ -481,7 +482,7 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
         msc.set(new HashMap<>(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
         msc.set(ReadThenWriteOnMissLoadStrategy.NAME,
                 ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
-                ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL);
+                LoadStrategy.NAME_LABEL);
 
 
         ReadThenWriteOnMissLoadStrategy s = (ReadThenWriteOnMissLoadStrategy) LoadStrategyFactory.build(msc, mlc);

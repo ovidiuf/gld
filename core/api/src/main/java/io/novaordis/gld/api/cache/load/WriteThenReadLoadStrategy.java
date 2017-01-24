@@ -19,7 +19,6 @@ package io.novaordis.gld.api.cache.load;
 import io.novaordis.gld.api.KeyProvider;
 import io.novaordis.gld.api.LoadStrategyBase;
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.RandomContentGenerator;
 import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.gld.api.cache.CacheServiceConfiguration;
 import io.novaordis.gld.api.cache.operation.Read;
@@ -33,7 +32,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A load strategy that attempts to write a key (either randomly generated or read from a embedded key store) then
@@ -68,7 +66,6 @@ public class WriteThenReadLoadStrategy extends LoadStrategyBase {
 
     public static final String NAME = "write-then-read";
 
-    public static final String REUSE_VALUE_LABEL = "reuse-value";
     public static final String READ_TO_WRITE_LABEL = "read-to-write";
     public static final String WRITE_TO_READ_LABEL = "write-to-read";
 
@@ -77,11 +74,8 @@ public class WriteThenReadLoadStrategy extends LoadStrategyBase {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private boolean read;
-    private int valueSize;
     private int seriesSize;
     private int indexInSeries;
-    private String cachedValue;
-    private boolean reuseValue;
     private volatile boolean initialized;
     private ReadWriteRatio readWriteRatio;
 
@@ -127,51 +121,16 @@ public class WriteThenReadLoadStrategy extends LoadStrategyBase {
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    String computeValue() {
-
-        RandomContentGenerator valueGenerator = getValueGenerator();
-
-        String v;
-
-        if (reuseValue) {
-
-            if (cachedValue == null) {
-
-                cachedValue = valueGenerator.getRandomString(ThreadLocalRandom.current(), valueSize);
-            }
-
-            v = cachedValue;
-        }
-        else {
-
-            v = valueGenerator.getRandomString(ThreadLocalRandom.current(), valueSize);
-        }
-
-        return v;
-    }
-
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
     protected void init(ServiceConfiguration sc, Map<String, Object> loadStrategyRawConfig, LoadConfiguration lc)
             throws Exception {
 
-        Object o = loadStrategyRawConfig.remove(REUSE_VALUE_LABEL);
-
-        if (o != null) {
-
-            if (!(o instanceof Boolean)) {
-                throw new UserErrorException(
-                        "illegal '" +  REUSE_VALUE_LABEL + "' " + o.getClass().getSimpleName() + " value");
-            }
-
-            this.reuseValue = (Boolean)o;
-        }
-
         Integer rtw = null;
         Integer wtr = null;
 
-        o = loadStrategyRawConfig.remove(READ_TO_WRITE_LABEL);
+        Object o = loadStrategyRawConfig.remove(READ_TO_WRITE_LABEL);
 
         if (o != null) {
 
@@ -231,7 +190,6 @@ public class WriteThenReadLoadStrategy extends LoadStrategyBase {
 
         keyProvider.start();
 
-        this.valueSize = cc.getValueSize();
         this.read = readWriteRatio.isRead();
         this.seriesSize = readWriteRatio.getFollowUpSeriesSize();
         this.indexInSeries = 0;

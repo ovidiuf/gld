@@ -87,6 +87,11 @@ public abstract class JmsOperationBase implements JmsOperation {
 
     // Protected -------------------------------------------------------------------------------------------------------
 
+    protected void setPayload(String payload) {
+
+        this.payload = payload;
+    }
+
     //    protected javax.jms.Destination getJmsDestination(Session session) throws Exception
 //    {
 //        Destination destination = getDestination();

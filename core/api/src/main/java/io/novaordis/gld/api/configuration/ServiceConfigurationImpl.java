@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.configuration;
 
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.utilities.UserErrorException;
 
@@ -127,7 +128,7 @@ public class ServiceConfigurationImpl extends LowLevelConfigurationBase
             throw new UserErrorException("missing load strategy configuration");
         }
 
-        Object o = loadStrategyConfig.get(LOAD_STRATEGY_NAME_LABEL);
+        Object o = loadStrategyConfig.get(LoadStrategy.NAME_LABEL);
 
         if (o == null) {
 

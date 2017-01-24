@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.configuration;
 
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.utilities.UserErrorException;
 
@@ -79,7 +80,7 @@ public class MockServiceConfiguration extends LowLevelConfigurationBase implemen
         //
         return get(String.class,
                 ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
-                ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL);
+                LoadStrategy.NAME_LABEL);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

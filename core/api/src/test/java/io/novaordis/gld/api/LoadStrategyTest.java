@@ -72,7 +72,7 @@ public abstract class LoadStrategyTest {
         MockCacheServiceConfiguration msc = new MockCacheServiceConfiguration();
 
         Map<String, Object> mockRawConfig = new HashMap<>();
-        mockRawConfig.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        mockRawConfig.put(LoadStrategy.NAME_LABEL, s.getName());
         mockRawConfig.put("unknown-configuration-element", "some-value");
         msc.set(mockRawConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
@@ -98,7 +98,7 @@ public abstract class LoadStrategyTest {
         MockServiceConfiguration msc = new MockServiceConfiguration();
 
         Map<String, Object> mockRawConfig = new HashMap<>();
-        mockRawConfig.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, "wrong-name");
+        mockRawConfig.put(LoadStrategy.NAME_LABEL, "wrong-name");
         msc.set(mockRawConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
         try {
@@ -123,7 +123,7 @@ public abstract class LoadStrategyTest {
         MockCacheServiceConfiguration msc = new MockCacheServiceConfiguration();
 
         Map<String, Object> mockRawConfig = new HashMap<>();
-        mockRawConfig.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        mockRawConfig.put(LoadStrategy.NAME_LABEL, s.getName());
         msc.set(mockRawConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
         s.init(msc, mlc);
@@ -153,6 +153,50 @@ public abstract class LoadStrategyTest {
         assertTrue(p.isStarted());
     }
 
+    @Test
+    public void init_DoNotReuseValue_NotABoolean() throws Exception {
+
+        LoadStrategy s = getLoadStrategyToTest();
+
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+        MockCacheServiceConfiguration msc = new MockCacheServiceConfiguration();
+
+        Map<String, Object> mockRawConfig = new HashMap<>();
+        mockRawConfig.put(LoadStrategy.NAME_LABEL, s.getName());
+        msc.set(mockRawConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+
+        try {
+
+            s.init(msc, mlc);
+            fail("should throw exception");
+        }
+        catch(IllegalStateException ise) {
+
+            String msg = ise.getMessage();
+            log.info(msg);
+            assertEquals("blah", msg);
+        }
+    }
+
+    @Test
+    public void init_DoNotReuseValue() throws Exception {
+
+        LoadStrategy s = getLoadStrategyToTest();
+
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+        MockCacheServiceConfiguration msc = new MockCacheServiceConfiguration();
+
+        Map<String, Object> mockRawConfig = new HashMap<>();
+        msc.set(mockRawConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+
+        mockRawConfig.put(LoadStrategy.NAME_LABEL, s.getName());
+        mockRawConfig.put(LoadStrategy.REUSE_VALUE_LABEL, false);
+
+        s.init(msc, mlc);
+
+        assertFalse(s.isReuseValue());
+    }
+
     // identity and defaults -------------------------------------------------------------------------------------------
 
     @Test
@@ -165,6 +209,9 @@ public abstract class LoadStrategyTest {
 
         // unlimited
         assertNull(ls.getRemainingOperations());
+
+        // reuse value
+        assertTrue(ls.isReuseValue());
     }
 
     // lifecycle -------------------------------------------------------------------------------------------------------
@@ -279,7 +326,7 @@ public abstract class LoadStrategyTest {
 
         MockServiceConfiguration msc = new MockServiceConfiguration();
         Map<String, Object> rawLSC = new HashMap<>();
-        rawLSC.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        rawLSC.put(LoadStrategy.NAME_LABEL, s.getName());
         msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
@@ -477,6 +524,70 @@ public abstract class LoadStrategyTest {
         int actual = producedOperationCount.get();
         log.info("expected: " + operationsPerStrategy + ", actual: " + actual);
         assertEquals(operationsPerStrategy, actual);
+    }
+
+    // value reuse tests -----------------------------------------------------------------------------------------------
+
+    @Test
+    public void reuseValue() throws Exception {
+
+        LoadStrategy s = getLoadStrategyToTest();
+
+        //
+        // default behavior
+        //
+        assertTrue(s.isReuseValue());
+
+        String rv = s.getReusedValue();
+        assertNotNull(rv);
+        assertEquals(rv.length(), s.getValueSize());
+
+        String rv2 = s.getReusedValue();
+        assertEquals(rv, rv2);
+    }
+
+    @Test
+    public void doNotReuseValue() throws Exception {
+
+        LoadStrategyBase s = (LoadStrategyBase)getLoadStrategyToTest();
+
+        s.setReuseValue(false);
+
+        assertFalse(s.isReuseValue());
+
+        String rv = s.getReusedValue();
+        assertNull(rv);
+    }
+
+    @Test
+    public void computeValue_ReuseValue() throws Exception {
+
+        LoadStrategyBase slb = (LoadStrategyBase)getLoadStrategyToTest();
+        assertTrue(slb.isReuseValue());
+
+        String s = slb.computeValue();
+        assertNotNull(s);
+        assertEquals(slb.getValueSize(), s.length());
+
+        String s2 = slb.computeValue();
+        assertEquals(s, s2);
+    }
+
+    @Test
+    public void computeValue_DoNotReuseValue() throws Exception {
+
+        LoadStrategyBase slb = (LoadStrategyBase)getLoadStrategyToTest();
+        slb.setReuseValue(false);
+
+        String s = slb.computeValue();
+        assertNotNull(s);
+        assertEquals(slb.getValueSize(), s.length());
+
+        String s2 = slb.computeValue();
+        assertNotNull(s2);
+        assertEquals(slb.getValueSize(), s2.length());
+
+        assertNotEquals(s, s2);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

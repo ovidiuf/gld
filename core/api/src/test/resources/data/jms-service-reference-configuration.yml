@@ -18,6 +18,7 @@ service:
     connection-policy: connection-per-run
     session-policy: session-per-operation
     message-size: 1025
+    reuse-value: false
 
   implementation:
     name: embedded

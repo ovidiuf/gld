@@ -19,20 +19,17 @@ package io.novaordis.gld.api.cache.load;
 import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.LoadStrategyBase;
 import io.novaordis.gld.api.Operation;
-import io.novaordis.gld.api.RandomContentGenerator;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.gld.api.cache.CacheServiceConfiguration;
 import io.novaordis.gld.api.cache.operation.Read;
 import io.novaordis.gld.api.cache.operation.Write;
 import io.novaordis.gld.api.provider.RandomKeyProvider;
-import io.novaordis.utilities.UserErrorException;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A load strategy that implements the following behavior:
@@ -67,23 +64,13 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
 
     public static final String NAME = "read-then-write-on-miss";
 
-    public static final String REUSE_VALUE_LABEL = "reuse-value";
-
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private int valueSize;
-    private boolean reuseValue;
-    private String cachedValue;
     private volatile boolean initialized;
 
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    public ReadThenWriteOnMissLoadStrategy() {
-
-        this.reuseValue = true;
-    }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
 
@@ -107,17 +94,6 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    /**
-     * By default, the load strategy randomly generates the first entry value and then keeps reusing it, as a speed
-     * optimization (reuse-value: "true"). To change this behavior and configure the load strategy to generate a new
-     * random value every times it needs one, set "reuse-value" to "false" in the configuration. Configuring the load
-     * strategy to not reuse values will make it somewhat slower.
-     */
-    public boolean isReuseValue() {
-
-        return reuseValue;
-    }
-
     @Override
     public String toString() {
 
@@ -131,18 +107,6 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
     @Override
     protected void init(ServiceConfiguration sc, Map<String, Object> loadStrategyRawConfig, LoadConfiguration lc)
             throws Exception {
-
-        Object o = loadStrategyRawConfig.remove(REUSE_VALUE_LABEL);
-
-        if (o != null) {
-
-            if (!(o instanceof Boolean)) {
-                throw new UserErrorException(
-                        "illegal '" +  REUSE_VALUE_LABEL + "' " + o.getClass().getSimpleName() + " value");
-            }
-
-            this.reuseValue = (Boolean)o;
-        }
 
         if (!(sc instanceof CacheServiceConfiguration)) {
 
@@ -173,9 +137,6 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
         //
 
         keyProvider.start();
-
-        this.valueSize = cc.getValueSize();
-
         initialized = true;
     }
 
@@ -226,29 +187,6 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
 
         return result;
 
-    }
-
-    String computeValue() {
-
-        RandomContentGenerator valueGenerator = getValueGenerator();
-
-        String v;
-
-        if (reuseValue) {
-
-            if (cachedValue == null) {
-
-                cachedValue = valueGenerator.getRandomString(ThreadLocalRandom.current(), valueSize);
-            }
-
-            v = cachedValue;
-        }
-        else {
-
-            v = valueGenerator.getRandomString(ThreadLocalRandom.current(), valueSize);
-        }
-
-        return v;
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

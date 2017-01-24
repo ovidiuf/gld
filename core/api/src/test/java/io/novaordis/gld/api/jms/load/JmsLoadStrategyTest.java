@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.jms.load;
 
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.LoadStrategyTest;
 import io.novaordis.gld.api.configuration.MockLoadConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
@@ -93,7 +94,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
         MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
         Map<String, Object> rawLSC = new HashMap<>();
         msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-        rawLSC.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        rawLSC.put(LoadStrategy.NAME_LABEL, s.getName());
         rawLSC.put(JmsLoadStrategy.QUEUE_LABEL, "/jms/test-queue");
         rawLSC.put(JmsLoadStrategy.CONNECTION_FACTORY_LABEL, "/jms/TestConnectionFactory");
 
@@ -124,7 +125,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
         MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
         Map<String, Object> rawLSC = new HashMap<>();
         msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-        rawLSC.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        rawLSC.put(LoadStrategy.NAME_LABEL, s.getName());
 
         assertNull(rawLSC.get(JmsLoadStrategy.QUEUE_LABEL));
         assertNull(rawLSC.get(JmsLoadStrategy.TOPIC_LABEL));
@@ -152,7 +153,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
         MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
         Map<String, Object> rawLSC = new HashMap<>();
         msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-        rawLSC.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        rawLSC.put(LoadStrategy.NAME_LABEL, s.getName());
         rawLSC.put(JmsLoadStrategy.QUEUE_LABEL, "/jms/test-queue");
 
         assertNull(rawLSC.get(JmsLoadStrategy.CONNECTION_FACTORY_LABEL));
@@ -180,7 +181,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
         MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
         Map<String, Object> rawLSC = new HashMap<>();
         msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-        rawLSC.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        rawLSC.put(LoadStrategy.NAME_LABEL, s.getName());
         rawLSC.put(JmsLoadStrategy.QUEUE_LABEL, "A");
         rawLSC.put(JmsLoadStrategy.QUEUE_LABEL, "B");
 
@@ -207,7 +208,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
         MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
         Map<String, Object> rawLSC = new HashMap<>();
         msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-        rawLSC.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        rawLSC.put(LoadStrategy.NAME_LABEL, s.getName());
         rawLSC.put(JmsLoadStrategy.TOPIC_LABEL, "/jms/test-topic");
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
@@ -228,7 +229,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
         msc.setMessageSize(777);
         Map<String, Object> rawLSC = new HashMap<>();
         msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-        rawLSC.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        rawLSC.put(LoadStrategy.NAME_LABEL, s.getName());
         rawLSC.put(JmsLoadStrategy.QUEUE_LABEL, "/jms/test-queue");
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
@@ -247,7 +248,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
         msc.setMessageSize(777);
         Map<String, Object> rawLSC = new HashMap<>();
         msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-        rawLSC.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        rawLSC.put(LoadStrategy.NAME_LABEL, s.getName());
         rawLSC.put(JmsLoadStrategy.QUEUE_LABEL, "/jms/test-queue");
         rawLSC.put(JmsServiceConfiguration.MESSAGE_SIZE_LABEL, 778);
 
@@ -267,7 +268,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
         MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
         Map<String, Object> rawLSC = new HashMap<>();
         msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-        rawLSC.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        rawLSC.put(LoadStrategy.NAME_LABEL, s.getName());
         rawLSC.put(JmsLoadStrategy.QUEUE_LABEL, "/jms/test-queue");
 
         //
@@ -290,7 +291,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
         MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
         Map<String, Object> rawLSC = new HashMap<>();
         msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-        rawLSC.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        rawLSC.put(LoadStrategy.NAME_LABEL, s.getName());
         rawLSC.put(JmsLoadStrategy.QUEUE_LABEL, "/jms/test-queue");
         rawLSC.put(JmsLoadStrategy.CONNECTION_POLICY_LABEL, "connection-per-thread");
 
@@ -310,7 +311,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
         MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
         Map<String, Object> rawLSC = new HashMap<>();
         msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-        rawLSC.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        rawLSC.put(LoadStrategy.NAME_LABEL, s.getName());
         rawLSC.put(JmsLoadStrategy.QUEUE_LABEL, "/jms/test-queue");
         rawLSC.put(JmsLoadStrategy.CONNECTION_POLICY_LABEL, "no-such-connection-policy");
 
@@ -337,7 +338,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
         MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
         Map<String, Object> rawLSC = new HashMap<>();
         msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-        rawLSC.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        rawLSC.put(LoadStrategy.NAME_LABEL, s.getName());
         rawLSC.put(JmsLoadStrategy.QUEUE_LABEL, "/jms/test-queue");
         rawLSC.put(JmsLoadStrategy.SESSION_POLICY_LABEL, "session-per-thread");
 
@@ -357,7 +358,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
         MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
         Map<String, Object> rawLSC = new HashMap<>();
         msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-        rawLSC.put(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL, s.getName());
+        rawLSC.put(LoadStrategy.NAME_LABEL, s.getName());
         rawLSC.put(JmsLoadStrategy.QUEUE_LABEL, "/jms/test-queue");
         rawLSC.put(JmsLoadStrategy.SESSION_POLICY_LABEL, "no-such-session-policy");
 

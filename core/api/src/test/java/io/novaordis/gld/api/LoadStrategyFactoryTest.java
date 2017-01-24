@@ -93,7 +93,7 @@ public abstract class LoadStrategyFactoryTest {
 
         Map<String, Object> completelyCustomLoadStrategyFactoryConfig = new HashMap<>();
         completelyCustomLoadStrategyFactoryConfig.put(
-                ServiceConfiguration.LOAD_STRATEGY_FACTORY_CLASS_LABEL,
+                LoadStrategy.FACTORY_CLASS_LABEL,
                 "I.am.sure.this.class.does.not.exist");
         msc.set(completelyCustomLoadStrategyFactoryConfig ,ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
@@ -122,7 +122,7 @@ public abstract class LoadStrategyFactoryTest {
 
         Map<String, Object> completelyCustomLoadStrategyFactoryConfig = new HashMap<>();
         completelyCustomLoadStrategyFactoryConfig.put(
-                ServiceConfiguration.LOAD_STRATEGY_FACTORY_CLASS_LABEL,
+                LoadStrategy.FACTORY_CLASS_LABEL,
                 MockLoadStrategyFactory.class.getName());
         msc.set(completelyCustomLoadStrategyFactoryConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
@@ -223,7 +223,7 @@ public abstract class LoadStrategyFactoryTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("missing or null '" + ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL + "' map element", msg);
+            assertEquals("missing or null '" + LoadStrategy.NAME_LABEL + "' map element", msg);
         }
     }
 

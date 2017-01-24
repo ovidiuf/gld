@@ -58,8 +58,7 @@ public interface LoadStrategyFactory {
         //
 
         String ldClassName = sc.get(String.class,
-                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
-                ServiceConfiguration.LOAD_STRATEGY_FACTORY_CLASS_LABEL);
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.FACTORY_CLASS_LABEL);
 
         // if specified, takes precedence, if not the usual pattern applies
 

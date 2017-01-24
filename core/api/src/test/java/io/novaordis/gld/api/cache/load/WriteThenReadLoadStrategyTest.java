@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.cache.load;
 
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.LoadStrategyFactory;
 import io.novaordis.gld.api.LoadStrategyTest;
 import io.novaordis.gld.api.Operation;
@@ -490,7 +491,7 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest {
         msc.set(new HashMap<>(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
         msc.set(WriteThenReadLoadStrategy.NAME,
                 ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
-                ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL);
+                LoadStrategy.NAME_LABEL);
 
 
         WriteThenReadLoadStrategy s = (WriteThenReadLoadStrategy)LoadStrategyFactory.build(msc, mlc);

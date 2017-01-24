@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class LoadStrategyBase implements LoadStrategy {
@@ -51,6 +52,9 @@ public abstract class LoadStrategyBase implements LoadStrategy {
     //
     private AtomicLong remainingOperation;
 
+    private boolean reuseValue;
+    private String reusedValue;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     protected LoadStrategyBase() {
@@ -61,6 +65,12 @@ public abstract class LoadStrategyBase implements LoadStrategy {
         // by default, unlimited operations
         //
         this.remainingOperation = null;
+
+        //
+        // by default, we are reusing values, we'll have to explicitly configure the load strategy to not reuse values
+        //
+
+        this.reuseValue = true;
     }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
@@ -132,13 +142,37 @@ public abstract class LoadStrategyBase implements LoadStrategy {
         // check name consistency
         //
 
-        String n = (String) loadStrategyRawConfig.remove(ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL);
+        String n = (String) loadStrategyRawConfig.remove(NAME_LABEL);
 
         if (!getName().equals(n)) {
 
             throw new IllegalStateException(
                     "inconsistent load strategy name, expected '" + getName() + "' but found '" + n + "'");
         }
+
+        //
+        // pull common elements
+        //
+
+        //
+        // value size
+        //
+
+        boolean fail = true;
+        if (fail) { throw new RuntimeException("RETURN HERE"); }
+
+        // this.valueSize = sc.getValueSize();
+
+
+        //
+        // reuse value
+        //
+
+        //
+        // TODO we need sc.remove()
+        //
+        this.reuseValue = sc.get(
+                Boolean.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, REUSE_VALUE_LABEL);
 
         init(sc, loadStrategyRawConfig, lc);
 
@@ -255,9 +289,61 @@ public abstract class LoadStrategyBase implements LoadStrategy {
         return l;
     }
 
+    @Override
+    public int getValueSize() {
+
+        throw new RuntimeException("NYE");
+    }
+
+    @Override
+    public boolean isReuseValue() {
+
+        return reuseValue;
+    }
+
+    @Override
+    public String getReusedValue() {
+
+        if (!reuseValue) {
+
+            return null;
+        }
+
+        //
+        // TODO not fully thread safe, we may end with a few "reused values" but do we care?
+        //
+
+        if (reusedValue != null) {
+
+            return reusedValue;
+        }
+
+        RandomContentGenerator valueGenerator = getValueGenerator();
+        reusedValue = valueGenerator.getRandomString(ThreadLocalRandom.current(), getValueSize());
+        return reusedValue;
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
+
+    void setReuseValue(boolean b) {
+
+        this.reuseValue = b;
+    }
+
+    protected String computeValue() {
+
+        String s = getReusedValue();
+
+        if (s == null) {
+
+            RandomContentGenerator valueGenerator = getValueGenerator();
+            s = valueGenerator.getRandomString(ThreadLocalRandom.current(), getValueSize());
+        }
+
+        return s;
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

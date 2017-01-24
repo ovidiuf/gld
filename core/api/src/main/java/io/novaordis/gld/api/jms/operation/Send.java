@@ -17,6 +17,7 @@
 package io.novaordis.gld.api.jms.operation;
 
 import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
+import io.novaordis.gld.api.jms.load.JmsLoadStrategyBase;
 import io.novaordis.gld.api.service.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,13 +41,12 @@ public class Send extends JmsOperationBase {
 
         super(loadStrategy);
 
-        // create the payload outside the perform() method to influence as little as possible the execution duration;
-        // in this specific case we reuse the message created by the strategy (and presumably cached), because we are
-        // not interested creating distinct message bodies, we're only interested in the payload length
+        // create the payload outside perform() method to influence as little as possible the execution duration;
+        // in this specific case we reuse the message created by the strategy (and presumably cached), because we
+        // are not interested creating distinct message bodies, we're only interested in the payload length
 
-
-        throw new RuntimeException("RETURN HERE");
-        // this.payload = loadStrategy.getMessagePayload();
+        JmsLoadStrategyBase lsb = (JmsLoadStrategyBase)loadStrategy;
+        setPayload(lsb.getMessagePayload());
     }
 
     // Constructors ----------------------------------------------------------------------------------------------------

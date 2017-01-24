@@ -38,9 +38,8 @@ public interface ServiceConfiguration extends LowLevelConfiguration {
 
     String TYPE_LABEL = "type";
     String IMPLEMENTATION_CONFIGURATION_LABEL = "implementation";
+
     String LOAD_STRATEGY_CONFIGURATION_LABEL = "load-strategy";
-    String LOAD_STRATEGY_NAME_LABEL = "name";
-    String LOAD_STRATEGY_FACTORY_CLASS_LABEL = "factory-class";
 
     // Static ----------------------------------------------------------------------------------------------------------
 

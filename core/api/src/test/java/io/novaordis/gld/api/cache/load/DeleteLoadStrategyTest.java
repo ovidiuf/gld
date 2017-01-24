@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.cache.load;
 
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.LoadStrategyFactory;
 import io.novaordis.gld.api.LoadStrategyTest;
 import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
@@ -208,7 +209,7 @@ public class DeleteLoadStrategyTest extends LoadStrategyTest {
         msc.set(new HashMap<>(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
         msc.set(DeleteLoadStrategy.NAME,
                 ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
-                ServiceConfiguration.LOAD_STRATEGY_NAME_LABEL);
+                LoadStrategy.NAME_LABEL);
 
 
         DeleteLoadStrategy s = (DeleteLoadStrategy) LoadStrategyFactory.build(msc, mlc);
