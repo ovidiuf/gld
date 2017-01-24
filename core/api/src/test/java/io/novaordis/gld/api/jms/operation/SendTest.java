@@ -16,12 +16,16 @@
 
 package io.novaordis.gld.api.jms.operation;
 
+import io.novaordis.gld.api.jms.Producer;
+import io.novaordis.gld.api.jms.embedded.EmbeddedMessageProducer;
+import io.novaordis.gld.api.jms.embedded.EmbeddedQueue;
+import io.novaordis.gld.api.jms.embedded.EmbeddedSession;
 import io.novaordis.gld.api.jms.load.MockJmsLoadStrategy;
+import io.novaordis.gld.api.jms.load.SendLoadStrategy;
 import org.junit.Test;
 
-import java.util.List;
+import javax.jms.Session;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
@@ -45,18 +49,17 @@ public class SendTest extends JmsOperationTest {
     @Test
     public void perform() throws Exception {
 
-        fail("return here");
+        SendLoadStrategy ls = new SendLoadStrategy();
 
-//        SendLoadStrategy loadStrategy = new SendLoadStrategy();
-//
-//        Send send = getJmsOperationToTest(loadStrategy);
-//
-//        EmbeddedQueue jmsQueue = new EmbeddedQueue("TEST");
-//        EmbeddedSession jmsSession = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
-//        EmbeddedMessageProducer jmsProducer = (EmbeddedMessageProducer)jmsSession.createProducer(jmsQueue);
-//
-//        Producer endpoint = new Producer(jmsProducer, jmsSession);
-//
+        Send send = ls.next(null, null, false);
+
+        EmbeddedQueue jmsQueue = new EmbeddedQueue("TEST");
+        EmbeddedSession jmsSession = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
+        EmbeddedMessageProducer jmsProducer = (EmbeddedMessageProducer)jmsSession.createProducer(jmsQueue);
+
+        Producer endpoint = new Producer(jmsProducer, jmsSession);
+
+        fail("return here");
 //        send.perform(endpoint);
     }
 
@@ -94,7 +97,16 @@ public class SendTest extends JmsOperationTest {
     protected Send getOperationToTest(String key) throws Exception {
 
         MockJmsLoadStrategy ms = new MockJmsLoadStrategy();
-        return new Send(ms);
+        Send s = new Send(ms);
+
+        //
+        // send operations do not get IDs (keys) right away, but only after transit through the JMS machinery, so
+        // we need to simulate it
+        //
+
+        s.setId(key);
+
+        return s;
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

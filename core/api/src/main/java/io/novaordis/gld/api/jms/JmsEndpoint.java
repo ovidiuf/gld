@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms;
+package io.novaordis.gld.api.jms;
 
 import javax.jms.Session;
 
 /**
  * A wrapper for a MessageProducer or a MessageConsumer.
  *
- * @see com.novaordis.gld.service.jms.JmsResourceManager
+ * @see JmsResourceManager
  */
-public interface JmsEndpoint
-{
+public interface JmsEndpoint {
+
     /**
      * Closes the endpoint and the endpoint only - does not close the associated session, because we may be in a
      * situation where we want to reuse the session for further work.

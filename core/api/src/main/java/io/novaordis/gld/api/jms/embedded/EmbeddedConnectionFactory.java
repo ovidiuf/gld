@@ -14,22 +14,15 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms;
+package io.novaordis.gld.api.jms.embedded;
 
-import com.novaordis.gld.service.jms.embedded.EmbeddedQueue;
-import com.novaordis.gld.service.jms.embedded.EmbeddedSession;
-import org.junit.Test;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.JMSException;
 
-import javax.jms.Session;
+public class EmbeddedConnectionFactory implements ConnectionFactory {
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
-public abstract class JmsEndpointTest
-{
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = LoggerFactory.getLogger(JmsEndpointTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -37,30 +30,40 @@ public abstract class JmsEndpointTest
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public EmbeddedConnectionFactory(String clientUrl) {
+
+        throw new RuntimeException("RETURN HERE");
+//        if (!ActiveMQService.isEmbedded(clientUrl))
+//        {
+//            throw new IllegalArgumentException(clientUrl + " is not an embedded client URL");
+//        }
+    }
+
+    // ConnectionFactory implementation --------------------------------------------------------------------------------
+
+    @Override
+    public Connection createConnection() throws JMSException {
+
+        return new EmbeddedConnection();
+    }
+
+    @Override
+    public Connection createConnection(String s, String s1) throws JMSException {
+
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // close -----------------------------------------------------------------------------------------------------------
+    @Override
+    public String toString() {
 
-    @Test
-    public void closeDoesNotCloseSession() throws Exception
-    {
-        EmbeddedSession session = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
-
-        JmsEndpoint e = getEndpointToTest(session, new EmbeddedQueue("TEST"));
-
-        e.close();
-
-        assertEquals(session, e.getSession());
-
-        assertFalse(session.isClosed());
+        return "EmbeddedJMSConnectionFactory[" + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    protected abstract JmsEndpoint getEndpointToTest(Session session, javax.jms.Destination jmsDestination)
-        throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

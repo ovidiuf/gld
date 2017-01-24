@@ -14,50 +14,56 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.mock;
+package io.novaordis.gld.api.jms;
 
-import com.novaordis.gld.service.jms.JmsEndpoint;
-
+import javax.jms.MessageProducer;
 import javax.jms.Session;
 
-public class MockJmsEndpoint implements JmsEndpoint
-{
-    // Constants -------------------------------------------------------------------------------------------------------
+public class Producer implements JmsEndpoint {
 
-    private static final Logger log = LoggerFactory.getLogger(MockJmsEndpoint.class);
+    // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private boolean closed;
+    private Session session;
+    private MessageProducer producer;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockJmsEndpoint()
-    {
-        this.closed = false;
+    public Producer(MessageProducer producer, Session session) {
+
+        this.producer = producer;
+        this.session = session;
     }
 
     // JmsEndpoint implementation --------------------------------------------------------------------------------------
 
     @Override
-    public void close() throws Exception
-    {
-        this.closed = true;
+    public void close() throws Exception {
+
+        // do not close the session, it may be reused
+
+        producer.close();
     }
 
     @Override
-    public Session getSession()
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+    public Session getSession() {
+
+        return session;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public boolean isClosed()
-    {
-        return closed;
+    public MessageProducer getProducer() {
+        return producer;
+    }
+
+    @Override
+    public String toString() {
+
+        return "Producer[" + producer + ", " + session + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

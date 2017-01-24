@@ -64,7 +64,13 @@ public class SendLoadStrategy extends JmsLoadStrategyBase {
     }
 
     @Override
-    protected Operation nextInternal(Operation last, String lastWrittenKey, boolean runtimeShuttingDown)
+    public Send next(Operation last, String lastWrittenKey, boolean runtimeShuttingDown) throws Exception {
+
+        return (Send)super.next(last, lastWrittenKey, runtimeShuttingDown);
+    }
+
+    @Override
+    protected Send nextInternal(Operation last, String lastWrittenKey, boolean runtimeShuttingDown)
             throws Exception {
 
         return new Send(this);

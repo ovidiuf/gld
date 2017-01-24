@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms.embedded;
+package io.novaordis.gld.api.jms.embedded;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionConsumer;
@@ -28,8 +28,8 @@ import javax.jms.Topic;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmbeddedConnection implements Connection
-{
+public class EmbeddedConnection implements Connection {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
@@ -47,8 +47,8 @@ public class EmbeddedConnection implements Connection
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedConnection()
-    {
+    public EmbeddedConnection() {
+
         this.started = false;
         this.closed = false;
         this.createdSessions = new ArrayList<>();
@@ -58,71 +58,73 @@ public class EmbeddedConnection implements Connection
     // Connection implementation ---------------------------------------------------------------------------------------
 
     @Override
-    public Session createSession(boolean b, int i) throws JMSException
-    {
+    public Session createSession(boolean b, int i) throws JMSException {
+
         EmbeddedSession s = new EmbeddedSession(sessionCounter++, b, i);
         createdSessions.add(s);
         return s;
     }
 
     @Override
-    public String getClientID() throws JMSException
-    {
+    public String getClientID() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void setClientID(String s) throws JMSException
-    {
+    public void setClientID(String s) throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public ConnectionMetaData getMetaData() throws JMSException
-    {
+    public ConnectionMetaData getMetaData() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public ExceptionListener getExceptionListener() throws JMSException
-    {
+    public ExceptionListener getExceptionListener() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void setExceptionListener(ExceptionListener exceptionListener) throws JMSException
-    {
+    public void setExceptionListener(ExceptionListener exceptionListener) throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void start() throws JMSException
-    {
+    public void start() throws JMSException {
+
         started = true;
     }
 
     @Override
-    public void stop() throws JMSException
-    {
+    public void stop() throws JMSException {
+
         started = false;
     }
 
     @Override
-    public void close() throws JMSException
-    {
+    public void close() throws JMSException {
+
         stop();
         closed = true;
     }
 
     @Override
-    public ConnectionConsumer createConnectionConsumer(Destination destination, String s, ServerSessionPool serverSessionPool, int i) throws JMSException
-    {
+    public ConnectionConsumer createConnectionConsumer(
+            Destination destination, String s, ServerSessionPool serverSessionPool, int i) throws JMSException  {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public ConnectionConsumer createDurableConnectionConsumer(Topic topic, String s, String s1, ServerSessionPool serverSessionPool, int i) throws JMSException
-    {
+    public ConnectionConsumer createDurableConnectionConsumer(
+            Topic topic, String s, String s1, ServerSessionPool serverSessionPool, int i) throws JMSException {
+
         return null;
     }
 

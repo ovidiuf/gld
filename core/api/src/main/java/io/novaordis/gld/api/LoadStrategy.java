@@ -166,4 +166,9 @@ public interface LoadStrategy {
      */
     boolean isReuseValue();
 
+    /**
+     * @return the reused value, if the load strategy was configured to reuse values, or computes a new one.
+     */
+    String computeValue();
+
 }

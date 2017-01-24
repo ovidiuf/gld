@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms;
+package io.novaordis.gld.api.jms;
 
-import com.novaordis.gld.service.jms.embedded.EmbeddedMessageProducer;
-import com.novaordis.gld.service.jms.embedded.EmbeddedQueue;
-import com.novaordis.gld.service.jms.embedded.EmbeddedSession;
+import io.novaordis.gld.api.jms.embedded.EmbeddedQueue;
+import io.novaordis.gld.api.jms.embedded.EmbeddedSession;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.jms.MessageProducer;
 import javax.jms.Session;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
-public class ProducerTest extends JmsEndpointTest
-{
+public abstract class JmsEndpointTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = LoggerFactory.getLogger(ProducerTest.class);
+    private static final Logger log = LoggerFactory.getLogger(JmsEndpointTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -41,31 +41,30 @@ public class ProducerTest extends JmsEndpointTest
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    // close -----------------------------------------------------------------------------------------------------------
+
     @Test
-    public void close() throws Exception
-    {
+    public void closeDoesNotCloseSession() throws Exception {
+
         EmbeddedSession session = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
-        EmbeddedQueue queue = new EmbeddedQueue("TEST");
-        Producer p = getEndpointToTest(session, queue);
 
-        p.close();
+        JmsEndpoint e = getEndpointToTest(session, new EmbeddedQueue("TEST"));
 
-        EmbeddedMessageProducer mp = (EmbeddedMessageProducer)p.getProducer();
+        e.close();
+
+        assertEquals(session, e.getSession());
 
         assertFalse(session.isClosed());
-        assertTrue(mp.isClosed());
+
+        log.debug(".");
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    @Override
-    protected Producer getEndpointToTest(Session session, javax.jms.Destination jmsDestination) throws Exception
-    {
-        MessageProducer p = session.createProducer(jmsDestination);
-        return new Producer(p, session);
-    }
+    protected abstract JmsEndpoint getEndpointToTest(Session session, javax.jms.Destination jmsDestination)
+        throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

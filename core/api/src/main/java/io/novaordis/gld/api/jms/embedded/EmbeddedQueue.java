@@ -14,62 +14,39 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms;
+package io.novaordis.gld.api.jms.embedded;
 
+import javax.jms.JMSException;
+import javax.jms.Queue;
 
-import javax.jms.MessageProducer;
-import javax.jms.Session;
+public class EmbeddedQueue implements Queue {
 
-public class Producer implements JmsEndpoint
-{
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Session session;
-    private MessageProducer producer;
+    private String name;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Producer(MessageProducer producer, Session session)
-    {
-        this.producer = producer;
-        this.session = session;
+    public EmbeddedQueue(String name) {
+        this.name = name;
     }
 
-    // JmsEndpoint implementation --------------------------------------------------------------------------------------
-
-    /**
-     * @see com.novaordis.gld.service.jms.JmsEndpoint#close()
-     */
-    @Override
-    public void close() throws Exception
-    {
-        // do not close the session, it may be reused
-
-        producer.close();
-    }
+    // Queue implementation --------------------------------------------------------------------------------------------
 
     @Override
-    public Session getSession()
-    {
-        return session;
+    public String getQueueName() throws JMSException {
+        return name;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-
-    public MessageProducer getProducer()
-    {
-        return producer;
-    }
-
     @Override
-    public String toString()
-    {
-        return "Producer[" + producer + ", " + session + "]";
+    public String toString() {
+        return name;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

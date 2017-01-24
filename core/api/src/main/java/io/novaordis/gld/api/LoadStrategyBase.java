@@ -323,16 +323,8 @@ public abstract class LoadStrategyBase implements LoadStrategy {
         return reusedValue;
     }
 
-    // Public ----------------------------------------------------------------------------------------------------------
-
-    // Package protected -----------------------------------------------------------------------------------------------
-
-    void setReuseValue(boolean b) {
-
-        this.reuseValue = b;
-    }
-
-    protected String computeValue() {
+    @Override
+    public String computeValue() {
 
         String s = getReusedValue();
 
@@ -343,6 +335,15 @@ public abstract class LoadStrategyBase implements LoadStrategy {
         }
 
         return s;
+    }
+
+    // Public ----------------------------------------------------------------------------------------------------------
+
+    // Package protected -----------------------------------------------------------------------------------------------
+
+    void setReuseValue(boolean b) {
+
+        this.reuseValue = b;
     }
 
     // Protected -------------------------------------------------------------------------------------------------------

@@ -14,89 +14,50 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms.embedded;
+package io.novaordis.gld.api.jms;
 
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class EmbeddedMessageConsumer implements MessageConsumer
-{
+import javax.jms.Session;
+
+public class MockJmsEndpoint implements JmsEndpoint {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(MockJmsEndpoint.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Destination destination;
-
     private boolean closed;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedMessageConsumer(Destination destination)
-    {
-        this.destination = destination;
+    public MockJmsEndpoint() {
+
         this.closed = false;
     }
 
-    // MessageConsumer implementation ----------------------------------------------------------------------------------
+    // JmsEndpoint implementation --------------------------------------------------------------------------------------
 
     @Override
-    public String getMessageSelector() throws JMSException
-    {
+    public void close() throws Exception {
+
+        this.closed = true;
+    }
+
+    @Override
+    public Session getSession() {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public MessageListener getMessageListener() throws JMSException
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void setMessageListener(MessageListener messageListener) throws JMSException
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Message receive() throws JMSException
-    {
-        return new EmbeddedTextMessage("TEST");
-    }
-
-    @Override
-    public Message receive(long l) throws JMSException
-    {
-        return new EmbeddedTextMessage("TEST");
-    }
-
-    @Override
-    public Message receiveNoWait() throws JMSException
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void close() throws JMSException
-    {
-        closed = true;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Override
-    public String toString()
-    {
-        return "EmbeddedConsumer[" + destination + "]";
-    }
+    public boolean isClosed() {
 
-    public boolean isClosed()
-    {
         return closed;
     }
 

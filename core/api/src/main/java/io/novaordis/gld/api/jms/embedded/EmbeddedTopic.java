@@ -14,60 +14,41 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms;
+package io.novaordis.gld.api.jms.embedded;
 
-import javax.jms.MessageConsumer;
-import javax.jms.Session;
+import javax.jms.JMSException;
+import javax.jms.Topic;
 
-public class Consumer implements JmsEndpoint
-{
+public class EmbeddedTopic implements Topic {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Session session;
-    private MessageConsumer consumer;
+    private String name;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Consumer(MessageConsumer consumer, Session session)
-    {
-        this.consumer = consumer;
-        this.session = session;
+    public EmbeddedTopic(String name) {
+
+        this.name = name;
     }
 
-    // JmsEndpoint implementation --------------------------------------------------------------------------------------
-
-    /**
-     * @see com.novaordis.gld.service.jms.JmsEndpoint#close()
-     */
-    @Override
-    public void close() throws Exception
-    {
-        // do not close the session, it may be reused
-
-        consumer.close();
-    }
+    // Queue implementation --------------------------------------------------------------------------------------------
 
     @Override
-    public Session getSession()
-    {
-        return session;
+    public String getTopicName() throws JMSException {
+
+        return name;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public MessageConsumer getConsumer()
-    {
-        return consumer;
-    }
-
     @Override
-    public String toString()
-    {
-        return "Consumer[" + consumer + ", " + session + "]";
+    public String toString() {
+        return name;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

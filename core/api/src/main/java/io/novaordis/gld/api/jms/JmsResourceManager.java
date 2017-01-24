@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms;
+package io.novaordis.gld.api.jms;
 
-import com.novaordis.gld.operations.jms.JmsOperation;
-import com.novaordis.gld.operations.jms.Send;
-import com.novaordis.gld.strategy.load.jms.Destination;
+import io.novaordis.gld.api.jms.load.ConnectionPolicy;
+import io.novaordis.gld.api.jms.load.SessionPolicy;
+import io.novaordis.gld.api.jms.operation.JmsOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jms.Connection;
 import javax.jms.MessageConsumer;
@@ -55,10 +57,10 @@ import java.util.Map;
  *  and it relies on the fact that deals with MultiThreadedRunner threads and not other threads. If you use it in a
  *  different context, you will need to consider that.
  *
- * @see com.novaordis.gld.service.jms.JmsEndpoint
+ * @see JmsEndpoint
  */
-public class JmsResourceManager
-{
+public class JmsResourceManager {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = LoggerFactory.getLogger(JmsResourceManager.class);
@@ -68,106 +70,111 @@ public class JmsResourceManager
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private Connection connection;
-    private EndpointPolicy policy;
+    private ConnectionPolicy connectionPolicy;
+    private SessionPolicy sessionPolicy;
 
     // <thread name - session instance>
     final private Map<String, Session> sessions;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public JmsResourceManager(Connection connection, EndpointPolicy policy)
-    {
+    public JmsResourceManager(Connection connection, ConnectionPolicy connectionPolicy, SessionPolicy sessionPolicy) {
+
         this.connection = connection;
-        this.policy = policy;
+        this.connectionPolicy = connectionPolicy;
+        this.sessionPolicy = sessionPolicy;
         this.sessions = new HashMap<>();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public JmsEndpoint checkOutEndpoint(JmsOperation jmsOperation) throws Exception
-    {
-        if (connection == null)
-        {
+    public JmsEndpoint checkOutEndpoint(JmsOperation jmsOperation) throws Exception {
+
+        if (connection == null) {
+
             throw new IllegalStateException(this + " is closed");
         }
 
         JmsEndpoint result;
 
-        if (EndpointPolicy.NEW_SESSION_NEW_ENDPOINT_PER_OPERATION.equals(policy))
-        {
-            // create a new Session and a new endpoint
+//        if (EndpointPolicy.NEW_SESSION_NEW_ENDPOINT_PER_OPERATION.equals(policy)) {
+//
+//            // create a new Session and a new endpoint
+//
+//            Session session = createNewSession();
+//            result = createNewEndpointForSession(jmsOperation instanceof Send, session, jmsOperation.getDestination());
+//        }
+//        else if (EndpointPolicy.REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION.equals(policy)) {
+//
+//            // attempt to look up a previously created session for this thread - if it exists, use it,
+//            // if not create it and store it for reuse
+//            Session session = getSession();
+//            result = createNewEndpointForSession(jmsOperation instanceof Send, session, jmsOperation.getDestination());
+//        }
+//        else {
+//            throw new IllegalStateException(policy + " NOT SUPPORTED YET");
+//        }
+//
+//        return result;
 
-            Session session = createNewSession();
-            result = createNewEndpointForSession(jmsOperation instanceof Send, session, jmsOperation.getDestination());
-        }
-        else if (EndpointPolicy.REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION.equals(policy))
-        {
-            // attempt to look up a previously created session for this thread - if it exists, use it,
-            // if not create it and store it for reuse
-            Session session = getSession();
-            result = createNewEndpointForSession(jmsOperation instanceof Send, session, jmsOperation.getDestination());
-        }
-        else
-        {
-            throw new IllegalStateException(policy + " NOT SUPPORTED YET");
-        }
-
-        return result;
+        throw new RuntimeException("RETURN HERE");
     }
 
-    public void returnEndpoint(JmsEndpoint endpoint) throws Exception
-    {
-        // if we attempt to return an endpoint to a closed resource manager, close the endpoint and discard it
+    public void returnEndpoint(JmsEndpoint endpoint) throws Exception {
 
-        if (connection == null)
-        {
-            try
-            {
-                endpoint.close();
-            }
-            catch(Exception e)
-            {
-                log.warn("failed to close " + e, e);
-            }
-            return;
-        }
+//        // if we attempt to return an endpoint to a closed resource manager, close the endpoint and discard it
+//
+//        if (connection == null) {
+//
+//            try {
+//
+//                endpoint.close();
+//            }
+//            catch(Exception e) {
+//
+//                log.warn("failed to close " + e, e);
+//            }
+//            return;
+//        }
+//
+//        if (EndpointPolicy.NEW_SESSION_NEW_ENDPOINT_PER_OPERATION.equals(policy))
+//        {
+//            // close the session, we're not going to use it anymore
+//            Session session = endpoint.getSession();
+//            session.close();
+//        }
+//        else if (EndpointPolicy.REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION.equals(policy))
+//        {
+//            // close the endpoint, but leave the session alone, we'll re-use it for anything that gets
+//            // send on the same thread
+//            endpoint.close();
+//        }
+//        else {
+//
+//            throw new IllegalStateException(policy + " NOT SUPPORTED YET");
+//        }
 
-        if (EndpointPolicy.NEW_SESSION_NEW_ENDPOINT_PER_OPERATION.equals(policy))
-        {
-            // close the session, we're not going to use it anymore
-            Session session = endpoint.getSession();
-            session.close();
-        }
-        else if (EndpointPolicy.REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION.equals(policy))
-        {
-            // close the endpoint, but leave the session alone, we'll re-use it for anything that gets
-            // send on the same thread
-            endpoint.close();
-        }
-        else
-        {
-            throw new IllegalStateException(policy + " NOT SUPPORTED YET");
-        }
+        throw new RuntimeException("RETURN HERE");
     }
 
     /**
      * Clean up.
      */
-    public void close()
-    {
+    public void close() {
+
         // clean up whatever resources were checked out
         this.connection = null;
 
-        synchronized (sessions)
-        {
-            for(Session s: sessions.values())
-            {
-                try
-                {
+        synchronized (sessions) {
+
+            for(Session s: sessions.values()) {
+
+                try {
+
                     s.close();
                 }
-                catch(Exception e)
-                {
+                catch(Exception e) {
+
                     log.warn("failed to close JMS Session " + s, e);
                 }
             }
@@ -176,9 +183,14 @@ public class JmsResourceManager
         }
     }
 
-    public EndpointPolicy getPolicy()
-    {
-        return policy;
+    public ConnectionPolicy getConnectionPolicy() {
+
+        return connectionPolicy;
+    }
+
+    public SessionPolicy getSessionPolicy() {
+
+        return sessionPolicy;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -191,20 +203,20 @@ public class JmsResourceManager
      * Attempt to look up a previously created session for this thread - if it exists, use it, if not create it and
      * store it for further reuse.
      */
-    private Session getSession() throws Exception
-    {
+    private Session getSession() throws Exception {
+
         // if this thread has already a Session associated with it, use that
 
         String threadName = Thread.currentThread().getName();
 
         Session session;
 
-        synchronized (sessions)
-        {
+        synchronized (sessions) {
+
             session = sessions.get(threadName);
 
-            if (session == null)
-            {
+            if (session == null) {
+
                 session = createNewSession();
                 sessions.put(threadName, session);
             }
@@ -213,8 +225,8 @@ public class JmsResourceManager
         return session;
     }
 
-    private Session createNewSession() throws Exception
-    {
+    private Session createNewSession() throws Exception {
+
         return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
     }
 
@@ -222,21 +234,21 @@ public class JmsResourceManager
      * @param send true fro send, false for receive
      */
     private JmsEndpoint createNewEndpointForSession(boolean send, Session session, Destination destination)
-        throws Exception
-    {
+        throws Exception {
+
         JmsEndpoint result;
 
         String name = destination.getName();
         javax.jms.Destination jmsDestination =
             destination.isQueue() ? session.createQueue(name) : session.createTopic(name);
 
-        if (send)
-        {
+        if (send) {
+
             MessageProducer producer = session.createProducer(jmsDestination);
             result = new Producer(producer, session);
         }
-        else
-        {
+        else {
+
             MessageConsumer consumer = session.createConsumer(jmsDestination);
             result = new Consumer(consumer, session);
         }
@@ -265,9 +277,5 @@ public class JmsResourceManager
 //            s.close();
 //        }
 //    }
-
-
-
-
 
 }

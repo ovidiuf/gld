@@ -16,11 +16,16 @@
 
 package io.novaordis.gld.api.jms.operation;
 
+import io.novaordis.gld.api.jms.Producer;
 import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 import io.novaordis.gld.api.jms.load.JmsLoadStrategyBase;
 import io.novaordis.gld.api.service.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jms.MessageProducer;
+import javax.jms.Session;
+import javax.jms.TextMessage;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -45,8 +50,8 @@ public class Send extends JmsOperationBase {
         // in this specific case we reuse the message created by the strategy (and presumably cached), because we
         // are not interested creating distinct message bodies, we're only interested in the payload length
 
-        JmsLoadStrategyBase lsb = (JmsLoadStrategyBase)loadStrategy;
-        setPayload(lsb.getMessagePayload());
+        String v = loadStrategy.computeValue();
+        setPayload(v);
     }
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -55,13 +60,17 @@ public class Send extends JmsOperationBase {
 
     @Override
     public void perform(Service s) throws Exception {
+
         throw new RuntimeException("perform() NOT YET IMPLEMENTED");
 
-        // perform(JmsEndpoint endpoint)
-
+//        // perform(JmsEndpoint endpoint)
+//
 //        Producer producerEndpoint = (Producer)endpoint;
+//
 //        Session session = producerEndpoint.getSession();
 //        MessageProducer jmsProducer = producerEndpoint.getProducer();
+//
+//        String payload = getPayload();
 //
 //        TextMessage m = session.createTextMessage(payload);
 //

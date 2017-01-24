@@ -14,47 +14,62 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms.embedded;
+package io.novaordis.gld.api.jms;
 
-import javax.jms.JMSException;
-import javax.jms.Queue;
+import io.novaordis.gld.api.jms.embedded.EmbeddedMessageConsumer;
+import io.novaordis.gld.api.jms.embedded.EmbeddedQueue;
+import io.novaordis.gld.api.jms.embedded.EmbeddedSession;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class EmbeddedQueue implements Queue
-{
+import javax.jms.MessageConsumer;
+import javax.jms.Session;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class ConsumerTest extends JmsEndpointTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(ConsumerTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String name;
-
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    public EmbeddedQueue(String name)
-    {
-        this.name = name;
-    }
-
-    // Queue implementation --------------------------------------------------------------------------------------------
-
-    @Override
-    public String getQueueName() throws JMSException
-    {
-        return name;
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Override
-    public String toString()
-    {
-        return name;
+    @Test
+    public void close() throws Exception {
+
+        EmbeddedSession session = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
+        EmbeddedQueue queue = new EmbeddedQueue("TEST");
+        Consumer c = getEndpointToTest(session, queue);
+
+        c.close();
+
+        EmbeddedMessageConsumer mc = (EmbeddedMessageConsumer)c.getConsumer();
+
+        assertFalse(session.isClosed());
+        assertTrue(mc.isClosed());
+
+        log.debug(".");
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected Consumer getEndpointToTest(Session session, javax.jms.Destination jmsDestination) throws Exception {
+
+        MessageConsumer c = session.createConsumer(jmsDestination);
+        return new Consumer(c, session);
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

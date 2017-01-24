@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms.embedded;
+package io.novaordis.gld.api.jms.embedded;
 
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -23,8 +23,8 @@ import javax.jms.MessageProducer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmbeddedMessageProducer implements MessageProducer
-{
+public class EmbeddedMessageProducer implements MessageProducer {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
@@ -37,125 +37,126 @@ public class EmbeddedMessageProducer implements MessageProducer
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedMessageProducer(Destination destination)
-    {
+    public EmbeddedMessageProducer(Destination destination) {
+
         this.destination = destination;
         this.closed = false;
         this.messagesSentByThisProducer = new ArrayList<>();
     }
 
     // MessageProducer implementation ----------------------------------------------------------------------------------
+
     @Override
-    public void setDisableMessageID(boolean b) throws JMSException
-    {
+    public void setDisableMessageID(boolean b) throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public boolean getDisableMessageID() throws JMSException
-    {
+    public boolean getDisableMessageID() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void setDisableMessageTimestamp(boolean b) throws JMSException
-    {
+    public void setDisableMessageTimestamp(boolean b) throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public boolean getDisableMessageTimestamp() throws JMSException
-    {
+    public boolean getDisableMessageTimestamp() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void setDeliveryMode(int i) throws JMSException
-    {
+    public void setDeliveryMode(int i) throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public int getDeliveryMode() throws JMSException
-    {
+    public int getDeliveryMode() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void setPriority(int i) throws JMSException
-    {
+    public void setPriority(int i) throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public int getPriority() throws JMSException
-    {
+    public int getPriority() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void setTimeToLive(long l) throws JMSException
-    {
+    public void setTimeToLive(long l) throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public long getTimeToLive() throws JMSException
-    {
+    public long getTimeToLive() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public Destination getDestination() throws JMSException
-    {
+    public Destination getDestination() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void close() throws JMSException
-    {
+    public void close() throws JMSException {
+
         closed = true;
     }
 
     @Override
-    public void send(Message message) throws JMSException
-    {
+    public void send(Message message) throws JMSException {
+
         messagesSentByThisProducer.add(message);
     }
 
     @Override
-    public void send(Message message, int i, int i1, long l) throws JMSException
-    {
+    public void send(Message message, int i, int i1, long l) throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void send(Destination destination, Message message) throws JMSException
-    {
+    public void send(Destination destination, Message message) throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void send(Destination destination, Message message, int i, int i1, long l) throws JMSException
-    {
+    public void send(Destination destination, Message message, int i, int i1, long l) throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Override
-    public String toString()
-    {
+    public String toString() {
+
         return "EmbeddedProducer[" + destination + "]";
     }
 
-    public boolean isClosed()
-    {
+    public boolean isClosed() {
+
         return closed;
     }
 
-    public List<Message> getMessagesSentByThisProducer()
-    {
+    public List<Message> getMessagesSentByThisProducer() {
+
         return messagesSentByThisProducer;
     }
 

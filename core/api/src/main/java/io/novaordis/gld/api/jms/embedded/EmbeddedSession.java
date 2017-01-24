@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms.embedded;
+package io.novaordis.gld.api.jms.embedded;
 
 import javax.jms.BytesMessage;
 import javax.jms.Destination;
@@ -38,8 +38,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmbeddedSession implements Session
-{
+public class EmbeddedSession implements Session {
+
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
@@ -57,8 +57,8 @@ public class EmbeddedSession implements Session
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedSession(int sessionId, boolean transacted, int acknowledgment)
-    {
+    public EmbeddedSession(int sessionId, boolean transacted, int acknowledgment) {
+
         this.sessionId = sessionId;
         this.transacted = transacted;
         this.acknowledgment = acknowledgment;
@@ -70,89 +70,89 @@ public class EmbeddedSession implements Session
     // Session implementation ------------------------------------------------------------------------------------------
 
     @Override
-    public BytesMessage createBytesMessage() throws JMSException
-    {
+    public BytesMessage createBytesMessage() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public MapMessage createMapMessage() throws JMSException
-    {
+    public MapMessage createMapMessage() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public Message createMessage() throws JMSException
-    {
+    public Message createMessage() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public ObjectMessage createObjectMessage() throws JMSException
-    {
+    public ObjectMessage createObjectMessage() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public ObjectMessage createObjectMessage(Serializable serializable) throws JMSException
-    {
+    public ObjectMessage createObjectMessage(Serializable serializable) throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public StreamMessage createStreamMessage() throws JMSException
-    {
+    public StreamMessage createStreamMessage() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public TextMessage createTextMessage() throws JMSException
-    {
+    public TextMessage createTextMessage() throws JMSException {
+
         return new EmbeddedTextMessage();
     }
 
     @Override
-    public TextMessage createTextMessage(String s) throws JMSException
-    {
+    public TextMessage createTextMessage(String s) throws JMSException {
+
         return new EmbeddedTextMessage(s);
     }
 
     @Override
-    public boolean getTransacted() throws JMSException
-    {
+    public boolean getTransacted() throws JMSException {
+
         return transacted;
     }
 
     @Override
-    public int getAcknowledgeMode() throws JMSException
-    {
+    public int getAcknowledgeMode() throws JMSException {
+
         return acknowledgment;
     }
 
     @Override
-    public void commit() throws JMSException
-    {
+    public void commit() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void rollback() throws JMSException
-    {
+    public void rollback() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void close() throws JMSException
-    {
+    public void close() throws JMSException {
+
         // close all created producers and consumers
 
-        for(EmbeddedMessageConsumer c: createdConsumers)
-        {
+        for(EmbeddedMessageConsumer c: createdConsumers) {
+
             c.close();
         }
 
-        for(EmbeddedMessageProducer p: createdProducers)
-        {
+        for(EmbeddedMessageProducer p: createdProducers) {
+
             p.close();
         }
 
@@ -160,131 +160,131 @@ public class EmbeddedSession implements Session
     }
 
     @Override
-    public void recover() throws JMSException
-    {
+    public void recover() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public MessageListener getMessageListener() throws JMSException
-    {
+    public MessageListener getMessageListener() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void setMessageListener(MessageListener messageListener) throws JMSException
-    {
+    public void setMessageListener(MessageListener messageListener) throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public MessageProducer createProducer(Destination destination) throws JMSException
-    {
+    public MessageProducer createProducer(Destination destination) throws JMSException {
+
         EmbeddedMessageProducer p = new EmbeddedMessageProducer(destination);
         createdProducers.add(p);
         return p;
     }
 
     @Override
-    public MessageConsumer createConsumer(Destination destination) throws JMSException
-    {
+    public MessageConsumer createConsumer(Destination destination) throws JMSException {
+
         EmbeddedMessageConsumer c = new EmbeddedMessageConsumer(destination);
         createdConsumers.add(c);
         return c;
     }
 
     @Override
-    public MessageConsumer createConsumer(Destination destination, String s) throws JMSException
-    {
+    public MessageConsumer createConsumer(Destination destination, String s) throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public MessageConsumer createConsumer(Destination destination, String s, boolean b) throws JMSException
-    {
+    public MessageConsumer createConsumer(Destination destination, String s, boolean b) throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public Queue createQueue(String s) throws JMSException
-    {
+    public Queue createQueue(String s) throws JMSException {
+
         return new EmbeddedQueue(s);
     }
 
     @Override
-    public Topic createTopic(String s) throws JMSException
-    {
+    public Topic createTopic(String s) throws JMSException {
+
         return new EmbeddedTopic(s);
     }
 
     @Override
-    public TopicSubscriber createDurableSubscriber(Topic topic, String s) throws JMSException
-    {
+    public TopicSubscriber createDurableSubscriber(Topic topic, String s) throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public TopicSubscriber createDurableSubscriber(Topic topic, String s, String s1, boolean b) throws JMSException
-    {
+    public TopicSubscriber createDurableSubscriber(Topic topic, String s, String s1, boolean b) throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public QueueBrowser createBrowser(Queue queue) throws JMSException
-    {
+    public QueueBrowser createBrowser(Queue queue) throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public QueueBrowser createBrowser(Queue queue, String s) throws JMSException
-    {
+    public QueueBrowser createBrowser(Queue queue, String s) throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public TemporaryQueue createTemporaryQueue() throws JMSException
-    {
+    public TemporaryQueue createTemporaryQueue() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public TemporaryTopic createTemporaryTopic() throws JMSException
-    {
+    public TemporaryTopic createTemporaryTopic() throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     @Override
-    public void unsubscribe(String s) throws JMSException
-    {
+    public void unsubscribe(String s) throws JMSException {
+
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public boolean isClosed()
-    {
+    public boolean isClosed() {
+
         return closed;
     }
 
-    public List<EmbeddedMessageProducer> getCreatedProducers()
-    {
+    public List<EmbeddedMessageProducer> getCreatedProducers() {
+
         return createdProducers;
     }
 
-    public List<EmbeddedMessageConsumer> getCreatedConsumers()
-    {
+    public List<EmbeddedMessageConsumer> getCreatedConsumers() {
+
         return createdConsumers;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
+
         return "EmbeddedSession[" + sessionId + "]";
     }
 

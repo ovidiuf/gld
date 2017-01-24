@@ -14,17 +14,26 @@
  * limitations under the License.
  */
 
-package com.novaordis.gld.service.jms.embedded;
+package io.novaordis.gld.api.jms;
 
-import com.novaordis.gld.service.jms.activemq.ActiveMQService;
+import io.novaordis.gld.api.jms.embedded.EmbeddedMessageProducer;
+import io.novaordis.gld.api.jms.embedded.EmbeddedQueue;
+import io.novaordis.gld.api.jms.embedded.EmbeddedSession;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSException;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
 
-public class EmbeddedConnectionFactory implements ConnectionFactory
-{
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class ProducerTest extends JmsEndpointTest {
+
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(ProducerTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -32,39 +41,35 @@ public class EmbeddedConnectionFactory implements ConnectionFactory
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedConnectionFactory(String clientUrl)
-    {
-        if (!ActiveMQService.isEmbedded(clientUrl))
-        {
-            throw new IllegalArgumentException(clientUrl + " is not an embedded client URL");
-        }
-    }
-
-    // ConnectionFactory implementation --------------------------------------------------------------------------------
-
-    @Override
-    public Connection createConnection() throws JMSException
-    {
-        return new EmbeddedConnection();
-    }
-
-    @Override
-    public Connection createConnection(String s, String s1) throws JMSException
-    {
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Override
-    public String toString()
-    {
-        return "EmbeddedJMSConnectionFactory[" + "]";
+    @Test
+    public void close() throws Exception {
+
+        EmbeddedSession session = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
+        EmbeddedQueue queue = new EmbeddedQueue("TEST");
+        Producer p = getEndpointToTest(session, queue);
+
+        p.close();
+
+        EmbeddedMessageProducer mp = (EmbeddedMessageProducer)p.getProducer();
+
+        assertFalse(session.isClosed());
+        assertTrue(mp.isClosed());
+
+        log.debug(".");
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected Producer getEndpointToTest(Session session, javax.jms.Destination jmsDestination) throws Exception {
+
+        MessageProducer p = session.createProducer(jmsDestination);
+        return new Producer(p, session);
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

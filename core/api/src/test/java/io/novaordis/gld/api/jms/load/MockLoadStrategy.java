@@ -187,6 +187,12 @@ public class MockLoadStrategy implements LoadStrategy {
         throw new RuntimeException("isReuseValue() NOT YET IMPLEMENTED");
     }
 
+    @Override
+    public String computeValue() {
+
+        return "mock value";
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Override

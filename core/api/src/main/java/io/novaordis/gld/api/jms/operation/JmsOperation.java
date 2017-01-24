@@ -42,4 +42,9 @@ public interface JmsOperation extends Operation {
 
     Destination getDestination();
 
+    /**
+     * May return null if a send operation which was not submitted for processing.
+     */
+    String getId();
+
 }

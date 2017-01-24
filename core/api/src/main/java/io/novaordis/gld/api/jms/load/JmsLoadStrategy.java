@@ -70,5 +70,4 @@ public interface JmsLoadStrategy extends LoadStrategy {
      */
     Long getMessages();
 
-
 }

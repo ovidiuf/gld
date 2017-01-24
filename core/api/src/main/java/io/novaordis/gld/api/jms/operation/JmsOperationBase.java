@@ -33,6 +33,7 @@ public abstract class JmsOperationBase implements JmsOperation {
 
     private JmsLoadStrategy loadStrategy;
 
+    private String id;
     private String payload;
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -57,7 +58,8 @@ public abstract class JmsOperationBase implements JmsOperation {
 
     @Override
     public String getKey() {
-        throw new RuntimeException("getKey() NOT YET IMPLEMENTED");
+
+        return getId();
     }
 
     @Override
@@ -72,6 +74,12 @@ public abstract class JmsOperationBase implements JmsOperation {
         return loadStrategy.getDestination();
     }
 
+    @Override
+    public String getId() {
+
+        return id;
+    }
+
 //    /**
 //     * Externalize the job of choosing what endpoint to use for operation to JmsResourceManager.
 //     *
@@ -82,6 +90,14 @@ public abstract class JmsOperationBase implements JmsOperation {
 
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    /**
+     * Has the same semantics as "key".
+     */
+    public void setId(String id) {
+
+        this.id = id;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
