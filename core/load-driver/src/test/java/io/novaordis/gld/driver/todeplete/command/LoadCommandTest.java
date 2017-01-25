@@ -451,7 +451,7 @@ public class LoadCommandTest extends CommandTest {
 //            });
 //
 //        Load load = (Load)c.getCommand();
-//        assertEquals(new Long(100), load.getMaxOperations());
+//        assertEquals(new Long(100), load.getOperations());
 //    }
 //
 //    @Test
@@ -465,7 +465,7 @@ public class LoadCommandTest extends CommandTest {
 //
 //        Load load = (Load)c.getCommand();
 //
-//        assertNull(load.getMaxOperations());
+//        assertNull(load.getOperations());
 //    }
 //
 //    @Test

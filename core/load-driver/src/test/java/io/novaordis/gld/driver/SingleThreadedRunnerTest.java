@@ -383,7 +383,7 @@ public class SingleThreadedRunnerTest {
 
         msc.set(WriteThenReadLoadStrategy.NAME,
                 CacheServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
-                CacheServiceConfiguration.LOAD_STRATEGY_NAME_LABEL);
+                CacheLoadStrategy.NAME_LABEL);
 
         //
         // only writes
