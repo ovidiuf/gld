@@ -19,6 +19,7 @@ package io.novaordis.gld.api.jms;
 import io.novaordis.gld.api.jms.load.ConnectionPolicy;
 import io.novaordis.gld.api.jms.load.SessionPolicy;
 import io.novaordis.gld.api.jms.operation.JmsOperation;
+import io.novaordis.gld.api.jms.operation.Send;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The purpose of this class is to encapsulate the logic that dictates of to reuse JMS resources (Sessions,
+ * The purpose of this class is to encapsulate the logic specifies how to reuse JMS resources (Sessions,
  * MessageProducers and MessageConsumers) across requests. By default, a new Session and respectively a MessageProducer
  * and MessageConsumer instance are created for *each* message, then closed after the operation. Different variations
  * can be externally configured (use the same Session for all messages sent/received on the same thread, use the
@@ -40,12 +41,12 @@ import java.util.Map;
  *
  *  JmsEndpoint jmse = manager.checkOutEndpoint();
  *
- *  try
- *  {
+ *  try {
+ *
  *      jmsOperation.perform(jmse);
  *  }
- *  finally
- *  {
+ *  finally {
+ *
  *     manager.returnEndpoint(jmse);
  *  }
  *
@@ -97,64 +98,69 @@ public class JmsResourceManager {
 
         JmsEndpoint result;
 
-//        if (EndpointPolicy.NEW_SESSION_NEW_ENDPOINT_PER_OPERATION.equals(policy)) {
-//
-//            // create a new Session and a new endpoint
-//
-//            Session session = createNewSession();
-//            result = createNewEndpointForSession(jmsOperation instanceof Send, session, jmsOperation.getDestination());
-//        }
-//        else if (EndpointPolicy.REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION.equals(policy)) {
-//
-//            // attempt to look up a previously created session for this thread - if it exists, use it,
-//            // if not create it and store it for reuse
-//            Session session = getSession();
-//            result = createNewEndpointForSession(jmsOperation instanceof Send, session, jmsOperation.getDestination());
-//        }
-//        else {
-//            throw new IllegalStateException(policy + " NOT SUPPORTED YET");
-//        }
-//
-//        return result;
+        if (SessionPolicy.SESSION_PER_OPERATION.equals(sessionPolicy)) {
 
-        throw new RuntimeException("RETURN HERE");
+            //
+            // create a new Session and a new endpoint
+            //
+
+            Session session = createNewSession();
+            result = createNewEndpointForSession(jmsOperation instanceof Send, session, jmsOperation.getDestination());
+        }
+        else if (SessionPolicy.SESSION_PER_THREAD.equals(sessionPolicy)) {
+
+            //
+            // attempt to look up a previously created session for this thread - if it exists, use it, if not create it
+            // and store it for reuse
+            //
+            Session session = getSession();
+            result = createNewEndpointForSession(jmsOperation instanceof Send, session, jmsOperation.getDestination());
+        }
+        else {
+
+            throw new IllegalStateException(sessionPolicy + " NOT SUPPORTED YET");
+        }
+
+        return result;
     }
 
     public void returnEndpoint(JmsEndpoint endpoint) throws Exception {
 
-//        // if we attempt to return an endpoint to a closed resource manager, close the endpoint and discard it
-//
-//        if (connection == null) {
-//
-//            try {
-//
-//                endpoint.close();
-//            }
-//            catch(Exception e) {
-//
-//                log.warn("failed to close " + e, e);
-//            }
-//            return;
-//        }
-//
-//        if (EndpointPolicy.NEW_SESSION_NEW_ENDPOINT_PER_OPERATION.equals(policy))
-//        {
-//            // close the session, we're not going to use it anymore
-//            Session session = endpoint.getSession();
-//            session.close();
-//        }
-//        else if (EndpointPolicy.REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION.equals(policy))
-//        {
-//            // close the endpoint, but leave the session alone, we'll re-use it for anything that gets
-//            // send on the same thread
-//            endpoint.close();
-//        }
-//        else {
-//
-//            throw new IllegalStateException(policy + " NOT SUPPORTED YET");
-//        }
+        // if we attempt to return an endpoint to a closed resource manager, close the endpoint and discard it
 
-        throw new RuntimeException("RETURN HERE");
+        if (connection == null) {
+
+            try {
+
+                endpoint.close();
+            }
+            catch(Exception e) {
+
+                log.warn("failed to close " + e, e);
+            }
+            return;
+        }
+
+        if (SessionPolicy.SESSION_PER_OPERATION.equals(sessionPolicy)) {
+
+            //
+            // close the session, we're not going to use it anymore
+            //
+            Session session = endpoint.getSession();
+            session.close();
+        }
+        else if (SessionPolicy.SESSION_PER_THREAD.equals(sessionPolicy)) {
+
+            //
+            // close the endpoint, but leave the session alone, we'll re-use it for anything that gets send on the same
+            // thread
+            //
+            endpoint.close();
+        }
+        else {
+
+            throw new IllegalStateException(sessionPolicy + " NOT SUPPORTED YET");
+        }
     }
 
     /**

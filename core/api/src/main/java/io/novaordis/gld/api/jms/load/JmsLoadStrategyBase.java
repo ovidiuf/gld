@@ -226,12 +226,12 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // Package protected -----------------------------------------------------------------------------------------------
-
-    void setDestination(Destination d) {
+    public void setDestination(Destination d) {
 
         this.destination = d;
     }
+
+    // Package protected -----------------------------------------------------------------------------------------------
 
     void setConnectionPolicy(ConnectionPolicy cp) {
 

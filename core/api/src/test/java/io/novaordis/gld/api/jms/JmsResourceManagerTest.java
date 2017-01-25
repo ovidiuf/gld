@@ -17,7 +17,14 @@
 package io.novaordis.gld.api.jms;
 
 import io.novaordis.gld.api.jms.embedded.EmbeddedConnection;
+import io.novaordis.gld.api.jms.embedded.EmbeddedMessageConsumer;
+import io.novaordis.gld.api.jms.embedded.EmbeddedMessageProducer;
+import io.novaordis.gld.api.jms.embedded.EmbeddedSession;
+import io.novaordis.gld.api.jms.load.ConnectionPolicy;
+import io.novaordis.gld.api.jms.load.ReceiveLoadStrategy;
 import io.novaordis.gld.api.jms.load.SendLoadStrategy;
+import io.novaordis.gld.api.jms.load.SessionPolicy;
+import io.novaordis.gld.api.jms.operation.Receive;
 import io.novaordis.gld.api.jms.operation.Send;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -45,289 +52,294 @@ public class JmsResourceManagerTest {
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void testReactionOnClosedManager() throws Exception {
+    public void closedResourceManager() throws Exception {
 
-//        EmbeddedConnection connection = new EmbeddedConnection();
-//        JmsResourceManager manager =
-//            new JmsResourceManager(connection, EndpointPolicy.NEW_SESSION_NEW_ENDPOINT_PER_OPERATION);
-//
-//        manager.close();
-//
-//        Send send = new Send(new SendLoadStrategy());
-//
-//        try
-//        {
-//            manager.checkOutEndpoint(send);
-//            fail("should fail with IllegalStateException, manager is closed");
-//        }
-//        catch(IllegalStateException e)
-//        {
-//            log.info(e.getMessage());
-//        }
-//
-//        // check how a closed manager reacts to returning an endpoint
-//
-//        MockJmsEndpoint mockEndpoint = new MockJmsEndpoint();
-//        assertFalse(mockEndpoint.isClosed());
-//
-//        manager.returnEndpoint(mockEndpoint);
-//
-//        assertTrue(mockEndpoint.isClosed());
+        EmbeddedConnection connection = new EmbeddedConnection();
 
-        fail("return here");
-    }
+        JmsResourceManager manager = new JmsResourceManager(
+                connection, ConnectionPolicy.CONNECTION_PER_RUN, SessionPolicy.SESSION_PER_OPERATION);
 
-    // NEW_SESSION_NEW_ENDPOINT_PER_OPERATION --------------------------------------------------------------------------
+        manager.close();
 
-    @Test
-    public void test_NEW_SESSION_NEW_ENDPOINT_PER_OPERATION_send_lifecycle() throws Exception {
+        Send send = new Send(new SendLoadStrategy());
 
-//        EmbeddedConnection connection = new EmbeddedConnection();
-//        JmsResourceManager manager =
-//            new JmsResourceManager(connection, EndpointPolicy.NEW_SESSION_NEW_ENDPOINT_PER_OPERATION);
-//
-//        SendLoadStrategy loadStrategy = new SendLoadStrategy();
-//        loadStrategy.setDestination(new Queue("TEST-QUEUE"));
-//        Send send = new Send(loadStrategy);
-//
-//        Producer endpoint = (Producer)manager.checkOutEndpoint(send);
-//
-//        // check that the corresponding Session and MessageProducer have been created
-//
-//        List<EmbeddedSession> createdSessions = connection.getCreatedSessions();
-//        assertEquals(1, createdSessions.size());
-//        EmbeddedSession session = createdSessions.get(0);
-//        assertEquals(endpoint.getSession(), session);
-//
-//        List<EmbeddedMessageProducer> createdProducers = createdSessions.get(0).getCreatedProducers();
-//        assertEquals(1, createdProducers.size());
-//        assertEquals(endpoint.getProducer(), createdProducers.get(0));
-//
-//        assertFalse(session.isClosed());
-//
-//        manager.returnEndpoint(endpoint);
-//
-//        // check that the corresponding Session and MessageProducer have been released
-//
-//        assertTrue(session.isClosed());
-//
-//        // we trust that the message producer is closed, and they're all released because the manager
-//        // does not keep references to them
+        try {
 
-        fail("return here");
+            manager.checkOutEndpoint(send);
+            fail("should fail with IllegalStateException, manager is closed");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.contains("is closed"));
+        }
+
+        // check how a closed manager reacts to returning an endpoint
+
+        MockJmsEndpoint mockEndpoint = new MockJmsEndpoint();
+        assertFalse(mockEndpoint.isClosed());
+
+        manager.returnEndpoint(mockEndpoint);
+
+        assertTrue(mockEndpoint.isClosed());
     }
 
     @Test
-    public void test_NEW_SESSION_NEW_ENDPOINT_PER_OPERATION_receive_lifecycle() throws Exception {
+    public void sessionPerOperation_sendLifecycle() throws Exception {
 
-//        EmbeddedConnection connection = new EmbeddedConnection();
-//        JmsResourceManager manager =
-//            new JmsResourceManager(connection, EndpointPolicy.NEW_SESSION_NEW_ENDPOINT_PER_OPERATION);
-//
-//        ReceiveLoadStrategy loadStrategy = new ReceiveLoadStrategy();
-//        loadStrategy.setDestination(new Topic("TEST-TOPIC"));
-//        Receive receive = new Receive(loadStrategy);
-//
-//        Consumer endpoint = (Consumer)manager.checkOutEndpoint(receive);
-//
-//        // check that the corresponding Session and MessageConsumer have been created
-//
-//        List<EmbeddedSession> createdSessions = connection.getCreatedSessions();
-//        assertEquals(1, createdSessions.size());
-//        EmbeddedSession session = createdSessions.get(0);
-//        assertEquals(endpoint.getSession(), session);
-//
-//        List<EmbeddedMessageConsumer> createdConsumers = createdSessions.get(0).getCreatedConsumers();
-//        assertEquals(1, createdConsumers.size());
-//        assertEquals(endpoint.getConsumer(), createdConsumers.get(0));
-//
-//        assertFalse(session.isClosed());
-//
-//        manager.returnEndpoint(endpoint);
-//
-//        // check that the corresponding Session and MessageProducer have been released
-//
-//        assertTrue(session.isClosed());
-//
-//        // we trust that the message producer is closed, and they're all released because the manager
-//        // does not keep references to them
+        EmbeddedConnection connection = new EmbeddedConnection();
 
-        fail("return here");
-    }
+        JmsResourceManager manager = new JmsResourceManager(
+                connection, ConnectionPolicy.CONNECTION_PER_RUN, SessionPolicy.SESSION_PER_OPERATION);
 
-    // REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION ------------------------------------------------------------------------
+        SendLoadStrategy loadStrategy = new SendLoadStrategy();
+        loadStrategy.setDestination(new Queue("TEST-QUEUE"));
+        Send send = new Send(loadStrategy);
 
-    @Test
-    public void test_REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION_send_lifecycle() throws Exception {
+        Producer endpoint = (Producer)manager.checkOutEndpoint(send);
 
-//        EmbeddedConnection connection = new EmbeddedConnection();
-//
-//        JmsResourceManager manager =
-//            new JmsResourceManager(connection, EndpointPolicy.REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION);
-//
-//        SendLoadStrategy loadStrategy = new SendLoadStrategy();
-//        loadStrategy.setDestination(new Queue("TEST-QUEUE"));
-//        Send send = new Send(loadStrategy);
-//
-//        Producer endpoint = (Producer)manager.checkOutEndpoint(send);
-//
-//        // check that the corresponding Session and MessageProducer have been created
-//
-//        List<EmbeddedSession> createdSessions = connection.getCreatedSessions();
-//        assertEquals(1, createdSessions.size());
-//        EmbeddedSession session = createdSessions.get(0);
-//        assertEquals(endpoint.getSession(), session);
-//
-//        List<EmbeddedMessageProducer> createdProducers = createdSessions.get(0).getCreatedProducers();
-//        assertEquals(1, createdProducers.size());
-//        EmbeddedMessageProducer messageProducer = createdProducers.get(0);
-//        assertEquals(endpoint.getProducer(), messageProducer);
-//
-//        assertFalse(session.isClosed());
-//        assertFalse(messageProducer.isClosed());
-//
-//        // return the endpoint
-//
-//        manager.returnEndpoint(endpoint);
-//
-//        // check that the corresponding MessageProducer have been released and closed
-//
-//        assertTrue(messageProducer.isClosed());
-//
-//        // check that the corresponding session is still around and opened - it was cached for reuse on the
-//        // same thread
-//
-//        assertFalse(session.isClosed());
-//
-//        // check out another endpoint - make sure we get a different one, but on the same session
-//
-//        Producer endpoint2 = (Producer)manager.checkOutEndpoint(send);
-//
-//        // check that the corresponding Session and MessageProducer have been created
-//
-//        List<EmbeddedSession> createdSessions2 = connection.getCreatedSessions();
-//        assertEquals(1, createdSessions2.size());
-//        EmbeddedSession session2 = createdSessions2.get(0);
-//        assertEquals(endpoint2.getSession(), session2);
-//
-//        // make sure it's the same session
-//        assertEquals(endpoint2.getSession(), session);
-//
-//        List<EmbeddedMessageProducer> createdProducers2 = session2.getCreatedProducers();
-//        assertEquals(2, createdProducers2.size());
-//        EmbeddedMessageProducer messageProducer2 = createdProducers2.get(1);
-//        assertEquals(endpoint2.getProducer(), messageProducer2);
-//
-//        assertFalse(session2.isClosed());
-//        assertFalse(messageProducer2.isClosed());
-//
-//        // return the endpoint
-//
-//        manager.returnEndpoint(endpoint2);
-//
-//        // check that the corresponding MessageProducer have been released and closed
-//
-//        assertTrue(messageProducer2.isClosed());
-//
-//        // check that the corresponding session is still around and opened - it was cached for reuse on the
-//        // same thread
-//
-//        assertFalse(session2.isClosed());
-//
-//        // make sure the session is closed when we close the manager
-//
-//        manager.close();
-//
-//        assertTrue(session.isClosed());
-//        assertTrue(session2.isClosed());
+        // check that the corresponding Session and MessageProducer have been created
 
-        fail("return here");
+        List<EmbeddedSession> createdSessions = connection.getCreatedSessions();
+        assertEquals(1, createdSessions.size());
+        EmbeddedSession session = createdSessions.get(0);
+        assertEquals(endpoint.getSession(), session);
+
+        List<EmbeddedMessageProducer> createdProducers = createdSessions.get(0).getCreatedProducers();
+        assertEquals(1, createdProducers.size());
+        assertEquals(endpoint.getProducer(), createdProducers.get(0));
+
+        assertFalse(session.isClosed());
+
+        manager.returnEndpoint(endpoint);
+
+        // check that the corresponding Session and MessageProducer have been released
+
+        assertTrue(session.isClosed());
+
+        //
+        // we trust that the message producer is closed, and they're all released because the manager does not keep
+        // references to them
+        //
     }
 
     @Test
-    public void test_REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION_receive_lifecycle() throws Exception {
+    public void sessionPerOperation_receiveLifecycle() throws Exception {
 
-//        EmbeddedConnection connection = new EmbeddedConnection();
-//
-//        JmsResourceManager manager =
-//            new JmsResourceManager(connection, EndpointPolicy.REUSE_SESSION_NEW_ENDPOINT_PER_OPERATION);
-//
-//        ReceiveLoadStrategy loadStrategy = new ReceiveLoadStrategy();
-//        loadStrategy.setDestination(new Queue("TEST-QUEUE"));
-//        Receive receive = new Receive(loadStrategy);
-//
-//        Consumer endpoint = (Consumer)manager.checkOutEndpoint(receive);
-//
-//        // check that the corresponding Session and MessageProducer have been created
-//
-//        List<EmbeddedSession> createdSessions = connection.getCreatedSessions();
-//        assertEquals(1, createdSessions.size());
-//        EmbeddedSession session = createdSessions.get(0);
-//        assertEquals(endpoint.getSession(), session);
-//
-//        List<EmbeddedMessageConsumer> createdConsumers = createdSessions.get(0).getCreatedConsumers();
-//        assertEquals(1, createdConsumers.size());
-//        EmbeddedMessageConsumer messageConsumer = createdConsumers.get(0);
-//        assertEquals(endpoint.getConsumer(), messageConsumer);
-//
-//        assertFalse(session.isClosed());
-//        assertFalse(messageConsumer.isClosed());
-//
-//        // return the endpoint
-//
-//        manager.returnEndpoint(endpoint);
-//
-//        // check that the corresponding MessageConsumer have been released and closed
-//
-//        assertTrue(messageConsumer.isClosed());
-//
-//        // check that the corresponding session is still around and opened - it was cached for reuse on the
-//        // same thread
-//
-//        assertFalse(session.isClosed());
-//
-//        // check out another endpoint - make sure we get a different one, but on the same session
-//
-//        Consumer endpoint2 = (Consumer)manager.checkOutEndpoint(receive);
-//
-//        // check that the corresponding Session and MessageConsumer have been created
-//
-//        List<EmbeddedSession> createdSessions2 = connection.getCreatedSessions();
-//        assertEquals(1, createdSessions2.size());
-//        EmbeddedSession session2 = createdSessions2.get(0);
-//        assertEquals(endpoint2.getSession(), session2);
-//
-//        // make sure it's the same session
-//        assertEquals(endpoint2.getSession(), session);
-//
-//        List<EmbeddedMessageConsumer> createdConsumers2 = session2.getCreatedConsumers();
-//        assertEquals(2, createdConsumers2.size());
-//        EmbeddedMessageConsumer messageConsumer2 = createdConsumers2.get(1);
-//        assertEquals(endpoint2.getConsumer(), messageConsumer2);
-//
-//        assertFalse(session2.isClosed());
-//        assertFalse(messageConsumer2.isClosed());
-//
-//        // return the endpoint
-//
-//        manager.returnEndpoint(endpoint2);
-//
-//        // check that the corresponding MessageConsumer have been released and closed
-//
-//        assertTrue(messageConsumer2.isClosed());
-//
-//        // check that the corresponding session is still around and opened - it was cached for reuse on the
-//        // same thread
-//
-//        assertFalse(session2.isClosed());
-//
-//        // make sure the session is closed when we close the manager
-//
-//        manager.close();
-//
-//        assertTrue(session.isClosed());
+        EmbeddedConnection connection = new EmbeddedConnection();
 
-        fail("return here");
+        JmsResourceManager manager = new JmsResourceManager(
+                connection, ConnectionPolicy.CONNECTION_PER_RUN, SessionPolicy.SESSION_PER_OPERATION);
+
+        ReceiveLoadStrategy loadStrategy = new ReceiveLoadStrategy();
+        loadStrategy.setDestination(new Topic("TEST-TOPIC"));
+        Receive receive = new Receive(loadStrategy);
+
+        Consumer endpoint = (Consumer)manager.checkOutEndpoint(receive);
+
+        // check that the corresponding Session and MessageConsumer have been created
+
+        List<EmbeddedSession> createdSessions = connection.getCreatedSessions();
+        assertEquals(1, createdSessions.size());
+        EmbeddedSession session = createdSessions.get(0);
+        assertEquals(endpoint.getSession(), session);
+
+        List<EmbeddedMessageConsumer> createdConsumers = createdSessions.get(0).getCreatedConsumers();
+        assertEquals(1, createdConsumers.size());
+        assertEquals(endpoint.getConsumer(), createdConsumers.get(0));
+
+        assertFalse(session.isClosed());
+
+        manager.returnEndpoint(endpoint);
+
+        // check that the corresponding Session and MessageProducer have been released
+
+        assertTrue(session.isClosed());
+
+        //
+        // we trust that the message consumer is closed, and they're all released because the manager does not keep
+        // references to them
+        //
+    }
+
+    @Test
+    public void sessionPerThread_sendLifecycle() throws Exception {
+
+        EmbeddedConnection connection = new EmbeddedConnection();
+
+        JmsResourceManager manager =
+            new JmsResourceManager(connection, ConnectionPolicy.CONNECTION_PER_RUN, SessionPolicy.SESSION_PER_THREAD);
+
+        SendLoadStrategy loadStrategy = new SendLoadStrategy();
+        loadStrategy.setDestination(new Queue("TEST-QUEUE"));
+        Send send = new Send(loadStrategy);
+
+        Producer endpoint = (Producer)manager.checkOutEndpoint(send);
+
+        //
+        // check that the corresponding Session and MessageProducer have been created
+        //
+
+        List<EmbeddedSession> createdSessions = connection.getCreatedSessions();
+        assertEquals(1, createdSessions.size());
+        EmbeddedSession session = createdSessions.get(0);
+        assertEquals(endpoint.getSession(), session);
+
+        List<EmbeddedMessageProducer> createdProducers = createdSessions.get(0).getCreatedProducers();
+        assertEquals(1, createdProducers.size());
+        EmbeddedMessageProducer messageProducer = createdProducers.get(0);
+        assertEquals(endpoint.getProducer(), messageProducer);
+
+        assertFalse(session.isClosed());
+        assertFalse(messageProducer.isClosed());
+
+        //
+        // return the endpoint
+        //
+
+        manager.returnEndpoint(endpoint);
+
+        //
+        // check that the corresponding MessageProducer have been released and closed
+        //
+
+        assertTrue(messageProducer.isClosed());
+
+        //
+        // check that the corresponding session is still around and opened - it was cached for reuse on the
+        // same thread
+        //
+
+        assertFalse(session.isClosed());
+
+        //
+        // check out another endpoint - make sure we get a different one, but on the same session
+        //
+
+        Producer endpoint2 = (Producer)manager.checkOutEndpoint(send);
+
+        // check that the corresponding Session and MessageProducer have been created
+
+        List<EmbeddedSession> createdSessions2 = connection.getCreatedSessions();
+        assertEquals(1, createdSessions2.size());
+        EmbeddedSession session2 = createdSessions2.get(0);
+        assertEquals(endpoint2.getSession(), session2);
+
+        // make sure it's the same session
+        assertEquals(endpoint2.getSession(), session);
+
+        List<EmbeddedMessageProducer> createdProducers2 = session2.getCreatedProducers();
+        assertEquals(2, createdProducers2.size());
+        EmbeddedMessageProducer messageProducer2 = createdProducers2.get(1);
+        assertEquals(endpoint2.getProducer(), messageProducer2);
+
+        assertFalse(session2.isClosed());
+        assertFalse(messageProducer2.isClosed());
+
+        // return the endpoint
+
+        manager.returnEndpoint(endpoint2);
+
+        // check that the corresponding MessageProducer have been released and closed
+
+        assertTrue(messageProducer2.isClosed());
+
+        // check that the corresponding session is still around and opened - it was cached for reuse on the
+        // same thread
+
+        assertFalse(session2.isClosed());
+
+        // make sure the session is closed when we close the manager
+
+        manager.close();
+
+        assertTrue(session.isClosed());
+        assertTrue(session2.isClosed());
+    }
+
+    @Test
+    public void sessionPerThread__receiveLifecycle() throws Exception {
+
+        EmbeddedConnection connection = new EmbeddedConnection();
+
+        JmsResourceManager manager =
+            new JmsResourceManager(connection, ConnectionPolicy.CONNECTION_PER_RUN, SessionPolicy.SESSION_PER_THREAD);
+
+        ReceiveLoadStrategy loadStrategy = new ReceiveLoadStrategy();
+        loadStrategy.setDestination(new Queue("TEST-QUEUE"));
+        Receive receive = new Receive(loadStrategy);
+
+        Consumer endpoint = (Consumer)manager.checkOutEndpoint(receive);
+
+        // check that the corresponding Session and MessageProducer have been created
+
+        List<EmbeddedSession> createdSessions = connection.getCreatedSessions();
+        assertEquals(1, createdSessions.size());
+        EmbeddedSession session = createdSessions.get(0);
+        assertEquals(endpoint.getSession(), session);
+
+        List<EmbeddedMessageConsumer> createdConsumers = createdSessions.get(0).getCreatedConsumers();
+        assertEquals(1, createdConsumers.size());
+        EmbeddedMessageConsumer messageConsumer = createdConsumers.get(0);
+        assertEquals(endpoint.getConsumer(), messageConsumer);
+
+        assertFalse(session.isClosed());
+        assertFalse(messageConsumer.isClosed());
+
+        // return the endpoint
+
+        manager.returnEndpoint(endpoint);
+
+        // check that the corresponding MessageConsumer have been released and closed
+
+        assertTrue(messageConsumer.isClosed());
+
+        // check that the corresponding session is still around and opened - it was cached for reuse on the
+        // same thread
+
+        assertFalse(session.isClosed());
+
+        // check out another endpoint - make sure we get a different one, but on the same session
+
+        Consumer endpoint2 = (Consumer)manager.checkOutEndpoint(receive);
+
+        // check that the corresponding Session and MessageConsumer have been created
+
+        List<EmbeddedSession> createdSessions2 = connection.getCreatedSessions();
+        assertEquals(1, createdSessions2.size());
+        EmbeddedSession session2 = createdSessions2.get(0);
+        assertEquals(endpoint2.getSession(), session2);
+
+        // make sure it's the same session
+        assertEquals(endpoint2.getSession(), session);
+
+        List<EmbeddedMessageConsumer> createdConsumers2 = session2.getCreatedConsumers();
+        assertEquals(2, createdConsumers2.size());
+        EmbeddedMessageConsumer messageConsumer2 = createdConsumers2.get(1);
+        assertEquals(endpoint2.getConsumer(), messageConsumer2);
+
+        assertFalse(session2.isClosed());
+        assertFalse(messageConsumer2.isClosed());
+
+        // return the endpoint
+
+        manager.returnEndpoint(endpoint2);
+
+        // check that the corresponding MessageConsumer have been released and closed
+
+        assertTrue(messageConsumer2.isClosed());
+
+        // check that the corresponding session is still around and opened - it was cached for reuse on the
+        // same thread
+
+        assertFalse(session2.isClosed());
+
+        // make sure the session is closed when we close the manager
+
+        manager.close();
+
+        assertTrue(session.isClosed());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
