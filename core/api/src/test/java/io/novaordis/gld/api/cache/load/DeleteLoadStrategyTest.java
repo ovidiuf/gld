@@ -232,7 +232,9 @@ public class DeleteLoadStrategyTest extends LoadStrategyTest {
     @Override
     protected MockCacheServiceConfiguration getCorrespondingServiceConfiguration() {
 
-        return new MockCacheServiceConfiguration();
+        MockCacheServiceConfiguration c = new MockCacheServiceConfiguration();
+        c.set(new HashMap<String, Object>(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        return c;
     }
 
     @Override

@@ -98,25 +98,24 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
     public void init_reuseValue_InvalidValue() throws Exception {
 
         ReadThenWriteOnMissLoadStrategy s = getLoadStrategyToTest();
-
         MockLoadConfiguration mlc = new MockLoadConfiguration();
-        MockServiceConfiguration sc = new MockServiceConfiguration();
-        Map<String, Object> m = new HashMap<>();
-        m.put(LoadStrategy.NAME_LABEL, s.getName());
-        m.put(ReadThenWriteOnMissLoadStrategy.REUSE_VALUE_LABEL, "true");
-        sc.set(m, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        MockCacheServiceConfiguration sc = getCorrespondingServiceConfiguration();
+        sc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
+        sc.set("true", ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.REUSE_VALUE_LABEL);
 
         try {
+
             s.init(sc, mlc);
         }
-        catch(UserErrorException e) {
+        catch(IllegalStateException e) {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("illegal '" +  ReadThenWriteOnMissLoadStrategy.REUSE_VALUE_LABEL + "' String value", msg);
+            assertTrue(msg.contains("Boolean"));
+            assertTrue(msg.contains("String"));
+            assertTrue(msg.contains("\"true\""));
         }
     }
-
 
 //    @Test
 //    public void hit_noKeyStore() throws Exception {
@@ -502,13 +501,15 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
     @Override
     protected MockCacheServiceConfiguration getCorrespondingServiceConfiguration() {
 
-        return new MockCacheServiceConfiguration();
+        MockCacheServiceConfiguration c = new MockCacheServiceConfiguration();
+        c.set(new HashMap<String, Object>(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        return c;
     }
 
     @Override
     protected void initialize(LoadStrategy ls) throws Exception {
 
-        assertTrue(ls instanceof DeleteLoadStrategy);
+        assertTrue(ls instanceof ReadThenWriteOnMissLoadStrategy);
         MockCacheServiceConfiguration sc = getCorrespondingServiceConfiguration();
         sc.set(ls.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
         ls.init(sc, new MockLoadConfiguration());

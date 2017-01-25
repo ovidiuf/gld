@@ -511,13 +511,15 @@ public class WriteThenReadLoadStrategyTest extends LoadStrategyTest {
     @Override
     protected MockCacheServiceConfiguration getCorrespondingServiceConfiguration() {
 
-        return new MockCacheServiceConfiguration();
+        MockCacheServiceConfiguration c = new MockCacheServiceConfiguration();
+        c.set(new HashMap<String, Object>(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        return c;
     }
 
     @Override
     protected void initialize(LoadStrategy ls) throws Exception {
 
-        assertTrue(ls instanceof DeleteLoadStrategy);
+        assertTrue(ls instanceof WriteThenReadLoadStrategy);
         MockCacheServiceConfiguration sc = getCorrespondingServiceConfiguration();
         sc.set(ls.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
         ls.init(sc, new MockLoadConfiguration());
