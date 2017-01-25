@@ -29,6 +29,7 @@ import io.novaordis.gld.api.provider.SetKeyProvider;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A load strategy that generate delete operations based on keys read from an external storage.
@@ -166,14 +167,21 @@ public class DeleteLoadStrategy extends LoadStrategyBase {
             throw new IllegalStateException(this + " not configured, missing key provider");
         }
 
-        String key = kp.next();
+//        String key = kp.next();
+//
+//        if (key == null) {
+//
+//            return null;
+//        }
 
-        if (key == null) {
+        //
+        // for the time we disregarding the key provider and we just simply generate delete operations
+        // with random keys
+        //
 
-            return null;
-        }
+        String randomKey = getValueGenerator().getRandomString(ThreadLocalRandom.current(), 10);
 
-        return new Delete(key);
+        return new Delete(randomKey);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------
