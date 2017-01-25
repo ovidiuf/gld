@@ -16,11 +16,10 @@
 
 package io.novaordis.gld.api;
 
-import io.novaordis.gld.api.cache.MockCacheService;
-import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
 import io.novaordis.gld.api.configuration.MockLoadConfiguration;
 import io.novaordis.gld.api.configuration.MockServiceConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
+import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 import io.novaordis.gld.api.service.Service;
 import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.utilities.UserErrorException;
@@ -67,14 +66,16 @@ public abstract class LoadStrategyTest {
     public void implementationsAreRequiredToFailIfTheyEncounterUnknownConfigurationOptions() throws Exception {
 
         LoadStrategy s = getLoadStrategyToTest();
+        MockServiceConfiguration msc = getCorrespondingServiceConfiguration();
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
-        MockCacheServiceConfiguration msc = new MockCacheServiceConfiguration();
 
-        Map<String, Object> mockRawConfig = new HashMap<>();
-        mockRawConfig.put(LoadStrategy.NAME_LABEL, s.getName());
-        mockRawConfig.put("unknown-configuration-element", "some-value");
-        msc.set(mockRawConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        Map<String, Object> raw = new HashMap<>();
+        raw.put(LoadStrategy.NAME_LABEL, s.getName());
+        raw.put(JmsLoadStrategy.QUEUE_LABEL, "something");
+        raw.put(JmsLoadStrategy.CONNECTION_FACTORY_LABEL, "something");
+        raw.put("unknown-configuration-element", "some-value");
+        msc.set(raw, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
         try {
 
@@ -93,9 +94,9 @@ public abstract class LoadStrategyTest {
     public void configurationContainsInconsistentName() throws Exception {
 
         LoadStrategy s = getLoadStrategyToTest();
+        MockServiceConfiguration msc = getCorrespondingServiceConfiguration();
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
-        MockServiceConfiguration msc = new MockServiceConfiguration();
 
         Map<String, Object> mockRawConfig = new HashMap<>();
         mockRawConfig.put(LoadStrategy.NAME_LABEL, "wrong-name");
@@ -120,11 +121,8 @@ public abstract class LoadStrategyTest {
         LoadStrategy s = getLoadStrategyToTest();
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
-        MockCacheServiceConfiguration msc = new MockCacheServiceConfiguration();
-
-        Map<String, Object> mockRawConfig = new HashMap<>();
-        mockRawConfig.put(LoadStrategy.NAME_LABEL, s.getName());
-        msc.set(mockRawConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        MockServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
 
         s.init(msc, mlc);
 
@@ -136,7 +134,7 @@ public abstract class LoadStrategyTest {
         //
         // link and test
         //
-        MockCacheService ms = new MockCacheService();
+        MockService ms = new MockService(s.getServiceType());
         s.setService(ms);
 
         Service s2 = s.getService();
@@ -159,11 +157,9 @@ public abstract class LoadStrategyTest {
         LoadStrategy s = getLoadStrategyToTest();
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
-        MockCacheServiceConfiguration msc = new MockCacheServiceConfiguration();
-
-        Map<String, Object> mockRawConfig = new HashMap<>();
-        mockRawConfig.put(LoadStrategy.NAME_LABEL, s.getName());
-        msc.set(mockRawConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        MockServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
+        msc.set("not boolean", ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.REUSE_VALUE_LABEL);
 
         try {
 
@@ -174,7 +170,9 @@ public abstract class LoadStrategyTest {
 
             String msg = ise.getMessage();
             log.info(msg);
-            assertEquals("blah", msg);
+            assertTrue(msg.contains("Boolean"));
+            assertTrue(msg.contains("String"));
+            assertTrue(msg.contains("\"not boolean\""));
         }
     }
 
@@ -184,13 +182,9 @@ public abstract class LoadStrategyTest {
         LoadStrategy s = getLoadStrategyToTest();
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
-        MockCacheServiceConfiguration msc = new MockCacheServiceConfiguration();
-
-        Map<String, Object> mockRawConfig = new HashMap<>();
-        msc.set(mockRawConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-
-        mockRawConfig.put(LoadStrategy.NAME_LABEL, s.getName());
-        mockRawConfig.put(LoadStrategy.REUSE_VALUE_LABEL, false);
+        MockServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
+        msc.set(false, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.REUSE_VALUE_LABEL);
 
         s.init(msc, mlc);
 
@@ -212,6 +206,8 @@ public abstract class LoadStrategyTest {
 
         // reuse value
         assertTrue(ls.isReuseValue());
+
+        assertEquals(ServiceConfiguration.DEFAULT_VALUE_SIZE, ls.getValueSize());
     }
 
     // lifecycle -------------------------------------------------------------------------------------------------------
@@ -324,10 +320,8 @@ public abstract class LoadStrategyTest {
 
         LoadStrategy s = getLoadStrategyToTest();
 
-        MockServiceConfiguration msc = new MockServiceConfiguration();
-        Map<String, Object> rawLSC = new HashMap<>();
-        rawLSC.put(LoadStrategy.NAME_LABEL, s.getName());
-        msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        MockServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
 
@@ -379,6 +373,7 @@ public abstract class LoadStrategyTest {
     public void maxOperations_remainingOperations() throws Exception {
 
         LoadStrategyBase lsb = (LoadStrategyBase)getLoadStrategyToTest();
+        initialize(lsb);
 
         assertNull(lsb.getOperations());
         assertNull(lsb.getRemainingOperations());
@@ -416,6 +411,7 @@ public abstract class LoadStrategyTest {
     public void next_Unlimited() throws Exception {
 
         LoadStrategy ls = getLoadStrategyToTest();
+        initialize(ls);
 
         assertNull(ls.getOperations());
 
@@ -433,6 +429,7 @@ public abstract class LoadStrategyTest {
     public void next_Limited() throws Exception {
 
         LoadStrategyBase lsb = (LoadStrategyBase)getLoadStrategyToTest();
+        initialize(lsb);
 
         lsb.setOperations(2L);
 
@@ -453,6 +450,8 @@ public abstract class LoadStrategyTest {
     public void next_Multithreaded_ByDefaultProducesAnUnlimitedNumberOfOperations() throws Exception {
 
         final LoadStrategy ls = getLoadStrategyToTest();
+
+        initialize(ls);
 
         assertNull(ls.getOperations());
 
@@ -492,6 +491,7 @@ public abstract class LoadStrategyTest {
     public void next_Multithreaded_LimitedNumberOfOperations() throws Exception {
 
         final LoadStrategyBase ls = (LoadStrategyBase)getLoadStrategyToTest();
+        initialize(ls);
 
         long operationsPerStrategy = 1000;
         ls.setOperations(operationsPerStrategy);
@@ -595,6 +595,10 @@ public abstract class LoadStrategyTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     protected abstract LoadStrategy getLoadStrategyToTest() throws Exception;
+
+    protected abstract MockServiceConfiguration getCorrespondingServiceConfiguration();
+
+    protected abstract void initialize(LoadStrategy ls) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

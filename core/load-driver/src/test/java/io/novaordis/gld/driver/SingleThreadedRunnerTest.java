@@ -333,6 +333,36 @@ public class SingleThreadedRunnerTest {
             public void setKeyProvider(KeyProvider keyProvider) {
                 throw new RuntimeException("setKeyProvider() NOT YET IMPLEMENTED");
             }
+
+            @Override
+            public Long getOperations() {
+                throw new RuntimeException("getOperations() NOT YET IMPLEMENTED");
+            }
+
+            @Override
+            public Long getRemainingOperations() {
+                throw new RuntimeException("getRemainingOperations() NOT YET IMPLEMENTED");
+            }
+
+            @Override
+            public int getValueSize() {
+                throw new RuntimeException("getValueSize() NOT YET IMPLEMENTED");
+            }
+
+            @Override
+            public String getReusedValue() {
+                throw new RuntimeException("getReusedValue() NOT YET IMPLEMENTED");
+            }
+
+            @Override
+            public boolean isReuseValue() {
+                throw new RuntimeException("isReuseValue() NOT YET IMPLEMENTED");
+            }
+
+            @Override
+            public String computeValue() {
+                throw new RuntimeException("computeValue() NOT YET IMPLEMENTED");
+            }
         };
 
         MockService ms = new MockService();
@@ -383,7 +413,7 @@ public class SingleThreadedRunnerTest {
 
         msc.set(WriteThenReadLoadStrategy.NAME,
                 CacheServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
-                CacheLoadStrategy.NAME_LABEL);
+                LoadStrategy.NAME_LABEL);
 
         //
         // only writes
@@ -411,7 +441,7 @@ public class SingleThreadedRunnerTest {
         //
 
         msc.remove(CacheServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
-                CacheServiceConfiguration.LOAD_STRATEGY_FACTORY_CLASS_LABEL);
+                LoadStrategy.FACTORY_CLASS_LABEL);
 
         WriteThenReadLoadStrategy wtr = new WriteThenReadLoadStrategy();
 

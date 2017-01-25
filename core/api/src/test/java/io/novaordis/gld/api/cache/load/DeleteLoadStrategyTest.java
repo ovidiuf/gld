@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class DeleteLoadStrategyTest extends LoadStrategyTest {
 
@@ -224,7 +225,23 @@ public class DeleteLoadStrategyTest extends LoadStrategyTest {
 
     @Override
     protected DeleteLoadStrategy getLoadStrategyToTest() throws Exception {
+
         return new DeleteLoadStrategy();
+    }
+
+    @Override
+    protected MockCacheServiceConfiguration getCorrespondingServiceConfiguration() {
+
+        return new MockCacheServiceConfiguration();
+    }
+
+    @Override
+    protected void initialize(LoadStrategy ls) throws Exception {
+
+        assertTrue(ls instanceof DeleteLoadStrategy);
+        MockCacheServiceConfiguration sc = getCorrespondingServiceConfiguration();
+        sc.set(ls.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
+        ls.init(sc, new MockLoadConfiguration());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

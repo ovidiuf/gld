@@ -47,6 +47,8 @@ public class SendLoadStrategy extends JmsLoadStrategyBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private volatile boolean initialized;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // JmsLoadStrategyBase overrides -----------------------------------------------------------------------------------
@@ -73,6 +75,11 @@ public class SendLoadStrategy extends JmsLoadStrategyBase {
     protected Send nextInternal(Operation last, String lastWrittenKey, boolean runtimeShuttingDown)
             throws Exception {
 
+        if (!initialized) {
+
+            throw new IllegalStateException(this + " was not initialized");
+        }
+
         return new Send(this);
     }
 
@@ -89,9 +96,7 @@ public class SendLoadStrategy extends JmsLoadStrategyBase {
     protected void initInternal(
             ServiceConfiguration sc, Map<String, Object> loadStrategyRawConfig, LoadConfiguration lc) throws Exception {
 
-        //
-        // noop for the time being
-        //
+        initialized = true;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

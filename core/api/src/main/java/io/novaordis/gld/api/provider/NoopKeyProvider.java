@@ -14,22 +14,11 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.mock.configuration;
+package io.novaordis.gld.api.provider;
 
-import io.novaordis.gld.api.configuration.OutputConfiguration;
-import io.novaordis.gld.api.sampler.SamplerConfiguration;
-import io.novaordis.utilities.NotYetImplementedException;
-import io.novaordis.utilities.UserErrorException;
+import io.novaordis.gld.api.KeyProvider;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-
-/**
- * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/9/16
- */
-public class MockOutputConfiguration implements OutputConfiguration {
+public class NoopKeyProvider implements KeyProvider {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -37,51 +26,42 @@ public class MockOutputConfiguration implements OutputConfiguration {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private MockSamplerConfiguration samplerConfiguration;
+    private volatile boolean started;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockOutputConfiguration() {
+    // KeyProvider implementation --------------------------------------------------------------------------------------
 
-        this.samplerConfiguration = new MockSamplerConfiguration();
-    }
-
-    // OutputConfiguration implementation ------------------------------------------------------------------------------
+    // lifecycle -------------------------------------------------------------------------------------------------------
 
     @Override
-    public <T> T get(Class<? extends T> type, String... path) {
-        throw new NotYetImplementedException("get() NOT YET IMPLEMENTED");
-    }
+    public void start() throws Exception {
 
-    @Override
-    public <T> T remove(Class<? extends T> type, String... path) {
-        throw new RuntimeException("remove() NOT YET IMPLEMENTED");
+        started = true;
     }
 
     @Override
-    public File getFile(String... path) {
-        throw new RuntimeException("getFile() NOT YET IMPLEMENTED");
+    public void stop() {
+
+        started = false;
     }
 
     @Override
-    public Map<String, Object> get(String... path) {
-        throw new RuntimeException("get() NOT YET IMPLEMENTED");
+    public boolean isStarted() {
+
+        return started;
     }
 
     @Override
-    public List<Object> getList(String... path) {
-        throw new NotYetImplementedException("getList() NOT YET IMPLEMENTED");
+    public Long getRemainingKeyCount() {
+
+        return null;
     }
 
     @Override
-    public File getConfigurationDirectory() {
-        throw new NotYetImplementedException("getConfigurationDirectory() NOT YET IMPLEMENTED");
-    }
+    public String next() {
 
-    @Override
-    public SamplerConfiguration getSamplerConfiguration() throws UserErrorException {
-
-        return samplerConfiguration;
+        return null;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

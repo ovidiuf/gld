@@ -41,12 +41,17 @@ public class MockService implements Service {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    //
+    // we're mock by default but we can change that
+    //
     public MockService() {
 
-        //
-        // we're mock by default but we can change that
-        //
-        this.type = ServiceType.mock;
+        this(ServiceType.mock);
+    }
+
+    public MockService(ServiceType st) {
+
+        this.type = st;
     }
 
     // Service implementation ------------------------------------------------------------------------------------------

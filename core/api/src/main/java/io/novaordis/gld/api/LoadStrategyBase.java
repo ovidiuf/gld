@@ -73,6 +73,13 @@ public abstract class LoadStrategyBase implements LoadStrategy {
         //
 
         this.reuseValue = true;
+
+        //
+        // we initialize with the default value, it will be overwritten later, during the initialization phase, if
+        // the service was configured with a non-default value size
+        //
+
+        this.serviceConfigurationValueSize = ServiceConfiguration.DEFAULT_VALUE_SIZE;
     }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
@@ -235,7 +242,7 @@ public abstract class LoadStrategyBase implements LoadStrategy {
 
         if (remainingOperation == null) {
 
-            nextInternal(last, lastWrittenKey, runtimeShuttingDown);
+            return nextInternal(last, lastWrittenKey, runtimeShuttingDown);
         }
 
         long remaining = remainingOperation.getAndDecrement();
@@ -390,7 +397,7 @@ public abstract class LoadStrategyBase implements LoadStrategy {
     /**
      * @see LoadStrategy#next(Operation, String, boolean)
      */
-    protected abstract  Operation nextInternal(Operation last, String lastWrittenKey, boolean runtimeShuttingDown)
+    protected abstract Operation nextInternal(Operation last, String lastWrittenKey, boolean runtimeShuttingDown)
             throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------

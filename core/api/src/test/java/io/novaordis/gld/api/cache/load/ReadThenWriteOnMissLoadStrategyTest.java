@@ -495,7 +495,23 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
 
     @Override
     protected ReadThenWriteOnMissLoadStrategy getLoadStrategyToTest() throws Exception {
+
         return new ReadThenWriteOnMissLoadStrategy();
+    }
+
+    @Override
+    protected MockCacheServiceConfiguration getCorrespondingServiceConfiguration() {
+
+        return new MockCacheServiceConfiguration();
+    }
+
+    @Override
+    protected void initialize(LoadStrategy ls) throws Exception {
+
+        assertTrue(ls instanceof DeleteLoadStrategy);
+        MockCacheServiceConfiguration sc = getCorrespondingServiceConfiguration();
+        sc.set(ls.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
+        ls.init(sc, new MockLoadConfiguration());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

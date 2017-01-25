@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.mock.configuration;
 
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.configuration.ImplementationConfiguration;
 import io.novaordis.gld.api.configuration.ImplementationConfigurationImpl;
 import io.novaordis.gld.api.configuration.LowLevelConfigurationBase;
@@ -52,7 +53,7 @@ public class MockServiceConfiguration extends LowLevelConfigurationBase implemen
         //
 
         Map<String, Object> loadStrategyConfig = new HashMap<>();
-        loadStrategyConfig.put(LOAD_STRATEGY_FACTORY_CLASS_LABEL, MockLdLoadStrategyFactory.class.getName());
+        loadStrategyConfig.put(LoadStrategy.FACTORY_CLASS_LABEL, MockLdLoadStrategyFactory.class.getName());
         set(loadStrategyConfig, LOAD_STRATEGY_CONFIGURATION_LABEL);
     }
 
@@ -76,6 +77,11 @@ public class MockServiceConfiguration extends LowLevelConfigurationBase implemen
     @Override
     public String getLoadStrategyName() throws UserErrorException {
         throw new RuntimeException("getLoadStrategyName() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public int getValueSize() throws UserErrorException {
+        throw new RuntimeException("getValueSize() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

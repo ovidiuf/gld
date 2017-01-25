@@ -53,6 +53,11 @@ public class MockStoreConfiguration implements StoreConfiguration {
     }
 
     @Override
+    public <T> T remove(Class<? extends T> type, String... path) {
+        throw new RuntimeException("remove() NOT YET IMPLEMENTED");
+    }
+
+    @Override
     public File getFile(String... path) {
         throw new RuntimeException("getFile() NOT YET IMPLEMENTED");
     }

@@ -151,15 +151,9 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
 
         JmsLoadStrategy s = getLoadStrategyToTest();
 
-        MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
-        Map<String, Object> rawLSC = new HashMap<>();
-        msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-        rawLSC.put(LoadStrategy.NAME_LABEL, s.getName());
-        rawLSC.put(JmsLoadStrategy.CONNECTION_FACTORY_LABEL, "something");
-
-        rawLSC.put(JmsLoadStrategy.QUEUE_LABEL, "/jms/test-queue");
-
-        assertNull(rawLSC.get(JmsLoadStrategy.CONNECTION_FACTORY_LABEL));
+        MockJmsServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
+        msc.set(null, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.CONNECTION_FACTORY_LABEL);
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
 
@@ -172,7 +166,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("required configuration element connection-factory missing", msg);
+            assertEquals("required configuration element 'connection-factory' missing", msg);
         }
     }
 
@@ -181,14 +175,10 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
 
         JmsLoadStrategy s = getLoadStrategyToTest();
 
-        MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
-        Map<String, Object> rawLSC = new HashMap<>();
-        msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-        rawLSC.put(LoadStrategy.NAME_LABEL, s.getName());
-        rawLSC.put(JmsLoadStrategy.CONNECTION_FACTORY_LABEL, "something");
-
-        rawLSC.put(JmsLoadStrategy.QUEUE_LABEL, "A");
-        rawLSC.put(JmsLoadStrategy.QUEUE_LABEL, "B");
+        MockJmsServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
+        msc.set("A", ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.QUEUE_LABEL);
+        msc.set("B", ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.TOPIC_LABEL);
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
 
@@ -210,12 +200,10 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
 
         JmsLoadStrategy s = getLoadStrategyToTest();
 
-        MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
-        Map<String, Object> rawLSC = new HashMap<>();
-        msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-        rawLSC.put(LoadStrategy.NAME_LABEL, s.getName());
-        rawLSC.put(JmsLoadStrategy.CONNECTION_FACTORY_LABEL, "something");
-        rawLSC.put(JmsLoadStrategy.TOPIC_LABEL, "/jms/test-topic");
+        MockJmsServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
+        msc.set(null, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.QUEUE_LABEL);
+        msc.set("/jms/test-topic", ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.TOPIC_LABEL);
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
 
@@ -318,13 +306,10 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
 
         JmsLoadStrategy s = getLoadStrategyToTest();
 
-        MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
-        Map<String, Object> rawLSC = new HashMap<>();
-        msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-        rawLSC.put(LoadStrategy.NAME_LABEL, s.getName());
-        rawLSC.put(JmsLoadStrategy.CONNECTION_FACTORY_LABEL, "something");
-        rawLSC.put(JmsLoadStrategy.QUEUE_LABEL, "/jms/test-queue");
-        rawLSC.put(JmsLoadStrategy.CONNECTION_POLICY_LABEL, "no-such-connection-policy");
+        MockJmsServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
+        msc.set("no-such-connection-policy",
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.CONNECTION_POLICY_LABEL);
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
 
@@ -337,7 +322,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("invalid connection policy 'no-such-connection-policy', valid options: 'blah', 'blah', 'blah'", msg);
+            assertEquals("invalid connection policy 'no-such-connection-policy', valid options: 'connection-per-run', 'connection-per-thread', 'connection-per-operation', 'connection-pool'", msg);
         }
     }
 
@@ -367,13 +352,11 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
 
         JmsLoadStrategy s = getLoadStrategyToTest();
 
-        MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
-        Map<String, Object> rawLSC = new HashMap<>();
-        msc.set(rawLSC, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-        rawLSC.put(LoadStrategy.NAME_LABEL, s.getName());
-        rawLSC.put(JmsLoadStrategy.CONNECTION_FACTORY_LABEL, "something");
-        rawLSC.put(JmsLoadStrategy.QUEUE_LABEL, "/jms/test-queue");
-        rawLSC.put(JmsLoadStrategy.SESSION_POLICY_LABEL, "no-such-session-policy");
+        MockJmsServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
+
+        msc.set("no-such-session-policy",
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.SESSION_POLICY_LABEL);
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
 
@@ -386,7 +369,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("invalid session policy 'no-such-session-policy', valid options: 'blah', 'blah', 'blah'", msg);
+            assertEquals("invalid session policy 'no-such-session-policy', valid options: 'session-per-thread', 'session-per-operation'", msg);
         }
     }
 
@@ -395,6 +378,32 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     protected abstract JmsLoadStrategy getLoadStrategyToTest() throws Exception;
+
+    @Override
+    protected MockJmsServiceConfiguration getCorrespondingServiceConfiguration() {
+
+        MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
+
+        //
+        // we populate the service configuration with mandatory elements, so the initialization works well
+        //
+
+        msc.set(new HashMap<String, Object>(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        msc.set("testQueue", ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.QUEUE_LABEL);
+        msc.set("testConnectionFactory",
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.CONNECTION_FACTORY_LABEL);
+
+        return msc;
+    }
+
+    @Override
+    protected void initialize(LoadStrategy ls) throws Exception {
+
+        assertTrue(ls instanceof JmsLoadStrategy);
+        MockJmsServiceConfiguration sc = getCorrespondingServiceConfiguration();
+        sc.set(ls.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
+        ls.init(sc, new MockLoadConfiguration());
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

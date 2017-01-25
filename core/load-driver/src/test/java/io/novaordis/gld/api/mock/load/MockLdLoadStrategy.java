@@ -262,6 +262,36 @@ public class MockLdLoadStrategy implements LoadStrategy {
         this.keyProvider = keyProvider;
     }
 
+    @Override
+    public Long getOperations() {
+        throw new RuntimeException("getOperations() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Long getRemainingOperations() {
+        throw new RuntimeException("getRemainingOperations() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public int getValueSize() {
+        throw new RuntimeException("getValueSize() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public String getReusedValue() {
+        throw new RuntimeException("getReusedValue() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public boolean isReuseValue() {
+        throw new RuntimeException("isReuseValue() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public String computeValue() {
+        throw new RuntimeException("computeValue() NOT YET IMPLEMENTED");
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
 //    public int getRemainingOperations() {
