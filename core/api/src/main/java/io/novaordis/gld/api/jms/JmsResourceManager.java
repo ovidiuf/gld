@@ -60,6 +60,7 @@ import java.util.Map;
  *
  * @see JmsEndpoint
  */
+@Deprecated
 public class JmsResourceManager {
 
     // Constants -------------------------------------------------------------------------------------------------------

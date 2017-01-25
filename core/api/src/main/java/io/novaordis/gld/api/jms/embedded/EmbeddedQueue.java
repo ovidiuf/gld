@@ -19,7 +19,7 @@ package io.novaordis.gld.api.jms.embedded;
 import javax.jms.JMSException;
 import javax.jms.Queue;
 
-public class EmbeddedQueue implements Queue {
+public class EmbeddedQueue extends EmbeddedDestination implements Queue {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -27,27 +27,22 @@ public class EmbeddedQueue implements Queue {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String name;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public EmbeddedQueue(String name) {
-        this.name = name;
+
+        super(name);
     }
 
     // Queue implementation --------------------------------------------------------------------------------------------
 
     @Override
     public String getQueueName() throws JMSException {
-        return name;
+
+        return getName();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    @Override
-    public String toString() {
-        return name;
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

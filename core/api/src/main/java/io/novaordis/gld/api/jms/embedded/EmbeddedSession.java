@@ -282,6 +282,34 @@ public class EmbeddedSession implements Session {
         return createdConsumers;
     }
 
+    /**
+     * May return an empty list if there were no message sent, or the queue does not exist.
+     */
+    public List<Message> getMessagesSentToDestination(String destinationName, boolean queue) throws Exception {
+
+        List<Message> result = new ArrayList<>();
+
+        for(EmbeddedMessageProducer p : createdProducers) {
+
+            Destination d = p.getDestination();
+
+            if ((!queue || d instanceof EmbeddedTopic) && (queue || d instanceof EmbeddedQueue)) {
+
+                continue;
+            }
+
+            if (!((EmbeddedDestination)d).getName().equals(destinationName)) {
+
+                continue;
+            }
+
+
+            result.addAll(p.getMessagesSentByThisProducer());
+        }
+
+        return result;
+    }
+
     @Override
     public String toString() {
 

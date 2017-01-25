@@ -16,12 +16,12 @@
 
 package io.novaordis.gld.api.jms.operation;
 
-import io.novaordis.gld.api.jms.JmsEndpoint;
-import io.novaordis.gld.api.jms.Producer;
+import io.novaordis.gld.api.jms.embedded.EmbeddedQueue;
 import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jms.Destination;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
@@ -68,15 +68,11 @@ public class Send extends JmsOperationBase {
     }
 
     @Override
-    public void perform(JmsEndpoint endpoint) throws Exception {
+    public void perform(Session session) throws Exception {
 
-        Producer producerEndpoint = (Producer)endpoint;
-
-        Session session = producerEndpoint.getSession();
-        MessageProducer producer = producerEndpoint.getProducer();
-
+        Destination destination = new EmbeddedQueue(getLoadStrategy().getDestination().getName());
+        MessageProducer producer = session.createProducer(destination);
         String payload = getPayload();
-
         TextMessage m = session.createTextMessage(payload);
 
         // if (trace) { log.trace("sending message with payload \"" + payload + "\""); }

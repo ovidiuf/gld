@@ -16,11 +16,16 @@
 
 package io.novaordis.gld.api.jms;
 
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.jms.load.ConnectionPolicy;
+import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 import io.novaordis.gld.api.jms.load.SessionPolicy;
 import io.novaordis.gld.api.jms.operation.JmsOperation;
 import io.novaordis.gld.api.service.ServiceBase;
 import io.novaordis.gld.api.service.ServiceType;
+
+import javax.jms.Connection;
+import javax.jms.Session;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -34,15 +39,11 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private JmsResourceManager resourceManager;
+    private javax.jms.ConnectionFactory connectionFactory;
+    private ConnectionPolicy connectionPolicy;
+    private SessionPolicy sessionPolicy;
 
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    public JmsServiceBase() {
-
-        this.resourceManager = new JmsResourceManager(
-                null, ConnectionPolicy.CONNECTION_PER_RUN, SessionPolicy.SESSION_PER_THREAD);
-    }
 
     // JmsService implementation ---------------------------------------------------------------------------------------
 
@@ -53,16 +54,108 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
     }
 
     @Override
-    public JmsEndpoint getEndpoint(JmsOperation jmsOperation) throws Exception {
+    public Session checkOut(JmsOperation jmsOperation) throws Exception {
 
-        return resourceManager.checkOutEndpoint(jmsOperation);
+        //
+        // look at connection policy and at the session policy
+        //
+
+        Session session;
+
+        if (SessionPolicy.SESSION_PER_OPERATION.equals(sessionPolicy)) {
+
+            //
+            // we need a new session
+            //
+
+            Connection c = getConnection();
+
+            session = c.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        }
+        else if (SessionPolicy.SESSION_PER_THREAD.equals(sessionPolicy)) {
+
+            //
+            // get the session from the thread, and if not available, create one
+            //
+
+            throw new RuntimeException("NOT YET IMPLEMENTED");
+        }
+        else {
+
+            throw new RuntimeException(sessionPolicy + " SUPPORT NOT YET IMPLEMENTED");
+        }
+
+        return session;
+    }
+
+    @Override
+    public void checkIn(Session session) throws Exception {
+
+        //
+        // look at the session policy and handle accordingly
+        //
+
+        if (SessionPolicy.SESSION_PER_OPERATION.equals(sessionPolicy)) {
+
+            //
+            // done with it, close
+            //
+
+            session.close();
+        }
+        else if (SessionPolicy.SESSION_PER_THREAD.equals(sessionPolicy)) {
+
+            //
+            // get the session from the thread, and if not available, create one
+            //
+
+            throw new RuntimeException("NOT YET IMPLEMENTED");
+        }
+        else {
+
+            throw new RuntimeException(sessionPolicy + " SUPPORT NOT YET IMPLEMENTED");
+        }
+    }
+
+    /**
+     * We intercept the method that installs the load strategy to get some configuration from it.
+     */
+    @Override
+    public void setLoadStrategy(LoadStrategy s) {
+
+        if (!(s instanceof JmsLoadStrategy)) {
+
+            throw new IllegalArgumentException("invalid load strategy " + s);
+        }
+
+        super.setLoadStrategy(s);
+
+        JmsLoadStrategy jmsLoadStrategy = (JmsLoadStrategy)s;
+
+        this.connectionPolicy = jmsLoadStrategy.getConnectionPolicy();
+        this.sessionPolicy = jmsLoadStrategy.getSessionPolicy();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
+    Connection getConnection() throws Exception {
+
+        return connectionFactory.createConnection();
+    }
+
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected void setConnectionFactory(javax.jms.ConnectionFactory cf) {
+
+        this.connectionFactory = cf;
+    }
+
+    protected javax.jms.ConnectionFactory getConnectionFactory() {
+
+        return connectionFactory;
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

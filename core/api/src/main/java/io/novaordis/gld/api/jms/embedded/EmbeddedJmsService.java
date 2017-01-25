@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,14 +16,23 @@
 
 package io.novaordis.gld.api.jms.embedded;
 
-import javax.jms.Connection;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
+import io.novaordis.gld.api.jms.JmsServiceBase;
+import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
+import io.novaordis.utilities.UserErrorException;
+
 import javax.jms.ConnectionFactory;
-import javax.jms.JMSException;
 import javax.jms.Message;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class EmbeddedConnectionFactory implements ConnectionFactory {
+/**
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 1/25/17
+ */
+public class EmbeddedJmsService extends JmsServiceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -31,38 +40,23 @@ public class EmbeddedConnectionFactory implements ConnectionFactory {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private List<EmbeddedConnection> createdConnections;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedConnectionFactory(String clientUrl) {
-
-        throw new RuntimeException("RETURN HERE");
-//        if (!ActiveMQService.isEmbedded(clientUrl))
-//        {
-//            throw new IllegalArgumentException(clientUrl + " is not an embedded client URL");
-//        }
-    }
-
-    public EmbeddedConnectionFactory() {
-
-        this.createdConnections = new ArrayList<>();
-    }
-
-    // ConnectionFactory implementation --------------------------------------------------------------------------------
+    // JmsService implementation ---------------------------------------------------------------------------------------
 
     @Override
-    public Connection createConnection() throws JMSException {
+    public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {
 
-        EmbeddedConnection c = new EmbeddedConnection();
-        createdConnections.add(c);
-        return c;
-    }
+        String connectionFactoryName = serviceConfiguration.get(
+                String.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
+                JmsLoadStrategy.CONNECTION_FACTORY_LABEL);
 
-    @Override
-    public Connection createConnection(String s, String s1) throws JMSException {
+        if (connectionFactoryName == null) {
 
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+            throw new IllegalArgumentException("missing connection factory name");
+        }
+
+        setConnectionFactory(new EmbeddedConnectionFactory());
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -72,20 +66,12 @@ public class EmbeddedConnectionFactory implements ConnectionFactory {
      */
     public List<Message> getMessagesSentToDestination(String destinationName, boolean queue) throws Exception {
 
-        List<Message> messages = new ArrayList<>();
+        List<Message> result = new ArrayList<>();
 
-        for(EmbeddedConnection c: createdConnections) {
+        EmbeddedConnectionFactory cf = (EmbeddedConnectionFactory)getConnectionFactory();
+        result.addAll(cf.getMessagesSentToDestination(destinationName, queue));
 
-            messages.addAll(c.getMessagesSentToDestination(destinationName, queue));
-        }
-
-        return messages;
-
-    }
-    @Override
-    public String toString() {
-
-        return "EmbeddedJMSConnectionFactory[" + "]";
+        return result;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

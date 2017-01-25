@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
+import javax.jms.Session;
 import javax.jms.TextMessage;
 
 public class Receive extends JmsOperationBase {
@@ -50,33 +51,35 @@ public class Receive extends JmsOperationBase {
     // JmsOperationBase overrides --------------------------------------------------------------------------------------
 
     @Override
-    public void perform(JmsEndpoint endpoint) throws Exception {
+    public void perform(Session session) throws Exception {
 
-        Consumer consumer = (Consumer)endpoint;
-        MessageConsumer jmsConsumer = consumer.getConsumer();
+//        Consumer consumer = (Consumer)endpoint;
+//        MessageConsumer jmsConsumer = consumer.getConsumer();
+//
+//        Message m;
+//
+//        if (timeoutMs == null) {
+//
+//            m = jmsConsumer.receive();
+//        }
+//        else {
+//
+//            m = jmsConsumer.receive(timeoutMs);
+//        }
+//
+//        if (trace) {
+//
+//            String messageID = m.getJMSMessageID();
+//            String textPayload = null;
+//            if (m instanceof TextMessage) {
+//
+//                textPayload = ((TextMessage)m).getText();
+//            }
+//
+//            log.trace(messageID + ": " + (textPayload == null ? "0:null" : textPayload.length() + ":" + textPayload));
+//        }
 
-        Message m;
-
-        if (timeoutMs == null) {
-
-            m = jmsConsumer.receive();
-        }
-        else {
-
-            m = jmsConsumer.receive(timeoutMs);
-        }
-
-        if (trace) {
-
-            String messageID = m.getJMSMessageID();
-            String textPayload = null;
-            if (m instanceof TextMessage) {
-
-                textPayload = ((TextMessage)m).getText();
-            }
-
-            log.trace(messageID + ": " + (textPayload == null ? "0:null" : textPayload.length() + ":" + textPayload));
-        }
+        throw new RuntimeException("NYE");
     }
 
     @Override

@@ -22,6 +22,7 @@ import javax.jms.ConnectionMetaData;
 import javax.jms.Destination;
 import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.ServerSessionPool;
 import javax.jms.Session;
 import javax.jms.Topic;
@@ -133,6 +134,21 @@ public class EmbeddedConnection implements Connection {
     public List<EmbeddedSession> getCreatedSessions()
     {
         return createdSessions;
+    }
+
+    /**
+     * May return an empty list if there were no message sent, or the queue does not exist.
+     */
+    public List<Message> getMessagesSentToDestination(String destinationName, boolean queue) throws Exception {
+
+        List<Message> result = new ArrayList<>();
+
+        for(EmbeddedSession s: createdSessions) {
+
+            result.addAll(s.getMessagesSentToDestination(destinationName, queue));
+        }
+
+        return result;
     }
 
     @Override

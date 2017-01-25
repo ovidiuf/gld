@@ -109,7 +109,7 @@ public class EmbeddedMessageProducer implements MessageProducer {
     @Override
     public Destination getDestination() throws JMSException {
 
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        return destination;
     }
 
     @Override

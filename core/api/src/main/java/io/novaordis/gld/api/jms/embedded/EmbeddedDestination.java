@@ -16,10 +16,9 @@
 
 package io.novaordis.gld.api.jms.embedded;
 
-import javax.jms.JMSException;
-import javax.jms.Topic;
+import javax.jms.Destination;
 
-public class EmbeddedTopic extends EmbeddedDestination implements Topic {
+public class EmbeddedDestination implements Destination {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -27,22 +26,25 @@ public class EmbeddedTopic extends EmbeddedDestination implements Topic {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String name;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedTopic(String name) {
-
-        super(name);
-    }
-
-    // Queue implementation --------------------------------------------------------------------------------------------
-
-    @Override
-    public String getTopicName() throws JMSException {
-
-        return getName();
+    public EmbeddedDestination(String name) {
+        this.name = name;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public String getName()  {
+
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

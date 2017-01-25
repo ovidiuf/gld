@@ -17,10 +17,11 @@
 package io.novaordis.gld.api.jms.operation;
 
 import io.novaordis.gld.api.jms.Destination;
-import io.novaordis.gld.api.jms.JmsEndpoint;
 import io.novaordis.gld.api.jms.JmsService;
 import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 import io.novaordis.gld.api.service.Service;
+
+import javax.jms.Session;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -96,9 +97,24 @@ public abstract class JmsOperationBase implements JmsOperation {
         // pull the appropriate resources from the service and then execute the operations with these resources
         //
 
-        JmsEndpoint endpoint = ((JmsService)s).getEndpoint(this);
+        JmsService jmsService = (JmsService)s;
 
-        perform(endpoint);
+        Session session = jmsService.checkOut(this);
+
+        try {
+
+            perform(session);
+
+        }
+        finally {
+
+            //
+            // handle the session according to the policy
+            //
+
+            jmsService.checkIn(session);
+
+        }
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

@@ -16,11 +16,13 @@
 
 package io.novaordis.gld.api.jms;
 
+import io.novaordis.gld.api.jms.embedded.EmbeddedJmsService;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/20/17
  */
-public class MockJmsServiceTest extends JmsServiceTest {
+public class EmbeddedJmsServiceTest extends JmsServiceTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -41,7 +43,7 @@ public class MockJmsServiceTest extends JmsServiceTest {
     @Override
     protected JmsService getServiceToTest() throws Exception {
 
-        return new MockJmsService();
+        return new EmbeddedJmsService();
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

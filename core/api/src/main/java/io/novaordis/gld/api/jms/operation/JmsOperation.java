@@ -21,6 +21,8 @@ import io.novaordis.gld.api.jms.Destination;
 import io.novaordis.gld.api.jms.JmsEndpoint;
 import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 
+import javax.jms.Session;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/5/16
@@ -48,6 +50,6 @@ public interface JmsOperation extends Operation {
      */
     String getId();
 
-    void perform(JmsEndpoint endpoint) throws Exception;
+    void perform(Session session) throws Exception;
 
 }
