@@ -16,6 +16,9 @@
 
 package io.novaordis.gld.api.jms;
 
+import io.novaordis.gld.api.jms.load.ConnectionPolicy;
+import io.novaordis.gld.api.jms.load.SessionPolicy;
+import io.novaordis.gld.api.jms.operation.JmsOperation;
 import io.novaordis.gld.api.service.ServiceBase;
 import io.novaordis.gld.api.service.ServiceType;
 
@@ -31,7 +34,15 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private JmsResourceManager resourceManager;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public JmsServiceBase() {
+
+        this.resourceManager = new JmsResourceManager(
+                null, ConnectionPolicy.CONNECTION_PER_RUN, SessionPolicy.SESSION_PER_THREAD);
+    }
 
     // JmsService implementation ---------------------------------------------------------------------------------------
 
@@ -39,6 +50,12 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
     public ServiceType getType() {
 
         return ServiceType.jms;
+    }
+
+    @Override
+    public JmsEndpoint getEndpoint(JmsOperation jmsOperation) throws Exception {
+
+        return resourceManager.checkOutEndpoint(jmsOperation);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

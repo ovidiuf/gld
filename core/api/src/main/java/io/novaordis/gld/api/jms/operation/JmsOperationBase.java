@@ -17,7 +17,10 @@
 package io.novaordis.gld.api.jms.operation;
 
 import io.novaordis.gld.api.jms.Destination;
+import io.novaordis.gld.api.jms.JmsEndpoint;
+import io.novaordis.gld.api.jms.JmsService;
 import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
+import io.novaordis.gld.api.service.Service;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -80,14 +83,23 @@ public abstract class JmsOperationBase implements JmsOperation {
         return id;
     }
 
-//    /**
-//     * Externalize the job of choosing what endpoint to use for operation to JmsResourceManager.
-//     *
-//     * @see com.novaordis.gld.service.jms.JmsEndpoint
-//     * @see com.novaordis.gld.service.jms.JmsResourceManager
-//     */
-//    public abstract void perform(JmsEndpoint endpoint) throws Exception;
+    @Override
+    public void perform(Service s) throws Exception {
 
+        if (!(s instanceof JmsService)) {
+
+            throw new IllegalArgumentException("invalid service " + s);
+
+        }
+
+        //
+        // pull the appropriate resources from the service and then execute the operations with these resources
+        //
+
+        JmsEndpoint endpoint = ((JmsService)s).getEndpoint(this);
+
+        perform(endpoint);
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 

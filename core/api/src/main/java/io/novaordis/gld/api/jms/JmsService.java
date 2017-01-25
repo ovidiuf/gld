@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.jms;
 
+import io.novaordis.gld.api.jms.operation.JmsOperation;
 import io.novaordis.gld.api.service.Service;
 
 /**
@@ -29,5 +30,7 @@ public interface JmsService extends Service {
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    JmsEndpoint getEndpoint(JmsOperation jmsOperation) throws Exception;
 
 }

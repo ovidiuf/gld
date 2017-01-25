@@ -16,10 +16,15 @@
 
 package io.novaordis.gld.api.jms.operation;
 
+import io.novaordis.gld.api.jms.Consumer;
+import io.novaordis.gld.api.jms.JmsEndpoint;
 import io.novaordis.gld.api.jms.load.ReceiveLoadStrategy;
-import io.novaordis.gld.api.service.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jms.Message;
+import javax.jms.MessageConsumer;
+import javax.jms.TextMessage;
 
 public class Receive extends JmsOperationBase {
 
@@ -45,39 +50,34 @@ public class Receive extends JmsOperationBase {
     // JmsOperationBase overrides --------------------------------------------------------------------------------------
 
     @Override
-    public void perform(Service s) throws Exception {
-        throw new RuntimeException("perform() NOT YET IMPLEMENTED");
-    }
+    public void perform(JmsEndpoint endpoint) throws Exception {
 
-//    @Override
-//    public void perform(JmsEndpoint endpoint) throws Exception {
-//
-//        Consumer consumer = (Consumer)endpoint;
-//        MessageConsumer jmsConsumer = consumer.getConsumer();
-//
-//        Message m;
-//
-//        if (timeoutMs == null)
-//        {
-//            m = jmsConsumer.receive();
-//        }
-//        else
-//        {
-//            m = jmsConsumer.receive(timeoutMs);
-//        }
-//
-//        if (trace)
-//        {
-//            String messageID = m.getJMSMessageID();
-//            String textPayload = null;
-//            if (m instanceof TextMessage)
-//            {
-//                textPayload = ((TextMessage)m).getText();
-//            }
-//
-//            log.trace(messageID + ": " + (textPayload == null ? "0:null" : textPayload.length() + ":" + textPayload));
-//        }
-//    }
+        Consumer consumer = (Consumer)endpoint;
+        MessageConsumer jmsConsumer = consumer.getConsumer();
+
+        Message m;
+
+        if (timeoutMs == null) {
+
+            m = jmsConsumer.receive();
+        }
+        else {
+
+            m = jmsConsumer.receive(timeoutMs);
+        }
+
+        if (trace) {
+
+            String messageID = m.getJMSMessageID();
+            String textPayload = null;
+            if (m instanceof TextMessage) {
+
+                textPayload = ((TextMessage)m).getText();
+            }
+
+            log.trace(messageID + ": " + (textPayload == null ? "0:null" : textPayload.length() + ":" + textPayload));
+        }
+    }
 
     @Override
     public boolean wasPerformed() {

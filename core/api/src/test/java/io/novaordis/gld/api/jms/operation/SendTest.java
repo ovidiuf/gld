@@ -16,6 +16,8 @@
 
 package io.novaordis.gld.api.jms.operation;
 
+import io.novaordis.gld.api.jms.JmsService;
+import io.novaordis.gld.api.jms.MockJmsService;
 import io.novaordis.gld.api.jms.Producer;
 import io.novaordis.gld.api.jms.embedded.EmbeddedMessageProducer;
 import io.novaordis.gld.api.jms.embedded.EmbeddedQueue;
@@ -59,8 +61,9 @@ public class SendTest extends JmsOperationTest {
 
         Producer endpoint = new Producer(jmsProducer, jmsSession);
 
-        fail("return here");
-//        send.perform(endpoint);
+        MockJmsService service = new MockJmsService();
+
+        send.perform(service);
     }
 
     @Test

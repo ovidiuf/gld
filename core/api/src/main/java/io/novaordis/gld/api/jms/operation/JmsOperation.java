@@ -18,6 +18,7 @@ package io.novaordis.gld.api.jms.operation;
 
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.jms.Destination;
+import io.novaordis.gld.api.jms.JmsEndpoint;
 import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 
 /**
@@ -46,5 +47,7 @@ public interface JmsOperation extends Operation {
      * May return null if a send operation which was not submitted for processing.
      */
     String getId();
+
+    void perform(JmsEndpoint endpoint) throws Exception;
 
 }
