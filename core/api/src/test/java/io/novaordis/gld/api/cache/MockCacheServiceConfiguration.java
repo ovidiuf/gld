@@ -50,12 +50,6 @@ public class MockCacheServiceConfiguration extends MockServiceConfiguration impl
         return ServiceConfiguration.DEFAULT_KEY_SIZE;
     }
 
-    @Override
-    public int getValueSize() {
-
-        return CacheServiceConfiguration.DEFAULT_VALUE_SIZE;
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------

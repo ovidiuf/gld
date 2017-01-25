@@ -38,8 +38,8 @@ public interface ServiceConfiguration extends LowLevelConfiguration {
 
     String TYPE_LABEL = "type";
     String IMPLEMENTATION_CONFIGURATION_LABEL = "implementation";
-
     String LOAD_STRATEGY_CONFIGURATION_LABEL = "load-strategy";
+    String VALUE_SIZE_LABEL = "value-size";
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -61,5 +61,12 @@ public interface ServiceConfiguration extends LowLevelConfiguration {
     ImplementationConfiguration getImplementationConfiguration() throws UserErrorException;
 
     String getLoadStrategyName() throws UserErrorException;
+
+    /**
+     * @return the default value size, in bytes. A specific load strategy may choose to ignore this default and use a
+     * load-strategy specific value. The configuration value is optional, if not present in the configuration file,
+     * the default value (see DEFAULT_VALUE_SIZE above) is used.
+     */
+    int getValueSize() throws UserErrorException;
 
 }

@@ -44,6 +44,8 @@ public abstract class LoadStrategyBase implements LoadStrategy {
     private RandomContentGenerator valueGenerator;
     private volatile boolean started;
 
+    private int serviceConfigurationValueSize;
+
     // null means unlimited operations
     private Long maxOperations;
 
@@ -52,7 +54,7 @@ public abstract class LoadStrategyBase implements LoadStrategy {
     //
     private AtomicLong remainingOperation;
 
-    private boolean reuseValue;
+    private Boolean reuseValue;
     private String reusedValue;
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -155,24 +157,17 @@ public abstract class LoadStrategyBase implements LoadStrategy {
         //
 
         //
-        // value size
+        // value size read from service configuration
         //
 
-        boolean fail = true;
-        if (fail) { throw new RuntimeException("RETURN HERE"); }
-
-        // this.valueSize = sc.getValueSize();
-
+        this.serviceConfigurationValueSize = sc.getValueSize();
 
         //
         // reuse value
         //
 
-        //
-        // TODO we need sc.remove()
-        //
-        this.reuseValue = sc.get(
-                Boolean.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, REUSE_VALUE_LABEL);
+        Boolean rv = sc.remove(Boolean.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, REUSE_VALUE_LABEL);
+        this.reuseValue = rv != null ? rv : reuseValue;
 
         init(sc, loadStrategyRawConfig, lc);
 
@@ -292,7 +287,7 @@ public abstract class LoadStrategyBase implements LoadStrategy {
     @Override
     public int getValueSize() {
 
-        throw new RuntimeException("NYE");
+        return serviceConfigurationValueSize;
     }
 
     @Override

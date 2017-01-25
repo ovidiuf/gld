@@ -80,55 +80,13 @@ public class LowLevelConfigurationBase implements LowLevelConfiguration {
     @Override
     public <T> T get(Class<? extends T> type, String... path) {
 
-        String pathAsString = "";
+        return getAndPossiblyRemove(type, false, path);
+    }
 
-        Map<String, Object> current = rawConfiguration;
+    @Override
+    public <T> T remove(Class<? extends T> type, String... path) {
 
-        for(int i = 0; i < path.length; i ++) {
-
-            String element = path[i];
-
-            pathAsString = pathAsString.isEmpty() ? element : pathAsString + "." + element;
-
-            Object o = current.get(element);
-
-            if (o == null) {
-
-                return null;
-            }
-
-            if (i < path.length - 1) {
-
-                //
-                // we expect a map, if we get anything else, it means the path did not match, return null
-                //
-
-                if (!(o instanceof Map)) {
-
-                    return null;
-                }
-
-                //noinspection unchecked
-                current = (Map<String, Object>)o;
-                continue;
-            }
-
-            //
-            // at the end of the path
-            //
-
-            if (type.isAssignableFrom(o.getClass())) {
-
-                //noinspection unchecked
-                return (T) o;
-            }
-
-            throw new IllegalStateException(
-                    "expected " + pathAsString + " to be a " + type.getSimpleName() + " but it is a(n) " +
-                            o.getClass().getSimpleName() + ": \"" + o + "\"");
-        }
-
-        return null;
+        return getAndPossiblyRemove(type, true, path);
     }
 
     @Override
@@ -211,6 +169,69 @@ public class LowLevelConfigurationBase implements LowLevelConfiguration {
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
+
+    /**
+     * @see LowLevelConfiguration#get(Class, String...)
+     * @see LowLevelConfiguration#remove(Class, String...)
+     */
+    <T> T getAndPossiblyRemove(Class<? extends T> type, boolean remove, String... path) {
+
+        String pathAsString = "";
+
+        Map<String, Object> current = rawConfiguration;
+
+        for(int i = 0; i < path.length; i ++) {
+
+            String element = path[i];
+
+            pathAsString = pathAsString.isEmpty() ? element : pathAsString + "." + element;
+
+            Object o = current.get(element);
+
+            if (o == null) {
+
+                return null;
+            }
+
+            if (i < path.length - 1) {
+
+                //
+                // we expect a map, if we get anything else, it means the path did not match, return null
+                //
+
+                if (!(o instanceof Map)) {
+
+                    return null;
+                }
+
+                //noinspection unchecked
+                current = (Map<String, Object>)o;
+                continue;
+            }
+
+            //
+            // at the end of the path
+            //
+
+            if (type.isAssignableFrom(o.getClass())) {
+
+                if (remove) {
+
+                    current.remove(element);
+                }
+
+                //noinspection unchecked
+                return (T) o;
+            }
+
+            throw new IllegalStateException(
+                    "expected " + pathAsString + " to be a " + type.getSimpleName() + " but it is a(n) " +
+                            o.getClass().getSimpleName() + ": \"" + o + "\"");
+        }
+
+        return null;
+    }
+
 
     // Protected -------------------------------------------------------------------------------------------------------
 

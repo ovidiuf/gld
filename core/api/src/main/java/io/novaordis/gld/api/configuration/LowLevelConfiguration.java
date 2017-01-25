@@ -69,7 +69,6 @@ public interface LowLevelConfiguration {
      */
     File getFile(String ... path);
 
-
     /**
      * Walks the internal storage following the specified path and returns the value found in the map entry that
      * matches the path. If there is no path match, returns null. If the value is not null and does not match the
@@ -78,6 +77,15 @@ public interface LowLevelConfiguration {
      * @exception IllegalStateException if the value is not null and does not match the requested type.
      */
     <T> T get(Class<? extends T> type, String ... path);
+
+    /**
+     * Walks the internal storage following the specified path and returns and removes the value found in the map entry
+     * that matches the path. If there is no path match, returns null. If the value is not null and does not match the
+     * requested type, the method throws IllegalStateException.
+     *
+     * @exception IllegalStateException if the value is not null and does not match the requested type.
+     */
+    <T> T remove(Class<? extends T> type, String ... path);
 
     /**
      * @return the directory containing the configuration file this configuration was loaded from. It is necessary

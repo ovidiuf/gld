@@ -41,6 +41,10 @@ public interface JmsServiceConfiguration extends ServiceConfiguration {
      * @return the default message size, in bytes. A specific load strategy may choose to ignore this default and use a
      * load-strategy specific value. The configuration value is optional, if not present in the configuration file,
      * the default value (see ServiceConfiguration.DEFAULT_VALUE_SIZE above) is used.
+     *
+     * Semantically equivalent with getValueSize()
+     *
+     * @see ServiceConfiguration#getValueSize()
      */
     int getMessageSize() throws UserErrorException;
 

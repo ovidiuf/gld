@@ -86,8 +86,11 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
         // required queue/topic name
         //
 
-        String queueName = (String)loadStrategyRawConfig.remove(JmsLoadStrategy.QUEUE_LABEL);
-        String topicName = (String)loadStrategyRawConfig.remove(JmsLoadStrategy.TOPIC_LABEL);
+        String queueName = sc.remove(
+                String.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.QUEUE_LABEL);
+
+        String topicName = sc.remove(
+                String.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.TOPIC_LABEL);
 
         if (queueName != null && topicName != null) {
 
@@ -112,7 +115,8 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
         // required connection factory
         //
 
-        String connectionFactoryName = (String)loadStrategyRawConfig.remove(JmsLoadStrategy.CONNECTION_FACTORY_LABEL);
+        String connectionFactoryName = sc.remove(String.class,
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.CONNECTION_FACTORY_LABEL);
 
         if (connectionFactoryName == null) {
 
@@ -125,17 +129,10 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
         // optional message size
         //
 
-        Integer ms = jmsSc.get(Integer.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
-                JmsServiceConfiguration.MESSAGE_SIZE_LABEL);
+        Integer ms = jmsSc.remove(Integer.class,
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsServiceConfiguration.MESSAGE_SIZE_LABEL);
 
-        if (ms != null) {
-
-            this.messageSize = ms;
-        }
-        else {
-
-            this.messageSize = jmsSc.getMessageSize();
-        }
+        this.messageSize = ms != null ? ms : jmsSc.getMessageSize();
 
         //
         // optional max messages
@@ -147,25 +144,19 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
         // optional connection policy
         //
 
-        String cps = jmsSc.get(String.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
-                JmsLoadStrategy.CONNECTION_POLICY_LABEL);
+        String cps = jmsSc.remove(String.class,
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.CONNECTION_POLICY_LABEL);
 
-        if (cps != null) {
-
-            connectionPolicy = ConnectionPolicy.fromString(cps);
-        }
+        connectionPolicy = cps != null ? ConnectionPolicy.fromString(cps) : connectionPolicy;
 
         //
         // optional session policy
         //
 
-        String sps = jmsSc.get(String.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
-                JmsLoadStrategy.SESSION_POLICY_LABEL);
+        String sps = jmsSc.remove(String.class,
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.SESSION_POLICY_LABEL);
 
-        if (sps != null) {
-
-            sessionPolicy = SessionPolicy.fromString(sps);
-        }
+        sessionPolicy = sps != null ? SessionPolicy.fromString(sps) : sessionPolicy;
 
         //
         // give the actual load strategy a chance to look for specific configuration elements

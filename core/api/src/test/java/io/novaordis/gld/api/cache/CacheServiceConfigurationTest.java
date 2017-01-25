@@ -126,7 +126,7 @@ public class CacheServiceConfigurationTest extends ServiceConfigurationTest {
 
         CacheServiceConfiguration c = getConfigurationToTest(map, new File(System.getProperty("basedir")));
 
-        int s = c.getValueSize();
+        long s = c.getValueSize();
         assertEquals(CacheServiceConfiguration.DEFAULT_VALUE_SIZE, s);
     }
 

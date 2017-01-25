@@ -62,23 +62,6 @@ public class CacheServiceConfigurationImpl extends ServiceConfigurationImpl impl
         return i == null ? DEFAULT_KEY_SIZE : i;
     }
 
-    @Override
-    public int getValueSize() throws UserErrorException {
-
-        Integer i;
-
-        try {
-
-            i = get(Integer.class, CacheServiceConfiguration.VALUE_SIZE_LABEL);
-        }
-        catch(IllegalStateException e) {
-
-            throw new UserErrorException("'" + CacheServiceConfiguration.VALUE_SIZE_LABEL + "' is not an integer", e);
-        }
-
-        return i == null ? DEFAULT_VALUE_SIZE : i;
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Override

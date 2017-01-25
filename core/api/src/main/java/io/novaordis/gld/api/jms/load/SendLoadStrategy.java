@@ -86,8 +86,12 @@ public class SendLoadStrategy extends JmsLoadStrategyBase {
     }
 
     @Override
-    protected void initInternal(ServiceConfiguration sc, Map<String, Object> loadStrategyRawConfig, LoadConfiguration lc) throws Exception {
-        throw new RuntimeException("initInternal() NOT YET IMPLEMENTED");
+    protected void initInternal(
+            ServiceConfiguration sc, Map<String, Object> loadStrategyRawConfig, LoadConfiguration lc) throws Exception {
+
+        //
+        // noop for the time being
+        //
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

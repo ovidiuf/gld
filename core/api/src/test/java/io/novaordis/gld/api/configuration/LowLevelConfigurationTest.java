@@ -147,6 +147,95 @@ public abstract class LowLevelConfigurationTest {
         assertEquals("test-value", s);
     }
 
+    // remove() --------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void remove_NoMatch_FirstElement() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        String s = c.remove(String.class, "no-such-top-element");
+        assertNull(s);
+    }
+
+    @Test
+    public void remove_NoMatch_PartialMatch() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        //noinspection MismatchedQueryAndUpdateOfCollection
+        Map<String, Object> m2 = new HashMap<>();
+
+        m.put("token1", m2);
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        String s = c.remove(String.class, "token1", "token2");
+        assertNull(s);
+    }
+
+    @Test
+    public void remove_NoMatch_IntermediateElementNotAMap() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m2 = new HashMap<>();
+        m.put("token1", m2);
+        m2.put("token2", "a-string-not-a-map");
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        String s = c.remove(String.class, "token1", "token2", "token3");
+        assertNull(s);
+    }
+
+    @Test
+    public void remove_Match_NotTheExpectedType() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m2 = new HashMap<>();
+        Map<String, Object> m3 = new HashMap<>();
+        m.put("token1", m2);
+        m2.put("token2", m3);
+        m3.put("token3", 10);
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        try {
+
+            c.remove(String.class, "token1", "token2", "token3");
+            fail("should have thrown exception");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("expected token1.token2.token3 to be a String but it is a(n) Integer: \"10\"", msg);
+        }
+    }
+
+    @Test
+    public void remove() throws Exception {
+
+        Map<String, Object> m = new HashMap<>();
+        Map<String, Object> m2 = new HashMap<>();
+        Map<String, Object> m3 = new HashMap<>();
+        m.put("token1", m2);
+        m2.put("token2", m3);
+        m3.put("token3", "test-value");
+
+        LowLevelConfiguration c = getConfigurationToTest(m, new File("."));
+
+        String s = c.remove(String.class, "token1", "token2", "token3");
+
+        assertEquals("test-value", s);
+
+        //
+        // make sure the element was removed
+        //
+
+        assertTrue(m3.isEmpty());
+    }
+
     // getFile() -------------------------------------------------------------------------------------------------------
 
     @Test

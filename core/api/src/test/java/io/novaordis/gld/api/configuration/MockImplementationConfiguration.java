@@ -66,6 +66,11 @@ public class MockImplementationConfiguration implements ImplementationConfigurat
     }
 
     @Override
+    public <T> T remove(Class<? extends T> type, String... path) {
+        throw new RuntimeException("remove() NOT YET IMPLEMENTED");
+    }
+
+    @Override
     public File getFile(String... path) {
         throw new NotYetImplementedException("getFile() NOT YET IMPLEMENTED");
     }
