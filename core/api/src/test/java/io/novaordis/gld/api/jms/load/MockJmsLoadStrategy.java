@@ -33,6 +33,8 @@ public class MockJmsLoadStrategy extends MockLoadStrategy implements JmsLoadStra
 
     private Destination destination;
 
+    private SessionPolicy sessionPolicy;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockJmsLoadStrategy() {
@@ -43,6 +45,12 @@ public class MockJmsLoadStrategy extends MockLoadStrategy implements JmsLoadStra
     public MockJmsLoadStrategy(Destination d) {
 
         this.destination = d;
+
+        //
+        // default behavior
+        //
+
+        this.sessionPolicy = SessionPolicy.SESSION_PER_OPERATION;
     }
 
     // JmsLoadStrategy implementation ----------------------------------------------------------------------------------
@@ -71,10 +79,7 @@ public class MockJmsLoadStrategy extends MockLoadStrategy implements JmsLoadStra
     @Override
     public SessionPolicy getSessionPolicy() {
 
-        //
-        // default behavior
-        //
-        return SessionPolicy.SESSION_PER_OPERATION;
+        return sessionPolicy;
     }
 
     @Override
@@ -98,6 +103,11 @@ public class MockJmsLoadStrategy extends MockLoadStrategy implements JmsLoadStra
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public void setSessionPolicy(SessionPolicy sessionPolicy) {
+
+        this.sessionPolicy = sessionPolicy;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

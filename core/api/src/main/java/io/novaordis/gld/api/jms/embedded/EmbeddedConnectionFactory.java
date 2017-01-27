@@ -67,6 +67,11 @@ public class EmbeddedConnectionFactory implements ConnectionFactory {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    public List<EmbeddedConnection> getCreatedConnections() {
+
+        return createdConnections;
+    }
+
     /**
      * May return an empty list if there were no message sent, or the queue does not exist.
      */

@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,57 +14,35 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.jms;
+package io.novaordis.gld.api;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.Test;
 
-import javax.jms.Session;
+import static org.junit.Assert.assertEquals;
 
-public class MockJmsEndpoint implements JmsEndpoint {
+/**
+ * @author Ovidiu Feodorov <ovidiu@novaordis.com>
+ * @since 1/27/17
+ */
+public class ErrorCodesTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = LoggerFactory.getLogger(MockJmsEndpoint.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private boolean closed;
-    private Session session;
-
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    public MockJmsEndpoint() {
-
-        this.closed = false;
-    }
-
-    // JmsEndpoint implementation --------------------------------------------------------------------------------------
-
-    @Override
-    public void close() throws Exception {
-
-        this.closed = true;
-    }
-
-    @Override
-    public Session getSession() {
-
-        return session;
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public boolean isClosed() {
+    // Tests -----------------------------------------------------------------------------------------------------------
 
-        return closed;
-    }
+    @Test
+    public void toStringTest() throws Exception {
 
-    public void setSession(Session s) {
-
-        this.session = s;
+        String s = ErrorCodes.GLD_10001.toString();
+        assertEquals("GLD-10001", s);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.jms;
 
+import io.novaordis.gld.api.ErrorCodes;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.jms.load.ConnectionPolicy;
@@ -32,6 +33,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.jms.*;
 import javax.jms.ConnectionFactory;
+import java.lang.IllegalStateException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -57,6 +62,14 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
     // the only connection per service when the connection policy is ConnectionPolicy.CONNECTION_PER_RUN
     //
     private Connection connection;
+
+    //
+    // the structures that associate sessions to threads, if SessionPolicy.SESSION_PER_THREAD is in effect; will
+    // be initialized by setSessionPolicy();
+    //
+    private final Object sessionMutex = new Object();
+    private Map<Thread, Session> threadsToSessions;
+    private Map<Session, Thread> sessionsToThreads;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -206,7 +219,7 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
     }
 
     @Override
-    public void checkIn(JmsEndpoint session) throws Exception {
+    public void checkIn(JmsEndpoint endpoint) throws Exception {
 
         //
         // look at the session policy and handle accordingly
@@ -218,15 +231,59 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
             // done with it, close
             //
 
+            Session session = endpoint.getSession();
             session.close();
         }
         else if (SessionPolicy.SESSION_PER_THREAD.equals(sessionPolicy)) {
 
             //
-            // get the session from the thread, and if not available, create one
+            // look for an association with the thread and fail if the endpoint is returned from a different thread
             //
 
-            throw new RuntimeException("NOT YET IMPLEMENTED");
+            Thread thread = Thread.currentThread();
+            Session endpointSession = endpoint.getSession();
+
+            synchronized (sessionMutex) {
+
+                Session session = threadsToSessions.get(thread);
+
+                if (session == null) {
+
+                    //
+                    // consistency check, make sure the session is not associated with any other thread
+                    //
+
+                    Thread thread2 = sessionsToThreads.get(endpointSession);
+
+                    if (thread2 != null) {
+
+                        throw new IllegalStateException(
+                                "session " + endpointSession + " was checked out by " + thread2 + " but is being checked in from a different thread " + thread);
+                    }
+
+                    //
+                    // no session associated with this thread, and our session not associated with any other thread
+                    //
+
+                    throw new IllegalArgumentException("no session associated with " + thread);
+                }
+
+                //
+                // we find a different session that our endpoint's session
+                //
+
+                if (!session.equals(endpointSession)) {
+
+                    throw new IllegalArgumentException(
+                            "the session associated with " + thread + " is different from the endpoint session");
+                }
+
+                //
+                // session match, we're good, leave the session alone but close the endpoint
+                //
+
+                endpoint.close();
+            }
         }
         else {
 
@@ -270,12 +327,55 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
             // we use the only one connection per service, created when the service is started
             //
 
-            return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            return createSession(connection);
+        }
+        else if (SessionPolicy.SESSION_PER_THREAD.equals(sessionPolicy)) {
+
+            //
+            // each thread has an associated session
+            //
+
+            Thread thread = Thread.currentThread();
+            Session session;
+
+            synchronized (sessionMutex) {
+
+                session = threadsToSessions.get(thread);
+
+                if (session == null) {
+
+                    session = createSession(connection);
+
+                    threadsToSessions.put(thread, session);
+
+                    log.debug("session " + session + " created and associated with " + thread);
+
+                    Thread oldThread = sessionsToThreads.put(session, thread);
+
+                    if (oldThread != null) {
+
+                        //
+                        // this can't happen
+                        //
+                        throw new IllegalStateException(ErrorCodes.GLD_10001.toString());
+                    }
+                }
+            }
+
+            return session;
         }
         else {
 
             throw new RuntimeException("WE DON'T KNOW HOW TO HANDLE " + sessionPolicy);
         }
+    }
+
+    /**
+     * Always creates a new session.
+     */
+    Session createSession(Connection connection) throws Exception {
+
+        return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
     }
 
     // Protected -------------------------------------------------------------------------------------------------------
@@ -285,9 +385,24 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
         this.connectionPolicy = cp;
     }
 
+    protected SessionPolicy getSessionPolicy() {
+
+        return this.sessionPolicy;
+    }
+
     protected void setSessionPolicy(SessionPolicy sp) {
 
         this.sessionPolicy = sp;
+
+        if (SessionPolicy.SESSION_PER_THREAD.equals(sp)) {
+
+            //
+            // reset and initialize data structures associated with the SESSION_PER_THREAD policy
+            //
+
+            threadsToSessions = new HashMap<>();
+            sessionsToThreads = new HashMap<>();
+        }
     }
 
     protected void setConnection(Connection c) {

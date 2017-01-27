@@ -101,18 +101,18 @@ public class LoadDriverImpl implements LoadDriver {
         OutputConfiguration outputConfiguration = c.getOutputConfiguration();
 
         //
-        // load strategy instantiation and installation; the load strategy usually initializes the key provider which is
-        // accessible with LoadStrategy.getKeyProvider()
-        //
-
-        LoadStrategy loadStrategy = LoadStrategyFactory.build(serviceConfiguration, loadConfiguration);
-
-        //
         // service initialization and configuration; it also establishes service - load strategy bidirectional
         // relationship
         //
 
         this.service = ExtensionInfrastructure.initializeExtensionService(serviceConfiguration);
+
+        //
+        // load strategy instantiation and installation; the load strategy usually initializes the key provider which is
+        // accessible with LoadStrategy.getKeyProvider()
+        //
+
+        LoadStrategy loadStrategy = LoadStrategyFactory.build(serviceConfiguration, loadConfiguration);
 
         //
         // at this point the service is instantiated and configured, initialize the reference relationships

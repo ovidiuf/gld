@@ -38,6 +38,17 @@ public interface JmsService extends Service {
 
     /**
      * Returns the endpoint to the service, to be recycled or closed.
+     *
+     * Note that for a thread sensitive connection or session policy, an endpoint cannot be checked in from a thread
+     * different than the one that checked the endpoint out. If this situation is detected, an IllegalStateException
+     * will be thrown.
+     *
+     * @exception IllegalStateException if a thread-sensitive connection or session policy is in effect, and the
+     * endpoint is returned by a different thread than the one that checked it out.
+     *
+     * @exception IllegalArgumentException if we are attempting to check in an endpoint for which we don't find
+     * the associated structures, in case SessionPolicy.SESSION_PER_THREAD or ConnectionPolicy.CONNECTION_PER_THREAD are
+     * in effect.
      */
     void checkIn(JmsEndpoint session) throws Exception;
 
