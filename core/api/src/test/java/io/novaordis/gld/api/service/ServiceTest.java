@@ -19,7 +19,6 @@ package io.novaordis.gld.api.service;
 import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.MockLoadDriver;
-import io.novaordis.gld.api.mock.load.MockLoadStrategy;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,10 +55,10 @@ public abstract class ServiceTest {
         LoadStrategy ls = s.getLoadStrategy();
         assertNull(ls);
 
-        MockLoadStrategy ms = new MockLoadStrategy();
-        s.setLoadStrategy(ms);
+        LoadStrategy ls2 = getMatchingLoadStrategy();
+        s.setLoadStrategy(ls2);
         ls = s.getLoadStrategy();
-        assertEquals(ms, ls);
+        assertEquals(ls2, ls);
 
         LoadDriver ld = s.getLoadDriver();
         assertNull(ld);
@@ -99,7 +98,7 @@ public abstract class ServiceTest {
 
         Service s = getServiceToTest();
 
-        MockLoadStrategy mls = new MockLoadStrategy();
+        LoadStrategy mls = getMatchingLoadStrategy();
         s.setLoadStrategy(mls);
 
         assertFalse(s.isStarted());
@@ -132,7 +131,7 @@ public abstract class ServiceTest {
 
         Service s = getServiceToTest();
 
-        MockLoadStrategy ms = new MockLoadStrategy();
+        LoadStrategy ms = getMatchingLoadStrategy();
         MockLoadDriver md = new MockLoadDriver();
 
         s.setLoadStrategy(ms);
@@ -157,6 +156,8 @@ public abstract class ServiceTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     protected abstract Service getServiceToTest() throws Exception;
+
+    protected abstract LoadStrategy getMatchingLoadStrategy();
 
     // Private ---------------------------------------------------------------------------------------------------------
 

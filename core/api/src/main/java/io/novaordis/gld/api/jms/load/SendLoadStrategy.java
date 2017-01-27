@@ -47,6 +47,7 @@ public class SendLoadStrategy extends JmsLoadStrategyBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    // TODO migrate to base
     private volatile boolean initialized;
 
     // Constructors ----------------------------------------------------------------------------------------------------

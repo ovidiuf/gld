@@ -144,11 +144,13 @@ public class JmsResourceManager {
 
         if (SessionPolicy.SESSION_PER_OPERATION.equals(sessionPolicy)) {
 
-            //
-            // close the session, we're not going to use it anymore
-            //
-            Session session = endpoint.getSession();
-            session.close();
+            throw  new RuntimeException("RETURN HERE");
+
+//            //
+//            // close the session, we're not going to use it anymore
+//            //
+//            Session session = endpoint.getSession();
+//            session.close();
         }
         else if (SessionPolicy.SESSION_PER_THREAD.equals(sessionPolicy)) {
 

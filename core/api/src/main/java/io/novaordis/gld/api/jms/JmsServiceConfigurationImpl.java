@@ -40,6 +40,10 @@ public class JmsServiceConfigurationImpl extends ServiceConfigurationImpl implem
             throws Exception {
 
         super(rawConfiguration, configurationDirectory);
+
+        //
+        // until we decide to give the load strategy
+        //
     }
 
     @Override

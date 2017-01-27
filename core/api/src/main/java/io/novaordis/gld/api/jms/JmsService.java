@@ -19,9 +19,6 @@ package io.novaordis.gld.api.jms;
 import io.novaordis.gld.api.jms.operation.JmsOperation;
 import io.novaordis.gld.api.service.Service;
 
-import javax.jms.JMSException;
-import javax.jms.Session;
-
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/20/17
@@ -34,8 +31,19 @@ public interface JmsService extends Service {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    Session checkOut(JmsOperation jmsOperation) throws Exception;
+    /**
+     * Checks out an endpoint, to be used by the load driver to perform an operation.
+     */
+    JmsEndpoint checkOut(JmsOperation jmsOperation) throws Exception;
 
-    void checkIn(Session session) throws Exception;
+    /**
+     * Returns the endpoint to the service, to be recycled or closed.
+     */
+    void checkIn(JmsEndpoint session) throws Exception;
+
+    javax.jms.Destination resolveDestination(Destination d);
+
+    javax.jms.ConnectionFactory resolveConnectionFactory(String connectionFactoryName);
+
 
 }

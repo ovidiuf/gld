@@ -18,13 +18,13 @@ package io.novaordis.gld.api.jms.operation;
 
 import io.novaordis.gld.api.jms.Consumer;
 import io.novaordis.gld.api.jms.JmsEndpoint;
+import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 import io.novaordis.gld.api.jms.load.ReceiveLoadStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
-import javax.jms.Session;
 import javax.jms.TextMessage;
 
 public class Receive extends JmsOperationBase {
@@ -40,46 +40,52 @@ public class Receive extends JmsOperationBase {
 
     private Long timeoutMs;
 
+    private Message message;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Receive(ReceiveLoadStrategy loadStrategy) {
+    public Receive(JmsLoadStrategy ls) {
 
-        super(loadStrategy);
-        this.timeoutMs = loadStrategy.getTimeoutMs();
+        super(ls);
+
+        ReceiveLoadStrategy receiveLoadStrategy = (ReceiveLoadStrategy)ls;
+        this.timeoutMs = receiveLoadStrategy.getTimeoutMs();
     }
 
     // JmsOperationBase overrides --------------------------------------------------------------------------------------
 
     @Override
-    public void perform(Session session) throws Exception {
+    public void perform(JmsEndpoint endpoint) throws Exception {
 
-//        Consumer consumer = (Consumer)endpoint;
-//        MessageConsumer jmsConsumer = consumer.getConsumer();
-//
-//        Message m;
-//
-//        if (timeoutMs == null) {
-//
-//            m = jmsConsumer.receive();
-//        }
-//        else {
-//
-//            m = jmsConsumer.receive(timeoutMs);
-//        }
-//
-//        if (trace) {
-//
-//            String messageID = m.getJMSMessageID();
-//            String textPayload = null;
-//            if (m instanceof TextMessage) {
-//
-//                textPayload = ((TextMessage)m).getText();
-//            }
-//
-//            log.trace(messageID + ": " + (textPayload == null ? "0:null" : textPayload.length() + ":" + textPayload));
-//        }
+        MessageConsumer jmsConsumer = ((Consumer) endpoint).getConsumer();
 
-        throw new RuntimeException("NYE");
+        if (timeoutMs == null) {
+
+            message = jmsConsumer.receive();
+        }
+        else {
+
+            message = jmsConsumer.receive(timeoutMs);
+        }
+
+        if (trace) {
+
+            if (message == null) {
+
+                log.trace("receive returned null");
+            }
+            else {
+
+                String messageID = message.getJMSMessageID();
+                String textPayload = null;
+                if (message instanceof TextMessage) {
+
+                    textPayload = ((TextMessage) message).getText();
+                }
+
+                log.trace(messageID + ": " + (textPayload == null ? "0:null" : textPayload.length() + ":" + textPayload));
+            }
+        }
     }
 
     @Override
@@ -90,6 +96,28 @@ public class Receive extends JmsOperationBase {
     @Override
     public boolean wasSuccessful() {
         throw new RuntimeException("wasSuccessful() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public String getPayload() {
+
+        if (message == null) {
+
+            return null;
+        }
+
+        if (message instanceof TextMessage) {
+
+            try {
+                return ((TextMessage) message).getText();
+            }
+            catch(Exception e) {
+
+                throw new IllegalStateException(e);
+            }
+        }
+
+        throw new RuntimeException("DON'T KNOW HOW TO HANDLE " + message);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -105,15 +133,16 @@ public class Receive extends JmsOperationBase {
     @Override
     public String toString() {
 
-        return "NOT YET IMPLEMENTED";
+        JmsLoadStrategy ls = getLoadStrategy();
 
-//        Destination d = getDestination();
-//        String name = d.getName();
-//
-//        return
-//            "receive[" +
-//                ((d.isQueue() ? "queue=" : "topic=") + name) +
-//                (", timeout=" + (getTimeoutMs() == null ? "0" : getTimeoutMs())) + "]";
+        if (ls == null) {
+
+            return "uninitialized";
+        }
+
+        io.novaordis.gld.api.jms.Destination d = ls.getDestination();
+
+        return d + " timeout=" + (getTimeoutMs() == null ? "0" : getTimeoutMs());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -36,7 +36,6 @@ public class MockServiceConfiguration extends LowLevelConfigurationBase implemen
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String loadStrategyName;
     private ServiceType serviceType;
     private int valueSize;
 
@@ -52,6 +51,7 @@ public class MockServiceConfiguration extends LowLevelConfigurationBase implemen
         super(raw, new File(System.getProperty("basedir")));
         this.serviceType = ServiceType.mock;
         this.valueSize = ServiceConfiguration.DEFAULT_VALUE_SIZE;
+        set(new HashMap<String, Object>(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
     }
 
     // ServiceConfiguration implementation -----------------------------------------------------------------------------
@@ -72,17 +72,7 @@ public class MockServiceConfiguration extends LowLevelConfigurationBase implemen
     @Override
     public String getLoadStrategyName() {
 
-        if (loadStrategyName != null) {
-
-            return loadStrategyName;
-        }
-
-        //
-        // if not explicitely set, defer to the underlying map
-        //
-        return get(String.class,
-                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
-                LoadStrategy.NAME_LABEL);
+        return get(String.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
     }
 
     @Override
@@ -95,7 +85,7 @@ public class MockServiceConfiguration extends LowLevelConfigurationBase implemen
 
     public void setLoadStrategyName(String s) {
 
-        this.loadStrategyName = s;
+        set(s, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
     }
 
     public void setImplementationConfigurationMap(Map<String, Object> m) {

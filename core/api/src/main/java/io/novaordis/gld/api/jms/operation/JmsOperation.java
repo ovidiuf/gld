@@ -21,8 +21,6 @@ import io.novaordis.gld.api.jms.Destination;
 import io.novaordis.gld.api.jms.JmsEndpoint;
 import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 
-import javax.jms.Session;
-
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/5/16
@@ -50,6 +48,21 @@ public interface JmsOperation extends Operation {
      */
     String getId();
 
-    void perform(Session session) throws Exception;
+    /**
+     * Performs the operation with the endpoint that was checked out from the service. After the operation is performed
+     * the endpoint should be checked in, according to the following pattern:
+     *
+     * JmsEndpoint endpoint = service.checkOut(operation);
+     *
+     * try {
+     *
+     *     operation.perform(endpoint);
+     * }
+     * finally {
+     *
+     *     service.checkIn(endpoint);
+     * }
+     */
+    void perform(JmsEndpoint endpoint) throws Exception;
 
 }

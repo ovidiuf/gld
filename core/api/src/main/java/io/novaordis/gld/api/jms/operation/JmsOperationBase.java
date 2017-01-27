@@ -17,11 +17,10 @@
 package io.novaordis.gld.api.jms.operation;
 
 import io.novaordis.gld.api.jms.Destination;
+import io.novaordis.gld.api.jms.JmsEndpoint;
 import io.novaordis.gld.api.jms.JmsService;
 import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 import io.novaordis.gld.api.service.Service;
-
-import javax.jms.Session;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -99,11 +98,11 @@ public abstract class JmsOperationBase implements JmsOperation {
 
         JmsService jmsService = (JmsService)s;
 
-        Session session = jmsService.checkOut(this);
+        JmsEndpoint endpoint = jmsService.checkOut(this);
 
         try {
 
-            perform(session);
+            perform(endpoint);
 
         }
         finally {
@@ -112,7 +111,7 @@ public abstract class JmsOperationBase implements JmsOperation {
             // handle the session according to the policy
             //
 
-            jmsService.checkIn(session);
+            jmsService.checkIn(endpoint);
 
         }
     }

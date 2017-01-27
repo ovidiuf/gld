@@ -122,6 +122,12 @@ public class EmbeddedMessageProducer implements MessageProducer {
     public void send(Message message) throws JMSException {
 
         messagesSentByThisProducer.add(message);
+
+        if (destination != null) {
+
+            EmbeddedDestination ed = (EmbeddedDestination)destination;
+            ed.add(message);
+        }
     }
 
     @Override

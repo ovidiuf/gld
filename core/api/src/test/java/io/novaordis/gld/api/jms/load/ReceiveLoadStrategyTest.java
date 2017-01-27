@@ -52,7 +52,7 @@ public class ReceiveLoadStrategyTest extends JmsLoadStrategyTest {
     @Override
     protected JmsLoadStrategyBase getLoadStrategyToTest() throws Exception {
 
-        return new SendLoadStrategy();
+        return new ReceiveLoadStrategy();
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

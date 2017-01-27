@@ -20,6 +20,7 @@ import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.jms.operation.Receive;
+import io.novaordis.gld.api.jms.operation.Send;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -47,6 +48,9 @@ public class ReceiveLoadStrategy extends JmsLoadStrategyBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    // TODO migrate to base
+    private volatile boolean initialized;
+
     private long timeoutMs;
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -66,8 +70,19 @@ public class ReceiveLoadStrategy extends JmsLoadStrategyBase {
     }
 
     @Override
+    public Receive next(Operation last, String lastWrittenKey, boolean runtimeShuttingDown) throws Exception {
+
+        return (Receive)super.next(last, lastWrittenKey, runtimeShuttingDown);
+    }
+
+    @Override
     protected Operation nextInternal(Operation last, String lastWrittenKey, boolean runtimeShuttingDown)
             throws Exception {
+
+        if (!initialized) {
+
+            throw new IllegalStateException(this + " was not initialized");
+        }
 
         return new Receive(this);
 
@@ -77,6 +92,11 @@ public class ReceiveLoadStrategy extends JmsLoadStrategyBase {
     public long getTimeoutMs() {
 
         return timeoutMs;
+    }
+
+    public void setTimeoutMs(Long timeoutMs) {
+
+        this.timeoutMs = timeoutMs;
     }
 
     @Override
@@ -91,15 +111,12 @@ public class ReceiveLoadStrategy extends JmsLoadStrategyBase {
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    void setTimeoutMs(Long timeoutMs) {
-
-        this.timeoutMs = timeoutMs;
-    }
 
     @Override
     protected void initInternal(
             ServiceConfiguration sc, Map<String, Object> loadStrategyRawConfig, LoadConfiguration lc) throws Exception {
-        throw new RuntimeException("initInternal() NOT YET IMPLEMENTED");
+
+        initialized = true;
     }
 
     // Protected -------------------------------------------------------------------------------------------------------

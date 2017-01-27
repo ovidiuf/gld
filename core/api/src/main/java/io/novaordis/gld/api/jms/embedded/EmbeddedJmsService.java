@@ -17,12 +17,16 @@
 package io.novaordis.gld.api.jms.embedded;
 
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
+import io.novaordis.gld.api.jms.Destination;
 import io.novaordis.gld.api.jms.JmsServiceBase;
-import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 import io.novaordis.utilities.UserErrorException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.Message;
+import javax.jms.Queue;
+import javax.jms.Topic;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,27 +40,77 @@ public class EmbeddedJmsService extends JmsServiceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    private static final Logger log = LoggerFactory.getLogger(EmbeddedJmsService.class);
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private Map<String, EmbeddedConnectionFactory> connectionFactories;
+    private Map<String, EmbeddedDestination> destinations;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public EmbeddedJmsService() {
+
+        this.connectionFactories = new HashMap<>();
+        this.destinations = new HashMap<>();
+    }
 
     // JmsService implementation ---------------------------------------------------------------------------------------
 
     @Override
     public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {
 
-        String connectionFactoryName = serviceConfiguration.get(
-                String.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
-                JmsLoadStrategy.CONNECTION_FACTORY_LABEL);
+        super.configure(serviceConfiguration);
 
-        if (connectionFactoryName == null) {
+        log.debug(this + " configured");
+    }
 
-            throw new IllegalArgumentException("missing connection factory name");
+    @Override
+    public javax.jms.Destination resolveDestination(Destination d) {
+
+        //
+        // for the time being, any destination "exists"
+        //
+
+        EmbeddedDestination ed = destinations.get(d.getName());
+
+        if (ed != null) {
+
+            if (ed instanceof javax.jms.Queue && d instanceof Topic ||
+                    ed instanceof javax.jms.Topic && d instanceof Queue) {
+
+                throw new IllegalArgumentException(
+                        "destination " + d.getName() + " exists but it is a " +
+                                (ed instanceof javax.jms.Queue ? "queue" : "topic"));
+            }
+        }
+        else {
+
+            ed = d.isQueue() ? new EmbeddedQueue(d.getName()) : new EmbeddedTopic(d.getName());
+            destinations.put(d.getName(), ed);
         }
 
-        setConnectionFactory(new EmbeddedConnectionFactory());
+        return ed;
+    }
+
+    @Override
+    public ConnectionFactory resolveConnectionFactory(String connectionFactoryName) {
+
+        //
+        // for the time being, any connection factory "exists"
+        //
+
+        EmbeddedConnectionFactory cf = null;
+
+        if ((cf = connectionFactories.get(connectionFactoryName)) == null) {
+
+            cf = new EmbeddedConnectionFactory();
+            connectionFactories.put(connectionFactoryName, cf);
+        }
+
+        return cf;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -74,9 +128,37 @@ public class EmbeddedJmsService extends JmsServiceBase {
         return result;
     }
 
+    public void addToDestination(String name, boolean queue, Message m) {
+
+        EmbeddedDestination d = destinations.get(name);
+
+        if (d == null) {
+
+            d = queue ? new EmbeddedQueue(name) : new EmbeddedTopic(name);
+            destinations.put(name, d);
+
+        }
+        else {
+
+            if (d instanceof Queue && !queue || d instanceof Topic && queue) {
+
+                throw new IllegalArgumentException(d + " exists and it is a " + d.getClass().getSimpleName());
+            }
+        }
+
+        d.add(m);
+    }
+
+    @Override
+    public String toString() {
+
+        return "EmbeddedJmsService[" + Integer.toHexString(System.identityHashCode(this)) + "]";
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
 
     // Private ---------------------------------------------------------------------------------------------------------
 

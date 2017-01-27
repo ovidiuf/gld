@@ -31,7 +31,7 @@ public class EmbeddedMessageConsumer implements MessageConsumer {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Destination destination;
+    private EmbeddedDestination destination;
 
     private boolean closed;
 
@@ -39,7 +39,7 @@ public class EmbeddedMessageConsumer implements MessageConsumer {
 
     public EmbeddedMessageConsumer(Destination destination) {
 
-        this.destination = destination;
+        this.destination = (EmbeddedDestination)destination;
         this.closed = false;
     }
 
@@ -70,9 +70,9 @@ public class EmbeddedMessageConsumer implements MessageConsumer {
     }
 
     @Override
-    public Message receive(long l) throws JMSException {
+    public Message receive(long timeoutMs) throws JMSException {
 
-        return new EmbeddedTextMessage("TEST");
+        return destination.get(timeoutMs);
     }
 
     @Override

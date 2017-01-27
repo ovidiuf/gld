@@ -16,10 +16,22 @@
 
 package io.novaordis.gld.api.jms.operation;
 
-import io.novaordis.gld.api.jms.load.MockJmsLoadStrategy;
+import io.novaordis.gld.api.configuration.MockLoadConfiguration;
+import io.novaordis.gld.api.jms.MockJmsService;
+import io.novaordis.gld.api.jms.MockJmsServiceConfiguration;
+import io.novaordis.gld.api.jms.Queue;
+import io.novaordis.gld.api.jms.embedded.EmbeddedConnection;
+import io.novaordis.gld.api.jms.embedded.EmbeddedQueue;
+import io.novaordis.gld.api.jms.embedded.EmbeddedTextMessage;
+import io.novaordis.gld.api.jms.load.ConnectionPolicy;
+import io.novaordis.gld.api.jms.load.MockReceiveLoadStrategy;
+import io.novaordis.gld.api.jms.load.ReceiveLoadStrategy;
+import io.novaordis.gld.api.jms.load.SessionPolicy;
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -42,37 +54,62 @@ public class ReceiveTest extends JmsOperationTest {
     @Test
     public void perform_NoTimeout() throws Exception {
 
-        fail("return here");
+        ReceiveLoadStrategy ls = new ReceiveLoadStrategy();
+        MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
+        assertEquals("/jms/test-queue", msc.getQueueName());
+        msc.setLoadStrategyName(ls.getName());
+        ls.init(msc, new MockLoadConfiguration());
 
-//        ReceiveLoadStrategy loadStrategy = new ReceiveLoadStrategy();
-//        Receive receive = getJmsOperationToTest(loadStrategy);
-//
-//        EmbeddedQueue jmsQueue = new EmbeddedQueue("TEST");
-//        EmbeddedSession jmsSession = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
-//        EmbeddedMessageConsumer jmsConsumer = (EmbeddedMessageConsumer)jmsSession.createConsumer(jmsQueue);
-//
-//        Consumer endpoint = new Consumer(jmsConsumer, jmsSession);
-//
-//        receive.perform(endpoint);
+        Receive receive = ls.next(null, null, false);
+
+        MockJmsService service = new MockJmsService();
+        service.setConnectionPolicy(ConnectionPolicy.CONNECTION_PER_RUN);
+        service.setSessionPolicy(SessionPolicy.SESSION_PER_OPERATION);
+        service.setConnection(new EmbeddedConnection());
+
+        EmbeddedQueue q = (EmbeddedQueue)service.resolveDestination(new Queue("/jms/test-queue"));
+        q.add(new EmbeddedTextMessage("b3snB3"));
+
+        receive.perform(service);
+
+        String s = receive.getPayload();
+        assertEquals("b3snB3", s);
     }
 
     @Test
     public void perform_WithTimeout() throws Exception {
 
-        fail("return here");
+        long timeout = 10L;
 
-//        ReceiveLoadStrategy loadStrategy = new ReceiveLoadStrategy();
-//        loadStrategy.setTimeoutMs(7L);
-//
-//        Receive receive = getJmsOperationToTest(loadStrategy);
-//
-//        EmbeddedQueue jmsQueue = new EmbeddedQueue("TEST");
-//        EmbeddedSession jmsSession = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
-//        EmbeddedMessageConsumer jmsConsumer = (EmbeddedMessageConsumer)jmsSession.createConsumer(jmsQueue);
-//
-//        Consumer endpoint = new Consumer(jmsConsumer, jmsSession);
-//
-//        receive.perform(endpoint);
+        ReceiveLoadStrategy ls = new ReceiveLoadStrategy();
+        ls.setTimeoutMs(timeout);
+
+        MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
+        assertEquals("/jms/test-queue", msc.getQueueName());
+        msc.setLoadStrategyName(ls.getName());
+        ls.init(msc, new MockLoadConfiguration());
+
+        Receive receive = ls.next(null, null, false);
+
+        MockJmsService service = new MockJmsService();
+        service.setConnectionPolicy(ConnectionPolicy.CONNECTION_PER_RUN);
+        service.setSessionPolicy(SessionPolicy.SESSION_PER_OPERATION);
+        service.setConnection(new EmbeddedConnection());
+
+        EmbeddedQueue q = (EmbeddedQueue)service.resolveDestination(new Queue("/jms/test-queue"));
+
+        assertTrue(q.isEmpty());
+
+        long t0 = System.currentTimeMillis();
+
+        receive.perform(service);
+
+        long t1 = System.currentTimeMillis();
+
+        String s = receive.getPayload();
+        assertNull(s);
+
+        assertTrue(t1 - t0 >= timeout);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -80,10 +117,14 @@ public class ReceiveTest extends JmsOperationTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected Send getOperationToTest(String key) throws Exception {
+    protected Receive getOperationToTest(String key) throws Exception {
 
-        MockJmsLoadStrategy ms = new MockJmsLoadStrategy();
-        return new Send(ms);
+        MockReceiveLoadStrategy ms = new MockReceiveLoadStrategy();
+
+        Receive r = new Receive(ms);
+        r.setId(key);
+
+        return r;
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

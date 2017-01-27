@@ -47,6 +47,9 @@ public class ConsumerTest extends JmsEndpointTest {
     public void close() throws Exception {
 
         EmbeddedSession session = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
+
+        assertFalse(session.isClosed());
+
         EmbeddedQueue queue = new EmbeddedQueue("TEST");
         Consumer c = getEndpointToTest(session, queue);
 

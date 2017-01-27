@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.configuration;
 
+import io.novaordis.gld.api.http.HttpServiceConfigurationImpl;
 import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.gld.api.cache.CacheServiceConfigurationImpl;
 import io.novaordis.gld.api.jms.JmsServiceConfigurationImpl;
@@ -143,7 +144,7 @@ public class YamlBasedConfiguration implements Configuration {
             else if (ServiceType.http.name().equals(serviceType)) {
 
                 serviceConfiguration =
-                        new JmsServiceConfigurationImpl(serviceConfigurationMap, configurationDirectory);
+                        new HttpServiceConfigurationImpl(serviceConfigurationMap, configurationDirectory);
             }
             else {
 

@@ -19,15 +19,16 @@ package io.novaordis.gld.api.jms;
 import javax.jms.Session;
 
 /**
- * A wrapper for a MessageProducer or a MessageConsumer.
+ * This interface was introduced to allow for flexibility in implementing the load strategy. A JMS load strategy can
+ * choose to recycle Connections, Sessions or even MessageProducers and MessageConsumers. The JmsEndpoint abstracts
+ * out all these things: the load driver does not care how a message is sent by the JmsService implementation, as long
+ * as it complies with the load strategy.
  *
- * @see JmsResourceManager
  */
 public interface JmsEndpoint {
 
     /**
-     * Closes the endpoint and the endpoint only - does not close the associated session, because we may be in a
-     * situation where we want to reuse the session for further work.
+     * Closes the endpoint and the associated resources, according to the load strategy in effect.
      */
     void close() throws Exception;
 

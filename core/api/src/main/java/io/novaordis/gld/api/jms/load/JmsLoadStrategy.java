@@ -17,7 +17,6 @@
 package io.novaordis.gld.api.jms.load;
 
 import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.jms.ConnectionFactory;
 import io.novaordis.gld.api.jms.Destination;
 import io.novaordis.gld.api.jms.JmsServiceConfiguration;
 
@@ -41,7 +40,7 @@ public interface JmsLoadStrategy extends LoadStrategy {
 
     Destination getDestination();
 
-    ConnectionFactory getConnectionFactory();
+    String getConnectionFactoryName();
 
     /**
      * @return the connection policy employed by this load strategy. The default is CONNECTION_PER_RUN, which means

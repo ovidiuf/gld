@@ -16,7 +16,6 @@
 
 package io.novaordis.gld.api.jms.load;
 
-import io.novaordis.gld.api.jms.ConnectionFactory;
 import io.novaordis.gld.api.jms.Destination;
 
 /**
@@ -41,18 +40,27 @@ public class MockJmsLoadStrategy extends MockLoadStrategy implements JmsLoadStra
     }
 
     @Override
-    public ConnectionFactory getConnectionFactory() {
-        throw new RuntimeException("getConnectionFactory() NOT YET IMPLEMENTED");
+    public String getConnectionFactoryName() {
+
+        return "mock-connection-factory-name";
     }
 
     @Override
     public ConnectionPolicy getConnectionPolicy() {
-        throw new RuntimeException("getConnectionPolicy() NOT YET IMPLEMENTED");
+
+        //
+        // default behavior
+        //
+        return ConnectionPolicy.CONNECTION_PER_RUN;
     }
 
     @Override
     public SessionPolicy getSessionPolicy() {
-        throw new RuntimeException("getSessionPolicy() NOT YET IMPLEMENTED");
+
+        //
+        // default behavior
+        //
+        return SessionPolicy.SESSION_PER_OPERATION;
     }
 
     @Override

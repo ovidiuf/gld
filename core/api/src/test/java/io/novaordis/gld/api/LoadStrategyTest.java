@@ -372,8 +372,9 @@ public abstract class LoadStrategyTest {
     @Test
     public void maxOperations_remainingOperations() throws Exception {
 
+        MockServiceConfiguration msc = getCorrespondingServiceConfiguration();
         LoadStrategyBase lsb = (LoadStrategyBase)getLoadStrategyToTest();
-        initialize(lsb);
+        initialize(lsb, msc);
 
         assertNull(lsb.getOperations());
         assertNull(lsb.getRemainingOperations());
@@ -410,8 +411,9 @@ public abstract class LoadStrategyTest {
     @Test
     public void next_Unlimited() throws Exception {
 
+        MockServiceConfiguration msc = getCorrespondingServiceConfiguration();
         LoadStrategy ls = getLoadStrategyToTest();
-        initialize(ls);
+        initialize(ls, msc);
 
         assertNull(ls.getOperations());
 
@@ -428,8 +430,9 @@ public abstract class LoadStrategyTest {
     @Test
     public void next_Limited() throws Exception {
 
+        MockServiceConfiguration msc = getCorrespondingServiceConfiguration();
         LoadStrategyBase lsb = (LoadStrategyBase)getLoadStrategyToTest();
-        initialize(lsb);
+        initialize(lsb, msc);
 
         lsb.setOperations(2L);
 
@@ -449,9 +452,9 @@ public abstract class LoadStrategyTest {
     @Test
     public void next_Multithreaded_ByDefaultProducesAnUnlimitedNumberOfOperations() throws Exception {
 
-        final LoadStrategy ls = getLoadStrategyToTest();
-
-        initialize(ls);
+        MockServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        LoadStrategy ls = getLoadStrategyToTest();
+        initialize(ls, msc);
 
         assertNull(ls.getOperations());
 
@@ -490,8 +493,9 @@ public abstract class LoadStrategyTest {
     @Test
     public void next_Multithreaded_LimitedNumberOfOperations() throws Exception {
 
-        final LoadStrategyBase ls = (LoadStrategyBase)getLoadStrategyToTest();
-        initialize(ls);
+        MockServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        LoadStrategyBase ls = (LoadStrategyBase)getLoadStrategyToTest();
+        initialize(ls, msc);
 
         long operationsPerStrategy = 1000;
         ls.setOperations(operationsPerStrategy);
@@ -598,7 +602,7 @@ public abstract class LoadStrategyTest {
 
     protected abstract MockServiceConfiguration getCorrespondingServiceConfiguration();
 
-    protected abstract void initialize(LoadStrategy ls) throws Exception;
+    protected abstract void initialize(LoadStrategy ls, MockServiceConfiguration msc) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

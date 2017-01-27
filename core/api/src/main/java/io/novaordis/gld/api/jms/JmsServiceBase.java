@@ -17,15 +17,21 @@
 package io.novaordis.gld.api.jms;
 
 import io.novaordis.gld.api.LoadStrategy;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.jms.load.ConnectionPolicy;
 import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 import io.novaordis.gld.api.jms.load.SessionPolicy;
 import io.novaordis.gld.api.jms.operation.JmsOperation;
+import io.novaordis.gld.api.jms.operation.Receive;
+import io.novaordis.gld.api.jms.operation.Send;
 import io.novaordis.gld.api.service.ServiceBase;
 import io.novaordis.gld.api.service.ServiceType;
+import io.novaordis.utilities.UserErrorException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.jms.Connection;
-import javax.jms.Session;
+import javax.jms.*;
+import javax.jms.ConnectionFactory;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -35,17 +41,26 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    private static final Logger log = LoggerFactory.getLogger(JmsServiceBase.class);
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private javax.jms.ConnectionFactory connectionFactory;
     private ConnectionPolicy connectionPolicy;
     private SessionPolicy sessionPolicy;
 
+    private String connectionFactoryName;
+    private ConnectionFactory connectionFactory;
+
+    //
+    // the only connection per service when the connection policy is ConnectionPolicy.CONNECTION_PER_RUN
+    //
+    private Connection connection;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // JmsService implementation ---------------------------------------------------------------------------------------
+    // JmsService implementation and overrides -------------------------------------------------------------------------
 
     @Override
     public ServiceType getType() {
@@ -54,42 +69,144 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
     }
 
     @Override
-    public Session checkOut(JmsOperation jmsOperation) throws Exception {
+    public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {
+
+        if (!(serviceConfiguration instanceof JmsServiceConfiguration)) {
+
+            throw new IllegalArgumentException("invalid JMS service configuration " + serviceConfiguration);
+        }
 
         //
-        // look at connection policy and at the session policy
-        //
+        // TODO this is convoluted and ... wrong. We must not do anything related to the load strategy, because
+        // later code will extract configuration when building the load strategy instance. We need to review this
+        // See setLoadStrategy(LoadStrategy s) below.
+    }
 
-        Session session;
+    /**
+     * We intercept the method that installs the load strategy to get some configuration from it.
+     */
+    @Override
+    public void setLoadStrategy(LoadStrategy s) {
 
-        if (SessionPolicy.SESSION_PER_OPERATION.equals(sessionPolicy)) {
+        if (!(s instanceof JmsLoadStrategy)) {
 
-            //
-            // we need a new session
-            //
-
-            Connection c = getConnection();
-
-            session = c.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        }
-        else if (SessionPolicy.SESSION_PER_THREAD.equals(sessionPolicy)) {
-
-            //
-            // get the session from the thread, and if not available, create one
-            //
-
-            throw new RuntimeException("NOT YET IMPLEMENTED");
-        }
-        else {
-
-            throw new RuntimeException(sessionPolicy + " SUPPORT NOT YET IMPLEMENTED");
+            throw new IllegalArgumentException("invalid load strategy " + s);
         }
 
-        return session;
+        super.setLoadStrategy(s);
+
+        JmsLoadStrategy jmsLoadStrategy = (JmsLoadStrategy)s;
+
+        setConnectionPolicy(jmsLoadStrategy.getConnectionPolicy());
+        setSessionPolicy(jmsLoadStrategy.getSessionPolicy());
+        this.connectionFactoryName = jmsLoadStrategy.getConnectionFactoryName();
     }
 
     @Override
-    public void checkIn(Session session) throws Exception {
+    public void start() throws Exception {
+
+        super.start();
+
+        synchronized (this) {
+
+            //
+            // TODO this implies ConnectionPolicy.CONNECTION_PER_RUN, this code will need to be reviewed
+            //
+
+            if (connection != null) {
+
+                //
+                // already started
+                //
+
+                log.debug(this + " already started");
+
+                return;
+            }
+
+            //
+            // look up the ConnectionFactory
+            //
+
+            connectionFactory = resolveConnectionFactory(connectionFactoryName);
+            Connection c  = connectionFactory.createConnection();
+            setConnection(c);
+        }
+    }
+
+    @Override
+    public boolean isStarted() {
+
+        synchronized (this) {
+
+            return connection != null;
+        }
+    }
+
+    @Override
+    public void stop() {
+
+        super.stop();
+
+        synchronized (this) {
+
+            //
+            // TODO this implies ConnectionPolicy.CONNECTION_PER_RUN, this code will need to be reviewed
+            //
+
+            if (connection == null) {
+
+                return;
+            }
+
+            try {
+
+                connection.stop();
+            }
+            catch(Exception e) {
+
+                log.warn("failed to stop connection", e);
+
+            }
+
+            connection = null;
+        }
+    }
+
+
+    @Override
+    public JmsEndpoint checkOut(JmsOperation jmsOperation) throws Exception {
+
+        Connection connection = getConnection();
+
+        Session session = getSession(connection);
+
+        JmsEndpoint endpoint;
+
+        javax.jms.Destination d = resolveDestination(jmsOperation.getDestination());
+
+        if (jmsOperation instanceof Send) {
+
+            MessageProducer jmsProducer = session.createProducer(d);
+            endpoint = new Producer(jmsProducer, session);
+
+        }
+        else if (jmsOperation instanceof Receive) {
+
+            MessageConsumer jmsConsumer = session.createConsumer(d);
+            endpoint = new Consumer(jmsConsumer, session);
+        }
+        else {
+
+            throw new IllegalArgumentException("unknown JMS operation " + jmsOperation);
+        }
+
+        log.debug("created " + endpoint);
+        return endpoint;
+    }
+
+    @Override
+    public void checkIn(JmsEndpoint session) throws Exception {
 
         //
         // look at the session policy and handle accordingly
@@ -117,44 +234,65 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
         }
     }
 
-    /**
-     * We intercept the method that installs the load strategy to get some configuration from it.
-     */
-    @Override
-    public void setLoadStrategy(LoadStrategy s) {
-
-        if (!(s instanceof JmsLoadStrategy)) {
-
-            throw new IllegalArgumentException("invalid load strategy " + s);
-        }
-
-        super.setLoadStrategy(s);
-
-        JmsLoadStrategy jmsLoadStrategy = (JmsLoadStrategy)s;
-
-        this.connectionPolicy = jmsLoadStrategy.getConnectionPolicy();
-        this.sessionPolicy = jmsLoadStrategy.getSessionPolicy();
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
+
+    /**
+     * May return null if the service was not started or the start was not successful.
+     */
+    public ConnectionFactory getConnectionFactory() {
+
+        return connectionFactory;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     Connection getConnection() throws Exception {
 
-        return connectionFactory.createConnection();
+        if (ConnectionPolicy.CONNECTION_PER_RUN.equals(connectionPolicy)) {
+
+            //
+            // we use the only one connection per service, created when the service is started
+            //
+
+            return connection;
+        }
+        else {
+
+            throw new RuntimeException("WE DON'T KNOW HOW TO HANDLE " + connectionPolicy);
+        }
+    }
+
+    Session getSession(Connection connection) throws Exception {
+
+        if (SessionPolicy.SESSION_PER_OPERATION.equals(sessionPolicy)) {
+
+            //
+            // we use the only one connection per service, created when the service is started
+            //
+
+            return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        }
+        else {
+
+            throw new RuntimeException("WE DON'T KNOW HOW TO HANDLE " + sessionPolicy);
+        }
     }
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected void setConnectionFactory(javax.jms.ConnectionFactory cf) {
+    protected void setConnectionPolicy(ConnectionPolicy cp) {
 
-        this.connectionFactory = cf;
+        this.connectionPolicy = cp;
     }
 
-    protected javax.jms.ConnectionFactory getConnectionFactory() {
+    protected void setSessionPolicy(SessionPolicy sp) {
 
-        return connectionFactory;
+        this.sessionPolicy = sp;
+    }
+
+    protected void setConnection(Connection c) {
+
+        this.connection = c;
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

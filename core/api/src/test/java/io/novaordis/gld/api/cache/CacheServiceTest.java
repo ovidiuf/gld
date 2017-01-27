@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.cache;
 
+import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.service.ServiceTest;
 import io.novaordis.gld.api.service.ServiceType;
 import org.junit.Test;
@@ -53,6 +54,9 @@ public abstract class CacheServiceTest extends ServiceTest {
 
     @Override
     protected abstract CacheService getServiceToTest() throws Exception;
+
+    @Override
+    protected abstract LoadStrategy getMatchingLoadStrategy();
 
     // Private ---------------------------------------------------------------------------------------------------------
 

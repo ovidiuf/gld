@@ -19,7 +19,6 @@ package io.novaordis.gld.api.jms.load;
 import io.novaordis.gld.api.LoadStrategyBase;
 import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.gld.api.jms.ConnectionFactory;
 import io.novaordis.gld.api.jms.Destination;
 import io.novaordis.gld.api.jms.JmsServiceConfiguration;
 import io.novaordis.gld.api.jms.Queue;
@@ -43,7 +42,7 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private Destination destination;
-    private ConnectionFactory connectionFactory;
+    private String connectionFactoryName;
     private ConnectionPolicy connectionPolicy;
     private SessionPolicy sessionPolicy;
     private int messageSize;
@@ -116,15 +115,13 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
         // required connection factory
         //
 
-        String connectionFactoryName = sc.remove(String.class,
+        this.connectionFactoryName = sc.remove(String.class,
                 ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.CONNECTION_FACTORY_LABEL);
 
         if (connectionFactoryName == null) {
 
             throw new UserErrorException("required configuration element 'connection-factory' missing");
         }
-
-        this.connectionFactory = new ConnectionFactory(connectionFactoryName);
 
         //
         // optional message size
@@ -195,9 +192,9 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
     }
 
     @Override
-    public ConnectionFactory getConnectionFactory() {
+    public String getConnectionFactoryName() {
 
-        return connectionFactory;
+        return connectionFactoryName;
     }
 
     @Override
@@ -225,11 +222,6 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public void setDestination(Destination d) {
-
-        this.destination = d;
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

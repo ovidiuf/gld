@@ -50,8 +50,7 @@ public class MockJmsEndpoint implements JmsEndpoint {
 
     @Override
     public Session getSession() {
-
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        throw new RuntimeException("getSession() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

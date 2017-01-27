@@ -17,10 +17,16 @@
 package io.novaordis.gld.api.jms;
 
 import io.novaordis.gld.api.configuration.MockServiceConfiguration;
+import io.novaordis.gld.api.configuration.ServiceConfiguration;
+import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.utilities.UserErrorException;
 
+import java.util.HashMap;
+
 /**
+ * Contains the default configuration expected from a JMS service, plus mock mandatory elements.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/6/16
  */
@@ -33,6 +39,18 @@ public class MockJmsServiceConfiguration extends MockServiceConfiguration implem
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public MockJmsServiceConfiguration() {
+
+        //
+        // we populate the service configuration with mandatory elements, so the initialization works well
+        //
+
+        set(new HashMap<String, Object>(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
+        set("/jms/test-queue", ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.QUEUE_LABEL);
+        set("/jms/TestConnectionFactory",
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.CONNECTION_FACTORY_LABEL);
+    }
 
     // ServiceConfiguration implementation -----------------------------------------------------------------------------
 
@@ -55,6 +73,11 @@ public class MockJmsServiceConfiguration extends MockServiceConfiguration implem
     public void setMessageSize(int i) {
 
         setValueSize(i);
+    }
+
+    public String getQueueName() {
+
+        return get(String.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.QUEUE_LABEL);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

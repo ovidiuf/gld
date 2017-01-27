@@ -16,12 +16,12 @@
 
 package io.novaordis.gld.api.jms.operation;
 
-import io.novaordis.gld.api.jms.embedded.EmbeddedQueue;
+import io.novaordis.gld.api.jms.JmsEndpoint;
+import io.novaordis.gld.api.jms.Producer;
 import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jms.Destination;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
@@ -68,19 +68,34 @@ public class Send extends JmsOperationBase {
     }
 
     @Override
-    public void perform(Session session) throws Exception {
+    public void perform(JmsEndpoint endpoint) throws Exception {
 
-        Destination destination = new EmbeddedQueue(getLoadStrategy().getDestination().getName());
-        MessageProducer producer = session.createProducer(destination);
+        Session jmsSession = endpoint.getSession();
+        MessageProducer jmsProducer = ((Producer) endpoint).getProducer();
         String payload = getPayload();
-        TextMessage m = session.createTextMessage(payload);
+        TextMessage m = jmsSession.createTextMessage(payload);
 
-        // if (trace) { log.trace("sending message with payload \"" + payload + "\""); }
+        if (trace) { log.trace("sending message with payload \"" + payload + "\""); }
 
-        producer.send(m);
+        jmsProducer.send(m);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+
+        JmsLoadStrategy ls = getLoadStrategy();
+
+        if (ls == null) {
+
+            return "uninitialized";
+        }
+
+        io.novaordis.gld.api.jms.Destination d = ls.getDestination();
+
+        return "" + d;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

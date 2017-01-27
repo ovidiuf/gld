@@ -16,19 +16,21 @@
 
 package io.novaordis.gld.api.jms.operation;
 
-import io.novaordis.gld.api.jms.JmsService;
+import io.novaordis.gld.api.configuration.MockLoadConfiguration;
 import io.novaordis.gld.api.jms.MockJmsService;
-import io.novaordis.gld.api.jms.Producer;
-import io.novaordis.gld.api.jms.embedded.EmbeddedMessageProducer;
+import io.novaordis.gld.api.jms.MockJmsServiceConfiguration;
+import io.novaordis.gld.api.jms.Queue;
+import io.novaordis.gld.api.jms.embedded.EmbeddedConnection;
 import io.novaordis.gld.api.jms.embedded.EmbeddedQueue;
-import io.novaordis.gld.api.jms.embedded.EmbeddedSession;
+import io.novaordis.gld.api.jms.load.ConnectionPolicy;
 import io.novaordis.gld.api.jms.load.MockJmsLoadStrategy;
 import io.novaordis.gld.api.jms.load.SendLoadStrategy;
+import io.novaordis.gld.api.jms.load.SessionPolicy;
 import org.junit.Test;
 
-import javax.jms.Session;
+import javax.jms.TextMessage;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -52,44 +54,23 @@ public class SendTest extends JmsOperationTest {
     public void perform() throws Exception {
 
         SendLoadStrategy ls = new SendLoadStrategy();
+        MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
+        assertEquals("/jms/test-queue", msc.getQueueName());
+        msc.setLoadStrategyName(ls.getName());
+        ls.init(msc, new MockLoadConfiguration());
 
         Send send = ls.next(null, null, false);
 
-        EmbeddedQueue jmsQueue = new EmbeddedQueue("TEST");
-        EmbeddedSession jmsSession = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
-        EmbeddedMessageProducer jmsProducer = (EmbeddedMessageProducer)jmsSession.createProducer(jmsQueue);
-
-        Producer endpoint = new Producer(jmsProducer, jmsSession);
-
         MockJmsService service = new MockJmsService();
+        service.setConnectionPolicy(ConnectionPolicy.CONNECTION_PER_RUN);
+        service.setSessionPolicy(SessionPolicy.SESSION_PER_OPERATION);
+        service.setConnection(new EmbeddedConnection());
 
         send.perform(service);
-    }
 
-    @Test
-    public void perform_SpecificMessageSize() throws Exception {
-
-        fail("return here");
-
-//        int messageSize = 758;
-//
-//        SendLoadStrategy loadStrategy = new SendLoadStrategy();
-//        loadStrategy.setMessageSize(messageSize);
-//
-//        Send send = getJmsOperationToTest(loadStrategy);
-//
-//        EmbeddedQueue jmsQueue = new EmbeddedQueue("TEST");
-//        EmbeddedSession jmsSession = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
-//        EmbeddedMessageProducer jmsProducer = (EmbeddedMessageProducer)jmsSession.createProducer(jmsQueue);
-//
-//        Producer endpoint = new Producer(jmsProducer, jmsSession);
-//
-//        send.perform(endpoint);
-//
-//        List<Message> messages = jmsProducer.getMessagesSentByThisProducer();
-//        assertEquals(1, messages.size());
-//        Message m = messages.get(0);
-//        assertEquals(messageSize, ((TextMessage)m).getText().length());
+        EmbeddedQueue q = (EmbeddedQueue)service.resolveDestination(new Queue("/jms/test-queue"));
+        TextMessage m = (TextMessage)q.get(0);
+        assertEquals(ls.getReusedValue(), m.getText());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

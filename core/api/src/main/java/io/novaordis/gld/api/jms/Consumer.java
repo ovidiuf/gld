@@ -32,8 +32,8 @@ public class Consumer implements JmsEndpoint {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Consumer(MessageConsumer consumer, Session session)
-    {
+    public Consumer(MessageConsumer consumer, Session session) {
+
         this.consumer = consumer;
         this.session = session;
     }

@@ -27,7 +27,6 @@ import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
 import io.novaordis.gld.api.cache.operation.Read;
 import io.novaordis.gld.api.cache.operation.Write;
-import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -507,12 +506,12 @@ public class ReadThenWriteOnMissLoadStrategyTest extends LoadStrategyTest {
     }
 
     @Override
-    protected void initialize(LoadStrategy ls) throws Exception {
+    protected void initialize(LoadStrategy ls, MockServiceConfiguration msc) throws Exception {
 
         assertTrue(ls instanceof ReadThenWriteOnMissLoadStrategy);
-        MockCacheServiceConfiguration sc = getCorrespondingServiceConfiguration();
-        sc.set(ls.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
-        ls.init(sc, new MockLoadConfiguration());
+        assertTrue(msc instanceof MockCacheServiceConfiguration);
+        msc.set(ls.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
+        ls.init(msc, new MockLoadConfiguration());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

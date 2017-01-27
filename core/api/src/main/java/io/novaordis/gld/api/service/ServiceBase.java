@@ -39,6 +39,9 @@ public abstract class ServiceBase implements Service {
     private LoadDriver loadDriver;
     private LoadStrategy loadStrategy;
 
+    //
+    // subclasses may chose to manage this state differently, always use isStarted()
+    //
     private boolean started;
 
     // Constructors ----------------------------------------------------------------------------------------------------
