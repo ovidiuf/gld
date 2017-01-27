@@ -28,6 +28,7 @@ import io.novaordis.gld.api.jms.load.MockJmsLoadStrategy;
 import io.novaordis.gld.api.jms.load.ReceiveLoadStrategy;
 import io.novaordis.gld.api.jms.load.SendLoadStrategy;
 import io.novaordis.gld.api.jms.operation.JmsOperation;
+import io.novaordis.gld.api.jms.operation.MockSend;
 import io.novaordis.gld.api.service.ServiceTest;
 import io.novaordis.gld.api.service.ServiceType;
 import org.junit.Test;
@@ -101,7 +102,7 @@ public abstract class JmsServiceTest extends ServiceTest {
     //
 
     @Test
-    public void ConnectionPolicy_CONNECTION_PER_RUN() throws Exception {
+    public void ConnectionPolicy_CONNECTION_PER_RUN_connectionLifecycle() throws Exception {
 
         JmsServiceBase s = (JmsServiceBase)getServiceToTest();
         MockJmsLoadStrategy mls = new MockJmsLoadStrategy();
@@ -126,6 +127,29 @@ public abstract class JmsServiceTest extends ServiceTest {
         assertNull(c);
     }
 
+    @Test
+    public void ConnectionPolicy_CONNECTION_PER_RUN_BehaviorOnCheckInCheckOut() throws Exception {
+
+        JmsServiceBase s = (JmsServiceBase)getServiceToTest();
+        MockJmsLoadStrategy mls = new MockJmsLoadStrategy(new Queue("mock-queue"));
+        s.setLoadStrategy(mls);
+
+        s.start();
+
+        MockSend mo = new MockSend(mls);
+
+        JmsEndpointBase endpoint = (JmsEndpointBase)s.checkOut(mo);
+        Connection c = endpoint.getConnection();
+        s.checkIn(endpoint);
+
+        MockSend mo2 = new MockSend(mls);
+
+        JmsEndpointBase endpoint2 = (JmsEndpointBase)s.checkOut(mo2);
+        Connection c2 = endpoint2.getConnection();
+        s.checkIn(endpoint2);
+
+        assertTrue(c == c2);
+    }
 
     // to sort out -----------------------------------------------------------------------------------------------------
 

@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2015 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,10 +17,9 @@
 package io.novaordis.gld.api.jms;
 
 import javax.jms.Connection;
-import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
-public class Consumer extends JmsEndpointBase {
+public abstract class JmsEndpointBase implements JmsEndpoint {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -28,41 +27,30 @@ public class Consumer extends JmsEndpointBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private MessageConsumer consumer;
+    private Session session;
+    private Connection connection;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Consumer(MessageConsumer consumer, Session session, Connection connection) {
+    public JmsEndpointBase(Session session, Connection connection) {
 
-        super(session, connection);
-
-        this.consumer = consumer;
+        this.session = session;
+        this.connection = connection;
     }
 
     // JmsEndpoint implementation --------------------------------------------------------------------------------------
 
-    /**
-     * @see JmsEndpoint#close()
-     */
     @Override
-    public void close() throws Exception {
+    public Session getSession() {
 
-        // do not close the session, it may be reused
-
-        consumer.close();
+        return session;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public MessageConsumer getConsumer() {
+    public Connection getConnection() {
 
-        return consumer;
-    }
-
-    @Override
-    public String toString() {
-
-        return "Consumer[" + consumer + ", " + getSession() + "]";
+        return connection;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

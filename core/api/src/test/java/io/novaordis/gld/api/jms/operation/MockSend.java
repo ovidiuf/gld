@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.jms.load;
+package io.novaordis.gld.api.jms.operation;
 
-import io.novaordis.gld.api.jms.Destination;
-import io.novaordis.gld.api.jms.Queue;
+import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 1/23/17
+ * @since 1/27/17
  */
-public class MockJmsLoadStrategy extends MockLoadStrategy implements JmsLoadStrategy {
+public class MockSend extends Send {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -31,71 +30,60 @@ public class MockJmsLoadStrategy extends MockLoadStrategy implements JmsLoadStra
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Destination destination;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockJmsLoadStrategy() {
+    public MockSend(JmsLoadStrategy loadStrategy) {
 
-        this(new Queue("test-queue"));
+        super(loadStrategy);
     }
 
-    public MockJmsLoadStrategy(Destination d) {
+    // JmsOperation implementation -------------------------------------------------------------------------------------
 
-        this.destination = d;
-    }
-
-    // JmsLoadStrategy implementation ----------------------------------------------------------------------------------
-
-    @Override
-    public Destination getDestination() {
-
-        return destination;
-    }
-
-    @Override
-    public String getConnectionFactoryName() {
-
-        return "mock-connection-factory-name";
-    }
-
-    @Override
-    public ConnectionPolicy getConnectionPolicy() {
-
-        //
-        // default behavior
-        //
-        return ConnectionPolicy.CONNECTION_PER_RUN;
-    }
-
-    @Override
-    public SessionPolicy getSessionPolicy() {
-
-        //
-        // default behavior
-        //
-        return SessionPolicy.SESSION_PER_OPERATION;
-    }
-
-    @Override
-    public int getMessageSize() {
-        throw new RuntimeException("getMessageSize() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Long getMessages() {
-        throw new RuntimeException("getMessages() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Long getOperations() {
-        throw new RuntimeException("getOperations() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Long getRemainingOperations() {
-        throw new RuntimeException("getRemainingOperations() NOT YET IMPLEMENTED");
-    }
+//    @Override
+//    public String getKey() {
+//        throw new RuntimeException("getKey() NOT YET IMPLEMENTED");
+//    }
+//
+//    @Override
+//    public void perform(Service s) throws Exception {
+//        throw new RuntimeException("perform() NOT YET IMPLEMENTED");
+//    }
+//
+//    @Override
+//    public boolean wasPerformed() {
+//        throw new RuntimeException("wasPerformed() NOT YET IMPLEMENTED");
+//    }
+//
+//    @Override
+//    public boolean wasSuccessful() {
+//        throw new RuntimeException("wasSuccessful() NOT YET IMPLEMENTED");
+//    }
+//
+//    @Override
+//    public JmsLoadStrategy getLoadStrategy() {
+//        throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
+//    }
+//
+//    @Override
+//    public String getPayload() {
+//        throw new RuntimeException("getPayload() NOT YET IMPLEMENTED");
+//    }
+//
+//    @Override
+//    public Destination getDestination() {
+//
+//        return destination;
+//    }
+//
+//    @Override
+//    public String getId() {
+//        throw new RuntimeException("getId() NOT YET IMPLEMENTED");
+//    }
+//
+//    @Override
+//    public void perform(JmsEndpoint endpoint) throws Exception {
+//        throw new RuntimeException("perform() NOT YET IMPLEMENTED");
+//    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 

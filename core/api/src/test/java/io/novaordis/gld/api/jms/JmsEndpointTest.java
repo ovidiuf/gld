@@ -16,12 +16,14 @@
 
 package io.novaordis.gld.api.jms;
 
+import io.novaordis.gld.api.jms.embedded.EmbeddedConnection;
 import io.novaordis.gld.api.jms.embedded.EmbeddedQueue;
 import io.novaordis.gld.api.jms.embedded.EmbeddedSession;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jms.Connection;
 import javax.jms.Session;
 
 import static org.junit.Assert.assertEquals;
@@ -41,14 +43,44 @@ public abstract class JmsEndpointTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    // session ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void session() throws Exception {
+
+        EmbeddedConnection connection = new EmbeddedConnection();
+        EmbeddedSession session = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
+        EmbeddedQueue queue = new EmbeddedQueue("test");
+
+        JmsEndpoint e = getEndpointToTest(queue, session, connection);
+
+        assertEquals(session, e.getSession());
+    }
+
+    // connection ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void connection() throws Exception {
+
+        EmbeddedConnection connection = new EmbeddedConnection();
+        EmbeddedSession session = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
+        EmbeddedQueue queue = new EmbeddedQueue("test");
+
+        JmsEndpointBase e = (JmsEndpointBase)getEndpointToTest(queue, session, connection);
+
+        assertEquals(connection, e.getConnection());
+    }
+
     // close -----------------------------------------------------------------------------------------------------------
 
     @Test
     public void closeDoesNotCloseSession() throws Exception {
 
+        EmbeddedConnection connection = new EmbeddedConnection();
         EmbeddedSession session = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
+        EmbeddedQueue queue = new EmbeddedQueue("test");
 
-        JmsEndpoint e = getEndpointToTest(session, new EmbeddedQueue("TEST"));
+        JmsEndpoint e = getEndpointToTest(queue, session, connection);
 
         e.close();
 
@@ -63,8 +95,8 @@ public abstract class JmsEndpointTest {
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected abstract JmsEndpoint getEndpointToTest(Session session, javax.jms.Destination jmsDestination)
-        throws Exception;
+    protected abstract JmsEndpoint getEndpointToTest(
+            javax.jms.Destination jmsDestination, Session session, Connection connection) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

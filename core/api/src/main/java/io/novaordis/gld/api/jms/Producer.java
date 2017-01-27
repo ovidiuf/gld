@@ -16,10 +16,12 @@
 
 package io.novaordis.gld.api.jms;
 
+import javax.jms.Connection;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 
-public class Producer implements JmsEndpoint {
+public class Producer extends JmsEndpointBase {
+
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -27,15 +29,15 @@ public class Producer implements JmsEndpoint {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Session session;
     private MessageProducer producer;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Producer(MessageProducer producer, Session session) {
+    public Producer(MessageProducer producer, Session session, Connection connection) {
+
+        super(session, connection);
 
         this.producer = producer;
-        this.session = session;
     }
 
     // JmsEndpoint implementation --------------------------------------------------------------------------------------
@@ -48,12 +50,6 @@ public class Producer implements JmsEndpoint {
         producer.close();
     }
 
-    @Override
-    public Session getSession() {
-
-        return session;
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
     public MessageProducer getProducer() {
@@ -63,7 +59,7 @@ public class Producer implements JmsEndpoint {
     @Override
     public String toString() {
 
-        return "Producer[" + producer + ", " + session + "]";
+        return "Producer[" + producer + ", " + getSession() + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

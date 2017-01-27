@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.jms;
 
+import io.novaordis.gld.api.jms.embedded.EmbeddedConnection;
 import io.novaordis.gld.api.jms.embedded.EmbeddedMessageProducer;
 import io.novaordis.gld.api.jms.embedded.EmbeddedQueue;
 import io.novaordis.gld.api.jms.embedded.EmbeddedSession;
@@ -23,6 +24,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jms.Connection;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 
@@ -46,12 +48,13 @@ public class ProducerTest extends JmsEndpointTest {
     @Test
     public void close() throws Exception {
 
+        EmbeddedConnection connection = new EmbeddedConnection();
         EmbeddedSession session = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
 
         assertFalse(session.isClosed());
 
         EmbeddedQueue queue = new EmbeddedQueue("TEST");
-        Producer p = getEndpointToTest(session, queue);
+        Producer p = getEndpointToTest(queue, session, connection);
 
         p.close();
 
@@ -68,10 +71,11 @@ public class ProducerTest extends JmsEndpointTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected Producer getEndpointToTest(Session session, javax.jms.Destination jmsDestination) throws Exception {
+    protected Producer getEndpointToTest(
+            javax.jms.Destination jmsDestination, Session session, Connection connection) throws Exception {
 
         MessageProducer p = session.createProducer(jmsDestination);
-        return new Producer(p, session);
+        return new Producer(p, session, connection);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

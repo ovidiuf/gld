@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.jms;
 
+import io.novaordis.gld.api.jms.embedded.EmbeddedConnection;
 import io.novaordis.gld.api.jms.embedded.EmbeddedMessageConsumer;
 import io.novaordis.gld.api.jms.embedded.EmbeddedQueue;
 import io.novaordis.gld.api.jms.embedded.EmbeddedSession;
@@ -23,6 +24,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jms.Connection;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
@@ -46,12 +48,13 @@ public class ConsumerTest extends JmsEndpointTest {
     @Test
     public void close() throws Exception {
 
+        EmbeddedConnection connection = new EmbeddedConnection();
         EmbeddedSession session = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
 
         assertFalse(session.isClosed());
 
         EmbeddedQueue queue = new EmbeddedQueue("TEST");
-        Consumer c = getEndpointToTest(session, queue);
+        Consumer c = getEndpointToTest(queue, session, connection);
 
         c.close();
 
@@ -68,10 +71,11 @@ public class ConsumerTest extends JmsEndpointTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected Consumer getEndpointToTest(Session session, javax.jms.Destination jmsDestination) throws Exception {
+    protected Consumer getEndpointToTest(javax.jms.Destination jmsDestination, Session session, Connection connection)
+            throws Exception {
 
         MessageConsumer c = session.createConsumer(jmsDestination);
-        return new Consumer(c, session);
+        return new Consumer(c, session, connection);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

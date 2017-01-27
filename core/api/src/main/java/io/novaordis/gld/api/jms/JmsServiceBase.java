@@ -188,13 +188,13 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
         if (jmsOperation instanceof Send) {
 
             MessageProducer jmsProducer = session.createProducer(d);
-            endpoint = new Producer(jmsProducer, session);
+            endpoint = new Producer(jmsProducer, session, connection);
 
         }
         else if (jmsOperation instanceof Receive) {
 
             MessageConsumer jmsConsumer = session.createConsumer(d);
-            endpoint = new Consumer(jmsConsumer, session);
+            endpoint = new Consumer(jmsConsumer, session, connection);
         }
         else {
 

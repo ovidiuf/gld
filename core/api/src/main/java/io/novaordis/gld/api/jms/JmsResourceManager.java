@@ -254,12 +254,12 @@ public class JmsResourceManager {
         if (send) {
 
             MessageProducer producer = session.createProducer(jmsDestination);
-            result = new Producer(producer, session);
+            result = new Producer(producer, session, null);
         }
         else {
 
             MessageConsumer consumer = session.createConsumer(jmsDestination);
-            result = new Consumer(consumer, session);
+            result = new Consumer(consumer, session, null);
         }
 
         return result;
