@@ -19,6 +19,7 @@ package io.novaordis.gld.api.service;
 import io.novaordis.gld.api.cache.embedded.EmbeddedCacheService;
 import io.novaordis.gld.api.configuration.ImplementationConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
+import io.novaordis.gld.api.jms.embedded.EmbeddedJmsService;
 import io.novaordis.utilities.UserErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +66,10 @@ public class ServiceFactory {
             if (ServiceType.cache.name().equals(serviceType)) {
 
                 return EmbeddedCacheService.class.getName();
+            }
+            else if (ServiceType.jms.name().equals(serviceType)) {
+
+                return EmbeddedJmsService.class.getName();
             }
 
             throw new RuntimeException("NOT YET IMPLEMENTED embedded " + serviceType);
