@@ -15,9 +15,13 @@ service:
 
   type: jms
   message-size: 1024
-  queue: jms/queue/novaordis
-  connection-factory: jms/RemoteConnectionFactory
-  threading-model: connection-per-thread|new-session-per-thread|reuse-session-per-thread
+
+  load-strategy:
+    name: blah
+    queue: jms/queue/novaordis
+    connection-factory: jms/RemoteConnectionFactory
+    connection-reuse: connection-per-run
+    session-reuse: session-per-operation
 
   implementation:
     name: jboss-eap-7-jms
@@ -37,9 +41,6 @@ service:
     end-points:
       - localhost:4447
       - localhost:4448
-
-  load-strategy:
-    name: tbd
 
 load:
   threads: 1
