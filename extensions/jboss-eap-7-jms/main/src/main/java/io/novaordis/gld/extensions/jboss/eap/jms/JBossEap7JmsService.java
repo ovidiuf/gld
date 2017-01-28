@@ -58,7 +58,11 @@ public class JBossEap7JmsService extends JmsServiceBase {
             throw new IllegalArgumentException("not a JMS service configuration");
         }
 
-        throw new NotYetImplementedException("configure() NOT YET IMPLEMENTED");
+
+        throw new RuntimeException("RETURN HERE: PULL THE JNDI URL ...");
+        //
+        // node address
+        //
     }
 
     @Override

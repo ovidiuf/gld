@@ -38,9 +38,8 @@ service:
     #
     # implementation-specific configuration
     #
-    end-points:
-      - localhost:4447
-      - localhost:4448
+    nodes:
+      - localhost:8080 # remoting access to the JNDI server
 
 load:
   threads: 1
