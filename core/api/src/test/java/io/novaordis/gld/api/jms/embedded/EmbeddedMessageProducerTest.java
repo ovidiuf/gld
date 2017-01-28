@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.jms;
+package io.novaordis.gld.api.jms.embedded;
 
-import io.novaordis.gld.api.jms.embedded.EmbeddedJmsService;
-import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
-import io.novaordis.gld.api.jms.load.MockJmsLoadStrategy;
+import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 1/20/17
+ * @since 1/27/17
  */
-public class EmbeddedJmsServiceTest extends JmsServiceTest {
+public class EmbeddedMessageProducerTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -38,21 +39,25 @@ public class EmbeddedJmsServiceTest extends JmsServiceTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
+    @Test
+    public void sendSetsMessageID() throws Exception {
+
+        EmbeddedMessageProducer p = new EmbeddedMessageProducer(new EmbeddedQueue("test"));
+
+        EmbeddedTextMessage m = new EmbeddedTextMessage("test");
+
+        assertNull(m.getJMSMessageID());
+
+        p.send(m);
+
+        String id = m.getJMSMessageID();
+
+        assertNotNull(id);
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected JmsService getServiceToTest() throws Exception {
-
-        return new EmbeddedJmsService();
-    }
-
-    @Override
-    protected JmsLoadStrategy getMatchingLoadStrategy() {
-
-        return new MockJmsLoadStrategy();
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

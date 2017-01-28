@@ -30,21 +30,25 @@ public class EmbeddedTextMessage implements TextMessage {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private String text;
+    private String id;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedTextMessage(String text) {
-        this.text = text;
-    }
-
     public EmbeddedTextMessage() {
         this(null);
+    }
+
+    public EmbeddedTextMessage(String text) {
+
+        this.text = text;
+        this.id = null;
     }
 
     // TextMessage implementation --------------------------------------------------------------------------------------
 
     @Override
     public void setText(String s) throws JMSException {
+
         this.text = s;
     }
 
@@ -53,16 +57,19 @@ public class EmbeddedTextMessage implements TextMessage {
         return text;
     }
 
+    /**
+     * The ID is null when the message is created and set to a non null value upon sending.
+     */
     @Override
     public String getJMSMessageID() throws JMSException {
 
-        return "mock-embedded-jms-message-id";
+        return id;
     }
 
     @Override
     public void setJMSMessageID(String s) throws JMSException {
 
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        this.id = s;
     }
 
     @Override

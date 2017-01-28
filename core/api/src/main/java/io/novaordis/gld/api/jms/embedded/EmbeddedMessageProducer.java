@@ -22,6 +22,7 @@ import javax.jms.Message;
 import javax.jms.MessageProducer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class EmbeddedMessageProducer implements MessageProducer {
 
@@ -120,6 +121,10 @@ public class EmbeddedMessageProducer implements MessageProducer {
 
     @Override
     public void send(Message message) throws JMSException {
+
+        UUID uuid = UUID.randomUUID();
+
+        message.setJMSMessageID(uuid.toString());
 
         messagesSentByThisProducer.add(message);
 

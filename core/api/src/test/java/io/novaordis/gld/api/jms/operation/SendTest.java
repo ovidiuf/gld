@@ -31,6 +31,8 @@ import org.junit.Test;
 import javax.jms.TextMessage;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -61,6 +63,8 @@ public class SendTest extends JmsOperationTest {
 
         Send send = ls.next(null, null, false);
 
+        assertNull(send.getKey());
+
         MockJmsService service = new MockJmsService();
         service.setConnectionPolicy(ConnectionPolicy.CONNECTION_PER_RUN);
         service.setSessionPolicy(SessionPolicy.SESSION_PER_OPERATION);
@@ -71,6 +75,13 @@ public class SendTest extends JmsOperationTest {
         EmbeddedQueue q = (EmbeddedQueue)service.resolveDestination(new Queue("/jms/test-queue"));
         TextMessage m = (TextMessage)q.get(0);
         assertEquals(ls.getReusedValue(), m.getText());
+
+        String key = send.getKey();
+
+        assertNotNull(key);
+
+        String id = send.getId();
+        assertEquals(key, id);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

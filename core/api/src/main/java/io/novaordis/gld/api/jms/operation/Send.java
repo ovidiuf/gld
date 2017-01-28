@@ -78,6 +78,11 @@ public class Send extends JmsOperationBase {
         if (trace) { log.trace("sending message with payload \"" + payload + "\""); }
 
         jmsProducer.send(m);
+
+        //
+        // a JMS messages gets an ID after sending, update the operation
+        //
+        setId(m.getJMSMessageID());
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
