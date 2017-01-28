@@ -27,7 +27,7 @@ service:
 #
 load:
   threads: 10
-  messages: 17
+  messages: 10000000
 
 #
 # key store configuration
@@ -36,3 +36,10 @@ store:
 
   type: hierarchical
   directory: ../../../../target/test-scratch/test-hierarchical-store # if relative, is relative to the position of the configuration file
+
+output:
+  statistics:
+    sampling-interval: 1000
+    sampling-task-run-interval: 250
+    format: csv
+    file: /dev/stdout
