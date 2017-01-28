@@ -8,7 +8,7 @@
 
     <groupId>io.novaordis.gld.extensions.jboss-datagrid</groupId>
     <artifactId>jboss-datagrid-7-root</artifactId>
-    <version>1.0.1-SNAPSHOT-1</version>
+    <version>1.0.1-SNAPSHOT-2</version>
     <packaging>pom</packaging>
 
     <properties>
