@@ -18,9 +18,13 @@ package io.novaordis.gld.extensions.jboss.eap.jms;
 
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.jms.JmsServiceBase;
+import io.novaordis.gld.api.jms.JmsServiceConfiguration;
 import io.novaordis.utilities.NotYetImplementedException;
 import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.version.VersionUtilities;
+
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -49,7 +53,22 @@ public class JBossEap7JmsService extends JmsServiceBase {
     @Override
     public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {
 
+        if (!(serviceConfiguration instanceof JmsServiceConfiguration)) {
+
+            throw new IllegalArgumentException("not a JMS service configuration");
+        }
+
         throw new NotYetImplementedException("configure() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Destination resolveDestination(io.novaordis.gld.api.jms.Destination d) {
+        throw new RuntimeException("resolveDestination() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public ConnectionFactory resolveConnectionFactory(String connectionFactoryName) {
+        throw new RuntimeException("resolveConnectionFactory() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
