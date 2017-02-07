@@ -17,7 +17,7 @@ service:
   message-size: 1024
 
   load-strategy:
-    name: blah
+    name: send
     queue: jms/queue/novaordis
     connection-factory: jms/RemoteConnectionFactory
     connection-reuse: connection-per-run
@@ -38,8 +38,8 @@ service:
     #
     # implementation-specific configuration
     #
-    nodes:
-      - localhost:8080 # remoting access to the JNDI server
+
+    jndi-url: localhost:8081 # remoting access to the JNDI server
 
 load:
   threads: 1

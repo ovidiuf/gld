@@ -19,12 +19,14 @@ package io.novaordis.gld.extensions.jboss.eap.jms;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.jms.JmsServiceBase;
 import io.novaordis.gld.api.jms.JmsServiceConfiguration;
-import io.novaordis.utilities.NotYetImplementedException;
 import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.version.VersionUtilities;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import java.util.Properties;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -34,13 +36,31 @@ public class JBossEap7JmsService extends JmsServiceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    public static final String DEFAULT_INITIAL_CONTEXT_FACTORY_CLASS_NAME =
+            "org.jboss.naming.remote.client.InitialContextFactory";
+
     public static final String EXTENSION_VERSION_METADATA_FILE_NAME = "jboss-eap-7-jms-extension-version";
+
+    public static final String JNDI_URL_LABEL = "jndi-url";
+
+    private String initialContextFactoryClassName;
+
+    // the JNDI URL including the protocol part
+    private String jndiUrl;
+
+    // an active, verified InitialContext into the server's JNDI space
+    private InitialContext ic;
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public JBossEap7JmsService() {
+
+        setInitialContextFactoryClassName(DEFAULT_INITIAL_CONTEXT_FACTORY_CLASS_NAME);
+    }
 
     // JmsServiceBase overrides ----------------------------------------------------------------------------------------
 
@@ -58,26 +78,128 @@ public class JBossEap7JmsService extends JmsServiceBase {
             throw new IllegalArgumentException("not a JMS service configuration");
         }
 
+        //
+        // we need the JNDI endpoint to connect to the EAP server
+        //
 
-        throw new RuntimeException("RETURN HERE: PULL THE JNDI URL ...");
-        //
-        // node address
-        //
+        String rawJndiUrl;
+
+        try {
+
+            rawJndiUrl = serviceConfiguration.get(
+                    String.class, ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, JNDI_URL_LABEL);
+        }
+        catch(IllegalStateException e) {
+
+            throw new UserErrorException(e);
+        }
+
+        if (rawJndiUrl == null) {
+
+            throw new UserErrorException("missing required '" + JNDI_URL_LABEL + "' configuration element");
+        }
+
+        if (!rawJndiUrl.contains("://")) {
+
+            rawJndiUrl = "http-remoting://" + rawJndiUrl;
+        }
+
+        setJndiUrl(rawJndiUrl);
     }
 
     @Override
+    public void start() throws Exception {
+
+        //
+        // we first attempt to connect to the JNDI service before initializing the JMS machinery in the superclass.
+        //
+
+        if (jndiUrl == null) {
+
+            throw new IllegalStateException("JNDI URL was not initialized");
+        }
+
+        Properties p = new Properties();
+        p.put(Context.INITIAL_CONTEXT_FACTORY, getInitialContextFactoryClassName());
+        p.put(Context.PROVIDER_URL, jndiUrl);
+
+        try {
+
+            ic = new InitialContext(p);
+
+            //
+            // make a noop lookup to insure valid connectivity
+            //
+
+            ic.list("");
+
+            //
+            // at this point we have a valid initial context
+            //
+        }
+        catch(Exception e) {
+
+            throw new UserErrorException(e);
+        }
+
+
+        super.start();
+
+    }
+    @Override
     public Destination resolveDestination(io.novaordis.gld.api.jms.Destination d) {
+
         throw new RuntimeException("resolveDestination() NOT YET IMPLEMENTED");
     }
 
     @Override
     public ConnectionFactory resolveConnectionFactory(String connectionFactoryName) {
+
         throw new RuntimeException("resolveConnectionFactory() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    @Override
+    public String toString() {
+
+        String s = "EAP7 JMS ";
+
+        String jndiUrl = getJndiUrl();
+
+        if (jndiUrl == null) {
+
+            s += " (UNCONFIGURED)";
+        }
+        else {
+
+            s += jndiUrl;
+        }
+
+        return s;
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
+
+    String getJndiUrl() {
+
+        return jndiUrl;
+    }
+
+    void setJndiUrl(String s) {
+
+        this.jndiUrl = s;
+    }
+
+    String getInitialContextFactoryClassName() {
+
+        return initialContextFactoryClassName;
+    }
+
+    void setInitialContextFactoryClassName(String s) {
+
+        this.initialContextFactoryClassName = s;
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

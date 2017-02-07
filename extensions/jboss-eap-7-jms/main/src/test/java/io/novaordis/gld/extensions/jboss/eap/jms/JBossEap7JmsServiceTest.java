@@ -16,14 +16,22 @@
 
 package io.novaordis.gld.extensions.jboss.eap.jms;
 
-import io.novaordis.gld.api.jms.JmsServiceBase;
+import io.novaordis.gld.api.jms.MockJmsServiceConfiguration;
 import io.novaordis.gld.api.service.ServiceFactory;
+import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.util.HashMap;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -74,12 +82,73 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
         assertEquals("io.novaordis.gld.extensions.jboss.eap.jms.JBossEap7JmsService", className);
     }
 
+    // configure() -----------------------------------------------------------------------------------------------------
+
+    @Test
+    public void configure_JndiUrlIsMissing() throws Exception {
+
+        JBossEap7JmsService s = getJmsServiceBaseToTest();
+
+        MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration(new HashMap<>(), new File("."));
+
+        try {
+
+            s.configure(msc);
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.matches("missing required 'jndi-url' configuration element"));
+        }
+    }
+
+    // start() ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void start_JndiUrlNotInitialized() throws Exception {
+
+        JBossEap7JmsService s = getJmsServiceBaseToTest();
+
+        assertNull(s.getJndiUrl());
+
+        try {
+            s.start();
+
+            fail("should have thrown exception");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.contains("JNDI"));
+        }
+    }
+
+    //@Test
+    public void lifecycle() throws Exception {
+
+        JBossEap7JmsService s = getJmsServiceBaseToTest();
+
+        s.setJndiUrl("mock://mock-jndi-server");
+        s.setInitialContextFactoryClassName(MockInitialContextFactory.class.getName());
+
+        s.start();
+
+        assertTrue(s.isStarted());
+
+        s.stop();
+
+        assertFalse(s.isStarted());
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected JmsServiceBase getJmsServiceBaseToTest() throws Exception {
+    protected JBossEap7JmsService getJmsServiceBaseToTest() throws Exception {
 
         return new JBossEap7JmsService();
     }
