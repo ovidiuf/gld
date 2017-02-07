@@ -20,8 +20,8 @@ service:
     name: send
     queue: jms/queue/novaordis
     connection-factory: jms/RemoteConnectionFactory
-    connection-reuse: connection-per-run
-    session-reuse: session-per-operation
+    connection-policy: connection-per-run
+    session-policy: session-per-operation
 
   implementation:
     name: jboss-eap-7-jms
