@@ -42,6 +42,8 @@ public class EmbeddedJmsService extends JmsServiceBase {
 
     private static final Logger log = LoggerFactory.getLogger(EmbeddedJmsService.class);
 
+    public static final String DEFAULT_CONNECTION_FACTORY_NAME = "/MockConnectionFactory";
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
@@ -54,6 +56,14 @@ public class EmbeddedJmsService extends JmsServiceBase {
     public EmbeddedJmsService() {
 
         this.connectionFactories = new HashMap<>();
+
+        //
+        // We simulate the existence of /MockConnectionFactory, anything else does not exist
+        //
+
+        EmbeddedConnectionFactory cf = new EmbeddedConnectionFactory();
+        connectionFactories.put(DEFAULT_CONNECTION_FACTORY_NAME, cf);
+
         this.destinations = new HashMap<>();
     }
 
@@ -95,6 +105,10 @@ public class EmbeddedJmsService extends JmsServiceBase {
         return ed;
     }
 
+    /**
+     * We simulate the existence of the "/MockConnectionFactory" connection factory by default. Antyhing else does not
+     * exist.
+     */
     @Override
     public ConnectionFactory resolveConnectionFactory(String connectionFactoryName) {
 
@@ -102,15 +116,7 @@ public class EmbeddedJmsService extends JmsServiceBase {
         // for the time being, any connection factory "exists"
         //
 
-        EmbeddedConnectionFactory cf = null;
-
-        if ((cf = connectionFactories.get(connectionFactoryName)) == null) {
-
-            cf = new EmbeddedConnectionFactory();
-            connectionFactories.put(connectionFactoryName, cf);
-        }
-
-        return cf;
+        return connectionFactories.get(connectionFactoryName);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

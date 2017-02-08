@@ -144,6 +144,12 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
             //
 
             connectionFactory = resolveConnectionFactory(connectionFactoryName);
+
+            if (connectionFactory == null) {
+
+                throw new UserErrorException("Connection factory " + connectionFactoryName + " not bound in JNDI");
+            }
+
             Connection c  = connectionFactory.createConnection();
             setConnection(c);
         }

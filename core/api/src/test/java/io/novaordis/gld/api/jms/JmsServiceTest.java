@@ -36,6 +36,7 @@ import io.novaordis.gld.api.jms.operation.JmsOperation;
 import io.novaordis.gld.api.jms.operation.MockSend;
 import io.novaordis.gld.api.service.ServiceTest;
 import io.novaordis.gld.api.service.ServiceType;
+import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -629,6 +630,31 @@ public abstract class JmsServiceTest extends ServiceTest {
         }
     }
 
+    // start() ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void start_ConnectionFactoryNotBoundInJNDI() throws Exception {
+
+        JmsServiceBase s = (JmsServiceBase)getServiceToTest();
+        JmsLoadStrategy ls = getMatchingLoadStrategy();
+        s.setLoadStrategy(ls);
+
+        s.setConnectionFactoryName("/something");
+
+        try {
+
+            s.start();
+            fail("should throw exception");
+        }
+
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("Connection factory /something not bound in JNDI", msg);
+        }
+    }
+
     // end to end ------------------------------------------------------------------------------------------------------
 
     @Test
@@ -642,7 +668,7 @@ public abstract class JmsServiceTest extends ServiceTest {
         msc.set(new HashMap<String, Object>(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
         msc.set(SendLoadStrategy.NAME, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
         msc.set("test-queue", ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.QUEUE_LABEL);
-        msc.set("test-connection-factory",
+        msc.set(EmbeddedJmsService.DEFAULT_CONNECTION_FACTORY_NAME,
                 ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.CONNECTION_FACTORY_LABEL);
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
@@ -694,7 +720,7 @@ public abstract class JmsServiceTest extends ServiceTest {
         msc.set(new HashMap<String, Object>(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
         msc.set(ReceiveLoadStrategy.NAME, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
         msc.set("test-queue", ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.QUEUE_LABEL);
-        msc.set("test-connection-factory",
+        msc.set(EmbeddedJmsService.DEFAULT_CONNECTION_FACTORY_NAME,
                 ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.CONNECTION_FACTORY_LABEL);
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
