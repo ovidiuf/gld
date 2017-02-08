@@ -8,7 +8,7 @@
 
     <groupId>io.novaordis.gld.extensions.jboss-eap-jms</groupId>
     <artifactId>jboss-eap-7-root</artifactId>
-    <version>1.0.0-SNAPSHOT-13</version>
+    <version>1.0.0-SNAPSHOT-14</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -25,15 +25,18 @@
         <gld.api.version>1.1.1-SNAPSHOT-10</gld.api.version>
         <novaordis.utilities.version>4.5</novaordis.utilities.version>
         <slf4j.version>1.7.6</slf4j.version>
+
         <!--
-        <jdg.infinspan.client.hotrod.version>8.3.0.Final-redhat-1</jdg.infinspan.client.hotrod.version>
+            Dependencies required at runtime
         -->
+
+        <wildfly.client.all.version>7.0.4.GA-redhat-2</wildfly.client.all.version>
 
         <!--
             End of Dependencies
         -->
 
-        <jboss.eap.version>7.0.0</jboss.eap.version>
+        <jboss.eap.version>7.0.4</jboss.eap.version>
 
         <source.java.version>1.8</source.java.version>
         <target.java.version>1.8</target.java.version>
@@ -50,7 +53,7 @@
             <url>file:///Users/ovidiu/runtime/jboss-eap-7.0.0.GA-maven-repository/maven-repository</url>
         </repository>
         <repository>
-            <id>jboss-datagrid-repository</id>
+            <id>jboss-eap-repository-2</id>
             <url>file:///Users/ovidiu/runtime/jboss-eap-${jboss.eap.version}-maven-repository/maven-repository</url>
         </repository>
     </repositories>
@@ -81,12 +84,14 @@
         </dependency>
 
         <!--
-        <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-client-hotrod</artifactId>
-            <version>${jdg.infinspan.client.hotrod.version}</version>
-        </dependency>
+            Dependencies required at runtime
         -->
+
+        <dependency>
+            <groupId>org.jboss.eap</groupId>
+            <artifactId>wildfly-client-all</artifactId>
+            <version>${wildfly.client.all.version}</version>
+        </dependency>
 
         <!--
             Testing Dependencies

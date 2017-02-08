@@ -57,7 +57,7 @@
             the GLD API and *its* dependencies, will already be available in the runtime.
         -->
         <dependencySet>
-            <outputDirectory>${jboss.datagrid.version}</outputDirectory>
+            <outputDirectory>${jboss.eap.version}</outputDirectory>
             <excludes>
                 <exclude>io.novaordis.gld.extensions.jboss-eap-jms:*</exclude>
             </excludes>
