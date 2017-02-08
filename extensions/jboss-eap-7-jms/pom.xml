@@ -8,7 +8,7 @@
 
     <groupId>io.novaordis.gld.extensions.jboss-eap-jms</groupId>
     <artifactId>jboss-eap-7-root</artifactId>
-    <version>1.0.0-SNAPSHOT-15</version>
+    <version>1.0.0-SNAPSHOT-16</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -22,7 +22,7 @@
             Dependencies
         -->
 
-        <gld.api.version>1.1.1-SNAPSHOT-12</gld.api.version>
+        <gld.api.version>1.1.1-SNAPSHOT-14</gld.api.version>
         <novaordis.utilities.version>4.5</novaordis.utilities.version>
         <slf4j.version>1.7.6</slf4j.version>
 

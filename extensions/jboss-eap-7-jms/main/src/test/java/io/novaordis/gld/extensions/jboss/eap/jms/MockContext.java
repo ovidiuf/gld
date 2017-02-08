@@ -21,10 +21,13 @@ import javax.naming.CommunicationException;
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NameClassPair;
+import javax.naming.NameNotFoundException;
 import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -39,12 +42,14 @@ public class MockContext implements Context {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private String providerUrl;
+    private Map<String, Object> content;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockContext(String providerUrl) {
+    public MockContext(String providerUrl, Map<String, Object> c) {
 
         this.providerUrl = providerUrl;
+        this.content = new HashMap<>(c);
     }
 
     // Context implementation ------------------------------------------------------------------------------------------
@@ -56,7 +61,15 @@ public class MockContext implements Context {
 
     @Override
     public Object lookup(String name) throws NamingException {
-        throw new RuntimeException("lookup() NOT YET IMPLEMENTED");
+
+        Object o = content.get(name);
+
+        if (o == null) {
+
+            throw new NameNotFoundException(name + " not found");
+        }
+
+        return o;
     }
 
     @Override

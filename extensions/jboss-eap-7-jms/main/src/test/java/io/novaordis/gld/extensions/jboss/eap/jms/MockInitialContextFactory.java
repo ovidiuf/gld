@@ -22,7 +22,9 @@ import org.slf4j.LoggerFactory;
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import static org.junit.Assert.fail;
 
@@ -48,15 +50,21 @@ public class MockInitialContextFactory implements InitialContextFactory {
         return validJndiUrl;
     }
 
+    public static void bind(String name, Object o) {
+
+        content.put(name, o);
+    }
+
     public static void reset() {
 
         validJndiUrl = null;
+        content.clear();
     }
-
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private static String validJndiUrl;
+    private static Map<String, Object> content = new HashMap<>();
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -72,7 +80,7 @@ public class MockInitialContextFactory implements InitialContextFactory {
             fail("no '" + Context.PROVIDER_URL + "' found");
         }
 
-        MockContext mc = new MockContext(s);
+        MockContext mc = new MockContext(s, content);
 
         log.info("created " + mc);
 

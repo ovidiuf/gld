@@ -19,7 +19,7 @@ service:
   load-strategy:
     name: send
     queue: jms/queue/novaordis
-    connection-factory: jms/RemoteConnectionFactory
+    connection-factory: jms/RemoteConnectionFactory2
     connection-policy: connection-per-run
     session-policy: session-per-operation
 
@@ -39,7 +39,7 @@ service:
     # implementation-specific configuration
     #
 
-    jndi-url: localhost:8081 # remoting access to the JNDI server
+    jndi-url: localhost:8080 # remoting access to the JNDI server
 
 load:
   threads: 1

@@ -21,6 +21,8 @@ import io.novaordis.gld.api.jms.JmsServiceBase;
 import io.novaordis.gld.api.jms.JmsServiceConfiguration;
 import io.novaordis.utilities.UserErrorException;
 import io.novaordis.utilities.version.VersionUtilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -36,6 +38,8 @@ import java.util.Properties;
 public class JBossEap7JmsService extends JmsServiceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(JBossEap7JmsService.class);
 
     public static final String DEFAULT_INITIAL_CONTEXT_FACTORY_CLASS_NAME =
             "org.jboss.naming.remote.client.InitialContextFactory";
@@ -167,6 +171,8 @@ public class JBossEap7JmsService extends JmsServiceBase {
         }
         catch(NameNotFoundException e) {
 
+            log.debug(connectionFactoryName + " not bound in JNDI");
+
             return null;
         }
     }
@@ -215,6 +221,11 @@ public class JBossEap7JmsService extends JmsServiceBase {
     }
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected void setConnectionFactoryName(String s) {
+
+        super.setConnectionFactoryName(s);
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

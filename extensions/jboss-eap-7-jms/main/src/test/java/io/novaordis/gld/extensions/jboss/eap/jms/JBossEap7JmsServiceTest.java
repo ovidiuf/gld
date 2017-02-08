@@ -17,6 +17,7 @@
 package io.novaordis.gld.extensions.jboss.eap.jms;
 
 import io.novaordis.gld.api.jms.MockJmsServiceConfiguration;
+import io.novaordis.gld.api.jms.embedded.EmbeddedConnectionFactory;
 import io.novaordis.gld.api.jms.load.SendLoadStrategy;
 import io.novaordis.gld.api.service.ServiceFactory;
 import io.novaordis.utilities.UserErrorException;
@@ -162,17 +163,48 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
         }
     }
 
-   // @Test
-    public void lifecycle() throws Exception {
+    @Test
+    public void start_NoSuchConnectionFactory() throws Exception {
 
         JBossEap7JmsService s = getJmsServiceBaseToTest();
+
+        s.setLoadStrategy(new SendLoadStrategy());
 
         String validJndiUrl = "mock://valid-server";
         s.setJndiUrl(validJndiUrl);
         s.setInitialContextFactoryClassName(MockInitialContextFactory.class.getName());
         MockInitialContextFactory.setValidJndiUrl(validJndiUrl);
 
+        s.setConnectionFactoryName("/something");
+
+        try {
+
+            s.start();
+
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.contains("Connection factory /something not bound in JNDI"));
+        }
+    }
+
+    @Test
+    public void lifecycle() throws Exception {
+
+        JBossEap7JmsService s = getJmsServiceBaseToTest();
+
         s.setLoadStrategy(new SendLoadStrategy());
+
+        String validJndiUrl = "mock://valid-server";
+        s.setJndiUrl(validJndiUrl);
+        s.setInitialContextFactoryClassName(MockInitialContextFactory.class.getName());
+        MockInitialContextFactory.setValidJndiUrl(validJndiUrl);
+
+        s.setConnectionFactoryName("/MockConnectionFactory");
+        MockInitialContextFactory.bind("/MockConnectionFactory", new EmbeddedConnectionFactory());
 
         s.start();
 
@@ -182,7 +214,6 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
 
         assertFalse(s.isStarted());
     }
-
 
     // resolveConnectionFactory() --------------------------------------------------------------------------------------
 
