@@ -33,6 +33,9 @@ public class EmbeddedConnectionFactory implements ConnectionFactory {
 
     private List<EmbeddedConnection> createdConnections;
 
+    private String authorizedUser;
+    private String authorizedUserPassword;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public EmbeddedConnectionFactory(String clientUrl) {
@@ -46,6 +49,16 @@ public class EmbeddedConnectionFactory implements ConnectionFactory {
 
     public EmbeddedConnectionFactory() {
 
+        this(null, null);
+    }
+
+    /**
+     * @param authorizedUser may be null, in which case anonymous connections are allowed.
+     */
+    public EmbeddedConnectionFactory(String authorizedUser, String authorizedPassword) {
+
+        this.authorizedUser = authorizedUser;
+        this.authorizedUserPassword = authorizedPassword;
         this.createdConnections = new ArrayList<>();
     }
 
@@ -54,16 +67,24 @@ public class EmbeddedConnectionFactory implements ConnectionFactory {
     @Override
     public Connection createConnection() throws JMSException {
 
-        EmbeddedConnection c = new EmbeddedConnection();
-        createdConnections.add(c);
-        return c;
+        return createConnection(null, null);
     }
 
     @Override
-    public Connection createConnection(String s, String s1) throws JMSException {
+    public Connection createConnection(String username, String password) throws JMSException {
 
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
+        if (username != null) {
+
+            if (!username.equals(authorizedUser) || !password.equals(authorizedUserPassword)) {
+
+                throw new JMSException("unauthorized connection attempt");
+
+            }
+        }
+
+        EmbeddedConnection c = new EmbeddedConnection(username);
+        createdConnections.add(c);
+        return c;    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 

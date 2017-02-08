@@ -33,6 +33,8 @@ public interface JmsLoadStrategy extends LoadStrategy {
     String CONNECTION_FACTORY_LABEL = "connection-factory";
     String CONNECTION_POLICY_LABEL = "connection-policy";
     String SESSION_POLICY_LABEL = "session-policy";
+    String USERNAME_LABEL = "user";
+    String PASSWORD_LABEL = "password";
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -41,6 +43,16 @@ public interface JmsLoadStrategy extends LoadStrategy {
     Destination getDestination();
 
     String getConnectionFactoryName();
+
+    /**
+     * May be null, in which case the load driver will attempt to create anonymous connections.
+     */
+    String getUsername();
+
+    /**
+     * May be null, in case the username is null.
+     */
+    char[] getPassword();
 
     /**
      * @return the connection policy employed by this load strategy. The default is CONNECTION_PER_RUN, which means

@@ -43,6 +43,8 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
 
     private Destination destination;
     private String connectionFactoryName;
+    private String username;
+    private char[] password;
     private ConnectionPolicy connectionPolicy;
     private SessionPolicy sessionPolicy;
     private int messageSize;
@@ -157,6 +159,26 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
         sessionPolicy = sps != null ? SessionPolicy.fromString(sps) : sessionPolicy;
 
         //
+        // optional username
+        //
+
+        this.username = jmsSc.remove(String.class,
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.USERNAME_LABEL);
+
+        //
+        // optional password
+        //
+
+        String s = jmsSc.remove(String.class,
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.PASSWORD_LABEL);
+
+        if (s != null) {
+
+            this.password = new char[s.length()];
+            s.getChars(0, s.length(), this.password, 0);
+        }
+
+        //
         // give the actual load strategy a chance to look for specific configuration elements
         //
 
@@ -219,6 +241,18 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
     public Long getMessages() {
 
         return getOperations();
+    }
+
+    @Override
+    public String getUsername() {
+
+        return username;
+    }
+
+    @Override
+    public char[] getPassword() {
+
+        return password;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

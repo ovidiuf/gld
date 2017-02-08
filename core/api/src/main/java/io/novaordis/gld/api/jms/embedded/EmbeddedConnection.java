@@ -46,14 +46,28 @@ public class EmbeddedConnection implements Connection {
 
     private int sessionCounter;
 
+    //
+    // the username the connection was created under. May be null
+    //
+    private String username;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public EmbeddedConnection() {
+
+        this(null);
+    }
+
+    /**
+     * @param username the username the connection was created under. May be null.
+     */
+    public EmbeddedConnection(String username) {
 
         this.started = false;
         this.closed = false;
         this.createdSessions = new ArrayList<>();
         this.sessionCounter = 0;
+        this.username = username;
     }
 
     // Connection implementation ---------------------------------------------------------------------------------------

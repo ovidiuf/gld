@@ -60,6 +60,9 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
     private String connectionFactoryName;
     private ConnectionFactory connectionFactory;
 
+    private String username; // may be null
+    private char[] password; // may be null
+
     //
     // the only connection per service when the connection policy is ConnectionPolicy.CONNECTION_PER_RUN
     //
@@ -115,6 +118,8 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
         setConnectionPolicy(jmsLoadStrategy.getConnectionPolicy());
         setSessionPolicy(jmsLoadStrategy.getSessionPolicy());
         setConnectionFactoryName(jmsLoadStrategy.getConnectionFactoryName());
+        setUsername(jmsLoadStrategy.getUsername());
+        setPassword(jmsLoadStrategy.getPassword());
     }
 
     @Override
@@ -150,7 +155,30 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
                 throw new UserErrorException("Connection factory " + connectionFactoryName + " not bound in JNDI");
             }
 
-            Connection c  = connectionFactory.createConnection();
+            Connection c;
+
+            String username = getUsername();
+
+            try {
+
+                if (username != null) {
+
+                    c = connectionFactory.createConnection(username, getPassword());
+                }
+                else {
+
+                    c = connectionFactory.createConnection();
+                }
+            }
+            catch(Exception e) {
+
+                //
+                // wrap JMS exceptions into UserErrorExceptions for friendlier reporting
+                //
+
+                throw new UserErrorException(e);
+            }
+
             setConnection(c);
         }
     }
@@ -391,6 +419,37 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
     protected void setConnectionPolicy(ConnectionPolicy cp) {
 
         this.connectionPolicy = cp;
+    }
+
+    protected void setUsername(String username) {
+
+        this.username = username;
+    }
+
+    /**
+     * May return null.
+     */
+    protected String getUsername() {
+
+        return username;
+    }
+
+    protected void setPassword(char[] p) {
+
+        this.password = p;
+    }
+
+    /**
+     * May return null.
+     */
+    protected String getPassword() {
+
+        if (password == null) {
+
+            return null;
+        }
+
+        return new String(password);
     }
 
     protected SessionPolicy getSessionPolicy() {

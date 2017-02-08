@@ -44,6 +44,10 @@ public class EmbeddedJmsService extends JmsServiceBase {
 
     public static final String DEFAULT_CONNECTION_FACTORY_NAME = "/MockConnectionFactory";
 
+    public static final String DEFAULT_AUTHORIZED_USER = "mock-user";
+    public static final char[] DEFAULT_AUTHORIZED_PASSWORD_AS_CHAR_ARRAY = new char[] {'m', 'o', 'c', 'k'};
+    public static final String DEFAULT_AUTHORIZED_PASSWORD = new String(DEFAULT_AUTHORIZED_PASSWORD_AS_CHAR_ARRAY);
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
@@ -61,7 +65,9 @@ public class EmbeddedJmsService extends JmsServiceBase {
         // We simulate the existence of /MockConnectionFactory, anything else does not exist
         //
 
-        EmbeddedConnectionFactory cf = new EmbeddedConnectionFactory();
+        EmbeddedConnectionFactory cf =
+                new EmbeddedConnectionFactory(DEFAULT_AUTHORIZED_USER, DEFAULT_AUTHORIZED_PASSWORD);
+
         connectionFactories.put(DEFAULT_CONNECTION_FACTORY_NAME, cf);
 
         this.destinations = new HashMap<>();

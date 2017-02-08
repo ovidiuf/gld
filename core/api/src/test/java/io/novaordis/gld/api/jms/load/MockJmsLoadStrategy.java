@@ -36,6 +36,9 @@ public class MockJmsLoadStrategy extends MockLoadStrategy implements JmsLoadStra
 
     private SessionPolicy sessionPolicy;
 
+    private String username;
+    private char[] password;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockJmsLoadStrategy() {
@@ -66,6 +69,18 @@ public class MockJmsLoadStrategy extends MockLoadStrategy implements JmsLoadStra
     public String getConnectionFactoryName() {
 
         return EmbeddedJmsService.DEFAULT_CONNECTION_FACTORY_NAME;
+    }
+
+    @Override
+    public String getUsername() {
+
+        return username;
+    }
+
+    @Override
+    public char[] getPassword() {
+
+        return password;
     }
 
     @Override

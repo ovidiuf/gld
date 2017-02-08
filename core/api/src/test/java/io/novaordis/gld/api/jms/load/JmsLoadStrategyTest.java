@@ -107,6 +107,9 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
         assertNull(s.getMessages());
 
         assertEquals(ServiceConfiguration.DEFAULT_VALUE_SIZE, s.getMessageSize());
+
+        assertNull(s.getUsername());
+        assertNull(s.getPassword());
     }
 
     @Test
@@ -340,6 +343,30 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
             log.info(msg);
             assertEquals("invalid session policy 'no-such-session-policy', valid options: 'session-per-thread', 'session-per-operation'", msg);
         }
+    }
+
+    @Test
+    public void init_NonNullUsername() throws Exception {
+
+        MockJmsServiceConfiguration msc = getCorrespondingServiceConfiguration();
+
+        JmsLoadStrategy s = getLoadStrategyToTest();
+
+        msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
+        msc.set("test-user", ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.USERNAME_LABEL);
+        msc.set("test", ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.PASSWORD_LABEL);
+
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+
+        s.init(msc, mlc);
+
+        assertEquals("test-user", s.getUsername());
+
+        assertEquals(4, s.getPassword().length);
+        assertEquals('t', s.getPassword()[0]);
+        assertEquals('e', s.getPassword()[1]);
+        assertEquals('s', s.getPassword()[2]);
+        assertEquals('t', s.getPassword()[3]);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jms.Connection;
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 import javax.jms.TextMessage;
@@ -653,6 +654,50 @@ public abstract class JmsServiceTest extends ServiceTest {
             log.info(msg);
             assertEquals("Connection factory /something not bound in JNDI", msg);
         }
+    }
+
+    @Test
+    public void start_UsernameAndPasswordPresent_AuthorizationFailure() throws Exception {
+
+        JmsServiceBase s = (JmsServiceBase)getServiceToTest();
+        JmsLoadStrategy ls = getMatchingLoadStrategy();
+        s.setLoadStrategy(ls);
+
+        //
+        // the default authorized user is EmbeddedJmsService.DEFAULT_AUTHORIZED_USER
+        //
+        s.setUsername("some-random-user");
+        s.setPassword(new char[] {'s', 'o', 'm', 'e', 't', 'h', 'i', 'n', 'g'});
+
+        try {
+
+            s.start();
+            fail("should throw exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.contains("unauthorized connection attempt"));
+
+            Throwable cause = e.getCause();
+            assertTrue(cause instanceof JMSException);
+        }
+    }
+
+    @Test
+    public void start_UsernameAndPasswordPresent() throws Exception {
+
+        JmsServiceBase s = (JmsServiceBase)getServiceToTest();
+        JmsLoadStrategy ls = getMatchingLoadStrategy();
+        s.setLoadStrategy(ls);
+
+        s.setUsername(EmbeddedJmsService.DEFAULT_AUTHORIZED_USER);
+        s.setPassword(EmbeddedJmsService.DEFAULT_AUTHORIZED_PASSWORD_AS_CHAR_ARRAY);
+
+        s.start();
+
+        assertTrue(s.isStarted());
     }
 
     // end to end ------------------------------------------------------------------------------------------------------
