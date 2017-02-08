@@ -235,6 +235,26 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
         }
     }
 
+    // resolveDestination() --------------------------------------------------------------------------------------------
+
+    @Test
+    public void resolveConnectionFactory_NullDestination() throws Exception {
+
+        JBossEap7JmsService s = getJmsServiceBaseToTest();
+
+        try {
+
+            s.resolveDestination(null);
+
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+        }
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

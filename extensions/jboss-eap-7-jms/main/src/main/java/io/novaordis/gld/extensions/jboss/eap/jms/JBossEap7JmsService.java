@@ -150,10 +150,25 @@ public class JBossEap7JmsService extends JmsServiceBase {
         super.start();
 
     }
+
     @Override
     public Destination resolveDestination(io.novaordis.gld.api.jms.Destination d) throws Exception {
 
-        throw new RuntimeException("resolveDestination() NOT YET IMPLEMENTED");
+        if (d == null) {
+
+            throw new IllegalArgumentException("null destination specification");
+        }
+
+        try {
+
+            Object o = ic.lookup(d.getName());
+            return (Destination)o;
+        }
+        catch(NameNotFoundException e) {
+
+            log.debug((d.isQueue() ? "queue " : "topic ") + d.getName() + " not bound in JNDI");
+            return null;
+        }
     }
 
     @Override
