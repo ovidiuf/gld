@@ -26,6 +26,7 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NameNotFoundException;
 import java.util.Properties;
 
 /**
@@ -142,20 +143,32 @@ public class JBossEap7JmsService extends JmsServiceBase {
             throw new UserErrorException(e);
         }
 
-
         super.start();
 
     }
     @Override
-    public Destination resolveDestination(io.novaordis.gld.api.jms.Destination d) {
+    public Destination resolveDestination(io.novaordis.gld.api.jms.Destination d) throws Exception {
 
         throw new RuntimeException("resolveDestination() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public ConnectionFactory resolveConnectionFactory(String connectionFactoryName) {
+    public ConnectionFactory resolveConnectionFactory(String connectionFactoryName) throws Exception {
 
-        throw new RuntimeException("resolveConnectionFactory() NOT YET IMPLEMENTED");
+        if (connectionFactoryName == null) {
+
+            throw new IllegalArgumentException("null connection factory");
+        }
+
+        try {
+
+            Object o = ic.lookup(connectionFactoryName);
+            return (ConnectionFactory)o;
+        }
+        catch(NameNotFoundException e) {
+
+            return null;
+        }
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

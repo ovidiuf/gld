@@ -38,7 +38,25 @@ public class MockInitialContextFactory implements InitialContextFactory {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
+    public static void setValidJndiUrl(String s) {
+
+        validJndiUrl = s;
+    }
+
+    public static String getValidJndiUrl() {
+
+        return validJndiUrl;
+    }
+
+    public static void reset() {
+
+        validJndiUrl = null;
+    }
+
+
     // Attributes ------------------------------------------------------------------------------------------------------
+
+    private static String validJndiUrl;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -54,9 +72,9 @@ public class MockInitialContextFactory implements InitialContextFactory {
             fail("no '" + Context.PROVIDER_URL + "' found");
         }
 
-        MockContext mc = new MockContext();
+        MockContext mc = new MockContext(s);
 
-        log.info("created mock initial context for " + s);
+        log.info("created " + mc);
 
         return mc;
     }

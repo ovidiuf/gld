@@ -17,12 +17,15 @@
 package io.novaordis.gld.extensions.jboss.eap.jms;
 
 import io.novaordis.gld.api.jms.MockJmsServiceConfiguration;
+import io.novaordis.gld.api.jms.load.SendLoadStrategy;
 import io.novaordis.gld.api.service.ServiceFactory;
 import io.novaordis.utilities.UserErrorException;
+import org.junit.After;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.naming.NamingException;
 import java.io.File;
 import java.util.HashMap;
 
@@ -50,6 +53,12 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @After
+    public void cleanUp() throws Exception {
+
+        MockInitialContextFactory.reset();
+    }
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
@@ -114,6 +123,7 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
         assertNull(s.getJndiUrl());
 
         try {
+
             s.start();
 
             fail("should have thrown exception");
@@ -126,13 +136,43 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
         }
     }
 
-    //@Test
+    @Test
+    public void start_NobodyListensAtJndiUrl() throws Exception {
+
+        JBossEap7JmsService s = getJmsServiceBaseToTest();
+
+        s.setJndiUrl("mock://invalid-server");
+        s.setInitialContextFactoryClassName(MockInitialContextFactory.class.getName());
+        MockInitialContextFactory.setValidJndiUrl("mock://valid-server");
+
+        try {
+
+            s.start();
+
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.contains("mock://invalid-server"));
+
+            Throwable cause = e.getCause();
+            assertTrue(cause instanceof NamingException);
+        }
+    }
+
+   // @Test
     public void lifecycle() throws Exception {
 
         JBossEap7JmsService s = getJmsServiceBaseToTest();
 
-        s.setJndiUrl("mock://mock-jndi-server");
+        String validJndiUrl = "mock://valid-server";
+        s.setJndiUrl(validJndiUrl);
         s.setInitialContextFactoryClassName(MockInitialContextFactory.class.getName());
+        MockInitialContextFactory.setValidJndiUrl(validJndiUrl);
+
+        s.setLoadStrategy(new SendLoadStrategy());
 
         s.start();
 
@@ -141,6 +181,27 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
         s.stop();
 
         assertFalse(s.isStarted());
+    }
+
+
+    // resolveConnectionFactory() --------------------------------------------------------------------------------------
+
+    @Test
+    public void resolveConnectionFactory_NullConnectionFactoryName() throws Exception {
+
+        JBossEap7JmsService s = getJmsServiceBaseToTest();
+
+        try {
+
+            s.resolveConnectionFactory(null);
+
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+        }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

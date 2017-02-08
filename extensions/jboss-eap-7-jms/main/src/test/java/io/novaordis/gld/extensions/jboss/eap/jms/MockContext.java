@@ -17,6 +17,7 @@
 package io.novaordis.gld.extensions.jboss.eap.jms;
 
 import javax.naming.Binding;
+import javax.naming.CommunicationException;
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NameClassPair;
@@ -37,7 +38,14 @@ public class MockContext implements Context {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String providerUrl;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public MockContext(String providerUrl) {
+
+        this.providerUrl = providerUrl;
+    }
 
     // Context implementation ------------------------------------------------------------------------------------------
 
@@ -98,7 +106,10 @@ public class MockContext implements Context {
 
     @Override
     public NamingEnumeration<NameClassPair> list(String name) throws NamingException {
-        throw new RuntimeException("list() NOT YET IMPLEMENTED");
+
+        checkValidJndiUrl();
+
+        return new MockNamingEnumeration<>(name);
     }
 
     @Override
@@ -186,14 +197,28 @@ public class MockContext implements Context {
         throw new RuntimeException("getNameInNamespace() NOT YET IMPLEMENTED");
     }
 
-
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+
+        return "MockContext[" + providerUrl + "]";
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private void checkValidJndiUrl() throws NamingException {
+
+        if (!providerUrl.equals(MockInitialContextFactory.getValidJndiUrl())) {
+
+            throw new CommunicationException("Failed to connect to any server. Servers tried: [" + providerUrl + "]");
+        }
+    }
+
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 
