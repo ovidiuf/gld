@@ -118,6 +118,7 @@ public class SamplerImpl extends TimerTask implements Sampler {
         try {
 
             filePrintWriter = new PrintWriter(new FileWriter(outputFile));
+            log.debug("successfully created writer to file " + outputFile);
         }
         catch(IOException e) {
 

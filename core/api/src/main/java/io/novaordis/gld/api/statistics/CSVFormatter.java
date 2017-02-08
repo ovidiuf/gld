@@ -45,6 +45,7 @@ public class CSVFormatter implements SamplingConsumer {
     }
 
     public static void writeLine(SamplingInterval si, Format format, Writer w) throws IOException {
+
         String line = toLine(si, format, false);
         w.write(line + "\n");
         w.flush();
@@ -60,12 +61,12 @@ public class CSVFormatter implements SamplingConsumer {
 
         String s = "";
 
-        if (headers)
-        {
+        if (headers) {
+
             s += csvFormat.getTimestampLabel();
         }
-        else
-        {
+        else {
+
             s += csvFormat.formatTimestamp(si.getStartMs());
         }
 
@@ -73,16 +74,16 @@ public class CSVFormatter implements SamplingConsumer {
 
         List<Class<? extends Operation>> orderedOperationTypes = csvFormat.orderOperationTypes(si.getOperationTypes());
 
-        for(Class<? extends Operation> ot: orderedOperationTypes)
-        {
-            if (headers)
-            {
+        for(Class<? extends Operation> ot: orderedOperationTypes) {
+
+            if (headers) {
+
                 s += csvFormat.getSuccessRateHeader(ot) + ", ";
                 s += csvFormat.getSuccessAverageDurationHeader(ot) + ", ";
                 s += csvFormat.getFailureRateHeader(ot) + ", ";
             }
-            else
-            {
+            else {
+
                 CounterValues v = si.getCounterValues(ot);
 
                 long sc = v.getSuccessCount();
@@ -100,8 +101,8 @@ public class CSVFormatter implements SamplingConsumer {
         }
 
         Set<Metric> metrics = si.getMetrics();
-        if (metrics != null)
-        {
+        if (metrics != null) {
+
             List<Metric> orderedMetrics = csvFormat.orderMetrics(metrics);
             for (Metric m : orderedMetrics)
             {
@@ -110,12 +111,12 @@ public class CSVFormatter implements SamplingConsumer {
             }
         }
 
-        if (headers)
-        {
+        if (headers) {
+
             s += csvFormat.getNotesHeader();
         }
-        else
-        {
+        else {
+
             List<String> notes = si.getAnnotations();
             s += csvFormat.formatNotes(notes);
         }
@@ -147,8 +148,8 @@ public class CSVFormatter implements SamplingConsumer {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public CSVFormatter(Writer w)
-    {
+    public CSVFormatter(Writer w) {
+
         this.w = w;
         this.writeHeaders = true;
         this.csvFormat = new CSVFormat();
@@ -160,32 +161,32 @@ public class CSVFormatter implements SamplingConsumer {
      * @see SamplingConsumer#consume(SamplingInterval...)
      */
     @Override
-    public void consume(SamplingInterval... samplingIntervals) throws Exception
-    {
-        if (writeHeaders)
-        {
+    public void consume(SamplingInterval... samplingIntervals) throws Exception {
+
+        if (writeHeaders) {
+
             writeHeaders = false;
             writeHeaders(samplingIntervals[0], csvFormat, w);
         }
 
-        for(SamplingInterval si: samplingIntervals)
-        {
+        for(SamplingInterval si: samplingIntervals) {
+
             writeLine(si, csvFormat, w);
         }
     }
 
     @Override
-    public void stop()
-    {
+    public void stop() {
+
         // close the underlying Writer
-        if (w != null)
-        {
-            try
-            {
+        if (w != null) {
+
+            try {
+
                 w.close();
             }
-            catch(IOException e)
-            {
+            catch(IOException e) {
+
                 log.warn(this + " failed to close the underlying writer", e);
             }
         }
