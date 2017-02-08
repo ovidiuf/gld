@@ -31,12 +31,14 @@ import io.novaordis.utilities.UserErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jms.*;
+import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
 import java.lang.IllegalStateException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -112,7 +114,7 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
 
         setConnectionPolicy(jmsLoadStrategy.getConnectionPolicy());
         setSessionPolicy(jmsLoadStrategy.getSessionPolicy());
-        this.connectionFactoryName = jmsLoadStrategy.getConnectionFactoryName();
+        setConnectionFactoryName(jmsLoadStrategy.getConnectionFactoryName());
     }
 
     @Override
@@ -408,6 +410,16 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
     protected void setConnection(Connection c) {
 
         this.connection = c;
+    }
+
+    protected void setConnectionFactoryName(String s) {
+
+        this.connectionFactoryName = s;
+    }
+
+    protected String getConnectionFactoryName() {
+
+        return connectionFactoryName;
     }
 
     // Private ---------------------------------------------------------------------------------------------------------
