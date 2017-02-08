@@ -52,9 +52,17 @@ public interface JmsService extends Service {
      */
     void checkIn(JmsEndpoint session) throws Exception;
 
-    javax.jms.Destination resolveDestination(Destination d);
+    /**
+     * @exception IllegalArgumentException on null destination.
+     * @exception Exception on any other underlying naming failure.
+     */
+    javax.jms.Destination resolveDestination(Destination d) throws Exception;
 
-    javax.jms.ConnectionFactory resolveConnectionFactory(String connectionFactoryName);
+    /**
+     * @exception IllegalArgumentException on null connection factory name
+     * @exception Exception on any other underlying naming failure.
+     */
+    javax.jms.ConnectionFactory resolveConnectionFactory(String connectionFactoryName) throws Exception;
 
 
 }
