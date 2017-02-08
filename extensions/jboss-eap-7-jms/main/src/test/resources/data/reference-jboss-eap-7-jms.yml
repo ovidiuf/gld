@@ -19,9 +19,11 @@ service:
   load-strategy:
     name: send
     queue: jms/queue/novaordis
-    connection-factory: jms/RemoteConnectionFactory2
+    connection-factory: jms/RemoteConnectionFactory
     connection-policy: connection-per-run
     session-policy: session-per-operation
+    user: jmsuser
+    password: jmsuser123
 
   implementation:
     name: jboss-eap-7-jms
