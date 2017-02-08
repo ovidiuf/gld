@@ -53,16 +53,19 @@ public interface JmsService extends Service {
     void checkIn(JmsEndpoint session) throws Exception;
 
     /**
+     * @return the JMS Destination instance corresponding to given destination, or null if the Destination is not found.
+     *
      * @exception IllegalArgumentException on null destination.
      * @exception Exception on any other underlying naming failure.
      */
     javax.jms.Destination resolveDestination(Destination d) throws Exception;
 
     /**
+     * @return the ConnectionFactory instance corresponding to the name, or null if the ConnectionFactory is not found.
+     *
      * @exception IllegalArgumentException on null connection factory name
      * @exception Exception on any other underlying naming failure.
      */
     javax.jms.ConnectionFactory resolveConnectionFactory(String connectionFactoryName) throws Exception;
-
 
 }
