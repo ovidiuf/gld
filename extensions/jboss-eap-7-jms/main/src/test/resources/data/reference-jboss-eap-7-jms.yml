@@ -17,7 +17,7 @@ service:
   message-size: 1024
 
   load-strategy:
-    name: send
+    name: receive
     queue: jms/queue/novaordis
     connection-factory: jms/RemoteConnectionFactory
     connection-policy: connection-per-run
@@ -30,12 +30,12 @@ service:
     version: 7.0.4
 
 
-     # 'classpath' is optional; if specified, it takes precedence
-     # over the libraries we ship with. if 'classpath' is missing,
-     # or the JAR(s) cannot be loaded, we will use the shipped
-     # libraries
+    # 'classpath' is optional; if specified, it takes precedence
+    # over the libraries we ship with. if 'classpath' is missing,
+    # or the JAR(s) cannot be loaded, we will use the shipped
+    # libraries
 
-    classpath: ${JDG_HOME}/client/activemq.jar
+    # classpath: ${JDG_HOME}/client/activemq.jar
 
     #
     # implementation-specific configuration
@@ -44,9 +44,10 @@ service:
     jndi-url: localhost:8080 # remoting access to the JNDI server
 
 load:
+
   threads: 1
   messages: 10000
 
 output:
   statistics:
-      file: test.csv
+      file: /Users/ovidiu/tmp/test.csv
