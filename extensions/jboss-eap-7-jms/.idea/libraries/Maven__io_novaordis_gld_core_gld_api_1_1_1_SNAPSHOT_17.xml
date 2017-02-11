@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: io.novaordis.gld.core:gld-api:1.1.1-SNAPSHOT-17">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/io/novaordis/gld/core/gld-api/1.1.1-SNAPSHOT-17/gld-api-1.1.1-SNAPSHOT-17.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/io/novaordis/gld/core/gld-api/1.1.1-SNAPSHOT-17/gld-api-1.1.1-SNAPSHOT-17-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/io/novaordis/gld/core/gld-api/1.1.1-SNAPSHOT-17/gld-api-1.1.1-SNAPSHOT-17-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

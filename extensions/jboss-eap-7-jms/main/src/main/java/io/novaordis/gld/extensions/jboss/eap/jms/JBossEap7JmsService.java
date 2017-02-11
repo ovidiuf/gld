@@ -149,6 +149,8 @@ public class JBossEap7JmsService extends JmsServiceBase {
 
         super.start();
 
+        log.debug("service " + this + " started");
+
     }
 
     @Override
