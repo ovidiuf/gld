@@ -115,7 +115,9 @@ public abstract class ServiceBase implements Service {
 
         started = true;
 
-        log.debug(this + " started");
+        //
+        // do not log "started" here, it will be confusing, as the sublass instance did not start yet
+        //
     }
 
     /**
