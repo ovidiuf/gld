@@ -49,7 +49,7 @@ public class ProducerTest extends JmsEndpointTest {
     public void close() throws Exception {
 
         EmbeddedConnection connection = new EmbeddedConnection();
-        EmbeddedSession session = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
+        EmbeddedSession session = new EmbeddedSession(connection, 0, false, Session.AUTO_ACKNOWLEDGE);
 
         assertFalse(session.isClosed());
 

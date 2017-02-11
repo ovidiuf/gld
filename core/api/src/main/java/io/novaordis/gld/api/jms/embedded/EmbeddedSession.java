@@ -55,10 +55,13 @@ public class EmbeddedSession implements Session {
 
     private int sessionId;
 
+    private EmbeddedConnection connection;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedSession(int sessionId, boolean transacted, int acknowledgment) {
+    public EmbeddedSession(EmbeddedConnection connection, int sessionId, boolean transacted, int acknowledgment) {
 
+        this.connection = connection;
         this.sessionId = sessionId;
         this.transacted = transacted;
         this.acknowledgment = acknowledgment;
@@ -194,7 +197,7 @@ public class EmbeddedSession implements Session {
     @Override
     public MessageConsumer createConsumer(Destination destination) throws JMSException {
 
-        EmbeddedMessageConsumer c = new EmbeddedMessageConsumer(destination);
+        EmbeddedMessageConsumer c = new EmbeddedMessageConsumer(this, destination);
         createdConsumers.add(c);
         return c;
     }
@@ -308,6 +311,11 @@ public class EmbeddedSession implements Session {
         }
 
         return result;
+    }
+
+    public EmbeddedConnection getConnection() {
+
+        return connection;
     }
 
     @Override

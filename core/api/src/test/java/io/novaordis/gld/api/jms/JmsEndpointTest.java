@@ -49,7 +49,7 @@ public abstract class JmsEndpointTest {
     public void session() throws Exception {
 
         EmbeddedConnection connection = new EmbeddedConnection();
-        EmbeddedSession session = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
+        EmbeddedSession session = new EmbeddedSession(connection, 0, false, Session.AUTO_ACKNOWLEDGE);
         EmbeddedQueue queue = new EmbeddedQueue("test");
 
         JmsEndpoint e = getEndpointToTest(queue, session, connection);
@@ -63,7 +63,7 @@ public abstract class JmsEndpointTest {
     public void connection() throws Exception {
 
         EmbeddedConnection connection = new EmbeddedConnection();
-        EmbeddedSession session = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
+        EmbeddedSession session = new EmbeddedSession(connection, 0, false, Session.AUTO_ACKNOWLEDGE);
         EmbeddedQueue queue = new EmbeddedQueue("test");
 
         JmsEndpointBase e = (JmsEndpointBase)getEndpointToTest(queue, session, connection);
@@ -77,7 +77,7 @@ public abstract class JmsEndpointTest {
     public void closeDoesNotCloseSession() throws Exception {
 
         EmbeddedConnection connection = new EmbeddedConnection();
-        EmbeddedSession session = new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE);
+        EmbeddedSession session = new EmbeddedSession(connection, 0, false, Session.AUTO_ACKNOWLEDGE);
         EmbeddedQueue queue = new EmbeddedQueue("test");
 
         JmsEndpoint e = getEndpointToTest(queue, session, connection);

@@ -17,6 +17,7 @@
 package io.novaordis.gld.api.jms;
 
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
+import io.novaordis.gld.api.jms.embedded.EmbeddedConnectionFactory;
 import io.novaordis.gld.api.jms.embedded.EmbeddedQueue;
 import io.novaordis.gld.api.jms.embedded.EmbeddedTopic;
 import io.novaordis.gld.api.jms.load.ConnectionPolicy;
@@ -96,7 +97,8 @@ public class MockJmsService extends JmsServiceBase {
 
     @Override
     public ConnectionFactory resolveConnectionFactory(String connectionFactoryName) {
-        throw new RuntimeException("resolveConnectionFactory() NOT YET IMPLEMENTED");
+
+        return new EmbeddedConnectionFactory();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

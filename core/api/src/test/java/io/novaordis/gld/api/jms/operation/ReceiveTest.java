@@ -20,10 +20,10 @@ import io.novaordis.gld.api.configuration.MockLoadConfiguration;
 import io.novaordis.gld.api.jms.MockJmsService;
 import io.novaordis.gld.api.jms.MockJmsServiceConfiguration;
 import io.novaordis.gld.api.jms.Queue;
-import io.novaordis.gld.api.jms.embedded.EmbeddedConnection;
 import io.novaordis.gld.api.jms.embedded.EmbeddedQueue;
 import io.novaordis.gld.api.jms.embedded.EmbeddedTextMessage;
 import io.novaordis.gld.api.jms.load.ConnectionPolicy;
+import io.novaordis.gld.api.jms.load.MockJmsLoadStrategy;
 import io.novaordis.gld.api.jms.load.MockReceiveLoadStrategy;
 import io.novaordis.gld.api.jms.load.ReceiveLoadStrategy;
 import io.novaordis.gld.api.jms.load.SessionPolicy;
@@ -65,7 +65,9 @@ public class ReceiveTest extends JmsOperationTest {
         MockJmsService service = new MockJmsService();
         service.setConnectionPolicy(ConnectionPolicy.CONNECTION_PER_RUN);
         service.setSessionPolicy(SessionPolicy.SESSION_PER_OPERATION);
-        service.setConnection(new EmbeddedConnection());
+        service.setLoadStrategy(new MockJmsLoadStrategy());
+
+        service.start();
 
         EmbeddedQueue q = (EmbeddedQueue)service.resolveDestination(new Queue("/jms/test-queue"));
         q.add(new EmbeddedTextMessage("b3snB3"));
@@ -94,7 +96,9 @@ public class ReceiveTest extends JmsOperationTest {
         MockJmsService service = new MockJmsService();
         service.setConnectionPolicy(ConnectionPolicy.CONNECTION_PER_RUN);
         service.setSessionPolicy(SessionPolicy.SESSION_PER_OPERATION);
-        service.setConnection(new EmbeddedConnection());
+        service.setLoadStrategy(new MockJmsLoadStrategy());
+
+        service.start();
 
         EmbeddedQueue q = (EmbeddedQueue)service.resolveDestination(new Queue("/jms/test-queue"));
 

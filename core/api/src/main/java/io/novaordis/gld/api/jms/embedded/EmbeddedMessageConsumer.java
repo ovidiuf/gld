@@ -35,12 +35,15 @@ public class EmbeddedMessageConsumer implements MessageConsumer {
 
     private boolean closed;
 
+    private EmbeddedSession session;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedMessageConsumer(Destination destination) {
+    public EmbeddedMessageConsumer(EmbeddedSession session, Destination destination) {
 
         this.destination = (EmbeddedDestination)destination;
         this.closed = false;
+        this.session = session;
     }
 
     // MessageConsumer implementation ----------------------------------------------------------------------------------
@@ -66,17 +69,23 @@ public class EmbeddedMessageConsumer implements MessageConsumer {
     @Override
     public Message receive() throws JMSException {
 
+        checkConnectionStarted();
+
         return new EmbeddedTextMessage("TEST");
     }
 
     @Override
     public Message receive(long timeoutMs) throws JMSException {
 
+        checkConnectionStarted();
+
         return destination.get(timeoutMs);
     }
 
     @Override
     public Message receiveNoWait() throws JMSException {
+
+        checkConnectionStarted();
 
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
@@ -104,6 +113,16 @@ public class EmbeddedMessageConsumer implements MessageConsumer {
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private void checkConnectionStarted() {
+
+        EmbeddedConnection c = session.getConnection();
+
+        if (!c.isStarted()) {
+
+            throw new IllegalStateException("underlying " + c + " not started");
+        }
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

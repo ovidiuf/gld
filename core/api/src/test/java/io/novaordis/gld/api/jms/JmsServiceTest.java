@@ -616,7 +616,7 @@ public abstract class JmsServiceTest extends ServiceTest {
         s.checkOut(new MockSend(mls));
 
         MockJmsEndpoint me = new MockJmsEndpoint();
-        me.setSession(new EmbeddedSession(0, false, Session.AUTO_ACKNOWLEDGE));
+        me.setSession(new EmbeddedSession(null, 0, false, Session.AUTO_ACKNOWLEDGE));
 
         try {
 

@@ -169,6 +169,12 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
 
                     c = connectionFactory.createConnection();
                 }
+
+                log.debug("connection " + c + " created");
+
+                c.start();
+
+                log.debug("connection " + c + " started");
             }
             catch(Exception e) {
 

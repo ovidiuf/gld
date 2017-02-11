@@ -75,7 +75,7 @@ public class EmbeddedConnection implements Connection {
     @Override
     public Session createSession(boolean b, int i) throws JMSException {
 
-        EmbeddedSession s = new EmbeddedSession(sessionCounter++, b, i);
+        EmbeddedSession s = new EmbeddedSession(this, sessionCounter++, b, i);
         createdSessions.add(s);
         return s;
     }
@@ -163,6 +163,11 @@ public class EmbeddedConnection implements Connection {
         }
 
         return result;
+    }
+
+    public boolean isStarted() {
+
+        return started;
     }
 
     @Override
