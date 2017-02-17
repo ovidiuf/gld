@@ -94,8 +94,6 @@ public class YamlBasedConfiguration implements Configuration {
             configurationDirectory = new File(".");
         }
 
-
-
         InputStream is = null;
 
         try {
@@ -104,7 +102,18 @@ public class YamlBasedConfiguration implements Configuration {
 
             Yaml yaml = new Yaml();
 
-            Map topLevelConfigurationMap = (Map)yaml.load(is);
+            Object content = yaml.load(is);
+
+            if (content == null) {
+
+                throw new UserErrorException("empty configuration file " + f);
+            }
+            else if (!(content instanceof Map)) {
+
+                throw new UserErrorException("invalid configuration file " + f);
+            }
+
+            Map topLevelConfigurationMap = (Map)content;
 
             Map<String, Object> serviceConfigurationMap = null;
             Map<String, Object> loadConfigurationMap = null;

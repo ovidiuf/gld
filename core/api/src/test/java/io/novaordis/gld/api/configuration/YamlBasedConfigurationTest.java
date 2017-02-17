@@ -108,32 +108,52 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
         assertEquals("c", l.get(2));
     }
 
-    // constructor -----------------------------------------------------------------------------------------------------
+    // load ------------------------------------------------------------------------------------------------------------
 
     @Test
-    public void missingServiceSection() throws Exception {
+    public void load_EmptyFile() throws Exception {
 
         File f = new File(scratchDirectory, "test.yml");
-        assertTrue(Files.write(f, "# empty"));
+        Files.write(f, "");
+
         YamlBasedConfiguration c = new YamlBasedConfiguration();
 
         try {
 
             c.load(f);
-            fail("should have thrown exception");
+            fail("should throw exception");
         }
         catch(UserErrorException e) {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertTrue(msg.matches(
-                    "'" + YamlBasedConfiguration.SERVICE_SECTION_LABEL +
-                            "' section empty or missing from configuration file .*test.yml"));
+            assertTrue(msg.startsWith("empty configuration file"));
         }
     }
 
     @Test
-    public void emptyServiceSection() throws Exception {
+    public void load_CommentsOnly() throws Exception {
+
+        File f = new File(scratchDirectory, "test.yml");
+        assertTrue(Files.write(f, "# empty"));
+
+        YamlBasedConfiguration c = new YamlBasedConfiguration();
+
+        try {
+
+            c.load(f);
+            fail("should throw exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.startsWith("empty configuration file"));
+        }
+    }
+
+    @Test
+    public void load_emptyServiceSection() throws Exception {
 
         File f = new File(scratchDirectory, "test.yml");
         assertTrue(Files.write(f,
@@ -159,7 +179,7 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
     }
 
     @Test
-    public void unknownServiceType() throws Exception {
+    public void load_unknownServiceType() throws Exception {
 
         File f = new File(scratchDirectory, "test.yml");
         assertTrue(Files.write(f,
@@ -184,7 +204,7 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
     }
 
     @Test
-    public void missingLoadSection() throws Exception {
+    public void load_missingLoadSection() throws Exception {
 
         File f = new File(scratchDirectory, "test.yml");
         assertTrue(Files.write(f,
@@ -208,7 +228,7 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
     }
 
     @Test
-    public void missingStoreSection() throws Exception {
+    public void load_missingStoreSection() throws Exception {
 
         File f = new File(scratchDirectory, "test.yml");
         assertTrue(Files.write(f,
@@ -228,7 +248,7 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
     }
 
     @Test
-    public void storeConfiguration() throws Exception {
+    public void load_storeConfiguration() throws Exception {
 
         File f = new File(scratchDirectory, "test.yml");
         assertTrue(Files.write(f,
@@ -248,7 +268,7 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
     }
 
     @Test
-    public void outputConfiguration() throws Exception {
+    public void load_outputConfiguration() throws Exception {
 
         File f = new File(scratchDirectory, "test.yml");
         assertTrue(Files.write(f,
@@ -270,7 +290,7 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
     }
 
     @Test
-    public void noParentSpecifiedForConfigurationFile() throws Exception {
+    public void load_noParentSpecifiedForConfigurationFile() throws Exception {
 
         File f = new File("no-such-file.yml");
 
@@ -299,6 +319,27 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
         // make sure the parent directory was initialized correctly
         //
         assertEquals(new File("."), c.getConfigurationDirectory());
+    }
+
+    @Test
+    public void load_RandomContent() throws Exception {
+
+        File f = new File(scratchDirectory, "test.yml");
+        Files.write(f, "some random content\nsome other random content\n");
+
+        YamlBasedConfiguration c = new YamlBasedConfiguration();
+
+        try {
+
+            c.load(f);
+            fail("should throw exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertTrue(msg.startsWith("invalid configuration file "));
+        }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
