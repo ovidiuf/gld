@@ -20,6 +20,7 @@ import io.novaordis.utilities.Files;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +44,8 @@ public class LowLevelConfigurationBase implements LowLevelConfiguration {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
+     * @param raw - null is acceptable, it will default to an empty map.
+     *
      * @param configurationDirectory represents the directory the configuration file the map was extracted from lives
      *                               in. It is needed to resolve the configuration elements that are relative file
      *                               paths. All relative file paths will be resolved relatively to the directory that
@@ -72,6 +75,12 @@ public class LowLevelConfigurationBase implements LowLevelConfiguration {
         }
 
         this.configurationDirectory = configurationDirectory;
+
+        if (raw == null) {
+
+            raw = new HashMap<>();
+        }
+
         this.rawConfiguration = raw;
     }
 
@@ -236,8 +245,8 @@ public class LowLevelConfigurationBase implements LowLevelConfiguration {
     // Protected -------------------------------------------------------------------------------------------------------
 
     /**
-     * Replaces the underlying instance at the specified position, if the path matches. If there is not a full patch
-     * match, and all the parents aren't Maps, the method throws IllegalArgumentException (no new parent maps are
+     * Replaces the underlying instance at the specified position, if the path matches. If there is not a full path
+     * match, and all the parents aren't Maps, the method throws IllegalArgumentException (no new parent maps will be
      * created). However, we will create the map corresponding to the last token in path, if the last token in path
      * is not known.
      *

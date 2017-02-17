@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.configuration;
+package io.novaordis.gld.api.service;
 
-import io.novaordis.gld.api.service.ServiceType;
 import org.junit.Test;
-
-import java.io.File;
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 2/17/17
  */
-public class LoadConfigurationImplTest extends LoadConfigurationTest {
+public class ServiceTypeTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(ServiceTypeTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -43,25 +43,41 @@ public class LoadConfigurationImplTest extends LoadConfigurationTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
-    // default load configuration --------------------------------------------------------------------------------------
+    // fromString() ----------------------------------------------------------------------------------------------------
 
     @Test
-    public void defaultLoadConfiguration() throws Exception {
+    public void fromString_Unknown() throws Exception {
 
-        LoadConfiguration c = new LoadConfigurationImpl(ServiceType.mock, null, new File("."));
+        try {
 
-        assertEquals(1, c.getThreadCount());
-        assertNull(c.getOperations());
+            ServiceType.fromString("something");
+            fail("should throw exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("unknown service type 'something'", msg);
+        }
+    }
+
+    @Test
+    public void fromString() throws Exception {
+
+
+        ServiceType t = ServiceType.fromString("cache");
+        assertEquals(ServiceType.cache, t);
+    }
+
+    @Test
+    public void fromString_CaseInsensitive() throws Exception {
+
+
+        ServiceType t = ServiceType.fromString("Cache");
+        assertEquals(ServiceType.cache, t);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
-
-    @Override
-    protected LoadConfigurationImpl getConfigurationToTest(
-            Map<String, Object> rawMap, File configurationDirectory) throws Exception {
-
-        return new LoadConfigurationImpl(ServiceType.mock, rawMap, configurationDirectory);
-    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

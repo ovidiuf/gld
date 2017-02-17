@@ -9,6 +9,9 @@ service:
 
   type: jms
 
+  implementation:
+    name: embedded
+
   message-size: 1024
 
   load-strategy:
@@ -20,8 +23,6 @@ service:
     message-size: 1025
     reuse-value: false
 
-  implementation:
-    name: embedded
 #
 # load characteristics
 #

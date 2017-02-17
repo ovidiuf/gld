@@ -26,5 +26,20 @@ public enum ServiceType {
     jms,
     http,
     mock,   // used for testing
-    unknown // used for testing
+    unknown, // used for testing
+
+    ;
+
+    public static ServiceType fromString(String s) {
+
+        for(ServiceType t: values()) {
+
+            if (t.toString().equalsIgnoreCase(s)) {
+
+                return t;
+            }
+        }
+
+        throw new IllegalArgumentException("unknown service type '" + s + "'");
+    }
 }

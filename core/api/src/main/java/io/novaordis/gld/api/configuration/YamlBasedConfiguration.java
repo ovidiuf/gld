@@ -89,7 +89,9 @@ public class YamlBasedConfiguration implements Configuration {
     public void load(File f) throws Exception {
 
         this.file = f;
+
         this.configurationDirectory = f.getParentFile();
+
         if (configurationDirectory == null) {
             configurationDirectory = new File(".");
         }
@@ -120,14 +122,18 @@ public class YamlBasedConfiguration implements Configuration {
             Map<String, Object> storeConfigurationMap = null;
             Map<String, Object> outputConfigurationMap = null;
 
+            //noinspection ConstantConditions
             if (topLevelConfigurationMap != null) {
 
                 //noinspection unchecked
                 serviceConfigurationMap = (Map<String, Object>)topLevelConfigurationMap.get(SERVICE_SECTION_LABEL);
+
                 //noinspection unchecked
                 loadConfigurationMap = (Map<String, Object>)topLevelConfigurationMap.get(LOAD_SECTION_LABEL);
+
                 //noinspection unchecked
                 storeConfigurationMap = (Map<String, Object>)topLevelConfigurationMap.get(STORE_SECTION_LABEL);
+
                 //noinspection unchecked
                 outputConfigurationMap = (Map<String, Object>)topLevelConfigurationMap.get(OUTPUT_SECTION_LABEL);
             }
@@ -138,51 +144,13 @@ public class YamlBasedConfiguration implements Configuration {
                         "'" + SERVICE_SECTION_LABEL + "' section empty or missing from configuration file " + file);
             }
 
-            String serviceType = (String)serviceConfigurationMap.get(ServiceConfiguration.TYPE_LABEL);
+            serviceConfiguration = buildServiceConfiguration(serviceConfigurationMap, configurationDirectory);
 
-            if (ServiceType.cache.name().equals(serviceType)) {
+            ServiceType st = serviceConfiguration.getType();
 
-                serviceConfiguration =
-                        new CacheServiceConfigurationImpl(serviceConfigurationMap, configurationDirectory);
-            }
-            else if (ServiceType.jms.name().equals(serviceType)) {
-
-                serviceConfiguration =
-                        new JmsServiceConfigurationImpl(serviceConfigurationMap, configurationDirectory);
-            }
-            else if (ServiceType.http.name().equals(serviceType)) {
-
-                serviceConfiguration =
-                        new HttpServiceConfigurationImpl(serviceConfigurationMap, configurationDirectory);
-            }
-            else {
-
-                throw new UserErrorException(
-                        "unknown service type '" + serviceType + "' in configuration file " + file);
-            }
-
-            if (loadConfigurationMap == null) {
-
-                //
-                // load defaults
-                //
-
-                loadConfiguration = LoadConfigurationImpl.getDefaultConfiguration(configurationDirectory);
-            }
-            else {
-
-                loadConfiguration = new LoadConfigurationImpl(loadConfigurationMap, configurationDirectory);
-            }
-
-            if (storeConfigurationMap != null) {
-
-                storeConfiguration = new StoreConfigurationImpl(storeConfigurationMap, configurationDirectory);
-            }
-
-            if (outputConfigurationMap != null) {
-
-                outputConfiguration = new OutputConfigurationImpl(outputConfigurationMap, configurationDirectory);
-            }
+            loadConfiguration = new LoadConfigurationImpl(st, loadConfigurationMap, configurationDirectory);
+            storeConfiguration = new StoreConfigurationImpl(storeConfigurationMap, configurationDirectory);
+            outputConfiguration = new OutputConfigurationImpl(outputConfigurationMap, configurationDirectory);
 
         }
         finally {
@@ -213,6 +181,49 @@ public class YamlBasedConfiguration implements Configuration {
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private static ServiceType extractServiceType(Map<String, Object> serviceConfigurationMap)
+            throws UserErrorException {
+
+        String sts = (String)serviceConfigurationMap.get(ServiceConfiguration.TYPE_LABEL);
+
+        if (sts == null) {
+
+            throw new UserErrorException("required 'type' missing from the service section");
+        }
+
+        try {
+
+            return ServiceType.fromString(sts);
+        }
+        catch(IllegalArgumentException e) {
+
+            throw new UserErrorException(e.getMessage());
+        }
+    }
+
+    private static ServiceConfiguration buildServiceConfiguration(Map<String, Object> serviceConfigurationMap,
+                                                                  File configurationDirectory) throws Exception {
+
+        ServiceType st = extractServiceType(serviceConfigurationMap);
+
+        if (ServiceType.cache.equals(st)) {
+
+            return new CacheServiceConfigurationImpl(serviceConfigurationMap, configurationDirectory);
+        }
+        else if (ServiceType.jms.equals(st)) {
+
+            return new JmsServiceConfigurationImpl(serviceConfigurationMap, configurationDirectory);
+        }
+        else if (ServiceType.http.equals(st)) {
+
+            return new HttpServiceConfigurationImpl(serviceConfigurationMap, configurationDirectory);
+        }
+        else {
+
+            throw new RuntimeException(st + " service type NOT YET SUPPORTED");
+        }
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

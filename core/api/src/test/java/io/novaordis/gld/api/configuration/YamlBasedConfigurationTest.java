@@ -153,7 +153,7 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
     }
 
     @Test
-    public void load_emptyServiceSection() throws Exception {
+    public void load_service_emptyServiceSection() throws Exception {
 
         File f = new File(scratchDirectory, "test.yml");
         assertTrue(Files.write(f,
@@ -179,7 +179,7 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
     }
 
     @Test
-    public void load_unknownServiceType() throws Exception {
+    public void load_service_unknownServiceType() throws Exception {
 
         File f = new File(scratchDirectory, "test.yml");
         assertTrue(Files.write(f,
@@ -198,8 +198,30 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertTrue(msg.matches(
-                    "unknown service type 'no-such-service-type' in configuration file .*test.yml"));
+            assertTrue(msg.startsWith("unknown service type 'no-such-service-type'"));
+        }
+    }
+
+    @Test
+    public void load_service_MissingServiceType() throws Exception {
+
+        File f = new File(scratchDirectory, "test.yml");
+        assertTrue(Files.write(f,
+                "service:\n" +
+                        "  implementation: embedded\n"));
+
+        YamlBasedConfiguration c = new YamlBasedConfiguration();
+
+        try {
+
+            c.load(f);
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
+            assertEquals("required 'type' missing from the service section", msg);
         }
     }
 
@@ -242,9 +264,17 @@ public class YamlBasedConfigurationTest extends ConfigurationTest {
         // we should be fine, if no store section is found, it means we don't store keys
         //
         YamlBasedConfiguration c = new YamlBasedConfiguration();
+
         c.load(f);
+
         StoreConfiguration sc = c.getStoreConfiguration();
-        assertNull(sc);
+
+        //
+        // returns an empty configuration
+        //
+
+        assertNotNull(sc);
+        assertNull(sc.getStoreType());
     }
 
     @Test

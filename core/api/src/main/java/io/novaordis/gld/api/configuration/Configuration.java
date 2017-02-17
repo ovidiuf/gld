@@ -48,12 +48,12 @@ public interface Configuration {
     LoadConfiguration getLoadConfiguration();
 
     /**
-     * May return null, it means there's no key store, we simply discard the keys used in testing.
+     * May return an empty configuration, it means there's no key store, we simply discard the keys used in testing.
      */
     StoreConfiguration getStoreConfiguration();
 
     /**
-     * May return null, it means there's no explicit output configuration, default should be used.
+     * May return an empty configuration, it means there's no explicit output configuration, default should be used.
      */
     OutputConfiguration getOutputConfiguration();
 

@@ -16,6 +16,8 @@
 
 package io.novaordis.gld.api.configuration;
 
+import io.novaordis.gld.api.service.ServiceType;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +54,16 @@ public class MockLoadConfiguration extends LowLevelConfigurationBase implements 
     }
 
     // LoadConfiguration implementation --------------------------------------------------------------------------------
+
+    @Override
+    public void setServiceType(ServiceType t) {
+        throw new RuntimeException("setServiceType() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public ServiceType getServiceType() {
+        throw new RuntimeException("getServiceType() NOT YET IMPLEMENTED");
+    }
 
     @Override
     public int getThreadCount() {

@@ -44,6 +44,8 @@ public interface StoreConfiguration extends LowLevelConfiguration {
     /**
      * A well-known store type ("in-memory", "hierarchical", etc.) or a fully qualified class name that can be
      * instantiated by reflection.
+     *
+     * May return null.
      */
     String getStoreType() throws UserErrorException;
 

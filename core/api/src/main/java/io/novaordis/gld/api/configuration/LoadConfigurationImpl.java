@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.api.configuration;
 
+import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.utilities.UserErrorException;
 
 import java.io.File;
@@ -33,44 +34,58 @@ public class LoadConfigurationImpl extends LowLevelConfigurationBase
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    public static LoadConfiguration getDefaultConfiguration(File configurationDirectory) {
-
-        Map<String, Object> raw = new HashMap<>();
-
-        raw.put(THREAD_COUNT_LABEL, DEFAULT_THREAD_COUNT);
-
-        try {
-
-            return new LoadConfigurationImpl(raw, configurationDirectory);
-        }
-        catch(Exception e) {
-
-            //
-            // not supposed to happen
-            //
-            throw new IllegalArgumentException(e);
-        }
-    }
-
     // Attributes ------------------------------------------------------------------------------------------------------
+
+    private ServiceType serviceType;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
+     * @param serviceType the service type.
+     *
      * @param rawMap the raw map as extracted from the YAML file from the section corresponding to this type of
-     *            configuration.
+     *            configuration. Null is acceptable, and in this case the instance will return default values.
+     *
      * @param configurationDirectory represents the directory the configuration file the map was extracted from lives
      *                               in. It is needed to resolve the configuration elements that are relative file
      *                               paths. All relative file paths will be resolved relatively to the directory that
      *                               contains the configuration file. The directory must exist, otherwise the
      *                               constructor will fail with IllegalArgumentException.
      */
-    public LoadConfigurationImpl(Map<String, Object> rawMap, File configurationDirectory) throws Exception {
+    public LoadConfigurationImpl(ServiceType serviceType, Map<String, Object> rawMap, File configurationDirectory)
+            throws Exception {
 
         super(rawMap, configurationDirectory);
+
+        if (serviceType == null) {
+
+            throw new IllegalArgumentException("null service type");
+        }
+
+        if (rawMap == null) {
+
+            rawMap = new HashMap<>();
+            rawMap.put(THREAD_COUNT_LABEL, DEFAULT_THREAD_COUNT);
+
+            set(rawMap);
+        }
+
+        this.serviceType = serviceType;
     }
 
-    // LoadConfiguration implementation --------------------------------------------------------------------------
+    // LoadConfiguration implementation --------------------------------------------------------------------------------
+
+    @Override
+    public ServiceType getServiceType() {
+
+        return serviceType;
+    }
+
+    @Override
+    public void setServiceType(ServiceType t) {
+
+        this.serviceType = t;
+    }
 
     @Override
     public int getThreadCount() throws UserErrorException {

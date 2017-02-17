@@ -16,8 +16,6 @@
 
 package io.novaordis.gld.api.configuration;
 
-import io.novaordis.utilities.UserErrorException;
-
 import java.io.File;
 import java.util.Map;
 
@@ -38,7 +36,8 @@ public class StoreConfigurationImpl extends LowLevelConfigurationBase
 
     /**
      * @param rawMap the raw map as extracted from the YAML file from the section corresponding to this type of
-     *            configuration.
+     *            configuration. Null is acceptable.
+     *
      * @param configurationDirectory represents the directory the configuration file the map was extracted from lives
      *                               in. It is needed to resolve the configuration elements that are relative file
      *                               paths. All relative file paths will be resolved relatively to the directory that
@@ -53,16 +52,9 @@ public class StoreConfigurationImpl extends LowLevelConfigurationBase
     // StoreConfiguration implementation -------------------------------------------------------------------------------
 
     @Override
-    public String getStoreType() throws UserErrorException {
+    public String getStoreType() {
 
-        String s = get(String.class, StoreConfiguration.STORE_TYPE_LABEL);
-
-        if (s == null) {
-
-            throw new UserErrorException("missing store type");
-        }
-
-        return s;
+        return get(String.class, StoreConfiguration.STORE_TYPE_LABEL);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

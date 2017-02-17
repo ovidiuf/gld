@@ -39,7 +39,8 @@ public class OutputConfigurationImpl extends LowLevelConfigurationBase implement
 
     /**
      * @param rawMap the raw map as extracted from the YAML file from the section corresponding to this type of
-     *            configuration.
+     *            configuration. Null is acceptable.
+     *
      * @param configurationDirectory represents the directory the configuration file the map was extracted from lives
      *                               in. It is needed to resolve the configuration elements that are relative file
      *                               paths. All relative file paths will be resolved relatively to the directory that

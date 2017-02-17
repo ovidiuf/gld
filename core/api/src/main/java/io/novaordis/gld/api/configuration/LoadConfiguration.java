@@ -16,11 +16,16 @@
 
 package io.novaordis.gld.api.configuration;
 
+import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.utilities.UserErrorException;
 
 /**
  * Typed access to the configuration that specifies the load characteristics (number of threads, duration, number
- * of requests/operations/messages), etc.
+ * of requests/operations/messages), key size, value size, message size, etc.
+ *
+ * Some of the configuration elements depend on the service type, so the service type has to be known when the
+ * configuration is parsed. The service type will be looked up only if such configuration elements are found, otherwise
+ * it can be left unset.
  *
  * The implementations of this interface also allow low-level typed access (typed access to specific points into the
  * configuration structure) via LowLevelConfiguration.
@@ -42,6 +47,14 @@ public interface LoadConfiguration extends LowLevelConfiguration {
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    /**
+     * The service type has to be known when the configuration is parsed, because some of the configuration elements
+     * are service-type dependent.
+     */
+    void setServiceType(ServiceType t);
+
+    ServiceType getServiceType();
 
     // Typed Access ----------------------------------------------------------------------------------------------------
 

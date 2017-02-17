@@ -16,7 +16,6 @@
 
 package io.novaordis.gld.api.configuration;
 
-import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 /**
@@ -55,17 +55,11 @@ public abstract class StoreConfigurationTest extends LowLevelConfigurationTest {
 
         StoreConfiguration c = getConfigurationToTest(rawMap, new File(System.getProperty("basedir")));
 
-        try {
+        //
+        // null is acceptable
+        //
+        assertNull(c.getStoreType());
 
-            c.getStoreType();
-            fail("should throw exception");
-        }
-        catch(UserErrorException e) {
-
-            String msg = e.getMessage();
-            log.info(msg);
-            assertEquals("missing store type", msg);
-        }
     }
 
     @Test
