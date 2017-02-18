@@ -6,13 +6,13 @@ service:
   type: cache
   implementation: embedded
 
-  key-size: 10
-  value-size: 1024
-
   load-strategy:
     name: read-then-write-on-miss
     use-different-values: true
 
 load:
   threads: 1
+  key-size: 10
+  value-size: 1024
+
 

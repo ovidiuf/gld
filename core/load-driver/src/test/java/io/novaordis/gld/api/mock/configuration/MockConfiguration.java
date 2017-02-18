@@ -21,6 +21,7 @@ import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.configuration.OutputConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.configuration.StoreConfiguration;
+import io.novaordis.gld.api.service.ServiceType;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -44,7 +45,7 @@ public class MockConfiguration implements Configuration {
     public MockConfiguration() throws Exception {
 
         serviceConfiguration = new MockServiceConfiguration();
-        loadConfiguration = new MockLoadConfiguration();
+        loadConfiguration = new MockLoadConfiguration(ServiceType.mock);
         storeConfiguration = new MockStoreConfiguration();
         outputConfiguration = new MockOutputConfiguration();
     }

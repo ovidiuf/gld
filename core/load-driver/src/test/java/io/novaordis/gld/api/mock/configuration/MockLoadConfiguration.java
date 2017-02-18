@@ -17,6 +17,8 @@
 package io.novaordis.gld.api.mock.configuration;
 
 import io.novaordis.gld.api.configuration.LoadConfigurationImpl;
+import io.novaordis.gld.api.service.ServiceType;
+import io.novaordis.utilities.UserErrorException;
 
 import java.io.File;
 import java.util.HashMap;
@@ -34,11 +36,14 @@ public class MockLoadConfiguration extends LoadConfigurationImpl {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private Integer keySize;
+    private Integer valueSize;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockLoadConfiguration() throws Exception {
+    public MockLoadConfiguration(ServiceType st) throws Exception {
 
-        super(new HashMap<>(), new File("."));
+        super(st, new HashMap<>(), new File("."));
 
         Map<String, Object> root = get();
 
@@ -53,6 +58,35 @@ public class MockLoadConfiguration extends LoadConfigurationImpl {
 
         Map<String, Object> root = get();
         root.put(OPERATION_COUNT_LABEL, i);
+    }
+
+    @Override
+    public Integer getKeySize() throws UserErrorException {
+
+        return keySize;
+    }
+
+    @Override
+    public Integer getValueSize() throws UserErrorException {
+
+        return valueSize;
+    }
+
+    @Override
+    public Integer getMessageSize() throws UserErrorException {
+
+        throw new RuntimeException("getMessageSize() NOT YET IMPLEMENTED");
+    }
+
+    public void setKeySize(Integer i) {
+
+        this.keySize = i;
+
+    }
+
+    public void setValueSize(Integer i) {
+
+        this.valueSize = i;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

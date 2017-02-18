@@ -12,8 +12,6 @@ service:
   implementation:
     name: embedded
 
-  message-size: 1024
-
   load-strategy:
     name: send
     queue: jms/queue/novaordis
@@ -27,8 +25,11 @@ service:
 # load characteristics
 #
 load:
+
   threads: 10
   messages: 10000000
+  message-size: 1024
+
 
 #
 # key store configuration

@@ -335,18 +335,8 @@ public class SingleThreadedRunnerTest {
             }
 
             @Override
-            public Long getOperations() {
-                throw new RuntimeException("getOperations() NOT YET IMPLEMENTED");
-            }
-
-            @Override
             public Long getRemainingOperations() {
                 throw new RuntimeException("getRemainingOperations() NOT YET IMPLEMENTED");
-            }
-
-            @Override
-            public int getValueSize() {
-                throw new RuntimeException("getValueSize() NOT YET IMPLEMENTED");
             }
 
             @Override
@@ -408,8 +398,6 @@ public class SingleThreadedRunnerTest {
         MockCacheService mcs = new MockCacheService();
 
         MockCacheServiceConfiguration msc = new MockCacheServiceConfiguration();
-        msc.setKeySize(3);
-        msc.setValueSize(7);
 
         msc.set(WriteThenReadLoadStrategy.NAME,
                 CacheServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL,
@@ -432,8 +420,10 @@ public class SingleThreadedRunnerTest {
                 WriteThenReadLoadStrategy.REUSE_VALUE_LABEL);
 
 
-        MockLoadConfiguration mlc = new MockLoadConfiguration();
+        MockLoadConfiguration mlc = new MockLoadConfiguration(mcs.getType());
         mlc.setOperations(2);
+        mlc.setKeySize(3);
+        mlc.setValueSize(7);
 
         //
         // because we're building the instance directly and not with the factory, clean configuration elements

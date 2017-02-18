@@ -17,7 +17,6 @@
 package io.novaordis.gld.api.mock.configuration;
 
 import io.novaordis.gld.api.cache.CacheServiceConfiguration;
-import io.novaordis.utilities.UserErrorException;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -31,42 +30,14 @@ public class MockCacheServiceConfiguration extends MockServiceConfiguration impl
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private int keySize;
-    private int valueSize;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockCacheServiceConfiguration() {
-
-        this.keySize = 1;
-        this.valueSize = 1;
     }
 
     // CacheServiceConfiguration implementation ------------------------------------------------------------------------
 
-    @Override
-    public int getKeySize() throws UserErrorException {
-
-        return keySize;
-    }
-
-    @Override
-    public int getValueSize() throws UserErrorException {
-
-        return valueSize;
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public void setKeySize(int i) {
-
-        this.keySize = i;
-    }
-
-    public void setValueSize(int i) {
-
-        this.valueSize = i;
-    }
 
     //
     // make set() public for testing

@@ -10,9 +10,6 @@ service:
   type: cache # options: cache, jms, http, etc.
   implementation: embedded
 
-  key-size: 512
-  value-size: 1024
-
   load-strategy:
     name: read-then-write-on-miss
     reuse-value: false
@@ -21,8 +18,12 @@ service:
 # load characteristics
 #
 load:
+
   threads: 10
   operations: 17
+  key-size: 512
+  value-size: 1024
+
 
 #
 # key store configuration

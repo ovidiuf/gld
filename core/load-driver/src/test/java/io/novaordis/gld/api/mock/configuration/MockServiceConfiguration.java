@@ -79,11 +79,6 @@ public class MockServiceConfiguration extends LowLevelConfigurationBase implemen
         throw new RuntimeException("getLoadStrategyName() NOT YET IMPLEMENTED");
     }
 
-    @Override
-    public int getValueSize() throws UserErrorException {
-        throw new RuntimeException("getValueSize() NOT YET IMPLEMENTED");
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
