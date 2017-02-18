@@ -9,7 +9,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="jboss-eap-7-jms" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: io.novaordis.gld.core:gld-api:1.1.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.novaordis.gld.core:gld-api:1.1.2-SNAPSHOT-3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.yaml:snakeyaml:1.17" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.jms:jms-api:1.1-rev-1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.novaordis.utilities:novaordis-utilities:4.5" level="project" />

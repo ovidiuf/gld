@@ -13,9 +13,6 @@
 #
 service:
 
-  type: jms
-  message-size: 1024
-
   load-strategy:
     name: receive
     queue: jms/queue/novaordis
@@ -47,6 +44,8 @@ load:
 
   threads: 1
   messages: 10000
+  type: jms
+  message-size: 1024
 
 output:
   statistics:
