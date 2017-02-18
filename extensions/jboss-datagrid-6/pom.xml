@@ -28,7 +28,7 @@
             target versions. The dependence on the API is not declared directly
             but through this module.
         -->
-        <gld.extension.jboss.datagrid.common.version>1.0.0</gld.extension.jboss.datagrid.common.version>
+        <gld.extension.jboss.datagrid.common.version>1.0.1-SNAPSHOT-1</gld.extension.jboss.datagrid.common.version>
 
         <novaordis.utilities.version>4.4.0</novaordis.utilities.version>
         <slf4j.version>1.7.6</slf4j.version>
