@@ -191,6 +191,41 @@ public abstract class LoadStrategyTest {
         assertFalse(s.isReuseValue());
     }
 
+    @Test
+    public void init_ValueSizeSpecifiedInLoadConfiguration() throws Exception {
+
+        LoadStrategyBase s = (LoadStrategyBase)getLoadStrategyToTest();
+
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+        MockServiceConfiguration msc = getCorrespondingServiceConfiguration();
+
+        msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
+
+        int valueSize = 12345;
+        mlc.setValueSize(valueSize);
+
+        s.init(msc, mlc);
+
+        assertEquals(valueSize, s.getValueSize());
+    }
+
+    @Test
+    public void init_ValueSizeNotSpecifiedInLoadConfiguration() throws Exception {
+
+        LoadStrategyBase s = (LoadStrategyBase)getLoadStrategyToTest();
+
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+        MockServiceConfiguration msc = getCorrespondingServiceConfiguration();
+
+        msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
+
+        mlc.setValueSize(null);
+
+        s.init(msc, mlc);
+
+        assertEquals(s.getServiceType().getDefaultValueSize(), s.getValueSize());
+    }
+
     // identity and defaults -------------------------------------------------------------------------------------------
 
     @Test
@@ -199,15 +234,10 @@ public abstract class LoadStrategyTest {
         LoadStrategy ls = getLoadStrategyToTest();
 
         // unlimited
-        assertNull(ls.getOperations());
-
-        // unlimited
         assertNull(ls.getRemainingOperations());
 
         // reuse value
         assertTrue(ls.isReuseValue());
-
-        assertEquals(ServiceConfiguration.DEFAULT_VALUE_SIZE, ls.getValueSize());
     }
 
     // lifecycle -------------------------------------------------------------------------------------------------------
@@ -376,11 +406,9 @@ public abstract class LoadStrategyTest {
         LoadStrategyBase lsb = (LoadStrategyBase)getLoadStrategyToTest();
         initialize(lsb, msc);
 
-        assertNull(lsb.getOperations());
         assertNull(lsb.getRemainingOperations());
 
         lsb.setOperations(1L);
-        assertEquals(1L, lsb.getOperations().longValue());
         assertEquals(1L, lsb.getRemainingOperations().longValue());
 
         //
@@ -391,7 +419,6 @@ public abstract class LoadStrategyTest {
 
         assertNotNull(o);
 
-        assertEquals(1L, lsb.getOperations().longValue());
         assertEquals(0L, lsb.getRemainingOperations().longValue());
 
         //
@@ -402,7 +429,6 @@ public abstract class LoadStrategyTest {
 
         assertNull(o2);
 
-        assertEquals(1L, lsb.getOperations().longValue());
         assertEquals(0L, lsb.getRemainingOperations().longValue());
     }
 
@@ -414,8 +440,6 @@ public abstract class LoadStrategyTest {
         MockServiceConfiguration msc = getCorrespondingServiceConfiguration();
         LoadStrategy ls = getLoadStrategyToTest();
         initialize(ls, msc);
-
-        assertNull(ls.getOperations());
 
         Operation o = ls.next(null, null, false);
         assertNotNull(o);
@@ -455,8 +479,6 @@ public abstract class LoadStrategyTest {
         MockServiceConfiguration msc = getCorrespondingServiceConfiguration();
         LoadStrategy ls = getLoadStrategyToTest();
         initialize(ls, msc);
-
-        assertNull(ls.getOperations());
 
         int threadCount = 1000;
         int operationsRequestedPerThread = 1000;
@@ -537,6 +559,8 @@ public abstract class LoadStrategyTest {
 
         LoadStrategy s = getLoadStrategyToTest();
 
+        int valueSize = s.getServiceType().getDefaultValueSize();
+
         //
         // default behavior
         //
@@ -544,7 +568,8 @@ public abstract class LoadStrategyTest {
 
         String rv = s.getReusedValue();
         assertNotNull(rv);
-        assertEquals(rv.length(), s.getValueSize());
+
+        assertEquals(rv.length(), valueSize);
 
         String rv2 = s.getReusedValue();
         assertEquals(rv, rv2);
@@ -566,14 +591,14 @@ public abstract class LoadStrategyTest {
     @Test
     public void computeValue_ReuseValue() throws Exception {
 
-        LoadStrategyBase slb = (LoadStrategyBase)getLoadStrategyToTest();
-        assertTrue(slb.isReuseValue());
+        LoadStrategyBase ls = (LoadStrategyBase)getLoadStrategyToTest();
+        assertTrue(ls.isReuseValue());
 
-        String s = slb.computeValue();
+        String s = ls.computeValue();
         assertNotNull(s);
-        assertEquals(slb.getValueSize(), s.length());
+        assertEquals(ls.getValueSize(), s.length());
 
-        String s2 = slb.computeValue();
+        String s2 = ls.computeValue();
         assertEquals(s, s2);
     }
 

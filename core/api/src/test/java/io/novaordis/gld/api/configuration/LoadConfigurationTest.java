@@ -323,6 +323,54 @@ public abstract class LoadConfigurationTest extends LowLevelConfigurationTest {
         assertEquals(10, l3.longValue());
     }
 
+    // keySize() -------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void keySize_Default() throws Exception {
+
+        Map<String, Object> raw = new HashMap<>();
+
+        LoadConfiguration lc = getConfigurationToTest(raw, new File("."));
+
+        assertNull(lc.getKeySize());
+    }
+
+    // post-refactoring tests ------------------------------------------------------------------------------------------
+
+    @Test
+    public void cacheLoad() throws Exception {
+
+        Map<String, Object> raw = new HashMap<>();
+
+        raw.put(LoadConfiguration.THREAD_COUNT_LABEL, 111);
+        raw.put(LoadConfiguration.OPERATION_COUNT_LABEL, 222);
+        raw.put(LoadConfiguration.KEY_SIZE_LABEL, 333);
+        raw.put(LoadConfiguration.VALUE_SIZE_LABEL, 444);
+
+        LoadConfiguration lc = getConfigurationToTest(raw, new File("."));
+
+        assertEquals(111, lc.getThreadCount());
+        assertEquals(222, lc.getOperations().longValue());
+        assertEquals(333, lc.getKeySize().intValue());
+        assertEquals(444, lc.getValueSize().intValue());
+    }
+
+    @Test
+    public void jmsLoad() throws Exception {
+
+        Map<String, Object> raw = new HashMap<>();
+
+        raw.put(LoadConfiguration.THREAD_COUNT_LABEL, 111);
+        raw.put(LoadConfiguration.MESSAGE_COUNT_LABEL, 222);
+        raw.put(LoadConfiguration.MESSAGE_SIZE_LABEL, 333);
+
+        LoadConfiguration lc = getConfigurationToTest(raw, new File("."));
+
+        assertEquals(111, lc.getThreadCount());
+        assertEquals(222, lc.getOperations().longValue());
+        assertEquals(333, lc.getMessageSize().intValue());
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     @Override

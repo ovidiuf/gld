@@ -17,7 +17,6 @@
 package io.novaordis.gld.api.cache;
 
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.utilities.UserErrorException;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -27,8 +26,6 @@ public interface CacheServiceConfiguration extends ServiceConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    String KEY_SIZE_LABEL = "key-size";
-
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
@@ -36,13 +33,6 @@ public interface CacheServiceConfiguration extends ServiceConfiguration {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    /**
-     * @return the default key size, in bytes. A specific load strategy may choose to ignore this default and use a
-     * load-strategy specific value. The configuration value is optional, if not present in the configuration file,
-     * the default value (see ServiceConfiguration.DEFAULT_KEY_SIZE above) is used.
-     */
-    int getKeySize() throws UserErrorException;
 
     // Package protected -----------------------------------------------------------------------------------------------
 

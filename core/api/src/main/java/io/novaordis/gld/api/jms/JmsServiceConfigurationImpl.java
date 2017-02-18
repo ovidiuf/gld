@@ -16,9 +16,7 @@
 
 package io.novaordis.gld.api.jms;
 
-import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfigurationImpl;
-import io.novaordis.utilities.UserErrorException;
 
 import java.io.File;
 import java.util.Map;
@@ -45,19 +43,6 @@ public class JmsServiceConfigurationImpl extends ServiceConfigurationImpl implem
         //
         // until we decide to give the load strategy
         //
-    }
-
-    @Override
-    public int getMessageSize() throws UserErrorException {
-
-        Integer i = get(Integer.class, MESSAGE_SIZE_LABEL);
-
-        if (i == null) {
-
-            return ServiceConfiguration.DEFAULT_VALUE_SIZE;
-        }
-
-        return i;
     }
 
     // JmsServiceConfiguration implementation ------------------------------------------------------------------------

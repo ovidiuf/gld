@@ -99,21 +99,6 @@ public class MockJmsLoadStrategy extends MockLoadStrategy implements JmsLoadStra
     }
 
     @Override
-    public int getMessageSize() {
-        throw new RuntimeException("getMessageSize() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Long getMessages() {
-        throw new RuntimeException("getMessages() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Long getOperations() {
-        throw new RuntimeException("getOperations() NOT YET IMPLEMENTED");
-    }
-
-    @Override
     public Long getRemainingOperations() {
         throw new RuntimeException("getRemainingOperations() NOT YET IMPLEMENTED");
     }

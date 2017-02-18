@@ -22,12 +22,11 @@ package io.novaordis.gld.api.service;
  */
 public enum ServiceType {
 
-    cache,
-    jms,
-    http,
-    mock,   // used for testing
-    unknown, // used for testing
-
+    cache(12, 1024),
+    jms(null, 1024),
+    http(10, 1024),
+    mock(10, 77889),    // used for testing
+    unknown(10, 1024), // used for testing
     ;
 
     public static ServiceType fromString(String s) {
@@ -42,4 +41,31 @@ public enum ServiceType {
 
         throw new IllegalArgumentException("unknown service type '" + s + "'");
     }
+
+    private Integer defaultKeySize;
+    private int defaultValueSize;
+
+    ServiceType(Integer defaultKeySize, int defaultValueSize) {
+
+        this.defaultKeySize = defaultKeySize;
+        this.defaultValueSize = defaultValueSize;
+    }
+
+    /**
+     * Return the default key size for the service, in characters. Some services (JMS) do not have a default key size,
+     * as it is provided by the implementation, so the method may return null.
+     */
+    public Integer getDefaultKeySize() {
+
+        return defaultKeySize;
+    }
+
+    /**
+     * Return the default value size for the service, in bytes.
+     */
+    public int getDefaultValueSize() {
+
+        return defaultValueSize;
+    }
+
 }

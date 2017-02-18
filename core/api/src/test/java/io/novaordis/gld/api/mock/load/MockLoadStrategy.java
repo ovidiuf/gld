@@ -139,18 +139,8 @@ public class MockLoadStrategy implements LoadStrategy {
     }
 
     @Override
-    public Long getOperations() {
-        throw new RuntimeException("getOperations() NOT YET IMPLEMENTED");
-    }
-
-    @Override
     public Long getRemainingOperations() {
         throw new RuntimeException("getRemainingOperations() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public int getValueSize() {
-        throw new RuntimeException("getValueSize() NOT YET IMPLEMENTED");
     }
 
     @Override

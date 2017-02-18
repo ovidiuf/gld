@@ -22,7 +22,6 @@ import io.novaordis.gld.api.configuration.MockLoadConfiguration;
 import io.novaordis.gld.api.configuration.MockServiceConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.jms.Destination;
-import io.novaordis.gld.api.jms.JmsServiceConfiguration;
 import io.novaordis.gld.api.jms.MockJmsServiceConfiguration;
 import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.utilities.UserErrorException;
@@ -103,10 +102,6 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
 
         assertEquals(ConnectionPolicy.CONNECTION_PER_RUN, s.getConnectionPolicy());
         assertEquals(SessionPolicy.SESSION_PER_OPERATION, s.getSessionPolicy());
-        assertNull(s.getOperations());
-        assertNull(s.getMessages());
-
-        assertEquals(ServiceConfiguration.DEFAULT_VALUE_SIZE, s.getMessageSize());
 
         assertNull(s.getUsername());
         assertNull(s.getPassword());
@@ -203,60 +198,6 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
         Destination d = s.getDestination();
         assertEquals("/jms/test-topic", d.getName());
         assertTrue(d.isTopic());
-    }
-
-    @Test
-    public void init_ServiceConfigurationMessageSizeDifferFromDefault() throws Exception {
-
-        MockJmsServiceConfiguration msc = getCorrespondingServiceConfiguration();
-        JmsLoadStrategy s = getLoadStrategyToTest();
-        msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
-
-        msc.setMessageSize(777);
-
-        MockLoadConfiguration mlc = new MockLoadConfiguration();
-
-        s.init(msc, mlc);
-
-        assertEquals(777, s.getMessageSize());
-    }
-
-    @Test
-    public void init_LoadConfigurationMessageSizeOverride() throws Exception {
-
-        MockJmsServiceConfiguration msc = getCorrespondingServiceConfiguration();
-        JmsLoadStrategy s = getLoadStrategyToTest();
-        msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
-
-        msc.setMessageSize(777);
-
-        msc.set(778,
-                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsServiceConfiguration.MESSAGE_SIZE_LABEL);
-
-        MockLoadConfiguration mlc = new MockLoadConfiguration();
-
-        s.init(msc, mlc);
-
-        assertEquals(778, s.getMessageSize());
-    }
-
-    @Test
-    public void init_NonDefaultMaxOperations() throws Exception {
-
-        MockJmsServiceConfiguration msc = getCorrespondingServiceConfiguration();
-        JmsLoadStrategy s = getLoadStrategyToTest();
-        msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
-
-        //
-        // currently, max-operations this is configured with LoadConfiguration
-        //
-
-        MockLoadConfiguration mlc = new MockLoadConfiguration();
-        mlc.setMessages(123L);
-
-        s.init(msc, mlc);
-
-        assertEquals(123L, s.getMessages().longValue());
     }
 
     @Test

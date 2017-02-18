@@ -54,15 +54,20 @@ public class DeleteLoadStrategy extends LoadStrategyBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public DeleteLoadStrategy() {
+
+        this(DEFAULT_KEY_COUNT);
+    }
+
     public DeleteLoadStrategy(int keyCount) {
 
         super();
         this.keyCount = keyCount;
-    }
 
-    public DeleteLoadStrategy() {
-
-        this(DEFAULT_KEY_COUNT);
+        //
+        // set the default value size, it will be overridden when init() is called
+        //
+        setValueSize(ServiceType.cache.getDefaultValueSize());
     }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------

@@ -143,28 +143,6 @@ public class ServiceConfigurationImpl extends LowLevelConfigurationBase
         return (String)o;
     }
 
-    @Override
-    public int getValueSize() throws UserErrorException {
-
-        Integer l;
-
-        try {
-
-            l = get(Integer.class, VALUE_SIZE_LABEL);
-        }
-        catch(Exception e) {
-
-            throw new UserErrorException("'" + VALUE_SIZE_LABEL + "' is not an integer", e);
-        }
-
-        if (l != null) {
-
-            return l;
-        }
-
-        return DEFAULT_VALUE_SIZE;
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------

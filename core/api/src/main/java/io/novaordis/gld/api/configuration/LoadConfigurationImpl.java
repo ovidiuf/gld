@@ -82,12 +82,6 @@ public class LoadConfigurationImpl extends LowLevelConfigurationBase
     }
 
     @Override
-    public void setServiceType(ServiceType t) {
-
-        this.serviceType = t;
-    }
-
-    @Override
     public int getThreadCount() throws UserErrorException {
 
         Integer i;
@@ -156,6 +150,52 @@ public class LoadConfigurationImpl extends LowLevelConfigurationBase
     public Long getMessages() throws UserErrorException {
 
         return getOperations();
+    }
+
+    @Override
+    public Integer getKeySize() throws UserErrorException {
+
+        String label = LoadConfiguration.KEY_SIZE_LABEL;
+
+        try {
+
+            return get(Integer.class, label);
+        }
+        catch(IllegalStateException e) {
+
+            throw new UserErrorException("'" + label + "' not an int", e);
+        }
+    }
+
+    @Override
+    public Integer getValueSize() throws UserErrorException {
+
+        String label = LoadConfiguration.VALUE_SIZE_LABEL;
+
+        Integer i;
+
+        try {
+
+            i = get(Integer.class, label);
+
+            if (i == null) {
+
+                label = LoadConfiguration.MESSAGE_SIZE_LABEL;
+                i = get(Integer.class, label);
+            }
+
+            return i;
+        }
+        catch(IllegalStateException e) {
+
+            throw new UserErrorException("'" + label + "' not an int", e);
+        }
+    }
+
+    @Override
+    public Integer getMessageSize() throws UserErrorException {
+
+        return getValueSize();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

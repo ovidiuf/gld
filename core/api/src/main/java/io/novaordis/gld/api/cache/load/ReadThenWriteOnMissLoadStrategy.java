@@ -72,6 +72,16 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public ReadThenWriteOnMissLoadStrategy() {
+
+        super();
+
+        //
+        // set the default value size, it will be overridden when init() is called
+        //
+        setValueSize(ServiceType.cache.getDefaultValueSize());
+    }
+
     // LoadStrategy implementation -------------------------------------------------------------------------------------
 
     @Override
@@ -113,16 +123,13 @@ public class ReadThenWriteOnMissLoadStrategy extends LoadStrategyBase {
             throw new IllegalArgumentException(sc + " not a CacheServiceConfiguration");
         }
 
-        CacheServiceConfiguration cc = (CacheServiceConfiguration)sc;
-
         //
         // create and configure the key provider
         //
 
-        RandomKeyProvider keyProvider = new RandomKeyProvider();
-
-        int keySize = cc.getKeySize();
-        keyProvider.setKeySize(keySize);
+        Integer keySize = lc.getKeySize();
+        keySize = keySize == null ? ServiceType.cache.getDefaultKeySize() : keySize;
+        RandomKeyProvider keyProvider = new RandomKeyProvider(keySize);
 
         Long keyCount = lc.getOperations();
         keyProvider.setKeyCount(keyCount);

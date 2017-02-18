@@ -17,7 +17,6 @@
 package io.novaordis.gld.api.cache;
 
 import io.novaordis.gld.api.configuration.MockServiceConfiguration;
-import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.service.ServiceType;
 
 /**
@@ -43,12 +42,6 @@ public class MockCacheServiceConfiguration extends MockServiceConfiguration impl
     }
 
     // CacheServiceConfiguration implementation ------------------------------------------------------------------------
-
-    @Override
-    public int getKeySize() {
-
-        return ServiceConfiguration.DEFAULT_KEY_SIZE;
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 

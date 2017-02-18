@@ -47,7 +47,6 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
     private char[] password;
     private ConnectionPolicy connectionPolicy;
     private SessionPolicy sessionPolicy;
-    private int messageSize;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -55,6 +54,11 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
 
         setConnectionPolicy(ConnectionPolicy.CONNECTION_PER_RUN);
         setSessionPolicy(SessionPolicy.SESSION_PER_OPERATION);
+
+        //
+        // set the default value size, it will be overridden when init() is called
+        //
+        setValueSize(ServiceType.jms.getDefaultValueSize());
     }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
@@ -124,15 +128,6 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
 
             throw new UserErrorException("required configuration element 'connection-factory' missing");
         }
-
-        //
-        // optional message size
-        //
-
-        Integer ms = jmsSc.remove(Integer.class,
-                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsServiceConfiguration.MESSAGE_SIZE_LABEL);
-
-        this.messageSize = ms != null ? ms : jmsSc.getMessageSize();
 
         //
         // optional max messages
@@ -229,18 +224,6 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
     public SessionPolicy getSessionPolicy() {
 
         return sessionPolicy;
-    }
-
-    @Override
-    public int getMessageSize() {
-
-        return messageSize;
-    }
-
-    @Override
-    public Long getMessages() {
-
-        return getOperations();
     }
 
     @Override

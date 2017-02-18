@@ -16,16 +16,11 @@
 
 package io.novaordis.gld.api.jms;
 
-import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfigurationTest;
 import io.novaordis.gld.api.service.ServiceType;
-import org.junit.Test;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -42,21 +37,6 @@ public class JmsServiceConfigurationTest extends ServiceConfigurationTest {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Tests -----------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void defaultMessageSize() throws Exception {
-
-        JmsServiceConfiguration c = getConfigurationToTest(new HashMap<>(), new File("."));
-        assertEquals(ServiceConfiguration.DEFAULT_VALUE_SIZE, c.getMessageSize());
-    }
-
-    @Test
-    public void nonDefaultMessageSize() throws Exception {
-
-        JmsServiceConfigurationImpl c = getConfigurationToTest(new HashMap<>(), new File("."));
-        c.set(123, JmsServiceConfiguration.MESSAGE_SIZE_LABEL);
-        assertEquals(123, c.getMessageSize());
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 

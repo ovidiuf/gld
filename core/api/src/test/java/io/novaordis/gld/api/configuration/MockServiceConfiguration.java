@@ -37,7 +37,6 @@ public class MockServiceConfiguration extends LowLevelConfigurationBase implemen
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private ServiceType serviceType;
-    private int valueSize;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -50,7 +49,6 @@ public class MockServiceConfiguration extends LowLevelConfigurationBase implemen
 
         super(raw, new File(System.getProperty("basedir")));
         this.serviceType = ServiceType.mock;
-        this.valueSize = ServiceConfiguration.DEFAULT_VALUE_SIZE;
         set(new HashMap<String, Object>(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
     }
 
@@ -73,12 +71,6 @@ public class MockServiceConfiguration extends LowLevelConfigurationBase implemen
     public String getLoadStrategyName() {
 
         return get(String.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
-    }
-
-    @Override
-    public int getValueSize() throws UserErrorException {
-
-        return valueSize;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -110,11 +102,6 @@ public class MockServiceConfiguration extends LowLevelConfigurationBase implemen
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    protected void setValueSize(int i) {
-
-        this.valueSize = i;
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

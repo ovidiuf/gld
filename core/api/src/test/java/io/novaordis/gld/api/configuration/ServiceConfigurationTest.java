@@ -353,27 +353,6 @@ public abstract class ServiceConfigurationTest extends LowLevelConfigurationTest
         Assert.assertEquals("test", rawConfig.get(LoadStrategy.NAME_LABEL));
     }
 
-    // getValueSize() --------------------------------------------------------------------------------------------------
-
-    @Test
-    public void getValueSize_DefaultValueSize() throws Exception {
-
-        Map<String, Object> raw = new HashMap<>();
-        ServiceConfiguration sc = getConfigurationToTest(raw, new File("."));
-
-        assertEquals(ServiceConfiguration.DEFAULT_VALUE_SIZE, sc.getValueSize());
-    }
-
-    @Test
-    public void getValueSize() throws Exception {
-
-        Map<String, Object> raw = new HashMap<>();
-        raw.put(ServiceConfiguration.VALUE_SIZE_LABEL, 10);
-        ServiceConfiguration sc = getConfigurationToTest(raw, new File("."));
-
-        assertEquals(10L, sc.getValueSize());
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     /**

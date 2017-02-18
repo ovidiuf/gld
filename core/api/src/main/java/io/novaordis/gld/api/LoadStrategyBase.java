@@ -44,11 +44,6 @@ public abstract class LoadStrategyBase implements LoadStrategy {
     private RandomContentGenerator valueGenerator;
     private volatile boolean started;
 
-    private int serviceConfigurationValueSize;
-
-    // null means unlimited operations
-    private Long maxOperations;
-
     //
     // towards the end of the cycle, may be driven into the negative territory - that is fine, report as zero.
     //
@@ -56,6 +51,8 @@ public abstract class LoadStrategyBase implements LoadStrategy {
 
     private Boolean reuseValue;
     private String reusedValue;
+
+    private int valueSize;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -73,13 +70,6 @@ public abstract class LoadStrategyBase implements LoadStrategy {
         //
 
         this.reuseValue = true;
-
-        //
-        // we initialize with the default value, it will be overwritten later, during the initialization phase, if
-        // the service was configured with a non-default value size
-        //
-
-        this.serviceConfigurationValueSize = ServiceConfiguration.DEFAULT_VALUE_SIZE;
     }
 
     // LoadStrategy implementation -------------------------------------------------------------------------------------
@@ -164,12 +154,6 @@ public abstract class LoadStrategyBase implements LoadStrategy {
         //
 
         //
-        // value size read from service configuration
-        //
-
-        this.serviceConfigurationValueSize = sc.getValueSize();
-
-        //
         // reuse value
         //
 
@@ -194,6 +178,13 @@ public abstract class LoadStrategyBase implements LoadStrategy {
 
             throw new UserErrorException(msg);
         }
+
+        //
+        // value size, configuration takes precedence, but if not specified, use the service's default
+        //
+
+        Integer vs = lc.getValueSize();
+        setValueSize(vs == null ? sc.getType().getDefaultValueSize() : vs);
     }
 
     @Override
@@ -265,12 +256,6 @@ public abstract class LoadStrategyBase implements LoadStrategy {
     }
 
     @Override
-    public Long getOperations() {
-
-        return maxOperations;
-    }
-
-    @Override
     public Long getRemainingOperations() {
 
         if (remainingOperation == null) {
@@ -289,12 +274,6 @@ public abstract class LoadStrategyBase implements LoadStrategy {
         }
 
         return l;
-    }
-
-    @Override
-    public int getValueSize() {
-
-        return serviceConfigurationValueSize;
     }
 
     @Override
@@ -348,6 +327,11 @@ public abstract class LoadStrategyBase implements LoadStrategy {
         this.reuseValue = b;
     }
 
+    int getValueSize() {
+
+        return valueSize;
+    }
+
     // Protected -------------------------------------------------------------------------------------------------------
 
     /**
@@ -363,8 +347,6 @@ public abstract class LoadStrategyBase implements LoadStrategy {
      * @param maxOperations null means unlimited.
      */
     protected void setOperations(Long maxOperations) {
-
-        this.maxOperations = maxOperations;
 
         //
         // also reset remaining
@@ -399,6 +381,11 @@ public abstract class LoadStrategyBase implements LoadStrategy {
      */
     protected abstract Operation nextInternal(Operation last, String lastWrittenKey, boolean runtimeShuttingDown)
             throws Exception;
+
+    protected void setValueSize(int i) {
+
+        this.valueSize = i;
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

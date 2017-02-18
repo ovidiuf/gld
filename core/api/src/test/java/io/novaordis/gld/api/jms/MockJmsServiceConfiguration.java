@@ -20,7 +20,6 @@ import io.novaordis.gld.api.configuration.MockServiceConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 import io.novaordis.gld.api.service.ServiceType;
-import io.novaordis.utilities.UserErrorException;
 
 import java.util.HashMap;
 
@@ -60,20 +59,9 @@ public class MockJmsServiceConfiguration extends MockServiceConfiguration implem
         return ServiceType.jms;
     }
 
-    @Override
-    public int getMessageSize() throws UserErrorException {
-
-        return getValueSize();
-    }
-
     // JmsServiceConfiguration implementation --------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public void setMessageSize(int i) {
-
-        setValueSize(i);
-    }
 
     public String getQueueName() {
 

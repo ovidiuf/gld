@@ -18,7 +18,6 @@ package io.novaordis.gld.api.provider;
 
 import io.novaordis.gld.api.KeyProvider;
 import io.novaordis.gld.api.RandomContentGenerator;
-import io.novaordis.gld.api.configuration.ServiceConfiguration;
 
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
@@ -41,9 +40,9 @@ public class RandomKeyProvider implements KeyProvider {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public RandomKeyProvider() {
+    public RandomKeyProvider(int defaultKeySize) {
 
-        this.keySize = ServiceConfiguration.DEFAULT_KEY_SIZE;
+        this.keySize = defaultKeySize;
         this.contentGenerator = new RandomContentGenerator();
     }
 

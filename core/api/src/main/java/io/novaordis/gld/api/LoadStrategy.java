@@ -126,21 +126,11 @@ public interface LoadStrategy {
     void setKeyProvider(KeyProvider keyProvider);
 
     /**
-     * @return the number of operations this load strategy is supposed to produce. null means "unlimited operations"
-     * This value does not change for a load strategy instance after it was instantiated. To get the actual number of
-     * remaining operations, call getRemainingOperations();
-     *
-     * @see LoadStrategy#getRemainingOperations()
-     */
-    Long getOperations();
-
-    /**
      * @return the number of operations this strategy will produce from the moment the method was invoked. null means
-     * "unlimited".
+     * "unlimited". For the total number of operations this strategy is supposed to produce, use getOperation() on
+     * the associated load configuration.
      */
     Long getRemainingOperations();
-
-    int getValueSize();
 
     /**
      * A load strategy can be configured to randomly generate a value only once, then reuse it for all its operations.

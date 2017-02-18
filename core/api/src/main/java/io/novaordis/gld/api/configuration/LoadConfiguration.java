@@ -44,6 +44,10 @@ public interface LoadConfiguration extends LowLevelConfiguration {
     String REQUEST_COUNT_LABEL = "requests";
     String MESSAGE_COUNT_LABEL = "messages";
 
+    String KEY_SIZE_LABEL = "key-size";
+    String VALUE_SIZE_LABEL = "value-size";
+    String MESSAGE_SIZE_LABEL = "message-size";
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -52,8 +56,6 @@ public interface LoadConfiguration extends LowLevelConfiguration {
      * The service type has to be known when the configuration is parsed, because some of the configuration elements
      * are service-type dependent.
      */
-    void setServiceType(ServiceType t);
-
     ServiceType getServiceType();
 
     // Typed Access ----------------------------------------------------------------------------------------------------
@@ -92,6 +94,27 @@ public interface LoadConfiguration extends LowLevelConfiguration {
      * @see LoadConfiguration#getMessages()
      */
     Long getMessages() throws UserErrorException;
+
+    /**
+     * @return the key size, in bytes. The configuration value is optional, if not present in the configuration file,
+     * the method returns null and the service is allowed to use whatever default value makes sense for it.
+     */
+    Integer getKeySize() throws UserErrorException;
+
+    /**
+     * @return the value size, in bytes. The configuration value is optional, if not present in the configuration file,
+     * the method returns null and the service is allowed to use whatever default value makes sense for it.
+     *
+     * getValueSize() and getMessageSize() are equivalent and can be used interchangeably.
+     *
+     * @see LoadConfiguration#getMessageSize()
+     */
+    Integer getValueSize() throws UserErrorException;
+
+    /**
+     * @see LoadConfiguration#getValueSize()
+     */
+    Integer getMessageSize() throws UserErrorException;
 
     // Untyped Access --------------------------------------------------------------------------------------------------
 

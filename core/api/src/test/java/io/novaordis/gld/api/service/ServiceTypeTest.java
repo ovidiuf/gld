@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 /**
@@ -64,7 +65,6 @@ public class ServiceTypeTest {
     @Test
     public void fromString() throws Exception {
 
-
         ServiceType t = ServiceType.fromString("cache");
         assertEquals(ServiceType.cache, t);
     }
@@ -72,9 +72,18 @@ public class ServiceTypeTest {
     @Test
     public void fromString_CaseInsensitive() throws Exception {
 
-
         ServiceType t = ServiceType.fromString("Cache");
         assertEquals(ServiceType.cache, t);
+    }
+
+    @Test
+    public void defaultValues() throws Exception {
+
+        Integer ks = ServiceType.cache.getDefaultKeySize();
+        log.info("" + ks);
+
+        int vs = ServiceType.cache.getDefaultValueSize();
+        assertNotNull(vs);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

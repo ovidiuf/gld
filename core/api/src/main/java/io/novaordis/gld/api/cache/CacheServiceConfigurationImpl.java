@@ -18,7 +18,6 @@ package io.novaordis.gld.api.cache;
 
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfigurationImpl;
-import io.novaordis.utilities.UserErrorException;
 
 import java.io.File;
 import java.util.Map;
@@ -44,23 +43,6 @@ public class CacheServiceConfigurationImpl extends ServiceConfigurationImpl impl
     }
 
     // CacheServiceConfiguration implementation ------------------------------------------------------------------------
-
-    @Override
-    public int getKeySize() throws UserErrorException {
-
-        Integer i;
-
-        try {
-
-            i = get(Integer.class, CacheServiceConfiguration.KEY_SIZE_LABEL);
-        }
-        catch(IllegalStateException e) {
-
-            throw new UserErrorException("'" + CacheServiceConfiguration.KEY_SIZE_LABEL + "' is not an integer", e);
-        }
-
-        return i == null ? DEFAULT_KEY_SIZE : i;
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 

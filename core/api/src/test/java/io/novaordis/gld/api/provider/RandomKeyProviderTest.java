@@ -17,7 +17,6 @@
 package io.novaordis.gld.api.provider;
 
 import io.novaordis.gld.api.KeyProviderTest;
-import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +34,8 @@ public class RandomKeyProviderTest extends KeyProviderTest {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
+    public static final int DEFAULT_KEY_SIZE = 777;
+
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -49,7 +50,7 @@ public class RandomKeyProviderTest extends KeyProviderTest {
         RandomKeyProvider p = getKeyProviderToTest();
 
         int keySize = p.getKeySize();
-        assertEquals(ServiceConfiguration.DEFAULT_KEY_SIZE, keySize);
+        assertEquals(DEFAULT_KEY_SIZE, keySize);
 
         Long remainingKeyCount = p.getRemainingKeyCount();
         assertNull(remainingKeyCount);
@@ -167,8 +168,9 @@ public class RandomKeyProviderTest extends KeyProviderTest {
     @Test
     public void next_KeySize() throws Exception {
 
+        RandomKeyProvider p = new RandomKeyProvider(DEFAULT_KEY_SIZE);
+
         int keySize = 10;
-        RandomKeyProvider p = new RandomKeyProvider();
         p.setKeySize(keySize);
 
         p.start();
@@ -185,7 +187,7 @@ public class RandomKeyProviderTest extends KeyProviderTest {
     @Override
     protected RandomKeyProvider getKeyProviderToTest() throws Exception {
 
-        return new RandomKeyProvider();
+        return new RandomKeyProvider(DEFAULT_KEY_SIZE);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

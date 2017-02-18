@@ -18,7 +18,6 @@ package io.novaordis.gld.api.jms.load;
 
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.jms.Destination;
-import io.novaordis.gld.api.jms.JmsServiceConfiguration;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -65,20 +64,5 @@ public interface JmsLoadStrategy extends LoadStrategy {
      * that one session is created for each operation, and then discarded.
      */
     SessionPolicy getSessionPolicy();
-
-    /**
-     * This is a convenience method that simply returns the value read from the service configuration, unless the
-     * load strategy chooses to override, in which case the method returns the overridden value
-     *
-     * @see JmsServiceConfiguration#getMessageSize()
-     */
-    int getMessageSize();
-
-    /**
-     * Same semantics as getOperations().
-     *
-     * @see LoadStrategy#getOperations()
-     */
-    Long getMessages();
 
 }

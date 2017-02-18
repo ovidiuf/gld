@@ -43,20 +43,20 @@ public class MockLoadStrategy implements LoadStrategy {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    private static String classLevelRequiredConfigurationElementName;
+    private static String classLevelRequiredConfigurationElementName = null;
 
-    /**
-     * Resets static configuration.
-     */
-    public static void reset() {
-
-        classLevelRequiredConfigurationElementName = null;
-    }
-
-    public static void setRequiredConfigurationElement(String elementName) {
-
-        classLevelRequiredConfigurationElementName = elementName;
-    }
+//    /**
+//     * Resets static configuration.
+//     */
+//    public static void reset() {
+//
+//        classLevelRequiredConfigurationElementName = null;
+//    }
+//
+//    public static void setRequiredConfigurationElement(String elementName) {
+//
+//        classLevelRequiredConfigurationElementName = elementName;
+//    }
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
@@ -163,18 +163,8 @@ public class MockLoadStrategy implements LoadStrategy {
     }
 
     @Override
-    public Long getOperations() {
-        throw new RuntimeException("getOperations() NOT YET IMPLEMENTED");
-    }
-
-    @Override
     public Long getRemainingOperations() {
         throw new RuntimeException("getRemainingOperations() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public int getValueSize() {
-        throw new RuntimeException("getValueSize() NOT YET IMPLEMENTED");
     }
 
     @Override

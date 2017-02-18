@@ -17,6 +17,7 @@
 package io.novaordis.gld.api.configuration;
 
 import io.novaordis.gld.api.service.ServiceType;
+import io.novaordis.utilities.UserErrorException;
 
 import java.io.File;
 import java.util.HashMap;
@@ -30,11 +31,15 @@ public class MockLoadConfiguration extends LowLevelConfigurationBase implements 
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    public static final int DEFAULT_KEY_SIZE = 7;
+    public static final int DEFAULT_VALUE_SIZE = 77;
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private Long operations;
+    private Integer valueSize;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -51,14 +56,11 @@ public class MockLoadConfiguration extends LowLevelConfigurationBase implements 
         // default unlimited
         //
         this.operations = null;
+
+        this.valueSize = DEFAULT_VALUE_SIZE;
     }
 
     // LoadConfiguration implementation --------------------------------------------------------------------------------
-
-    @Override
-    public void setServiceType(ServiceType t) {
-        throw new RuntimeException("setServiceType() NOT YET IMPLEMENTED");
-    }
 
     @Override
     public ServiceType getServiceType() {
@@ -89,11 +91,29 @@ public class MockLoadConfiguration extends LowLevelConfigurationBase implements 
         return getOperations();
     }
 
+    @Override
+    public Integer getKeySize() throws UserErrorException {
+
+        return DEFAULT_KEY_SIZE;
+    }
+
+    @Override
+    public Integer getValueSize() throws UserErrorException {
+
+        return valueSize;
+    }
+
+    @Override
+    public Integer getMessageSize() throws UserErrorException {
+
+        return getValueSize();
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public void setMessages(long l) {
+    public void setValueSize(Integer i) {
 
-        this.operations = l;
+        this.valueSize = i;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
