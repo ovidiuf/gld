@@ -153,7 +153,7 @@ public class LoadDriverImpl implements LoadDriver {
 
         long singleThreadedRunnerSleepMs = -1L;
 
-        if (storeConfiguration != null) {
+        if (storeConfiguration.getStoreType() != null) {
 
             this.keyStore = KeyStoreFactory.build(storeConfiguration);
         }
