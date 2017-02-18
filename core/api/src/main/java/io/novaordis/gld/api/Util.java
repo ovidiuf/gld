@@ -29,18 +29,36 @@ public class Util {
     // Static ----------------------------------------------------------------------------------------------------------
 
     public static Throwable getRoot(Throwable t) {
-        if (t == null)
-        {
+
+        if (t == null) {
+
             throw new IllegalArgumentException("null throwable");
         }
 
         Throwable root = t;
-        while (root.getCause() != null)
-        {
+        while (root.getCause() != null) {
             root = root.getCause();
         }
 
         return root;
+    }
+
+    /**
+     * If the string is longer than charCount, it displays the first characters in a log friendly format.
+     */
+    public static String firstCharacters(String s, int charCount) {
+
+        if (s == null) {
+
+            return null;
+        }
+
+        if (s.length() <= charCount) {
+
+            return s;
+        }
+
+        return s.substring(0, charCount) + "...";
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------

@@ -17,6 +17,7 @@
 package io.novaordis.gld.api.cache.operation;
 
 import io.novaordis.gld.api.Operation;
+import io.novaordis.gld.api.Util;
 import io.novaordis.gld.api.service.Service;
 import io.novaordis.gld.api.cache.CacheService;
 
@@ -68,7 +69,17 @@ public class Write extends CacheOperationBase {
     @Override
     public String toString() {
 
-        return getKey() + "=" + getValue();
+        String key = getKey();
+        String value = getValue();
+
+        String s = Util.firstCharacters(key, 12) + "=" + Util.firstCharacters(value, 12);
+
+        if (value != null) {
+
+            s += " (" + value.length() + " bytes)";
+        }
+
+        return s;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

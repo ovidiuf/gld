@@ -16,6 +16,11 @@
 
 package io.novaordis.gld.api;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/7/16
@@ -33,6 +38,24 @@ public class UtilTest {
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Tests -----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void firstCharacters_StringEquals() throws Exception {
+
+        assertEquals("abc", Util.firstCharacters("abc", 3));
+    }
+
+    @Test
+    public void firstCharacters_StringLonger() throws Exception {
+
+        assertEquals("abc...", Util.firstCharacters("abcd", 3));
+    }
+
+    @Test
+    public void firstCharacters_null() throws Exception {
+
+        assertNull(Util.firstCharacters(null, 3));
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

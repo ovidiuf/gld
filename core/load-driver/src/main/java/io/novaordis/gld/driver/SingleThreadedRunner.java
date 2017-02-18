@@ -32,6 +32,7 @@ public class SingleThreadedRunner implements Runnable {
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = LoggerFactory.getLogger(SingleThreadedRunner.class);
+    private static final boolean debug = log.isDebugEnabled();
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -161,6 +162,7 @@ public class SingleThreadedRunner implements Runnable {
         return durationExpired.get();
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void loopUntilStoppedOrOutOfOperationsOrDurationExpired() throws Exception {
 
         long operationCounter = 0L;
@@ -201,6 +203,11 @@ public class SingleThreadedRunner implements Runnable {
 
                 op.perform(service);
 
+                if (debug) {
+
+                    log.debug(op + " executed against " + service);
+                }
+
                 t1 = System.nanoTime();
 
                 if (keyStore != null) {
@@ -239,6 +246,7 @@ public class SingleThreadedRunner implements Runnable {
                         Thread.sleep(singleThreadedRunnerSleepMs);
                     }
                     catch (InterruptedException e) {
+
                         log.warn("interrupted while sleeping");
                     }
                 }

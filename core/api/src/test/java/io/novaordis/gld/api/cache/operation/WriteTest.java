@@ -67,6 +67,14 @@ public class WriteTest extends CacheOperationTest {
         assertEquals("test-value", value);
     }
 
+    @Test
+    public void toStringTest() throws Exception {
+
+        Write w = new Write("some_key_longer_than_12_characters", "some_value_longer_than_12_characters");
+        String s = w.toString();
+        log.info(s);
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
