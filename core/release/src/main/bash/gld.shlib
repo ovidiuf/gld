@@ -1,6 +1,15 @@
 #!/bin/bash
 
+verbose=false
+
+function debug() {
+
+    ${verbose} && echo "$@" 1>&2;
+}
+
 function build-classpath() {
+
+    debug "entering build-classpath()"
 
     #
     # add the JARs from lib
@@ -11,6 +20,8 @@ function build-classpath() {
     [ -d ${lib_dir} ] || { echo "[error]: library directory ${lib_dir} not found" 1>&2; exit 1; }
 
     local classpath="";
+
+    debug "lib_dir: ${lib_dir}"
 
     for i in $(find ${lib_dir} -name *.jar); do
         [ -z "${classpath}" ] && classpath=${i} || classpath=${classpath}:${i}
@@ -78,6 +89,7 @@ function main() {
             debug="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
         elif [ "$1" = "-v" -o "$1" = "--verbose" ]; then
              verbose_jvm_flag="-Dverbose=true"
+             verbose=true
         else
             [ -z "${args}" ] && args=$1 || args="${args} $1"
         fi
@@ -87,7 +99,7 @@ function main() {
     local classpath
     classpath=$(build-classpath) || exit 1
 
-    [ -n "${verbose_jvm_flag}" ] && echo "java ${debug} -cp ${classpath} ${verbose_jvm_flag} io.novaordis.gld.Main ${args}"
+    debug "java ${debug} -cp ${classpath} ${verbose_jvm_flag} io.novaordis.gld.Main ${args}"
 
     java ${debug} -cp ${classpath} ${verbose_jvm_flag} io.novaordis.gld.Main ${args}
 

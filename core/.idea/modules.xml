@@ -3,9 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/api/gld-api.iml" filepath="$PROJECT_DIR$/api/gld-api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/gld-core.iml" filepath="$PROJECT_DIR$/gld-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/load-driver/gld-load-driver.iml" filepath="$PROJECT_DIR$/load-driver/gld-load-driver.iml" />
       <module fileurl="file://$PROJECT_DIR$/release/release.iml" filepath="$PROJECT_DIR$/release/release.iml" />
+      <module fileurl="file://$PROJECT_DIR$/root.iml" filepath="$PROJECT_DIR$/root.iml" />
     </modules>
   </component>
 </project>

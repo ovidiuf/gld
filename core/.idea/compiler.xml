@@ -34,10 +34,9 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="gld-api" target="1.8" />
-      <module name="gld-core" target="1.8" />
-      <module name="GLD-CORE" target="1.8" />
       <module name="gld-load-driver" target="1.8" />
       <module name="release" target="1.8" />
+      <module name="root" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
