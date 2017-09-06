@@ -57,7 +57,19 @@
     <modules>
         <module>main</module>
         <module>release</module>    
-    </modules> 
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jboss.bom</groupId>
+                <artifactId>eap6-supported-artifacts</artifactId>
+                <version>6.4.15.GA</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -84,9 +96,8 @@
         -->
 
         <dependency>
-            <groupId>org.jboss.eap</groupId>
-            <artifactId>wildfly-client-all</artifactId>
-            <version>${wildfly.client.all.version}</version>
+            <groupId>org.hornetq</groupId>
+            <artifactId>hornetq-jms-client</artifactId>
         </dependency>
 
         <!--
