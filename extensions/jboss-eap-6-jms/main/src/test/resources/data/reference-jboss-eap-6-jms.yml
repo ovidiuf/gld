@@ -1,0 +1,46 @@
+#
+# A sample GLD configuration file that configures the load driver to send traffic into a JBoss EAP 6 JMS instance
+#
+# The reference/example configuration/example is available here:
+# https://kb.novaordis.com/index.php/JBoss_EAP_JMS_gld_Extension
+#
+#
+service:
+
+  load-strategy:
+    name: receive
+    queue: jms/queue/novaordis
+    connection-factory: jms/RemoteConnectionFactory
+    connection-policy: connection-per-run
+    session-policy: session-per-operation
+    user: jmsuser
+    password: jmsuser123
+
+  implementation:
+    name: jboss-eap-6-jms
+    version: 6.4.15
+
+
+    # 'classpath' is optional; if specified, it takes precedence
+    # over the libraries we ship with. if 'classpath' is missing,
+    # or the JAR(s) cannot be loaded, we will use the shipped
+    # libraries
+
+    # classpath: ${JDG_HOME}/client/activemq.jar
+
+    #
+    # implementation-specific configuration
+    #
+
+    jndi-url: localhost:4447 # remoting access to the JNDI server
+
+load:
+
+  threads: 1
+  messages: 10000
+  type: jms
+  message-size: 1024
+
+output:
+  statistics:
+      file: /Users/ovidiu/tmp/test.csv
