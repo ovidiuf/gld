@@ -57,6 +57,8 @@ function build-classpath() {
 #
 function get-extension-jars() {
 
+    debug "entering get-extension-jars($1)"
+
     local extension_dir=$1
 
     [ -z "${extension_dir}" ] && { echo "extension directory not provided" 1>&2; exit 1; }
@@ -68,7 +70,7 @@ function get-extension-jars() {
 
     local extension_classpath
 
-    for i in $(find ${extension_dir} -name *.jar); do
+    for i in $(find ${extension_dir} -name "*.jar"); do
         [ -z "${extension_classpath}" ] && \
             extension_classpath=${i} || \
             extension_classpath=${extension_classpath}:${i}

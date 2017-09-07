@@ -57,6 +57,7 @@ public class Extensions implements Command {
         log.debug("extracting extension info from classpath " + classpath);
 
         if (classpath == null) {
+
             throw new IllegalArgumentException("null classpath");
         }
 
@@ -67,6 +68,7 @@ public class Extensions implements Command {
         // identify the extension jars TODO does not work on windows, correct.
         //
         StringTokenizer st = new StringTokenizer(classpath, ":");
+
         while(st.hasMoreTokens()) {
 
             String cpElement = st.nextToken();
@@ -82,15 +84,21 @@ public class Extensions implements Command {
 
             if (i == -1) {
 
+                log.debug("'" + cpElement + "' does not contain the marker fragment '" + markerFragment + "'");
                 continue;
             }
 
             String s = cpElement.substring(i + markerFragment.length());
             String extensionName = s.substring(0, s.indexOf('/'));
 
+            log.debug("extension name: " + extensionName);
+
             ExtensionInfo ei = extensionInfos.get(extensionName);
 
             if (ei == null) {
+
+                log.debug("extension info: " + extensionName);
+
 
                 ei = new ExtensionInfo(extensionName);
                 extensionInfos.put(extensionName, ei);
