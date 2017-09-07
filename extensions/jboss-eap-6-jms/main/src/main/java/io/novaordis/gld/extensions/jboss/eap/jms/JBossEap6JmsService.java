@@ -60,6 +60,12 @@ public class JBossEap6JmsService extends JmsServiceBase {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    @Override
+    public String toString() {
+
+        return "JBoss EAP 6 JMS Service[" + getConnectionFactoryName() + "]";
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
