@@ -821,7 +821,12 @@ public abstract class JMSServiceTest extends ServiceTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected abstract JMSService getServiceToTest() throws Exception;
+    protected JMSService getServiceToTest() throws Exception {
+
+        return getJMSServiceToTest();
+    }
+
+    protected abstract JMSService getJMSServiceToTest() throws Exception;
 
     protected abstract JMSLoadStrategy getMatchingLoadStrategy();
 

@@ -44,7 +44,7 @@ public class EmbeddedJMSServiceTest extends JMSServiceTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected JMSService getServiceToTest() throws Exception {
+    protected JMSService getJMSServiceToTest() throws Exception {
 
         return new EmbeddedJMSService();
     }
