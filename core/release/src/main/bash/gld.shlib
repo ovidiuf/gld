@@ -37,6 +37,8 @@ function build-classpath() {
     # add the extension JARs
     #
 
+    debug "extensions dir: ${extensions_dir}"
+
     for i in $(find ${extensions_dir} -mindepth 1 -maxdepth 1 -type d); do
         classpath="${classpath}:$(get-extension-jars ${i})" || exit 1
     done
