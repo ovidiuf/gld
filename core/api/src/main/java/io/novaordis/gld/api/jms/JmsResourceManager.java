@@ -39,7 +39,7 @@ import java.util.Map;
  *
  * The usage pattern is:
  *
- *  JmsEndpoint jmse = manager.checkOutEndpoint();
+ *  JMSEndpoint jmse = manager.checkOutEndpoint();
  *
  *  try {
  *
@@ -58,7 +58,7 @@ import java.util.Map;
  *  and it relies on the fact that deals with MultiThreadedRunner threads and not other threads. If you use it in a
  *  different context, you will need to consider that.
  *
- * @see JmsEndpoint
+ * @see JMSEndpoint
  */
 @Deprecated
 public class JmsResourceManager {
@@ -90,14 +90,14 @@ public class JmsResourceManager {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public JmsEndpoint checkOutEndpoint(JmsOperation jmsOperation) throws Exception {
+    public JMSEndpoint checkOutEndpoint(JmsOperation jmsOperation) throws Exception {
 
         if (connection == null) {
 
             throw new IllegalStateException(this + " is closed");
         }
 
-        JmsEndpoint result;
+        JMSEndpoint result;
 
         if (SessionPolicy.SESSION_PER_OPERATION.equals(sessionPolicy)) {
 
@@ -125,7 +125,7 @@ public class JmsResourceManager {
         return result;
     }
 
-    public void returnEndpoint(JmsEndpoint endpoint) throws Exception {
+    public void returnEndpoint(JMSEndpoint endpoint) throws Exception {
 
         // if we attempt to return an endpoint to a closed resource manager, close the endpoint and discard it
 
@@ -242,10 +242,10 @@ public class JmsResourceManager {
     /**
      * @param send true fro send, false for receive
      */
-    private JmsEndpoint createNewEndpointForSession(boolean send, Session session, Destination destination)
+    private JMSEndpoint createNewEndpointForSession(boolean send, Session session, Destination destination)
         throws Exception {
 
-        JmsEndpoint result;
+        JMSEndpoint result;
 
         String name = destination.getName();
         javax.jms.Destination jmsDestination =

@@ -18,7 +18,7 @@ package io.novaordis.gld.api.jms.load;
 
 import io.novaordis.gld.api.jms.Destination;
 import io.novaordis.gld.api.jms.Queue;
-import io.novaordis.gld.api.jms.embedded.EmbeddedJmsService;
+import io.novaordis.gld.api.jms.embedded.EmbeddedJMSService;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -68,7 +68,7 @@ public class MockJmsLoadStrategy extends MockLoadStrategy implements JmsLoadStra
     @Override
     public String getConnectionFactoryName() {
 
-        return EmbeddedJmsService.DEFAULT_CONNECTION_FACTORY_NAME;
+        return EmbeddedJMSService.DEFAULT_CONNECTION_FACTORY_NAME;
     }
 
     @Override

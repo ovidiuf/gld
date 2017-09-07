@@ -16,7 +16,7 @@
 
 package io.novaordis.gld.api.jms.operation;
 
-import io.novaordis.gld.api.jms.JmsEndpoint;
+import io.novaordis.gld.api.jms.JMSEndpoint;
 import io.novaordis.gld.api.jms.Producer;
 import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 import org.slf4j.Logger;
@@ -68,7 +68,7 @@ public class Send extends JmsOperationBase {
     }
 
     @Override
-    public void perform(JmsEndpoint endpoint) throws Exception {
+    public void perform(JMSEndpoint endpoint) throws Exception {
 
         Session jmsSession = endpoint.getSession();
         MessageProducer jmsProducer = ((Producer) endpoint).getProducer();

@@ -20,7 +20,7 @@ import io.novaordis.gld.api.LoadStrategyBase;
 import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.jms.Destination;
-import io.novaordis.gld.api.jms.JmsServiceConfiguration;
+import io.novaordis.gld.api.jms.JMSServiceConfiguration;
 import io.novaordis.gld.api.jms.Queue;
 import io.novaordis.gld.api.jms.Topic;
 import io.novaordis.gld.api.provider.NoopKeyProvider;
@@ -77,12 +77,12 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
     protected void init(ServiceConfiguration sc, Map<String, Object> loadStrategyRawConfig, LoadConfiguration lc)
             throws Exception {
 
-        if (!(sc instanceof JmsServiceConfiguration)) {
+        if (!(sc instanceof JMSServiceConfiguration)) {
 
-            throw new IllegalArgumentException(sc + " not a JmsServiceConfiguration");
+            throw new IllegalArgumentException(sc + " not a JMSServiceConfiguration");
         }
 
-        JmsServiceConfiguration jmsSc = (JmsServiceConfiguration)sc;
+        JMSServiceConfiguration jmsSc = (JMSServiceConfiguration)sc;
 
         //
         // process common elements

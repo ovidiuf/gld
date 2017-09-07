@@ -21,11 +21,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.jms.Session;
 
-public class MockJmsEndpoint implements JmsEndpoint {
+public class MockJMSEndpoint implements JMSEndpoint {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = LoggerFactory.getLogger(MockJmsEndpoint.class);
+    private static final Logger log = LoggerFactory.getLogger(MockJMSEndpoint.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -36,12 +36,12 @@ public class MockJmsEndpoint implements JmsEndpoint {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockJmsEndpoint() {
+    public MockJMSEndpoint() {
 
         this.closed = false;
     }
 
-    // JmsEndpoint implementation --------------------------------------------------------------------------------------
+    // JMSEndpoint implementation --------------------------------------------------------------------------------------
 
     @Override
     public void close() throws Exception {

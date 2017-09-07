@@ -41,14 +41,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * A base implementation of a JMS service. Most JMS Service implementations, unless they have special needs, should
+ * inherit from this class.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/20/17
  */
-public abstract class JmsServiceBase extends ServiceBase implements JmsService {
+public abstract class JMSServiceBase extends ServiceBase implements JMSService {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = LoggerFactory.getLogger(JmsServiceBase.class);
+    private static final Logger log = LoggerFactory.getLogger(JMSServiceBase.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -78,7 +81,7 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // JmsService implementation and overrides -------------------------------------------------------------------------
+    // JMSService implementation and overrides -------------------------------------------------------------------------
 
     @Override
     public ServiceType getType() {
@@ -89,7 +92,7 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
     @Override
     public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {
 
-        if (!(serviceConfiguration instanceof JmsServiceConfiguration)) {
+        if (!(serviceConfiguration instanceof JMSServiceConfiguration)) {
 
             throw new IllegalArgumentException("invalid JMS service configuration " + serviceConfiguration);
         }
@@ -126,6 +129,8 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
     public void start() throws Exception {
 
         super.start();
+
+        log.debug("starting JMS service base of " + this);
 
         synchronized (this) {
 
@@ -203,6 +208,8 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
 
         super.stop();
 
+        log.debug("stopping JMS service base of " + this);
+
         synchronized (this) {
 
             //
@@ -230,13 +237,13 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
 
 
     @Override
-    public JmsEndpoint checkOut(JmsOperation jmsOperation) throws Exception {
+    public JMSEndpoint checkOut(JmsOperation jmsOperation) throws Exception {
 
         Connection connection = getConnection();
 
         Session session = getSession(connection);
 
-        JmsEndpoint endpoint;
+        JMSEndpoint endpoint;
 
         javax.jms.Destination d = resolveDestination(jmsOperation.getDestination());
 
@@ -261,7 +268,7 @@ public abstract class JmsServiceBase extends ServiceBase implements JmsService {
     }
 
     @Override
-    public void checkIn(JmsEndpoint endpoint) throws Exception {
+    public void checkIn(JMSEndpoint endpoint) throws Exception {
 
         //
         // look at the session policy and handle accordingly

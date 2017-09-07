@@ -23,7 +23,7 @@ import io.novaordis.gld.api.configuration.MockServiceConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.jms.embedded.EmbeddedConnection;
 import io.novaordis.gld.api.jms.embedded.EmbeddedConnectionFactory;
-import io.novaordis.gld.api.jms.embedded.EmbeddedJmsService;
+import io.novaordis.gld.api.jms.embedded.EmbeddedJMSService;
 import io.novaordis.gld.api.jms.embedded.EmbeddedMessageProducer;
 import io.novaordis.gld.api.jms.embedded.EmbeddedSession;
 import io.novaordis.gld.api.jms.embedded.EmbeddedTextMessage;
@@ -80,7 +80,7 @@ public abstract class JmsServiceTest extends ServiceTest {
     @Test
     public void getServiceType() throws Exception {
 
-        JmsService s = getServiceToTest();
+        JMSService s = getServiceToTest();
         assertEquals(ServiceType.jms, s.getType());
     }
 
@@ -91,7 +91,7 @@ public abstract class JmsServiceTest extends ServiceTest {
     @Test
     public void configure_NotTheRightTypeOfServiceConfiguration() throws Exception {
 
-        JmsServiceBase s = (JmsServiceBase)getServiceToTest();
+        JMSServiceBase s = (JMSServiceBase)getServiceToTest();
 
         MockServiceConfiguration msc = new MockServiceConfiguration();
 
@@ -115,7 +115,7 @@ public abstract class JmsServiceTest extends ServiceTest {
     @Test
     public void ConnectionPolicy_CONNECTION_PER_RUN_lifecycle() throws Exception {
 
-        JmsServiceBase s = (JmsServiceBase)getServiceToTest();
+        JMSServiceBase s = (JMSServiceBase)getServiceToTest();
         MockJmsLoadStrategy mls = new MockJmsLoadStrategy();
         s.setLoadStrategy(mls);
 
@@ -141,7 +141,7 @@ public abstract class JmsServiceTest extends ServiceTest {
     @Test
     public void ConnectionPolicy_CONNECTION_PER_RUN_BehaviorOnCheckInCheckOut() throws Exception {
 
-        JmsServiceBase s = (JmsServiceBase)getServiceToTest();
+        JMSServiceBase s = (JMSServiceBase)getServiceToTest();
         MockJmsLoadStrategy mls = new MockJmsLoadStrategy(new Queue("mock-queue"));
         s.setLoadStrategy(mls);
 
@@ -149,13 +149,13 @@ public abstract class JmsServiceTest extends ServiceTest {
 
         MockSend mo = new MockSend(mls);
 
-        JmsEndpointBase endpoint = (JmsEndpointBase)s.checkOut(mo);
+        JMSEndpointBase endpoint = (JMSEndpointBase)s.checkOut(mo);
         Connection c = endpoint.getConnection();
         s.checkIn(endpoint);
 
         MockSend mo2 = new MockSend(mls);
 
-        JmsEndpointBase endpoint2 = (JmsEndpointBase)s.checkOut(mo2);
+        JMSEndpointBase endpoint2 = (JMSEndpointBase)s.checkOut(mo2);
         Connection c2 = endpoint2.getConnection();
         s.checkIn(endpoint2);
 
@@ -169,7 +169,7 @@ public abstract class JmsServiceTest extends ServiceTest {
     @Test
     public void SessionPolicy_SESSION_PER_OPERATION_lifecycle() throws Exception {
 
-        JmsServiceBase s = (JmsServiceBase)getServiceToTest();
+        JMSServiceBase s = (JMSServiceBase)getServiceToTest();
         MockJmsLoadStrategy mls = new MockJmsLoadStrategy();
         s.setLoadStrategy(mls);
 
@@ -187,7 +187,7 @@ public abstract class JmsServiceTest extends ServiceTest {
     @Test
     public void SessionPolicy_SESSION_PER_OPERATION_BehaviorOnCheckInCheckOut() throws Exception {
 
-        EmbeddedJmsService s = (EmbeddedJmsService)getServiceToTest();
+        EmbeddedJMSService s = (EmbeddedJMSService)getServiceToTest();
         MockJmsLoadStrategy mls = new MockJmsLoadStrategy(new Queue("mock-queue"));
         s.setLoadStrategy(mls);
 
@@ -201,7 +201,7 @@ public abstract class JmsServiceTest extends ServiceTest {
         // checking out
         //
 
-        JmsEndpointBase endpoint = (JmsEndpointBase)s.checkOut(mo);
+        JMSEndpointBase endpoint = (JMSEndpointBase)s.checkOut(mo);
 
         EmbeddedSession session = (EmbeddedSession)endpoint.getSession();
 
@@ -243,7 +243,7 @@ public abstract class JmsServiceTest extends ServiceTest {
         // checking out the second
         //
 
-        JmsEndpointBase endpoint2 = (JmsEndpointBase)s.checkOut(mo2);
+        JMSEndpointBase endpoint2 = (JMSEndpointBase)s.checkOut(mo2);
 
         EmbeddedSession session3 = (EmbeddedSession)endpoint2.getSession();
 
@@ -282,7 +282,7 @@ public abstract class JmsServiceTest extends ServiceTest {
     @Test
     public void SessionPolicy_SESSION_PER_THREAD_lifecycle() throws Exception {
 
-        final JmsServiceBase s = (JmsServiceBase)getServiceToTest();
+        final JMSServiceBase s = (JMSServiceBase)getServiceToTest();
         MockJmsLoadStrategy mls = new MockJmsLoadStrategy();
         mls.setSessionPolicy(SessionPolicy.SESSION_PER_THREAD);
 
@@ -352,7 +352,7 @@ public abstract class JmsServiceTest extends ServiceTest {
     @Test
     public void SessionPolicy_SESSION_PER_THREAD_BehaviorOnCheckInCheckOut() throws Exception {
 
-        final EmbeddedJmsService s = (EmbeddedJmsService)getServiceToTest();
+        final EmbeddedJMSService s = (EmbeddedJMSService)getServiceToTest();
         MockJmsLoadStrategy mls = new MockJmsLoadStrategy(new Queue("mock-queue"));
         mls.setSessionPolicy(SessionPolicy.SESSION_PER_THREAD);
         s.setLoadStrategy(mls);
@@ -366,7 +366,7 @@ public abstract class JmsServiceTest extends ServiceTest {
         // checking out
         //
 
-        JmsEndpointBase endpoint = (JmsEndpointBase)s.checkOut(mo);
+        JMSEndpointBase endpoint = (JMSEndpointBase)s.checkOut(mo);
 
         EmbeddedSession session = (EmbeddedSession)endpoint.getSession();
 
@@ -399,7 +399,7 @@ public abstract class JmsServiceTest extends ServiceTest {
 
         final MockSend mo2 = new MockSend(mls);
 
-        final JmsEndpoint[] jmsEndpoints = new JmsEndpoint[1];
+        final JMSEndpoint[] jmsEndpoints = new JMSEndpoint[1];
         final Exception[] exceptions = new Exception[1];
 
         final CountDownLatch endpointCheckedOut = new CountDownLatch(1);
@@ -410,7 +410,7 @@ public abstract class JmsServiceTest extends ServiceTest {
 
             try {
 
-                JmsEndpoint mo2Endpoint = s.checkOut(mo2);
+                JMSEndpoint mo2Endpoint = s.checkOut(mo2);
                 jmsEndpoints[0] = mo2Endpoint;
 
                 log.info("endpoint checked out on " + Thread.currentThread());
@@ -443,7 +443,7 @@ public abstract class JmsServiceTest extends ServiceTest {
             fail("(1) session getter thread produced exception " + exceptions[0]);
         }
 
-        JmsEndpoint endpoint2 = jmsEndpoints[0];
+        JMSEndpoint endpoint2 = jmsEndpoints[0];
         EmbeddedSession session3 = (EmbeddedSession)endpoint2.getSession();
 
         createdSessions = connection.getCreatedSessions();
@@ -514,7 +514,7 @@ public abstract class JmsServiceTest extends ServiceTest {
     @Test
     public void SessionPolicy_SESSION_PER_THREAD_EndpointCheckedInFromADifferentThread() throws Exception {
 
-        final EmbeddedJmsService s = (EmbeddedJmsService)getServiceToTest();
+        final EmbeddedJMSService s = (EmbeddedJMSService)getServiceToTest();
         MockJmsLoadStrategy mls = new MockJmsLoadStrategy(new Queue("mock-queue"));
         mls.setSessionPolicy(SessionPolicy.SESSION_PER_THREAD);
         s.setLoadStrategy(mls);
@@ -524,7 +524,7 @@ public abstract class JmsServiceTest extends ServiceTest {
 
         final MockSend mo = new MockSend(mls);
 
-        final JmsEndpoint[] endpoints = new JmsEndpoint[1];
+        final JMSEndpoint[] endpoints = new JMSEndpoint[1];
         final Exception[] exceptions = new Exception[1];
         final CountDownLatch threadDone = new CountDownLatch(1);
 
@@ -577,13 +577,13 @@ public abstract class JmsServiceTest extends ServiceTest {
     @Test
     public void SessionPolicy_SESSION_PER_THREAD_NoSessionAssociatedWithThreadFound() throws Exception {
 
-        final JmsServiceBase s = (JmsServiceBase)getServiceToTest();
+        final JMSServiceBase s = (JMSServiceBase)getServiceToTest();
         MockJmsLoadStrategy mls = new MockJmsLoadStrategy();
         mls.setSessionPolicy(SessionPolicy.SESSION_PER_THREAD);
 
         s.setLoadStrategy(mls);
 
-        JmsEndpoint me = new MockJmsEndpoint();
+        JMSEndpoint me = new MockJMSEndpoint();
 
         try {
 
@@ -601,7 +601,7 @@ public abstract class JmsServiceTest extends ServiceTest {
     @Test
     public void SessionPolicy_SESSION_PER_THREAD_EndpointSessionAndThreadSessionDiffer() throws Exception {
 
-        final JmsServiceBase s = (JmsServiceBase)getServiceToTest();
+        final JMSServiceBase s = (JMSServiceBase)getServiceToTest();
         MockJmsLoadStrategy mls = new MockJmsLoadStrategy();
         mls.setSessionPolicy(SessionPolicy.SESSION_PER_THREAD);
 
@@ -615,7 +615,7 @@ public abstract class JmsServiceTest extends ServiceTest {
 
         s.checkOut(new MockSend(mls));
 
-        MockJmsEndpoint me = new MockJmsEndpoint();
+        MockJMSEndpoint me = new MockJMSEndpoint();
         me.setSession(new EmbeddedSession(null, 0, false, Session.AUTO_ACKNOWLEDGE));
 
         try {
@@ -636,7 +636,7 @@ public abstract class JmsServiceTest extends ServiceTest {
     @Test
     public void start_ConnectionFactoryNotBoundInJNDI() throws Exception {
 
-        JmsServiceBase s = (JmsServiceBase)getServiceToTest();
+        JMSServiceBase s = (JMSServiceBase)getServiceToTest();
         JmsLoadStrategy ls = getMatchingLoadStrategy();
         s.setLoadStrategy(ls);
 
@@ -659,12 +659,12 @@ public abstract class JmsServiceTest extends ServiceTest {
     @Test
     public void start_UsernameAndPasswordPresent_AuthorizationFailure() throws Exception {
 
-        JmsServiceBase s = (JmsServiceBase)getServiceToTest();
+        JMSServiceBase s = (JMSServiceBase)getServiceToTest();
         JmsLoadStrategy ls = getMatchingLoadStrategy();
         s.setLoadStrategy(ls);
 
         //
-        // the default authorized user is EmbeddedJmsService.DEFAULT_AUTHORIZED_USER
+        // the default authorized user is EmbeddedJMSService.DEFAULT_AUTHORIZED_USER
         //
         s.setUsername("some-random-user");
         s.setPassword(new char[] {'s', 'o', 'm', 'e', 't', 'h', 'i', 'n', 'g'});
@@ -688,12 +688,12 @@ public abstract class JmsServiceTest extends ServiceTest {
     @Test
     public void start_UsernameAndPasswordPresent() throws Exception {
 
-        JmsServiceBase s = (JmsServiceBase)getServiceToTest();
+        JMSServiceBase s = (JMSServiceBase)getServiceToTest();
         JmsLoadStrategy ls = getMatchingLoadStrategy();
         s.setLoadStrategy(ls);
 
-        s.setUsername(EmbeddedJmsService.DEFAULT_AUTHORIZED_USER);
-        s.setPassword(EmbeddedJmsService.DEFAULT_AUTHORIZED_PASSWORD_AS_CHAR_ARRAY);
+        s.setUsername(EmbeddedJMSService.DEFAULT_AUTHORIZED_USER);
+        s.setPassword(EmbeddedJMSService.DEFAULT_AUTHORIZED_PASSWORD_AS_CHAR_ARRAY);
 
         s.start();
 
@@ -709,16 +709,16 @@ public abstract class JmsServiceTest extends ServiceTest {
         // this is how the load driver initializes the service and the load strategy
         //
 
-        MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
+        MockJMSServiceConfiguration msc = new MockJMSServiceConfiguration();
         msc.set(new HashMap<String, Object>(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
         msc.set(SendLoadStrategy.NAME, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
         msc.set("test-queue", ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.QUEUE_LABEL);
-        msc.set(EmbeddedJmsService.DEFAULT_CONNECTION_FACTORY_NAME,
+        msc.set(EmbeddedJMSService.DEFAULT_CONNECTION_FACTORY_NAME,
                 ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.CONNECTION_FACTORY_LABEL);
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
 
-        JmsService service = getServiceToTest();
+        JMSService service = getServiceToTest();
 
         service.configure(msc);
 
@@ -744,9 +744,9 @@ public abstract class JmsServiceTest extends ServiceTest {
         // test whether the message made it through
         //
 
-        if (service instanceof EmbeddedJmsService) {
+        if (service instanceof EmbeddedJMSService) {
 
-            EmbeddedJmsService es = (EmbeddedJmsService)service;
+            EmbeddedJMSService es = (EmbeddedJMSService)service;
 
             List<Message> messages = es.getMessagesSentToDestination("test-queue", true);
             assertEquals(1, messages.size());
@@ -761,16 +761,16 @@ public abstract class JmsServiceTest extends ServiceTest {
         // this is how the load driver initializes the service and the load strategy
         //
 
-        MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
+        MockJMSServiceConfiguration msc = new MockJMSServiceConfiguration();
         msc.set(new HashMap<String, Object>(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
         msc.set(ReceiveLoadStrategy.NAME, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
         msc.set("test-queue", ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.QUEUE_LABEL);
-        msc.set(EmbeddedJmsService.DEFAULT_CONNECTION_FACTORY_NAME,
+        msc.set(EmbeddedJMSService.DEFAULT_CONNECTION_FACTORY_NAME,
                 ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.CONNECTION_FACTORY_LABEL);
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
 
-        JmsService service = getServiceToTest();
+        JMSService service = getServiceToTest();
 
         service.configure(msc);
 
@@ -780,9 +780,9 @@ public abstract class JmsServiceTest extends ServiceTest {
 
         String messageContent = "n32Hw2";
 
-        if (service instanceof EmbeddedJmsService) {
+        if (service instanceof EmbeddedJMSService) {
 
-            EmbeddedJmsService es = (EmbeddedJmsService)service;
+            EmbeddedJMSService es = (EmbeddedJMSService)service;
             es.addToDestination("test-queue", true, new EmbeddedTextMessage(messageContent));
         }
 
@@ -810,7 +810,7 @@ public abstract class JmsServiceTest extends ServiceTest {
 
         String payload = operation.getPayload();
 
-        if (service instanceof EmbeddedJmsService) {
+        if (service instanceof EmbeddedJMSService) {
 
             assertEquals(messageContent, payload);
         }
@@ -821,7 +821,7 @@ public abstract class JmsServiceTest extends ServiceTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected abstract JmsService getServiceToTest() throws Exception;
+    protected abstract JMSService getServiceToTest() throws Exception;
 
     protected abstract JmsLoadStrategy getMatchingLoadStrategy();
 

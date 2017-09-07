@@ -16,9 +16,6 @@
 
 package io.novaordis.gld.api.jms.load;
 
-import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.configuration.MockLoadConfiguration;
-import io.novaordis.gld.api.jms.MockJmsServiceConfiguration;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

@@ -81,7 +81,7 @@ public class MockSend extends Send {
 //    }
 //
 //    @Override
-//    public void perform(JmsEndpoint endpoint) throws Exception {
+//    public void perform(JMSEndpoint endpoint) throws Exception {
 //        throw new RuntimeException("perform() NOT YET IMPLEMENTED");
 //    }
 

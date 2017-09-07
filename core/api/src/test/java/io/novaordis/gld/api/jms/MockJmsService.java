@@ -34,7 +34,7 @@ import java.util.Map;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/20/17
  */
-public class MockJmsService extends JmsServiceBase {
+public class MockJMSService extends JMSServiceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -47,13 +47,13 @@ public class MockJmsService extends JmsServiceBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockJmsService() {
+    public MockJMSService() {
 
         this.queues = new HashMap<>();
         this.topics = new HashMap<>();
     }
 
-    // JmsServiceBase overrides ----------------------------------------------------------------------------------------
+    // JMSServiceBase overrides ----------------------------------------------------------------------------------------
 
     @Override
     public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {

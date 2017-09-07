@@ -29,7 +29,7 @@ import java.util.HashMap;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/6/16
  */
-public class MockJmsServiceConfiguration extends MockServiceConfiguration implements JmsServiceConfiguration {
+public class MockJMSServiceConfiguration extends MockServiceConfiguration implements JMSServiceConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -39,7 +39,7 @@ public class MockJmsServiceConfiguration extends MockServiceConfiguration implem
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockJmsServiceConfiguration() {
+    public MockJMSServiceConfiguration() {
 
         //
         // we populate the service configuration with mandatory elements, so the initialization works well
@@ -59,7 +59,7 @@ public class MockJmsServiceConfiguration extends MockServiceConfiguration implem
         return ServiceType.jms;
     }
 
-    // JmsServiceConfiguration implementation --------------------------------------------------------------------------
+    // JMSServiceConfiguration implementation --------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
 

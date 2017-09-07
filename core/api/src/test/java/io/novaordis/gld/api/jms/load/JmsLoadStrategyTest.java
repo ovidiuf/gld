@@ -22,7 +22,7 @@ import io.novaordis.gld.api.configuration.MockLoadConfiguration;
 import io.novaordis.gld.api.configuration.MockServiceConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.jms.Destination;
-import io.novaordis.gld.api.jms.MockJmsServiceConfiguration;
+import io.novaordis.gld.api.jms.MockJMSServiceConfiguration;
 import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;
@@ -85,7 +85,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
     @Test
     public void init_Defaults() throws Exception {
 
-        MockJmsServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        MockJMSServiceConfiguration msc = getCorrespondingServiceConfiguration();
         JmsLoadStrategy s = getLoadStrategyToTest();
         msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
 
@@ -110,7 +110,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
     @Test
     public void init_MissingDestination() throws Exception {
 
-        MockJmsServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        MockJMSServiceConfiguration msc = getCorrespondingServiceConfiguration();
         JmsLoadStrategy s = getLoadStrategyToTest();
         msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
 
@@ -135,7 +135,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
     @Test
     public void init_MissingConnectionFactory() throws Exception {
 
-        MockJmsServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        MockJMSServiceConfiguration msc = getCorrespondingServiceConfiguration();
         JmsLoadStrategy s = getLoadStrategyToTest();
         msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
 
@@ -159,7 +159,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
     @Test
     public void init_BothQueueAndTopic() throws Exception {
 
-        MockJmsServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        MockJMSServiceConfiguration msc = getCorrespondingServiceConfiguration();
         JmsLoadStrategy s = getLoadStrategyToTest();
         msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
 
@@ -184,7 +184,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
     @Test
     public void init_Topic() throws Exception {
 
-        MockJmsServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        MockJMSServiceConfiguration msc = getCorrespondingServiceConfiguration();
         JmsLoadStrategy s = getLoadStrategyToTest();
         msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
 
@@ -203,7 +203,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
     @Test
     public void init_NonDefaultConnectionPolicy() throws Exception {
 
-        MockJmsServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        MockJMSServiceConfiguration msc = getCorrespondingServiceConfiguration();
         JmsLoadStrategy s = getLoadStrategyToTest();
         msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
 
@@ -221,7 +221,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
     @Test
     public void init_InvalidConnectionPolicy() throws Exception {
 
-        MockJmsServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        MockJMSServiceConfiguration msc = getCorrespondingServiceConfiguration();
         JmsLoadStrategy s = getLoadStrategyToTest();
         msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
 
@@ -246,7 +246,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
     @Test
     public void init_NonDefaultSessionPolicy() throws Exception {
 
-        MockJmsServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        MockJMSServiceConfiguration msc = getCorrespondingServiceConfiguration();
         JmsLoadStrategy s = getLoadStrategyToTest();
         msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
 
@@ -264,7 +264,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
     @Test
     public void init_InvalidSessionPolicy() throws Exception {
 
-        MockJmsServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        MockJMSServiceConfiguration msc = getCorrespondingServiceConfiguration();
         JmsLoadStrategy s = getLoadStrategyToTest();
         msc.set(s.getName(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.NAME_LABEL);
 
@@ -289,7 +289,7 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
     @Test
     public void init_NonNullUsername() throws Exception {
 
-        MockJmsServiceConfiguration msc = getCorrespondingServiceConfiguration();
+        MockJMSServiceConfiguration msc = getCorrespondingServiceConfiguration();
 
         JmsLoadStrategy s = getLoadStrategyToTest();
 
@@ -317,9 +317,9 @@ public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
     protected abstract JmsLoadStrategy getLoadStrategyToTest() throws Exception;
 
     @Override
-    protected MockJmsServiceConfiguration getCorrespondingServiceConfiguration() {
+    protected MockJMSServiceConfiguration getCorrespondingServiceConfiguration() {
 
-        return new MockJmsServiceConfiguration();
+        return new MockJMSServiceConfiguration();
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,13 @@
 
 package io.novaordis.gld.api.jms;
 
-import io.novaordis.gld.api.configuration.ServiceConfigurationImpl;
-
-import java.io.File;
-import java.util.Map;
-
 /**
+ * A generic implementation of a JMS service that obtains its connection factories and destinations from JNDI.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/6/16
+ * @since 9/6/17
  */
-public class JMSServiceConfigurationImpl extends ServiceConfigurationImpl implements JMSServiceConfiguration {
+public abstract class JNDIBasedJMSService extends JMSServiceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -35,28 +32,9 @@ public class JMSServiceConfigurationImpl extends ServiceConfigurationImpl implem
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public JMSServiceConfigurationImpl(Map<String, Object> rawConfiguration, File configurationDirectory)
-            throws Exception {
-
-        super(rawConfiguration, configurationDirectory);
-
-        //
-        // until we decide to give the load strategy
-        //
-    }
-
-    // JMSServiceConfiguration implementation ------------------------------------------------------------------------
-
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
-
-    /**
-     * For testing.
-     */
-    protected void set(Object instance, String ... path) {
-        super.set(instance, path);
-    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

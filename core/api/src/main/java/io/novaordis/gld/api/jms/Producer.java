@@ -20,7 +20,7 @@ import javax.jms.Connection;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 
-public class Producer extends JmsEndpointBase {
+public class Producer extends JMSEndpointBase {
 
 
     // Constants -------------------------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ public class Producer extends JmsEndpointBase {
         this.producer = producer;
     }
 
-    // JmsEndpoint implementation --------------------------------------------------------------------------------------
+    // JMSEndpoint implementation --------------------------------------------------------------------------------------
 
     @Override
     public void close() throws Exception {

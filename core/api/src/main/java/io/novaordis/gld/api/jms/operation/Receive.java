@@ -17,7 +17,7 @@
 package io.novaordis.gld.api.jms.operation;
 
 import io.novaordis.gld.api.jms.Consumer;
-import io.novaordis.gld.api.jms.JmsEndpoint;
+import io.novaordis.gld.api.jms.JMSEndpoint;
 import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 import io.novaordis.gld.api.jms.load.ReceiveLoadStrategy;
 import org.slf4j.Logger;
@@ -55,7 +55,7 @@ public class Receive extends JmsOperationBase {
     // JmsOperationBase overrides --------------------------------------------------------------------------------------
 
     @Override
-    public void perform(JmsEndpoint endpoint) throws Exception {
+    public void perform(JMSEndpoint endpoint) throws Exception {
 
         MessageConsumer jmsConsumer = ((Consumer) endpoint).getConsumer();
 

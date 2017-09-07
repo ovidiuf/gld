@@ -19,7 +19,7 @@ package io.novaordis.gld.api.configuration;
 import io.novaordis.gld.api.http.HttpServiceConfigurationImpl;
 import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.gld.api.cache.CacheServiceConfigurationImpl;
-import io.novaordis.gld.api.jms.JmsServiceConfigurationImpl;
+import io.novaordis.gld.api.jms.JMSServiceConfigurationImpl;
 import io.novaordis.utilities.UserErrorException;
 import org.yaml.snakeyaml.Yaml;
 
@@ -213,7 +213,7 @@ public class YamlBasedConfiguration implements Configuration {
         }
         else if (ServiceType.jms.equals(st)) {
 
-            return new JmsServiceConfigurationImpl(serviceConfigurationMap, configurationDirectory);
+            return new JMSServiceConfigurationImpl(serviceConfigurationMap, configurationDirectory);
         }
         else if (ServiceType.http.equals(st)) {
 

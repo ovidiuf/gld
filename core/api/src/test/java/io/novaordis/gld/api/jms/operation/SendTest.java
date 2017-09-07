@@ -17,8 +17,8 @@
 package io.novaordis.gld.api.jms.operation;
 
 import io.novaordis.gld.api.configuration.MockLoadConfiguration;
-import io.novaordis.gld.api.jms.MockJmsService;
-import io.novaordis.gld.api.jms.MockJmsServiceConfiguration;
+import io.novaordis.gld.api.jms.MockJMSService;
+import io.novaordis.gld.api.jms.MockJMSServiceConfiguration;
 import io.novaordis.gld.api.jms.Queue;
 import io.novaordis.gld.api.jms.embedded.EmbeddedConnection;
 import io.novaordis.gld.api.jms.embedded.EmbeddedQueue;
@@ -56,7 +56,7 @@ public class SendTest extends JmsOperationTest {
     public void perform() throws Exception {
 
         SendLoadStrategy ls = new SendLoadStrategy();
-        MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
+        MockJMSServiceConfiguration msc = new MockJMSServiceConfiguration();
         assertEquals("/jms/test-queue", msc.getQueueName());
         msc.setLoadStrategyName(ls.getName());
         ls.init(msc, new MockLoadConfiguration());
@@ -65,7 +65,7 @@ public class SendTest extends JmsOperationTest {
 
         assertNull(send.getKey());
 
-        MockJmsService service = new MockJmsService();
+        MockJMSService service = new MockJMSService();
         service.setConnectionPolicy(ConnectionPolicy.CONNECTION_PER_RUN);
         service.setSessionPolicy(SessionPolicy.SESSION_PER_OPERATION);
         service.setConnection(new EmbeddedConnection());

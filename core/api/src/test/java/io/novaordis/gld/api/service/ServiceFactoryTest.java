@@ -20,8 +20,8 @@ import io.novaordis.gld.api.MockService;
 import io.novaordis.gld.api.cache.MockCacheServiceConfiguration;
 import io.novaordis.gld.api.cache.embedded.EmbeddedCacheService;
 import io.novaordis.gld.api.configuration.ImplementationConfiguration;
-import io.novaordis.gld.api.jms.MockJmsServiceConfiguration;
-import io.novaordis.gld.api.jms.embedded.EmbeddedJmsService;
+import io.novaordis.gld.api.jms.MockJMSServiceConfiguration;
+import io.novaordis.gld.api.jms.embedded.EmbeddedJMSService;
 import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -74,13 +74,13 @@ public class ServiceFactoryTest {
     @Test
     public void buildInstance_EmbeddedJms() throws Exception {
 
-        MockJmsServiceConfiguration sc = new MockJmsServiceConfiguration();
+        MockJMSServiceConfiguration sc = new MockJMSServiceConfiguration();
 
         sc.setImplementationConfigurationMap(buildImplementationConfigMap(ServiceFactory.EMBEDDED_MARKER, null));
 
         Service service = ServiceFactory.buildInstance(sc);
 
-        EmbeddedJmsService es = (EmbeddedJmsService)service;
+        EmbeddedJMSService es = (EmbeddedJMSService)service;
 
         assertNotNull(es);
     }

@@ -41,7 +41,7 @@ public class HttpServiceConfigurationImpl extends ServiceConfigurationImpl imple
         super(rawConfiguration, configurationDirectory);
     }
 
-    // JmsServiceConfiguration implementation ------------------------------------------------------------------------
+    // JMSServiceConfiguration implementation ------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
 

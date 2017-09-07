@@ -23,7 +23,7 @@ import io.novaordis.gld.api.service.Service;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/20/17
  */
-public interface JmsService extends Service {
+public interface JMSService extends Service {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ public interface JmsService extends Service {
     /**
      * Checks out an endpoint, to be used by the load driver to perform an operation.
      */
-    JmsEndpoint checkOut(JmsOperation jmsOperation) throws Exception;
+    JMSEndpoint checkOut(JmsOperation jmsOperation) throws Exception;
 
     /**
      * Returns the endpoint to the service, to be recycled or closed.
@@ -50,7 +50,7 @@ public interface JmsService extends Service {
      * the associated structures, in case SessionPolicy.SESSION_PER_THREAD or ConnectionPolicy.CONNECTION_PER_THREAD are
      * in effect.
      */
-    void checkIn(JmsEndpoint session) throws Exception;
+    void checkIn(JMSEndpoint session) throws Exception;
 
     /**
      * @return the JMS Destination instance corresponding to given destination, or null if the Destination is not found.

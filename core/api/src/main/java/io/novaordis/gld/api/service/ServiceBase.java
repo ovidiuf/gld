@@ -107,6 +107,8 @@ public abstract class ServiceBase implements Service {
             throw new IllegalStateException("incompletely configured service instance: load strategy not installed");
         }
 
+        log.debug("starting service base of " + this);
+
         //
         // start dependencies
         //
@@ -116,7 +118,7 @@ public abstract class ServiceBase implements Service {
         started = true;
 
         //
-        // do not log "started" here, it will be confusing, as the sublass instance did not start yet
+        // do not log "started" here, it will be confusing, as the subclass instance did not start yet
         //
     }
 
@@ -131,6 +133,9 @@ public abstract class ServiceBase implements Service {
 
             return;
         }
+
+        log.debug("stopping service base of " + this);
+
 
         //
         // stop dependencies

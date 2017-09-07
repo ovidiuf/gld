@@ -52,7 +52,7 @@ public abstract class JmsEndpointTest {
         EmbeddedSession session = new EmbeddedSession(connection, 0, false, Session.AUTO_ACKNOWLEDGE);
         EmbeddedQueue queue = new EmbeddedQueue("test");
 
-        JmsEndpoint e = getEndpointToTest(queue, session, connection);
+        JMSEndpoint e = getEndpointToTest(queue, session, connection);
 
         assertEquals(session, e.getSession());
     }
@@ -66,7 +66,7 @@ public abstract class JmsEndpointTest {
         EmbeddedSession session = new EmbeddedSession(connection, 0, false, Session.AUTO_ACKNOWLEDGE);
         EmbeddedQueue queue = new EmbeddedQueue("test");
 
-        JmsEndpointBase e = (JmsEndpointBase)getEndpointToTest(queue, session, connection);
+        JMSEndpointBase e = (JMSEndpointBase)getEndpointToTest(queue, session, connection);
 
         assertEquals(connection, e.getConnection());
     }
@@ -80,7 +80,7 @@ public abstract class JmsEndpointTest {
         EmbeddedSession session = new EmbeddedSession(connection, 0, false, Session.AUTO_ACKNOWLEDGE);
         EmbeddedQueue queue = new EmbeddedQueue("test");
 
-        JmsEndpoint e = getEndpointToTest(queue, session, connection);
+        JMSEndpoint e = getEndpointToTest(queue, session, connection);
 
         e.close();
 
@@ -95,7 +95,7 @@ public abstract class JmsEndpointTest {
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected abstract JmsEndpoint getEndpointToTest(
+    protected abstract JMSEndpoint getEndpointToTest(
             javax.jms.Destination jmsDestination, Session session, Connection connection) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------

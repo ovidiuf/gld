@@ -21,7 +21,7 @@ import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.gld.api.jms.JmsServiceConfiguration;
+import io.novaordis.gld.api.jms.JMSServiceConfiguration;
 import io.novaordis.gld.api.service.Service;
 import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.utilities.UserErrorException;
@@ -108,7 +108,7 @@ public class MockLoadStrategy implements LoadStrategy {
             // there is a required configuration element name, attempt to read it from the configuration
             //
 
-            JmsServiceConfiguration msc = (JmsServiceConfiguration)sc;
+            JMSServiceConfiguration msc = (JMSServiceConfiguration)sc;
 
             Map<String, Object> rawConfig = msc.get("load-strategy");
 

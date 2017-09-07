@@ -19,7 +19,7 @@ package io.novaordis.gld.api.jms;
 import javax.jms.Connection;
 import javax.jms.Session;
 
-public abstract class JmsEndpointBase implements JmsEndpoint {
+public abstract class JMSEndpointBase implements JMSEndpoint {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,13 +32,13 @@ public abstract class JmsEndpointBase implements JmsEndpoint {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public JmsEndpointBase(Session session, Connection connection) {
+    public JMSEndpointBase(Session session, Connection connection) {
 
         this.session = session;
         this.connection = connection;
     }
 
-    // JmsEndpoint implementation --------------------------------------------------------------------------------------
+    // JMSEndpoint implementation --------------------------------------------------------------------------------------
 
     @Override
     public Session getSession() {

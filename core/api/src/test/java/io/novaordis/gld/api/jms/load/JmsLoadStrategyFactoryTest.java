@@ -17,8 +17,8 @@
 package io.novaordis.gld.api.jms.load;
 
 import io.novaordis.gld.api.LoadStrategyFactoryTest;
-import io.novaordis.gld.api.jms.JmsServiceConfiguration;
-import io.novaordis.gld.api.jms.MockJmsServiceConfiguration;
+import io.novaordis.gld.api.jms.JMSServiceConfiguration;
+import io.novaordis.gld.api.jms.MockJMSServiceConfiguration;
 import io.novaordis.gld.api.service.ServiceType;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -64,9 +64,9 @@ public class JmsLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
     }
 
     @Override
-    protected JmsServiceConfiguration getCorrespondingConfigurationToTest() throws Exception {
+    protected JMSServiceConfiguration getCorrespondingConfigurationToTest() throws Exception {
 
-        MockJmsServiceConfiguration c = new MockJmsServiceConfiguration();
+        MockJMSServiceConfiguration c = new MockJMSServiceConfiguration();
         c.setLoadStrategyName("mock");
         log.debug("returning " + c);
         return c;

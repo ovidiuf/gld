@@ -20,12 +20,12 @@ import javax.jms.Session;
 
 /**
  * This interface was introduced to allow for flexibility in implementing the load strategy. A JMS load strategy can
- * choose to recycle Connections, Sessions or even MessageProducers and MessageConsumers. The JmsEndpoint abstracts
- * out all these things: the load driver does not care how a message is sent by the JmsService implementation, as long
+ * choose to recycle Connections, Sessions or even MessageProducers and MessageConsumers. The JMSEndpoint abstracts
+ * out all these things: the load driver does not care how a message is sent by the JMSService implementation, as long
  * as it complies with the load strategy.
  *
  */
-public interface JmsEndpoint {
+public interface JMSEndpoint {
 
     /**
      * Closes the endpoint and the associated resources, according to the load strategy in effect.

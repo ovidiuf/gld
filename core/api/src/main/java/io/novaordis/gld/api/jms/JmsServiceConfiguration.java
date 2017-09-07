@@ -22,7 +22,7 @@ import io.novaordis.gld.api.configuration.ServiceConfiguration;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/6/16
  */
-public interface JmsServiceConfiguration extends ServiceConfiguration {
+public interface JMSServiceConfiguration extends ServiceConfiguration {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

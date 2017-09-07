@@ -17,8 +17,8 @@
 package io.novaordis.gld.api.jms.operation;
 
 import io.novaordis.gld.api.jms.Destination;
-import io.novaordis.gld.api.jms.JmsEndpoint;
-import io.novaordis.gld.api.jms.JmsService;
+import io.novaordis.gld.api.jms.JMSEndpoint;
+import io.novaordis.gld.api.jms.JMSService;
 import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 import io.novaordis.gld.api.service.Service;
 
@@ -86,7 +86,7 @@ public abstract class JmsOperationBase implements JmsOperation {
     @Override
     public void perform(Service s) throws Exception {
 
-        if (!(s instanceof JmsService)) {
+        if (!(s instanceof JMSService)) {
 
             throw new IllegalArgumentException("invalid service " + s);
 
@@ -96,9 +96,9 @@ public abstract class JmsOperationBase implements JmsOperation {
         // pull the appropriate resources from the service and then execute the operations with these resources
         //
 
-        JmsService jmsService = (JmsService)s;
+        JMSService jmsService = (JMSService)s;
 
-        JmsEndpoint endpoint = jmsService.checkOut(this);
+        JMSEndpoint endpoint = jmsService.checkOut(this);
 
         try {
 

@@ -18,7 +18,7 @@ package io.novaordis.gld.api.jms.operation;
 
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.jms.Destination;
-import io.novaordis.gld.api.jms.JmsEndpoint;
+import io.novaordis.gld.api.jms.JMSEndpoint;
 import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 
 /**
@@ -52,7 +52,7 @@ public interface JmsOperation extends Operation {
      * Performs the operation with the endpoint that was checked out from the service. After the operation is performed
      * the endpoint should be checked in, according to the following pattern:
      *
-     * JmsEndpoint endpoint = service.checkOut(operation);
+     * JMSEndpoint endpoint = service.checkOut(operation);
      *
      * try {
      *
@@ -63,6 +63,6 @@ public interface JmsOperation extends Operation {
      *     service.checkIn(endpoint);
      * }
      */
-    void perform(JmsEndpoint endpoint) throws Exception;
+    void perform(JMSEndpoint endpoint) throws Exception;
 
 }

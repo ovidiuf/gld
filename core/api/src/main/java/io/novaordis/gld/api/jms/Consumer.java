@@ -20,7 +20,7 @@ import javax.jms.Connection;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
-public class Consumer extends JmsEndpointBase {
+public class Consumer extends JMSEndpointBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -39,10 +39,10 @@ public class Consumer extends JmsEndpointBase {
         this.consumer = consumer;
     }
 
-    // JmsEndpoint implementation --------------------------------------------------------------------------------------
+    // JMSEndpoint implementation --------------------------------------------------------------------------------------
 
     /**
-     * @see JmsEndpoint#close()
+     * @see JMSEndpoint#close()
      */
     @Override
     public void close() throws Exception {

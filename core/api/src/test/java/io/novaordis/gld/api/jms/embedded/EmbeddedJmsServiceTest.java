@@ -16,9 +16,8 @@
 
 package io.novaordis.gld.api.jms.embedded;
 
-import io.novaordis.gld.api.jms.JmsService;
+import io.novaordis.gld.api.jms.JMSService;
 import io.novaordis.gld.api.jms.JmsServiceTest;
-import io.novaordis.gld.api.jms.embedded.EmbeddedJmsService;
 import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
 import io.novaordis.gld.api.jms.load.MockJmsLoadStrategy;
 
@@ -26,7 +25,7 @@ import io.novaordis.gld.api.jms.load.MockJmsLoadStrategy;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/20/17
  */
-public class EmbeddedJmsServiceTest extends JmsServiceTest {
+public class EmbeddedJMSServiceTest extends JmsServiceTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -45,9 +44,9 @@ public class EmbeddedJmsServiceTest extends JmsServiceTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected JmsService getServiceToTest() throws Exception {
+    protected JMSService getServiceToTest() throws Exception {
 
-        return new EmbeddedJmsService();
+        return new EmbeddedJMSService();
     }
 
     @Override

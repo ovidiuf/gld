@@ -18,7 +18,7 @@ package io.novaordis.gld.api.jms.embedded;
 
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.jms.Destination;
-import io.novaordis.gld.api.jms.JmsServiceBase;
+import io.novaordis.gld.api.jms.JMSServiceBase;
 import io.novaordis.utilities.UserErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,11 +36,11 @@ import java.util.Map;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/25/17
  */
-public class EmbeddedJmsService extends JmsServiceBase {
+public class EmbeddedJMSService extends JMSServiceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = LoggerFactory.getLogger(EmbeddedJmsService.class);
+    private static final Logger log = LoggerFactory.getLogger(EmbeddedJMSService.class);
 
     public static final String DEFAULT_CONNECTION_FACTORY_NAME = "/MockConnectionFactory";
 
@@ -57,7 +57,7 @@ public class EmbeddedJmsService extends JmsServiceBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedJmsService() {
+    public EmbeddedJMSService() {
 
         this.connectionFactories = new HashMap<>();
 
@@ -73,7 +73,7 @@ public class EmbeddedJmsService extends JmsServiceBase {
         this.destinations = new HashMap<>();
     }
 
-    // JmsService implementation ---------------------------------------------------------------------------------------
+    // JMSService implementation ---------------------------------------------------------------------------------------
 
     @Override
     public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {
@@ -164,7 +164,7 @@ public class EmbeddedJmsService extends JmsServiceBase {
     @Override
     public String toString() {
 
-        return "EmbeddedJmsService[" + Integer.toHexString(System.identityHashCode(this)) + "]";
+        return "EmbeddedJMSService[" + Integer.toHexString(System.identityHashCode(this)) + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

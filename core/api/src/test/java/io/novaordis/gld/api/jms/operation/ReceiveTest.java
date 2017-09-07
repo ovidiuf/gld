@@ -17,8 +17,8 @@
 package io.novaordis.gld.api.jms.operation;
 
 import io.novaordis.gld.api.configuration.MockLoadConfiguration;
-import io.novaordis.gld.api.jms.MockJmsService;
-import io.novaordis.gld.api.jms.MockJmsServiceConfiguration;
+import io.novaordis.gld.api.jms.MockJMSService;
+import io.novaordis.gld.api.jms.MockJMSServiceConfiguration;
 import io.novaordis.gld.api.jms.Queue;
 import io.novaordis.gld.api.jms.embedded.EmbeddedQueue;
 import io.novaordis.gld.api.jms.embedded.EmbeddedTextMessage;
@@ -55,14 +55,14 @@ public class ReceiveTest extends JmsOperationTest {
     public void perform_NoTimeout() throws Exception {
 
         ReceiveLoadStrategy ls = new ReceiveLoadStrategy();
-        MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
+        MockJMSServiceConfiguration msc = new MockJMSServiceConfiguration();
         assertEquals("/jms/test-queue", msc.getQueueName());
         msc.setLoadStrategyName(ls.getName());
         ls.init(msc, new MockLoadConfiguration());
 
         Receive receive = ls.next(null, null, false);
 
-        MockJmsService service = new MockJmsService();
+        MockJMSService service = new MockJMSService();
         service.setConnectionPolicy(ConnectionPolicy.CONNECTION_PER_RUN);
         service.setSessionPolicy(SessionPolicy.SESSION_PER_OPERATION);
         service.setLoadStrategy(new MockJmsLoadStrategy());
@@ -86,14 +86,14 @@ public class ReceiveTest extends JmsOperationTest {
         ReceiveLoadStrategy ls = new ReceiveLoadStrategy();
         ls.setTimeoutMs(timeout);
 
-        MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration();
+        MockJMSServiceConfiguration msc = new MockJMSServiceConfiguration();
         assertEquals("/jms/test-queue", msc.getQueueName());
         msc.setLoadStrategyName(ls.getName());
         ls.init(msc, new MockLoadConfiguration());
 
         Receive receive = ls.next(null, null, false);
 
-        MockJmsService service = new MockJmsService();
+        MockJMSService service = new MockJMSService();
         service.setConnectionPolicy(ConnectionPolicy.CONNECTION_PER_RUN);
         service.setSessionPolicy(SessionPolicy.SESSION_PER_OPERATION);
         service.setLoadStrategy(new MockJmsLoadStrategy());

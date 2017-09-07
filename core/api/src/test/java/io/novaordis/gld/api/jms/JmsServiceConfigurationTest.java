@@ -26,7 +26,7 @@ import java.util.Map;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/6/16
  */
-public class JmsServiceConfigurationTest extends ServiceConfigurationTest {
+public class JMSServiceConfigurationTest extends ServiceConfigurationTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -45,9 +45,9 @@ public class JmsServiceConfigurationTest extends ServiceConfigurationTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected JmsServiceConfigurationImpl getConfigurationToTest(Map<String, Object> map, File cd) throws Exception {
+    protected JMSServiceConfigurationImpl getConfigurationToTest(Map<String, Object> map, File cd) throws Exception {
 
-        return new JmsServiceConfigurationImpl(map, cd);
+        return new JMSServiceConfigurationImpl(map, cd);
     }
 
     @Override
