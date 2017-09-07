@@ -90,7 +90,6 @@ public abstract class ServiceTest {
 
             assertEquals("incompletely configured service instance: load strategy not installed", msg);
         }
-
     }
 
     @Test

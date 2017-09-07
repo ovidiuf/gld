@@ -39,6 +39,8 @@ public class MockJMSLoadStrategy extends MockLoadStrategy implements JMSLoadStra
     private String username;
     private char[] password;
 
+    private String connectionFactoryName;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockJMSLoadStrategy() {
@@ -55,6 +57,8 @@ public class MockJMSLoadStrategy extends MockLoadStrategy implements JMSLoadStra
         //
 
         this.sessionPolicy = SessionPolicy.SESSION_PER_OPERATION;
+
+        this.connectionFactoryName = EmbeddedJMSService.DEFAULT_CONNECTION_FACTORY_NAME;
     }
 
     // JMSLoadStrategy implementation ----------------------------------------------------------------------------------
@@ -68,7 +72,7 @@ public class MockJMSLoadStrategy extends MockLoadStrategy implements JMSLoadStra
     @Override
     public String getConnectionFactoryName() {
 
-        return EmbeddedJMSService.DEFAULT_CONNECTION_FACTORY_NAME;
+        return connectionFactoryName;
     }
 
     @Override
@@ -108,6 +112,11 @@ public class MockJMSLoadStrategy extends MockLoadStrategy implements JMSLoadStra
     public void setSessionPolicy(SessionPolicy sessionPolicy) {
 
         this.sessionPolicy = sessionPolicy;
+    }
+
+    public void setConnectionFactoryName(String s) {
+
+        this.connectionFactoryName = s;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

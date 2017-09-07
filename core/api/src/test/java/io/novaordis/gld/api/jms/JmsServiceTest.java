@@ -27,6 +27,7 @@ import io.novaordis.gld.api.jms.embedded.EmbeddedJMSService;
 import io.novaordis.gld.api.jms.embedded.EmbeddedMessageProducer;
 import io.novaordis.gld.api.jms.embedded.EmbeddedSession;
 import io.novaordis.gld.api.jms.embedded.EmbeddedTextMessage;
+import io.novaordis.gld.api.jms.load.ConnectionPolicy;
 import io.novaordis.gld.api.jms.load.JMSLoadStrategy;
 import io.novaordis.gld.api.jms.load.MockJMSLoadStrategy;
 import io.novaordis.gld.api.jms.load.ReceiveLoadStrategy;
@@ -53,6 +54,7 @@ import java.util.concurrent.CountDownLatch;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -116,8 +118,8 @@ public abstract class JMSServiceTest extends ServiceTest {
     public void ConnectionPolicy_CONNECTION_PER_RUN_lifecycle() throws Exception {
 
         JMSServiceBase s = (JMSServiceBase)getServiceToTest();
-        MockJMSLoadStrategy mls = new MockJMSLoadStrategy();
-        s.setLoadStrategy(mls);
+        LoadStrategy ls = getMatchingLoadStrategy();
+        s.setLoadStrategy(ls);
 
         Connection c = s.getConnection();
 
@@ -142,18 +144,18 @@ public abstract class JMSServiceTest extends ServiceTest {
     public void ConnectionPolicy_CONNECTION_PER_RUN_BehaviorOnCheckInCheckOut() throws Exception {
 
         JMSServiceBase s = (JMSServiceBase)getServiceToTest();
-        MockJMSLoadStrategy mls = new MockJMSLoadStrategy(new Queue("mock-queue"));
-        s.setLoadStrategy(mls);
+        JMSLoadStrategy ls = getMatchingLoadStrategy();
+        s.setLoadStrategy(ls);
 
         s.start();
 
-        MockSend mo = new MockSend(mls);
+        MockSend mo = new MockSend(ls);
 
         JMSEndpointBase endpoint = (JMSEndpointBase)s.checkOut(mo);
         Connection c = endpoint.getConnection();
         s.checkIn(endpoint);
 
-        MockSend mo2 = new MockSend(mls);
+        MockSend mo2 = new MockSend(ls);
 
         JMSEndpointBase endpoint2 = (JMSEndpointBase)s.checkOut(mo2);
         Connection c2 = endpoint2.getConnection();
@@ -640,7 +642,13 @@ public abstract class JMSServiceTest extends ServiceTest {
         JMSLoadStrategy ls = getMatchingLoadStrategy();
         s.setLoadStrategy(ls);
 
-        s.setConnectionFactoryName("/something");
+        String connectionFactoryName = ls.getConnectionFactoryName();
+        assertNotNull(connectionFactoryName);
+
+        //
+        // flush JNDI so we won't find the connection factory
+        //
+        MockInitialContextFactory.getJndiSpace().clear();
 
         try {
 
@@ -651,8 +659,9 @@ public abstract class JMSServiceTest extends ServiceTest {
         catch(UserErrorException e) {
 
             String msg = e.getMessage();
-            log.info(msg);
-            assertEquals("Connection factory /something not bound in JNDI", msg);
+            assertTrue(msg.contains("connection factory"));
+            assertTrue(msg.contains(connectionFactoryName));
+            assertTrue(msg.contains("not bound in JNDI"));
         }
     }
 
@@ -823,7 +832,15 @@ public abstract class JMSServiceTest extends ServiceTest {
     @Override
     protected JMSService getServiceToTest() throws Exception {
 
-        return getJMSServiceToTest();
+        JMSServiceBase s = (JMSServiceBase)getJMSServiceToTest();
+
+        //
+        // so far, the JMS services we know can only run if they're configured with ConnectionPolicy.CONNECTION_PER_RUN
+        //
+
+        s.setConnectionPolicy(ConnectionPolicy.CONNECTION_PER_RUN);
+
+        return s;
     }
 
     protected abstract JMSService getJMSServiceToTest() throws Exception;

@@ -67,5 +67,4 @@ public interface JMSService extends Service {
      * @exception Exception on any other underlying naming failure.
      */
     javax.jms.ConnectionFactory resolveConnectionFactory(String connectionFactoryName) throws Exception;
-
 }

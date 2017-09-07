@@ -128,15 +128,16 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
     @Override
     public void start() throws Exception {
 
-        super.start();
-
-        log.debug("starting JMS service base of " + this);
-
         synchronized (this) {
 
             //
             // TODO this implies ConnectionPolicy.CONNECTION_PER_RUN, this code will need to be reviewed
             //
+
+            if (!ConnectionPolicy.CONNECTION_PER_RUN.equals(connectionPolicy)) {
+
+                throw new RuntimeException("WE DON'T KNOW HOW TO HANDLE " + connectionPolicy);
+            }
 
             if (connection != null) {
 
@@ -150,6 +151,12 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
             }
 
             //
+            // after possibly starting the subclass layer, we need to start this one to build and install JMS objects.
+            //
+
+            log.debug("starting JMS service base of " + this);
+
+            //
             // look up the ConnectionFactory
             //
 
@@ -157,7 +164,7 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
 
             if (connectionFactory == null) {
 
-                throw new UserErrorException("Connection factory " + connectionFactoryName + " not bound in JNDI");
+                throw new UserErrorException("connection factory " + connectionFactoryName + " not bound in JNDI");
             }
 
             Connection c;
@@ -192,6 +199,8 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
 
             setConnection(c);
         }
+
+        super.start();
     }
 
     @Override
@@ -234,7 +243,6 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
             connection = null;
         }
     }
-
 
     @Override
     public JMSEndpoint checkOut(JmsOperation jmsOperation) throws Exception {
@@ -432,6 +440,8 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
     protected void setConnectionPolicy(ConnectionPolicy cp) {
 
         this.connectionPolicy = cp;
+
+        log.debug(this + " installed " + this.connectionPolicy);
     }
 
     protected void setUsername(String username) {
@@ -488,6 +498,8 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
     protected void setConnection(Connection c) {
 
         this.connection = c;
+
+        log.debug(this + " installed connection " + c);
     }
 
     protected void setConnectionFactoryName(String s) {
