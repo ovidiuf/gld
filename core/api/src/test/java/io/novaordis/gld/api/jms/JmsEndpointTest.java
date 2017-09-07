@@ -29,11 +29,11 @@ import javax.jms.Session;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-public abstract class JmsEndpointTest {
+public abstract class JMSEndpointTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = LoggerFactory.getLogger(JmsEndpointTest.class);
+    private static final Logger log = LoggerFactory.getLogger(JMSEndpointTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

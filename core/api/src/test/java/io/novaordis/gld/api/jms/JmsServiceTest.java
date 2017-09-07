@@ -61,11 +61,11 @@ import static org.junit.Assert.fail;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/20/17
  */
-public abstract class JmsServiceTest extends ServiceTest {
+public abstract class JMSServiceTest extends ServiceTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = LoggerFactory.getLogger(JmsServiceTest.class);
+    private static final Logger log = LoggerFactory.getLogger(JMSServiceTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

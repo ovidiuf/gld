@@ -31,7 +31,7 @@ import javax.jms.Session;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class ProducerTest extends JmsEndpointTest {
+public class ProducerTest extends JMSEndpointTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

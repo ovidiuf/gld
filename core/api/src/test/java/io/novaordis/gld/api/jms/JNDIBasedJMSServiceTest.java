@@ -20,7 +20,7 @@ package io.novaordis.gld.api.jms;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 9/6/17
  */
-public abstract class JNDIBasedJMSServiceTest extends JmsServiceTest {
+public abstract class JNDIBasedJMSServiceTest extends JMSServiceTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
