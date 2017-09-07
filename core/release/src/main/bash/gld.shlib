@@ -23,7 +23,7 @@ function build-classpath() {
 
     debug "lib_dir: ${lib_dir}"
 
-    for i in $(find ${lib_dir} -name *.jar); do
+    for i in $(find ${lib_dir} -name "*.jar"); do
         [ -z "${classpath}" ] && classpath=${i} || classpath=${classpath}:${i}
     done
 
