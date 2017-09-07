@@ -30,11 +30,11 @@ import static org.junit.Assert.assertEquals;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/5/16
  */
-public class JmsLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
+public class JMSLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = LoggerFactory.getLogger(JmsLoadStrategyFactoryTest.class);
+    private static final Logger log = LoggerFactory.getLogger(JMSLoadStrategyFactoryTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -47,7 +47,7 @@ public class JmsLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
     @Test
     public void serviceType() throws Exception {
 
-        JmsLoadStrategyFactory f = getLoadStrategyFactoryToTest();
+        JMSLoadStrategyFactory f = getLoadStrategyFactoryToTest();
         assertEquals(ServiceType.jms, f.getServiceType());
     }
 
@@ -58,9 +58,9 @@ public class JmsLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected JmsLoadStrategyFactory getLoadStrategyFactoryToTest() throws Exception {
+    protected JMSLoadStrategyFactory getLoadStrategyFactoryToTest() throws Exception {
 
-        return new JmsLoadStrategyFactory();
+        return new JMSLoadStrategyFactory();
     }
 
     @Override

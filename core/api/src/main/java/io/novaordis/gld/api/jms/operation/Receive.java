@@ -18,7 +18,7 @@ package io.novaordis.gld.api.jms.operation;
 
 import io.novaordis.gld.api.jms.Consumer;
 import io.novaordis.gld.api.jms.JMSEndpoint;
-import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
+import io.novaordis.gld.api.jms.load.JMSLoadStrategy;
 import io.novaordis.gld.api.jms.load.ReceiveLoadStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +44,7 @@ public class Receive extends JmsOperationBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Receive(JmsLoadStrategy ls) {
+    public Receive(JMSLoadStrategy ls) {
 
         super(ls);
 
@@ -133,7 +133,7 @@ public class Receive extends JmsOperationBase {
     @Override
     public String toString() {
 
-        JmsLoadStrategy ls = getLoadStrategy();
+        JMSLoadStrategy ls = getLoadStrategy();
 
         if (ls == null) {
 

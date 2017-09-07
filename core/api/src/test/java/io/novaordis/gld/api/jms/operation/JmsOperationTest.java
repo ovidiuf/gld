@@ -17,7 +17,7 @@
 package io.novaordis.gld.api.jms.operation;
 
 import io.novaordis.gld.api.OperationTest;
-import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
+import io.novaordis.gld.api.jms.load.JMSLoadStrategy;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -48,7 +48,7 @@ public abstract class JmsOperationTest extends OperationTest {
 
         assertEquals("test", o.getKey());
 
-        JmsLoadStrategy s = o.getLoadStrategy();
+        JMSLoadStrategy s = o.getLoadStrategy();
 
         assertNotNull(s);
     }

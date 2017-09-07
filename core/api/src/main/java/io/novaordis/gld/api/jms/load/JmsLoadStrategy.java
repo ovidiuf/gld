@@ -23,7 +23,7 @@ import io.novaordis.gld.api.jms.Destination;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/23/17
  */
-public interface JmsLoadStrategy extends LoadStrategy {
+public interface JMSLoadStrategy extends LoadStrategy {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

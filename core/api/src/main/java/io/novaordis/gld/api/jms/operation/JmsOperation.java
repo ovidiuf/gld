@@ -19,7 +19,7 @@ package io.novaordis.gld.api.jms.operation;
 import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.jms.Destination;
 import io.novaordis.gld.api.jms.JMSEndpoint;
-import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
+import io.novaordis.gld.api.jms.load.JMSLoadStrategy;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -34,7 +34,7 @@ public interface JmsOperation extends Operation {
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Override
-    JmsLoadStrategy getLoadStrategy();
+    JMSLoadStrategy getLoadStrategy();
 
     /**
      * May be null.

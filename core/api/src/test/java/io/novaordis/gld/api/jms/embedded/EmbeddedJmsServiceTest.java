@@ -18,8 +18,8 @@ package io.novaordis.gld.api.jms.embedded;
 
 import io.novaordis.gld.api.jms.JMSService;
 import io.novaordis.gld.api.jms.JMSServiceTest;
-import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
-import io.novaordis.gld.api.jms.load.MockJmsLoadStrategy;
+import io.novaordis.gld.api.jms.load.JMSLoadStrategy;
+import io.novaordis.gld.api.jms.load.MockJMSLoadStrategy;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -50,9 +50,9 @@ public class EmbeddedJMSServiceTest extends JMSServiceTest {
     }
 
     @Override
-    protected JmsLoadStrategy getMatchingLoadStrategy() {
+    protected JMSLoadStrategy getMatchingLoadStrategy() {
 
-        return new MockJmsLoadStrategy();
+        return new MockJMSLoadStrategy();
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

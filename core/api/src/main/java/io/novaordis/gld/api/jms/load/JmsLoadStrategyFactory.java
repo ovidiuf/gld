@@ -23,7 +23,7 @@ import io.novaordis.gld.api.service.ServiceType;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 12/5/16
  */
-public class JmsLoadStrategyFactory extends LoadStrategyFactoryBase {
+public class JMSLoadStrategyFactory extends LoadStrategyFactoryBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

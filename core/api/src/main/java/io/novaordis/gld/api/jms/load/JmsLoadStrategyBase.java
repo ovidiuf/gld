@@ -33,7 +33,7 @@ import java.util.Map;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/22/17
  */
-public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements JmsLoadStrategy {
+public abstract class JMSLoadStrategyBase extends LoadStrategyBase implements JMSLoadStrategy {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -50,7 +50,7 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public JmsLoadStrategyBase() {
+    public JMSLoadStrategyBase() {
 
         setConnectionPolicy(ConnectionPolicy.CONNECTION_PER_RUN);
         setSessionPolicy(SessionPolicy.SESSION_PER_OPERATION);
@@ -93,10 +93,10 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
         //
 
         String queueName = sc.remove(
-                String.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.QUEUE_LABEL);
+                String.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JMSLoadStrategy.QUEUE_LABEL);
 
         String topicName = sc.remove(
-                String.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.TOPIC_LABEL);
+                String.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JMSLoadStrategy.TOPIC_LABEL);
 
         if (queueName != null && topicName != null) {
 
@@ -122,7 +122,7 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
         //
 
         this.connectionFactoryName = sc.remove(String.class,
-                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.CONNECTION_FACTORY_LABEL);
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JMSLoadStrategy.CONNECTION_FACTORY_LABEL);
 
         if (connectionFactoryName == null) {
 
@@ -140,7 +140,7 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
         //
 
         String cps = jmsSc.remove(String.class,
-                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.CONNECTION_POLICY_LABEL);
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JMSLoadStrategy.CONNECTION_POLICY_LABEL);
 
         connectionPolicy = cps != null ? ConnectionPolicy.fromString(cps) : connectionPolicy;
 
@@ -149,7 +149,7 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
         //
 
         String sps = jmsSc.remove(String.class,
-                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.SESSION_POLICY_LABEL);
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JMSLoadStrategy.SESSION_POLICY_LABEL);
 
         sessionPolicy = sps != null ? SessionPolicy.fromString(sps) : sessionPolicy;
 
@@ -158,14 +158,14 @@ public abstract class JmsLoadStrategyBase extends LoadStrategyBase implements Jm
         //
 
         this.username = jmsSc.remove(String.class,
-                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.USERNAME_LABEL);
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JMSLoadStrategy.USERNAME_LABEL);
 
         //
         // optional password
         //
 
         String s = jmsSc.remove(String.class,
-                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.PASSWORD_LABEL);
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JMSLoadStrategy.PASSWORD_LABEL);
 
         if (s != null) {
 

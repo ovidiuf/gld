@@ -16,7 +16,7 @@
 
 package io.novaordis.gld.api.jms.operation;
 
-import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
+import io.novaordis.gld.api.jms.load.JMSLoadStrategy;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -32,7 +32,7 @@ public class MockSend extends Send {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockSend(JmsLoadStrategy loadStrategy) {
+    public MockSend(JMSLoadStrategy loadStrategy) {
 
         super(loadStrategy);
     }
@@ -60,7 +60,7 @@ public class MockSend extends Send {
 //    }
 //
 //    @Override
-//    public JmsLoadStrategy getLoadStrategy() {
+//    public JMSLoadStrategy getLoadStrategy() {
 //        throw new RuntimeException("getLoadStrategy() NOT YET IMPLEMENTED");
 //    }
 //

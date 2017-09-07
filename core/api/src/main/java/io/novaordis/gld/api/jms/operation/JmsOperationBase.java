@@ -19,7 +19,7 @@ package io.novaordis.gld.api.jms.operation;
 import io.novaordis.gld.api.jms.Destination;
 import io.novaordis.gld.api.jms.JMSEndpoint;
 import io.novaordis.gld.api.jms.JMSService;
-import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
+import io.novaordis.gld.api.jms.load.JMSLoadStrategy;
 import io.novaordis.gld.api.service.Service;
 
 /**
@@ -34,14 +34,14 @@ public abstract class JmsOperationBase implements JmsOperation {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private JmsLoadStrategy loadStrategy;
+    private JMSLoadStrategy loadStrategy;
 
     private String id;
     private String payload;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    protected JmsOperationBase(JmsLoadStrategy loadStrategy) {
+    protected JmsOperationBase(JMSLoadStrategy loadStrategy) {
 
         if (loadStrategy == null) {
 
@@ -54,7 +54,7 @@ public abstract class JmsOperationBase implements JmsOperation {
     // JmsOperation implementation -------------------------------------------------------------------------------------
 
     @Override
-    public JmsLoadStrategy getLoadStrategy() {
+    public JMSLoadStrategy getLoadStrategy() {
 
         return loadStrategy;
     }

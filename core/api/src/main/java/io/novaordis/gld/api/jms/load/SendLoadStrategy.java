@@ -29,7 +29,7 @@ import java.util.Set;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/22/17
  */
-public class SendLoadStrategy extends JmsLoadStrategyBase {
+public class SendLoadStrategy extends JMSLoadStrategyBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -52,7 +52,7 @@ public class SendLoadStrategy extends JmsLoadStrategyBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // JmsLoadStrategyBase overrides -----------------------------------------------------------------------------------
+    // JMSLoadStrategyBase overrides -----------------------------------------------------------------------------------
 
     @Override
     public String getName() {

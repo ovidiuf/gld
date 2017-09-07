@@ -18,7 +18,7 @@ package io.novaordis.gld.api.jms;
 
 import io.novaordis.gld.api.configuration.MockServiceConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
+import io.novaordis.gld.api.jms.load.JMSLoadStrategy;
 import io.novaordis.gld.api.service.ServiceType;
 
 import java.util.HashMap;
@@ -46,9 +46,9 @@ public class MockJMSServiceConfiguration extends MockServiceConfiguration implem
         //
 
         set(new HashMap<String, Object>(), ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
-        set("/jms/test-queue", ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.QUEUE_LABEL);
+        set("/jms/test-queue", ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JMSLoadStrategy.QUEUE_LABEL);
         set("/jms/TestConnectionFactory",
-                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.CONNECTION_FACTORY_LABEL);
+                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JMSLoadStrategy.CONNECTION_FACTORY_LABEL);
     }
 
     // ServiceConfiguration implementation -----------------------------------------------------------------------------
@@ -65,7 +65,7 @@ public class MockJMSServiceConfiguration extends MockServiceConfiguration implem
 
     public String getQueueName() {
 
-        return get(String.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JmsLoadStrategy.QUEUE_LABEL);
+        return get(String.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JMSLoadStrategy.QUEUE_LABEL);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

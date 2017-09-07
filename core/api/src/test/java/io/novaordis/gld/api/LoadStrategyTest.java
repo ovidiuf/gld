@@ -19,7 +19,7 @@ package io.novaordis.gld.api;
 import io.novaordis.gld.api.configuration.MockLoadConfiguration;
 import io.novaordis.gld.api.configuration.MockServiceConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
+import io.novaordis.gld.api.jms.load.JMSLoadStrategy;
 import io.novaordis.gld.api.service.Service;
 import io.novaordis.gld.api.service.ServiceType;
 import io.novaordis.utilities.UserErrorException;
@@ -72,8 +72,8 @@ public abstract class LoadStrategyTest {
 
         Map<String, Object> raw = new HashMap<>();
         raw.put(LoadStrategy.NAME_LABEL, s.getName());
-        raw.put(JmsLoadStrategy.QUEUE_LABEL, "something");
-        raw.put(JmsLoadStrategy.CONNECTION_FACTORY_LABEL, "something");
+        raw.put(JMSLoadStrategy.QUEUE_LABEL, "something");
+        raw.put(JMSLoadStrategy.CONNECTION_FACTORY_LABEL, "something");
         raw.put("unknown-configuration-element", "some-value");
         msc.set(raw, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 

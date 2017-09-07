@@ -20,7 +20,6 @@ import io.novaordis.gld.api.Operation;
 import io.novaordis.gld.api.configuration.LoadConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.jms.operation.Receive;
-import io.novaordis.gld.api.jms.operation.Send;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -30,7 +29,7 @@ import java.util.Set;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/22/17
  */
-public class ReceiveLoadStrategy extends JmsLoadStrategyBase {
+public class ReceiveLoadStrategy extends JMSLoadStrategyBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -55,7 +54,7 @@ public class ReceiveLoadStrategy extends JmsLoadStrategyBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // JmsLoadStrategyBase overrides -----------------------------------------------------------------------------------
+    // JMSLoadStrategyBase overrides -----------------------------------------------------------------------------------
 
     @Override
     public String getName() {

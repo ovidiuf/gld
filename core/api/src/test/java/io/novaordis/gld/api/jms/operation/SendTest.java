@@ -23,7 +23,7 @@ import io.novaordis.gld.api.jms.Queue;
 import io.novaordis.gld.api.jms.embedded.EmbeddedConnection;
 import io.novaordis.gld.api.jms.embedded.EmbeddedQueue;
 import io.novaordis.gld.api.jms.load.ConnectionPolicy;
-import io.novaordis.gld.api.jms.load.MockJmsLoadStrategy;
+import io.novaordis.gld.api.jms.load.MockJMSLoadStrategy;
 import io.novaordis.gld.api.jms.load.SendLoadStrategy;
 import io.novaordis.gld.api.jms.load.SessionPolicy;
 import org.junit.Test;
@@ -91,7 +91,7 @@ public class SendTest extends JmsOperationTest {
     @Override
     protected Send getOperationToTest(String key) throws Exception {
 
-        MockJmsLoadStrategy ms = new MockJmsLoadStrategy();
+        MockJMSLoadStrategy ms = new MockJMSLoadStrategy();
         Send s = new Send(ms);
 
         //

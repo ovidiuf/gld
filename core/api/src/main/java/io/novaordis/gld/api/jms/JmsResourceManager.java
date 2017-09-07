@@ -268,7 +268,7 @@ public class JmsResourceManager {
     // Inner classes ---------------------------------------------------------------------------------------------------
 
 //
-//    JmsLoadStrategy jmsLoadStrategy = jmsOp.getLoadStrategy();
+//    JMSLoadStrategy jmsLoadStrategy = jmsOp.getLoadStrategy();
 //    boolean sessionPerOperation = false; // jmsLoadStrategy.isSessionPerOperation();
 //
 //    // lookup the corresponding session

@@ -23,7 +23,7 @@ import io.novaordis.gld.api.jms.Queue;
 import io.novaordis.gld.api.jms.embedded.EmbeddedQueue;
 import io.novaordis.gld.api.jms.embedded.EmbeddedTextMessage;
 import io.novaordis.gld.api.jms.load.ConnectionPolicy;
-import io.novaordis.gld.api.jms.load.MockJmsLoadStrategy;
+import io.novaordis.gld.api.jms.load.MockJMSLoadStrategy;
 import io.novaordis.gld.api.jms.load.MockReceiveLoadStrategy;
 import io.novaordis.gld.api.jms.load.ReceiveLoadStrategy;
 import io.novaordis.gld.api.jms.load.SessionPolicy;
@@ -65,7 +65,7 @@ public class ReceiveTest extends JmsOperationTest {
         MockJMSService service = new MockJMSService();
         service.setConnectionPolicy(ConnectionPolicy.CONNECTION_PER_RUN);
         service.setSessionPolicy(SessionPolicy.SESSION_PER_OPERATION);
-        service.setLoadStrategy(new MockJmsLoadStrategy());
+        service.setLoadStrategy(new MockJMSLoadStrategy());
 
         service.start();
 
@@ -96,7 +96,7 @@ public class ReceiveTest extends JmsOperationTest {
         MockJMSService service = new MockJMSService();
         service.setConnectionPolicy(ConnectionPolicy.CONNECTION_PER_RUN);
         service.setSessionPolicy(SessionPolicy.SESSION_PER_OPERATION);
-        service.setLoadStrategy(new MockJmsLoadStrategy());
+        service.setLoadStrategy(new MockJMSLoadStrategy());
 
         service.start();
 

@@ -41,7 +41,7 @@ public class SendLoadStrategyTest extends JmsLoadStrategyTest {
     @Test
     public void name() throws Exception {
 
-        JmsLoadStrategyBase s = getLoadStrategyToTest();
+        JMSLoadStrategyBase s = getLoadStrategyToTest();
         assertEquals(SendLoadStrategy.NAME, s.getName());
     }
 
@@ -50,7 +50,7 @@ public class SendLoadStrategyTest extends JmsLoadStrategyTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected JmsLoadStrategyBase getLoadStrategyToTest() throws Exception {
+    protected JMSLoadStrategyBase getLoadStrategyToTest() throws Exception {
 
         return new SendLoadStrategy();
     }

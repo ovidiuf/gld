@@ -20,7 +20,7 @@ import io.novaordis.gld.api.ErrorCodes;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
 import io.novaordis.gld.api.jms.load.ConnectionPolicy;
-import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
+import io.novaordis.gld.api.jms.load.JMSLoadStrategy;
 import io.novaordis.gld.api.jms.load.SessionPolicy;
 import io.novaordis.gld.api.jms.operation.JmsOperation;
 import io.novaordis.gld.api.jms.operation.Receive;
@@ -109,14 +109,14 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
     @Override
     public void setLoadStrategy(LoadStrategy s) {
 
-        if (!(s instanceof JmsLoadStrategy)) {
+        if (!(s instanceof JMSLoadStrategy)) {
 
             throw new IllegalArgumentException("invalid load strategy " + s);
         }
 
         super.setLoadStrategy(s);
 
-        JmsLoadStrategy jmsLoadStrategy = (JmsLoadStrategy)s;
+        JMSLoadStrategy jmsLoadStrategy = (JMSLoadStrategy)s;
 
         setConnectionPolicy(jmsLoadStrategy.getConnectionPolicy());
         setSessionPolicy(jmsLoadStrategy.getSessionPolicy());

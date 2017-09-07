@@ -18,7 +18,7 @@ package io.novaordis.gld.api.jms.operation;
 
 import io.novaordis.gld.api.jms.JMSEndpoint;
 import io.novaordis.gld.api.jms.Producer;
-import io.novaordis.gld.api.jms.load.JmsLoadStrategy;
+import io.novaordis.gld.api.jms.load.JMSLoadStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +41,7 @@ public class Send extends JmsOperationBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    public Send(JmsLoadStrategy loadStrategy) {
+    public Send(JMSLoadStrategy loadStrategy) {
 
         super(loadStrategy);
 
@@ -90,7 +90,7 @@ public class Send extends JmsOperationBase {
     @Override
     public String toString() {
 
-        JmsLoadStrategy ls = getLoadStrategy();
+        JMSLoadStrategy ls = getLoadStrategy();
 
         if (ls == null) {
 

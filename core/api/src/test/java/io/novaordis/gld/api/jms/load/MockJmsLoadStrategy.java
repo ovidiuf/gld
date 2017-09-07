@@ -24,7 +24,7 @@ import io.novaordis.gld.api.jms.embedded.EmbeddedJMSService;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/23/17
  */
-public class MockJmsLoadStrategy extends MockLoadStrategy implements JmsLoadStrategy {
+public class MockJMSLoadStrategy extends MockLoadStrategy implements JMSLoadStrategy {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -41,12 +41,12 @@ public class MockJmsLoadStrategy extends MockLoadStrategy implements JmsLoadStra
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockJmsLoadStrategy() {
+    public MockJMSLoadStrategy() {
 
         this(new Queue("test-queue"));
     }
 
-    public MockJmsLoadStrategy(Destination d) {
+    public MockJMSLoadStrategy(Destination d) {
 
         this.destination = d;
 
@@ -57,7 +57,7 @@ public class MockJmsLoadStrategy extends MockLoadStrategy implements JmsLoadStra
         this.sessionPolicy = SessionPolicy.SESSION_PER_OPERATION;
     }
 
-    // JmsLoadStrategy implementation ----------------------------------------------------------------------------------
+    // JMSLoadStrategy implementation ----------------------------------------------------------------------------------
 
     @Override
     public Destination getDestination() {
