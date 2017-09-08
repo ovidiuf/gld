@@ -246,6 +246,11 @@ public abstract class JNDIBasedJMSService extends JMSServiceBase {
         log.debug(this + " set initial context factory class name to " + namingInitialContextFactoryClassName);
     }
 
+    public String getJndiUrl() {
+
+        return jndiUrl;
+    }
+
     /**
      * Different implementations require specific JNDI prefixes. EAP 6 uses remote://, EAP 7 uses http-remoting://
      *
@@ -310,11 +315,6 @@ public abstract class JNDIBasedJMSService extends JMSServiceBase {
     }
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    protected String getJndiUrl() {
-
-        return jndiUrl;
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 
