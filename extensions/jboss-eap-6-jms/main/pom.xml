@@ -25,7 +25,7 @@
     <parent>
         <groupId>io.novaordis.gld.extensions.jboss-eap-jms</groupId>
         <artifactId>jboss-eap-6-root</artifactId>
-        <version>1.0.0-SNAPSHOT-9</version>
+        <version>1.0.0-SNAPSHOT-10</version>
     </parent>
 
     <artifactId>jboss-eap-6-jms</artifactId>
