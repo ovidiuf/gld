@@ -22,11 +22,11 @@ package io.novaordis.gld.api.service;
  */
 public enum ServiceType {
 
-    cache(12, 1024),
-    jms(null, 1024),
-    http(10, 1024),
-    mock(10, 77889),    // used for testing
-    unknown(10, 1024), // used for testing
+    cache(12, 1024, "Cache"),
+    jms(null, 1024, "JMS"),
+    http(10, 1024, "HTTP"),
+    mock(10, 77889, "Mock"),    // used for testing
+    unknown(10, 1024, "Unknown"), // used for testing
     ;
 
     public static ServiceType fromString(String s) {
@@ -44,11 +44,13 @@ public enum ServiceType {
 
     private Integer defaultKeySize;
     private int defaultValueSize;
+    private String loadStrategyFactoryClassNamePrefix;
 
-    ServiceType(Integer defaultKeySize, int defaultValueSize) {
+    ServiceType(Integer defaultKeySize, int defaultValueSize, String loadStrategyFactoryClassNamePrefix) {
 
         this.defaultKeySize = defaultKeySize;
         this.defaultValueSize = defaultValueSize;
+        this.loadStrategyFactoryClassNamePrefix = loadStrategyFactoryClassNamePrefix;
     }
 
     /**
@@ -66,6 +68,11 @@ public enum ServiceType {
     public int getDefaultValueSize() {
 
         return defaultValueSize;
+    }
+
+    public String getLoadStrategyFactoryClassNamePrefix() {
+
+        return loadStrategyFactoryClassNamePrefix;
     }
 
 }

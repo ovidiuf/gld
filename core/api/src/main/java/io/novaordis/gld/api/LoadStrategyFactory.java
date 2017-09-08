@@ -57,18 +57,18 @@ public interface LoadStrategyFactory {
         // cases.
         //
 
-        String ldClassName = sc.get(String.class,
-                ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.FACTORY_CLASS_LABEL);
+        String loadStrategyClassName = sc.get(
+                String.class, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, LoadStrategy.FACTORY_CLASS_LABEL);
 
         // if specified, takes precedence, if not the usual pattern applies
 
-        ServiceType t = null;
+        ServiceType serviceType = null;
 
-        if (ldClassName == null) {
+        if (loadStrategyClassName == null) {
 
-            t = sc.getType();
+            serviceType = sc.getType();
 
-            if (t == null) {
+            if (serviceType == null) {
 
                 throw new IllegalArgumentException("null service type");
             }
@@ -78,37 +78,37 @@ public interface LoadStrategyFactory {
             // is to allow adding new service types without changing this method.
             //
 
-            String serviceTypeName = t.name();
+            String serviceTypeName = serviceType.name();
+            String loadStrategyFactoryClassNamePrefix = serviceType.getLoadStrategyFactoryClassNamePrefix();
 
             //
-            // we expect the factory class name to match the following pattern:
+            // we expect the factory class name to match the following patterns:
             //
             // <this-package>.<service-type>.load.<service-type-with-first-letter-capitalized>LoadFactory
+            // <this-package>.<service-type>.load.<service-type-with-all-letters-capitalized>LoadFactory
             //
 
-            ldClassName = LoadStrategyFactory.class.getPackage().getName();
-
-            ldClassName += "." + serviceTypeName;
-            ldClassName += ".load.";
-            ldClassName +=
-                    Character.toUpperCase(serviceTypeName.charAt(0)) + serviceTypeName.substring(1);
-            ldClassName += "LoadStrategyFactory";
+            loadStrategyClassName =
+                    LoadStrategyFactory.class.getPackage().getName() + "." +
+                            serviceTypeName + ".load." + loadStrategyFactoryClassNamePrefix + "LoadStrategyFactory";
         }
 
-        log.debug("attempting to use load strategy factory class " + ldClassName);
+        log.debug("attempting to use load strategy factory class " + loadStrategyClassName);
 
         LoadStrategyFactory f;
 
         try {
 
-            Class c = Class.forName(ldClassName);
+            Class c = Class.forName(loadStrategyClassName);
+
             f = (LoadStrategyFactory) c.newInstance();
 
-        } catch (Exception e) {
+        }
+        catch (Throwable e) {
 
-            String msg = t == null ?
-                    "failed to instantiate a load strategy factory corresponding to class " + ldClassName :
-                    "failed to instantiate a load strategy factory corresponding to a service of type " + t;
+            String msg = serviceType == null ?
+                    "failed to instantiate a load strategy factory corresponding to class " + loadStrategyClassName :
+                    "failed to instantiate a load strategy factory corresponding to a(n) '" + serviceType + "' service type";
 
             throw new UserErrorException(msg, e);
         }

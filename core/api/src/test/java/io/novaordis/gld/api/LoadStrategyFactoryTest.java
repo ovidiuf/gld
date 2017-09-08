@@ -86,7 +86,7 @@ public abstract class LoadStrategyFactoryTest {
     // build() static wrapper ------------------------------------------------------------------------------------------
 
     @Test
-    public void buildInstance_FactoryFullyQualifiedClassName_NoSuchClass() throws Exception {
+    public void build_FactoryFullyQualifiedClassName_NoSuchClass() throws Exception {
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockServiceConfiguration msc = new MockServiceConfiguration();
@@ -115,7 +115,7 @@ public abstract class LoadStrategyFactoryTest {
     }
 
     @Test
-    public void buildInstance_FactoryFullyQualifiedClassName() throws Exception {
+    public void build_FactoryFullyQualifiedClassName() throws Exception {
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockServiceConfiguration msc = new MockServiceConfiguration();
@@ -126,12 +126,12 @@ public abstract class LoadStrategyFactoryTest {
                 MockLoadStrategyFactory.class.getName());
         msc.set(completelyCustomLoadStrategyFactoryConfig, ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL);
 
-        MockLoadStrategy s  = (MockLoadStrategy)LoadStrategyFactory.build(msc, mlc);
+        MockLoadStrategy s = (MockLoadStrategy)LoadStrategyFactory.build(msc, mlc);
         assertNotNull(s);
     }
 
     @Test
-    public void buildInstance_NullServiceType() throws Exception {
+    public void build_NullServiceType() throws Exception {
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockServiceConfiguration msc = new MockServiceConfiguration();
@@ -150,7 +150,7 @@ public abstract class LoadStrategyFactoryTest {
     }
 
     @Test
-    public void buildInstance_KnownServiceType() throws Exception {
+    public void build_KnownServiceType() throws Exception {
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockServiceConfiguration msc = new MockServiceConfiguration();
@@ -159,22 +159,22 @@ public abstract class LoadStrategyFactoryTest {
     }
 
     @Test
-    public void buildInstance_UnknownServiceType() throws Exception {
+    public void build_UnknownServiceType() throws Exception {
 
         MockLoadConfiguration mlc = new MockLoadConfiguration();
         MockServiceConfiguration msc = new MockServiceConfiguration();
         msc.setServiceType(ServiceType.unknown);
 
         try {
+
             LoadStrategyFactory.build(msc, mlc);
             fail("should have thrown exception");
         }
         catch(UserErrorException e) {
 
             String msg = e.getMessage();
-            log.info(msg);
-            assertTrue(msg.matches(
-                    "failed to instantiate a load strategy factory corresponding to a service of type unknown.*"));
+            assertTrue(msg.contains("failed to instantiate a load strategy factory"));
+            assertTrue(msg.contains("'unknown' service type"));
             Throwable t = e.getCause();
             assertTrue(t instanceof ClassNotFoundException);
         }
@@ -274,7 +274,6 @@ public abstract class LoadStrategyFactoryTest {
 
         assertNotNull(s);
     }
-
 
     // Package protected -----------------------------------------------------------------------------------------------
 

@@ -47,6 +47,7 @@ public abstract class LoadStrategyFactoryBase implements LoadStrategyFactory {
         //
 
         if (loadStrategyName == null) {
+
             throw new IllegalArgumentException("missing or null '" + LoadStrategy.NAME_LABEL + "' map element");
         }
 

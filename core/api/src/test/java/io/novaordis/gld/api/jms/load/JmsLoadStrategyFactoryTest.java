@@ -16,7 +16,10 @@
 
 package io.novaordis.gld.api.jms.load;
 
+import io.novaordis.gld.api.LoadStrategy;
+import io.novaordis.gld.api.LoadStrategyFactory;
 import io.novaordis.gld.api.LoadStrategyFactoryTest;
+import io.novaordis.gld.api.configuration.MockLoadConfiguration;
 import io.novaordis.gld.api.jms.JMSServiceConfiguration;
 import io.novaordis.gld.api.jms.MockJMSServiceConfiguration;
 import io.novaordis.gld.api.service.ServiceType;
@@ -25,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -49,6 +53,22 @@ public class JMSLoadStrategyFactoryTest extends LoadStrategyFactoryTest {
 
         JMSLoadStrategyFactory f = getLoadStrategyFactoryToTest();
         assertEquals(ServiceType.jms, f.getServiceType());
+    }
+
+    @Test
+    public void build_jmsServiceType() throws Exception {
+
+        MockJMSServiceConfiguration msc = new MockJMSServiceConfiguration();
+        msc.setServiceType(ServiceType.jms);
+        msc.setLoadStrategyName(SendLoadStrategy.NAME);
+
+        MockLoadConfiguration mlc = new MockLoadConfiguration();
+
+        LoadStrategy s = LoadStrategyFactory.build(msc, mlc);
+
+        SendLoadStrategy sendStrategy = (SendLoadStrategy)s;
+
+        assertNotNull(sendStrategy);
     }
 
     // Tests -----------------------------------------------------------------------------------------------------------

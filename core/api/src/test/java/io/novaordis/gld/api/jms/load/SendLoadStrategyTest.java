@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/22/17
  */
-public class SendLoadStrategyTest extends JmsLoadStrategyTest {
+public class SendLoadStrategyTest extends JMSLoadStrategyTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

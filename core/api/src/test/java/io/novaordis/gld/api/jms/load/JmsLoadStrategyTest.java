@@ -38,11 +38,11 @@ import static org.junit.Assert.fail;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/22/17
  */
-public abstract  class JmsLoadStrategyTest extends LoadStrategyTest {
+public abstract class JMSLoadStrategyTest extends LoadStrategyTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = LoggerFactory.getLogger(JmsLoadStrategyTest.class);
+    private static final Logger log = LoggerFactory.getLogger(JMSLoadStrategyTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
