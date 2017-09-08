@@ -27,9 +27,7 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Message;
 import javax.jms.Queue;
 import javax.jms.Topic;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -86,10 +84,6 @@ public class EmbeddedJMSService extends JMSServiceBase {
     @Override
     public javax.jms.Destination resolveDestination(Destination d) {
 
-        //
-        // for the time being, any destination "exists"
-        //
-
         EmbeddedDestination ed = destinations.get(d.getName());
 
         if (ed != null) {
@@ -101,11 +95,6 @@ public class EmbeddedJMSService extends JMSServiceBase {
                         "destination " + d.getName() + " exists but it is a " +
                                 (ed instanceof javax.jms.Queue ? "queue" : "topic"));
             }
-        }
-        else {
-
-            ed = d.isQueue() ? new EmbeddedQueue(d.getName()) : new EmbeddedTopic(d.getName());
-            destinations.put(d.getName(), ed);
         }
 
         return ed;
@@ -127,19 +116,6 @@ public class EmbeddedJMSService extends JMSServiceBase {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    /**
-     * May return an empty list if there were no message sent, or the queue does not exist.
-     */
-    public List<Message> getMessagesSentToDestination(String destinationName, boolean queue) throws Exception {
-
-        List<Message> result = new ArrayList<>();
-
-        EmbeddedConnectionFactory cf = (EmbeddedConnectionFactory)getConnectionFactory();
-        result.addAll(cf.getMessagesSentToDestination(destinationName, queue));
-
-        return result;
-    }
-
     public void addToDestination(String name, boolean queue, Message m) {
 
         EmbeddedDestination d = destinations.get(name);
@@ -159,6 +135,23 @@ public class EmbeddedJMSService extends JMSServiceBase {
         }
 
         d.add(m);
+    }
+
+    public void installConnectionFactory(String connectionFactoryName, String username, String password) {
+
+        EmbeddedConnectionFactory cf = new EmbeddedConnectionFactory(username, password);
+        connectionFactories.put(connectionFactoryName, cf);
+    }
+
+    public void createDestination(Destination d) throws Exception {
+
+        EmbeddedDestination ed = d.isQueue() ? new EmbeddedQueue(d.getName()) : new EmbeddedTopic(d.getName());
+        destinations.put(d.getName(), ed);
+    }
+
+    public void removeDestination(String jndiName) throws Exception {
+
+        destinations.remove(jndiName);
     }
 
     @Override

@@ -14,19 +14,26 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.jms.load;
+package io.novaordis.gld.api.jms;
 
-import io.novaordis.gld.api.jms.Destination;
-import io.novaordis.gld.api.jms.Queue;
-import io.novaordis.gld.api.jms.embedded.EmbeddedJMSService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 1/23/17
+ * @since 9/7/17
  */
-public class MockJMSLoadStrategy extends MockLoadStrategy implements JMSLoadStrategy {
+public class MockMessageConsumer implements MessageConsumer {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(MockMessageConsumer.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -34,100 +41,66 @@ public class MockJMSLoadStrategy extends MockLoadStrategy implements JMSLoadStra
 
     private Destination destination;
 
-    private SessionPolicy sessionPolicy;
-
-    private String username;
-    private char[] password;
-
-    private String connectionFactoryName;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockJMSLoadStrategy() {
+    public MockMessageConsumer(Destination d) {
 
-        this(new Queue("test-queue"));
-    }
+        if (d == null) {
 
-    public MockJMSLoadStrategy(Destination d) {
+            throw new IllegalArgumentException("null destination");
+        }
 
         this.destination = d;
-
-        //
-        // default behavior
-        //
-
-        this.sessionPolicy = SessionPolicy.SESSION_PER_OPERATION;
-
-        this.connectionFactoryName = EmbeddedJMSService.DEFAULT_CONNECTION_FACTORY_NAME;
     }
 
-    // JMSLoadStrategy implementation ----------------------------------------------------------------------------------
+    // MessageConsumer implementation ----------------------------------------------------------------------------------
 
     @Override
-    public Destination getDestination() {
-
-        return destination;
+    public String getMessageSelector() throws JMSException {
+        throw new RuntimeException("getMessageSelector() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public String getConnectionFactoryName() {
-
-        return connectionFactoryName;
+    public MessageListener getMessageListener() throws JMSException {
+        throw new RuntimeException("getMessageListener() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public String getUsername() {
-
-        return username;
+    public void setMessageListener(MessageListener listener) throws JMSException {
+        throw new RuntimeException("setMessageListener() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public char[] getPassword() {
-
-        return password;
+    public Message receive() throws JMSException {
+        throw new RuntimeException("receive() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public ConnectionPolicy getConnectionPolicy() {
+    public Message receive(long timeout) throws JMSException {
 
-        //
-        // default behavior
-        //
-        return ConnectionPolicy.CONNECTION_PER_RUN;
+        MockQueue mockQueue = (MockQueue)destination;
+
+        return mockQueue.receive(timeout);
     }
 
     @Override
-    public SessionPolicy getSessionPolicy() {
-
-        return sessionPolicy;
+    public Message receiveNoWait() throws JMSException {
+        throw new RuntimeException("receiveNoWait() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public Long getRemainingOperations() {
-        throw new RuntimeException("getRemainingOperations() NOT YET IMPLEMENTED");
+    public void close() throws JMSException {
+        throw new RuntimeException("close() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public void setSessionPolicy(SessionPolicy sessionPolicy) {
+    @Override
+    public String toString() {
 
-        this.sessionPolicy = sessionPolicy;
+        return "MockMessageConsumer[" + Integer.toHexString(System.identityHashCode(this)) + ", " + destination + "]";
     }
 
-    public void setConnectionFactoryName(String s) {
-
-        this.connectionFactoryName = s;
-    }
-
-    public void setUsername(String username) {
-
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-
-        this.password = password.toCharArray();
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

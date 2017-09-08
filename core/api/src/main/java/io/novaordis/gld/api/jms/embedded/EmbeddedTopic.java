@@ -19,7 +19,7 @@ package io.novaordis.gld.api.jms.embedded;
 import javax.jms.JMSException;
 import javax.jms.Topic;
 
-public class EmbeddedTopic extends EmbeddedDestination implements Topic {
+public class EmbeddedTopic extends EmbeddedDestination implements Topic, TestableTopic {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

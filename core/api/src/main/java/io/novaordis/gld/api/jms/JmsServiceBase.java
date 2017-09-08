@@ -36,7 +36,6 @@ import javax.jms.ConnectionFactory;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
-import java.lang.IllegalStateException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,7 +60,6 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
     private SessionPolicy sessionPolicy;
 
     private String connectionFactoryName;
-    private ConnectionFactory connectionFactory;
 
     private String username; // may be null
     private char[] password; // may be null
@@ -94,7 +92,7 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
 
         if (!(serviceConfiguration instanceof JMSServiceConfiguration)) {
 
-            throw new IllegalArgumentException("invalid JMS service configuration " + serviceConfiguration);
+            throw new IllegalArgumentException("not a JMS service configuration " + serviceConfiguration);
         }
 
         //
@@ -131,8 +129,14 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
         synchronized (this) {
 
             //
-            // TODO this implies ConnectionPolicy.CONNECTION_PER_RUN, this code will need to be reviewed
+            // sanity check - insure we have a load strategy. This will become apparent later, by the lack of various
+            // components, but we fail early
             //
+
+            if (getLoadStrategy() == null) {
+
+                throw new IllegalStateException("load strategy not installed");
+            }
 
             if (!ConnectionPolicy.CONNECTION_PER_RUN.equals(connectionPolicy)) {
 
@@ -160,7 +164,7 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
             // look up the ConnectionFactory
             //
 
-            connectionFactory = resolveConnectionFactory(connectionFactoryName);
+            ConnectionFactory connectionFactory = resolveConnectionFactory(connectionFactoryName);
 
             if (connectionFactory == null) {
 
@@ -187,6 +191,8 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
                 c.start();
 
                 log.debug("connection " + c + " started");
+
+                setConnection(c);
             }
             catch(Exception e) {
 
@@ -196,20 +202,9 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
 
                 throw new UserErrorException(e);
             }
-
-            setConnection(c);
         }
 
         super.start();
-    }
-
-    @Override
-    public boolean isStarted() {
-
-        synchronized (this) {
-
-            return connection != null;
-        }
     }
 
     @Override
@@ -232,11 +227,11 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
 
             try {
 
-                connection.stop();
+                connection.close();
             }
             catch(Exception e) {
 
-                log.warn("failed to stop connection", e);
+                log.warn("failed to close connection", e);
 
             }
 
@@ -245,7 +240,7 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
     }
 
     @Override
-    public JMSEndpoint checkOut(JmsOperation jmsOperation) throws Exception {
+    public JMSEndpoint checkOut(JmsOperation jmsOperation) throws JMSServiceException {
 
         Connection connection = getConnection();
 
@@ -253,17 +248,46 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
 
         JMSEndpoint endpoint;
 
-        javax.jms.Destination d = resolveDestination(jmsOperation.getDestination());
+        Destination d = jmsOperation.getDestination();
+
+        javax.jms.Destination jmsDestination = resolveDestination(d);
+
+        //
+        // insure the destination exists
+        //
+
+        if (jmsDestination == null) {
+
+            throw new JMSServiceException("destination not found: " + d);
+        }
 
         if (jmsOperation instanceof Send) {
 
-            MessageProducer jmsProducer = session.createProducer(d);
+            MessageProducer jmsProducer;
+
+            try {
+
+                jmsProducer = session.createProducer(jmsDestination);
+            }
+            catch (Exception e) {
+
+                throw new JMSServiceException(e);
+            }
             endpoint = new Producer(jmsProducer, session, connection);
 
         }
         else if (jmsOperation instanceof Receive) {
 
-            MessageConsumer jmsConsumer = session.createConsumer(d);
+            MessageConsumer jmsConsumer;
+
+            try {
+
+                jmsConsumer = session.createConsumer(jmsDestination);
+            }
+            catch(Exception e) {
+
+                throw new JMSServiceException(e);
+            }
             endpoint = new Consumer(jmsConsumer, session, connection);
         }
         else {
@@ -276,7 +300,7 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
     }
 
     @Override
-    public void checkIn(JMSEndpoint endpoint) throws Exception {
+    public void checkIn(JMSEndpoint endpoint) throws JMSServiceException {
 
         //
         // look at the session policy and handle accordingly
@@ -289,7 +313,15 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
             //
 
             Session session = endpoint.getSession();
-            session.close();
+
+            try {
+
+                session.close();
+            }
+            catch(Exception e) {
+
+                throw new JMSServiceException(e);
+            }
         }
         else if (SessionPolicy.SESSION_PER_THREAD.equals(sessionPolicy)) {
 
@@ -339,7 +371,14 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
                 // session match, we're good, leave the session alone but close the endpoint
                 //
 
-                endpoint.close();
+                try {
+
+                    endpoint.close();
+                }
+                catch(Exception e) {
+
+                    throw new JMSServiceException(e);
+                }
             }
         }
         else {
@@ -350,17 +389,9 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    /**
-     * May return null if the service was not started or the start was not successful.
-     */
-    public ConnectionFactory getConnectionFactory() {
-
-        return connectionFactory;
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
-    Connection getConnection() throws Exception {
+    Connection getConnection() throws JMSServiceException {
 
         if (ConnectionPolicy.CONNECTION_PER_RUN.equals(connectionPolicy)) {
 
@@ -376,7 +407,7 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
         }
     }
 
-    Session getSession(Connection connection) throws Exception {
+    Session getSession(Connection connection) throws JMSServiceException {
 
         if (SessionPolicy.SESSION_PER_OPERATION.equals(sessionPolicy)) {
 
@@ -430,9 +461,21 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
     /**
      * Always creates a new session.
      */
-    Session createSession(Connection connection) throws Exception {
+    Session createSession(Connection connection) throws JMSServiceException {
 
-        return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        try {
+
+            return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        }
+        catch(Exception e) {
+
+            throw new JMSServiceException(e);
+        }
+    }
+
+    String getConnectionFactoryName() {
+
+        return connectionFactoryName;
     }
 
     // Protected -------------------------------------------------------------------------------------------------------
@@ -507,10 +550,6 @@ public abstract class JMSServiceBase extends ServiceBase implements JMSService {
         this.connectionFactoryName = s;
     }
 
-    protected String getConnectionFactoryName() {
-
-        return connectionFactoryName;
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

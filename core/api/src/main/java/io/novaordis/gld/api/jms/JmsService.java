@@ -34,7 +34,7 @@ public interface JMSService extends Service {
     /**
      * Checks out an endpoint, to be used by the load driver to perform an operation.
      */
-    JMSEndpoint checkOut(JmsOperation jmsOperation) throws Exception;
+    JMSEndpoint checkOut(JmsOperation jmsOperation) throws JMSServiceException;
 
     /**
      * Returns the endpoint to the service, to be recycled or closed.
@@ -50,21 +50,21 @@ public interface JMSService extends Service {
      * the associated structures, in case SessionPolicy.SESSION_PER_THREAD or ConnectionPolicy.CONNECTION_PER_THREAD are
      * in effect.
      */
-    void checkIn(JMSEndpoint session) throws Exception;
+    void checkIn(JMSEndpoint session) throws JMSServiceException;
 
     /**
      * @return the JMS Destination instance corresponding to given destination, or null if the Destination is not found.
      *
      * @exception IllegalArgumentException on null destination.
-     * @exception Exception on any other underlying naming failure.
+     * @exception JMSServiceException on any other underlying naming failure.
      */
-    javax.jms.Destination resolveDestination(Destination d) throws Exception;
+    javax.jms.Destination resolveDestination(Destination d) throws JMSServiceException;
 
     /**
      * @return the ConnectionFactory instance corresponding to the name, or null if the ConnectionFactory is not found.
      *
      * @exception IllegalArgumentException on null connection factory name
-     * @exception Exception on any other underlying naming failure.
+     * @exception JMSServiceException on any other underlying naming failure.
      */
-    javax.jms.ConnectionFactory resolveConnectionFactory(String connectionFactoryName) throws Exception;
+    javax.jms.ConnectionFactory resolveConnectionFactory(String connectionFactoryName) throws JMSServiceException;
 }

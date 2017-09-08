@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.cache.embedded;
+package io.novaordis.gld.api.jms;
 
-import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.cache.CacheServiceTest;
-import io.novaordis.gld.api.cache.load.WriteThenReadLoadStrategy;
-import io.novaordis.gld.api.service.Service;
+import io.novaordis.gld.api.jms.embedded.TestableQueue;
+
+import javax.jms.JMSException;
+import javax.jms.Message;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 9/7/17
  */
-public class EmbeddedCacheServiceTest extends CacheServiceTest {
+public class MockQueue implements javax.jms.Queue, TestableQueue {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -33,23 +35,52 @@ public class EmbeddedCacheServiceTest extends CacheServiceTest {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private List<Message> messages;
+    private List<Message> messagesSent;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public MockQueue() {
+
+        this.messages = new ArrayList<>();
+        this.messagesSent = new ArrayList<>();
+    }
+
+    // Queue implementation --------------------------------------------------------------------------------------------
+
+    @Override
+    public String getQueueName() throws JMSException {
+
+        throw new RuntimeException("getQueueName() NOT YET IMPLEMENTED");
+    }
+
+    // TestableQueue implementation ------------------------------------------------------------------------------------
+
+    @Override
+    public List<Message> getMessagesSent() {
+
+        return messagesSent;
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    public void addMessage(Message m) {
+
+        messages.add(m);
+        messagesSent.add(m);
+    }
+
+    public Message receive(long timeout) {
+
+        if (messages.isEmpty()) {
+
+            return null;
+        }
+
+        return messages.remove(0);
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
-
-    @Override
-    protected EmbeddedCacheService getServiceToTest() throws Exception {
-
-        return new EmbeddedCacheService();
-    }
-
-    @Override
-    protected LoadStrategy getMatchingLoadStrategyToTest(Service s) {
-
-        return new WriteThenReadLoadStrategy();
-    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

@@ -38,15 +38,6 @@ public class EmbeddedConnectionFactory implements ConnectionFactory {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public EmbeddedConnectionFactory(String clientUrl) {
-
-        throw new RuntimeException("RETURN HERE");
-//        if (!ActiveMQService.isEmbedded(clientUrl))
-//        {
-//            throw new IllegalArgumentException(clientUrl + " is not an embedded client URL");
-//        }
-    }
-
     public EmbeddedConnectionFactory() {
 
         this(null, null);
@@ -77,21 +68,16 @@ public class EmbeddedConnectionFactory implements ConnectionFactory {
 
             if (!username.equals(authorizedUser) || !password.equals(authorizedUserPassword)) {
 
-                throw new JMSException("unauthorized connection attempt");
-
+                throw new JMSException("AUTHENTICATION FAILURE");
             }
         }
 
         EmbeddedConnection c = new EmbeddedConnection(username);
         createdConnections.add(c);
-        return c;    }
+        return c;
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public List<EmbeddedConnection> getCreatedConnections() {
-
-        return createdConnections;
-    }
 
     /**
      * May return an empty list if there were no message sent, or the queue does not exist.

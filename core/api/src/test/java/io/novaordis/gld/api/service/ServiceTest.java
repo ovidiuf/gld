@@ -20,8 +20,6 @@ import io.novaordis.gld.api.LoadDriver;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.MockLoadDriver;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -32,8 +30,6 @@ import static org.junit.Assert.fail;
 public abstract class ServiceTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = LoggerFactory.getLogger(ServiceTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -55,7 +51,7 @@ public abstract class ServiceTest {
         LoadStrategy ls = s.getLoadStrategy();
         assertNull(ls);
 
-        LoadStrategy ls2 = getMatchingLoadStrategy();
+        LoadStrategy ls2 = getMatchingLoadStrategyToTest(s);
         s.setLoadStrategy(ls2);
         ls = s.getLoadStrategy();
         assertEquals(ls2, ls);
@@ -86,9 +82,7 @@ public abstract class ServiceTest {
         catch(IllegalStateException e) {
 
             String msg = e.getMessage();
-            log.info(msg);
-
-            assertEquals("incompletely configured service instance: load strategy not installed", msg);
+            assertTrue(msg.contains("load strategy not installed"));
         }
     }
 
@@ -97,7 +91,7 @@ public abstract class ServiceTest {
 
         Service s = getServiceToTest();
 
-        LoadStrategy mls = getMatchingLoadStrategy();
+        LoadStrategy mls = getMatchingLoadStrategyToTest(s);
         s.setLoadStrategy(mls);
 
         assertFalse(s.isStarted());
@@ -130,7 +124,7 @@ public abstract class ServiceTest {
 
         Service s = getServiceToTest();
 
-        LoadStrategy ms = getMatchingLoadStrategy();
+        LoadStrategy ms = getMatchingLoadStrategyToTest(s);
         MockLoadDriver md = new MockLoadDriver();
 
         s.setLoadStrategy(ms);
@@ -154,9 +148,24 @@ public abstract class ServiceTest {
 
     // Protected -------------------------------------------------------------------------------------------------------
 
+    /**
+     * @return a Service instance fully configured so it can be successfully started, provided that the associated
+     * LoadStrategy instance, returned by getMatchingLoadStrategyToTest(), is applied with setLoadStrategy(). The
+     * method is also responsible with configuring the context with the elements it introduces, to allow a successful
+     * lifecycle.
+     *
+     * @see ServiceTest#getMatchingLoadStrategyToTest(Service)
+     */
     protected abstract Service getServiceToTest() throws Exception;
 
-    protected abstract LoadStrategy getMatchingLoadStrategy();
+    /**
+     * The method is also responsible with configuring the context with the elements it introduces, to allow a
+     * successful lifecycle.
+     *
+     * The method MUST NOT associate the service with the produced load strategy, it must use the Service reference
+     * in read-only mode. If an association needs to be made, that is the upper layer's responsibility.
+     */
+    protected abstract LoadStrategy getMatchingLoadStrategyToTest(Service s) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

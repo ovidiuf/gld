@@ -19,13 +19,8 @@ package io.novaordis.gld.api.jms;
 import io.novaordis.gld.api.LoadStrategy;
 import io.novaordis.gld.api.configuration.MockServiceConfiguration;
 import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.gld.api.jms.load.ConnectionPolicy;
 import io.novaordis.gld.api.jms.load.JMSLoadStrategy;
-import io.novaordis.gld.api.jms.load.MockJMSLoadStrategy;
-import io.novaordis.utilities.Files;
 import io.novaordis.utilities.UserErrorException;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import javax.naming.InitialContext;
@@ -53,33 +48,9 @@ public abstract class JNDIBasedJMSServiceTest extends JMSServiceTest {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String testConnectionFactoryName = "/TestConnectionFactory";
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    protected File scratchDirectory;
-
-    @Before
-    public void before() throws Exception {
-
-        String projectBaseDirName = System.getProperty("basedir");
-        scratchDirectory = new File(projectBaseDirName, "target/test-scratch");
-        assertTrue(scratchDirectory.isDirectory());
-    }
-
-    @After
-    public void after() throws Exception {
-
-        //
-        // scratch directory cleanup
-        //
-
-        assertTrue(Files.rmdir(scratchDirectory, false));
-
-        MockInitialContextFactory.reset();
-    }
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
@@ -182,6 +153,7 @@ public abstract class JNDIBasedJMSServiceTest extends JMSServiceTest {
 
         JNDIBasedJMSService s = getJNDIBasedJMSServiceToTest();
 
+        s.setJndiUrl(null);
         assertNull(s.getJndiUrl());
 
         try {
@@ -201,6 +173,9 @@ public abstract class JNDIBasedJMSServiceTest extends JMSServiceTest {
 
         JNDIBasedJMSService s = getJNDIBasedJMSServiceToTest();
 
+        s.setNamingInitialContextFactoryClassName(null);
+        assertNull(s.getNamingInitialContextFactoryClassName());
+
         s.setJndiUrl("mock://something");
 
         try {
@@ -219,9 +194,6 @@ public abstract class JNDIBasedJMSServiceTest extends JMSServiceTest {
     public void start_InitialContextListFails() throws Exception {
 
         JNDIBasedJMSService s = getJNDIBasedJMSServiceToTest();
-
-        s.setJndiUrl("mock://something");
-        s.setNamingInitialContextFactoryClassName(MockInitialContextFactory.class.getName());
 
         MockInitialContextFactory.setListFails(true);
 
@@ -243,10 +215,17 @@ public abstract class JNDIBasedJMSServiceTest extends JMSServiceTest {
 
         JNDIBasedJMSService s = getJNDIBasedJMSServiceToTest();
 
-        s.setJndiUrl("mock://something");
-        s.setNamingInitialContextFactoryClassName(MockInitialContextFactory.class.getName());
-        s.setConnectionFactoryName("i-am-sure-there-is-no-such-JMS-connection-factory");
-        s.setConnectionPolicy(ConnectionPolicy.CONNECTION_PER_RUN);
+        JMSLoadStrategy ls = getMatchingLoadStrategyToTest(s);
+
+        s.setLoadStrategy(ls);
+
+        //
+        // remove the connection factory from the JNDI space
+        //
+
+        String connectionFactoryName = s.getConnectionFactoryName();
+
+        assertNotNull(MockInitialContextFactory.getJndiSpace().remove(connectionFactoryName));
 
         try {
 
@@ -257,7 +236,7 @@ public abstract class JNDIBasedJMSServiceTest extends JMSServiceTest {
 
             String msg = e.getMessage();
             assertTrue(msg.contains("connection factory"));
-            assertTrue(msg.contains("i-am-sure-there-is-no-such-JMS-connection-factory"));
+            assertTrue(msg.contains(connectionFactoryName));
             assertTrue(msg.contains("not bound in JNDI"));
         }
     }
@@ -266,14 +245,6 @@ public abstract class JNDIBasedJMSServiceTest extends JMSServiceTest {
     public void start_LoadStrategyNotInstalled() throws Exception {
 
         JNDIBasedJMSService s = getJNDIBasedJMSServiceToTest();
-
-        s.setJndiUrl("mock://something");
-        s.setNamingInitialContextFactoryClassName(MockInitialContextFactory.class.getName());
-        s.setConnectionFactoryName("/some-connection-factory");
-        s.setConnectionPolicy(ConnectionPolicy.CONNECTION_PER_RUN);
-
-        MockConnectionFactory mcf = new MockConnectionFactory();
-        MockInitialContextFactory.install("/some-connection-factory", mcf);
 
         try {
 
@@ -292,18 +263,9 @@ public abstract class JNDIBasedJMSServiceTest extends JMSServiceTest {
 
         JNDIBasedJMSService s = getJNDIBasedJMSServiceToTest();
 
-        MockJMSLoadStrategy mls = new MockJMSLoadStrategy();
-        s.setLoadStrategy(mls);
+        JMSLoadStrategy ls = getMatchingLoadStrategyToTest(s);
 
-        //
-        // MockJMSLoadStrategy configures the service with to lookup /MockConnectionFactory
-        //
-        String connectionFactoryName = mls.getConnectionFactoryName();
-        MockConnectionFactory mcf = new MockConnectionFactory();
-        MockInitialContextFactory.install(connectionFactoryName, mcf);
-
-        s.setJndiUrl("mock://something");
-        s.setNamingInitialContextFactoryClassName(MockInitialContextFactory.class.getName());
+        s.setLoadStrategy(ls);
 
         s.start();
 
@@ -312,14 +274,18 @@ public abstract class JNDIBasedJMSServiceTest extends JMSServiceTest {
         InitialContext ic = s.getInitialContext();
 
         assertNotNull(ic);
-        MockConnectionFactory mcf2 = (MockConnectionFactory)ic.lookup(connectionFactoryName);
-        assertEquals(mcf, mcf2);
+
+        String connectionFactoryName = ls.getConnectionFactoryName();
+
+        MockConnectionFactory mcf = (MockConnectionFactory)ic.lookup(connectionFactoryName);
+
+        assertNotNull(mcf);
 
         MockConnection jmsConnection = (MockConnection)s.getConnection();
-        assertTrue(jmsConnection.isStarted());
+        assertTrue(jmsConnection.isClosed());
 
-        LoadStrategy ls = s.getLoadStrategy();
-        assertTrue(ls.isStarted());
+        LoadStrategy ls2 = s.getLoadStrategy();
+        assertTrue(ls2.isStarted());
     }
 
     // stop() ----------------------------------------------------------------------------------------------------------
@@ -327,15 +293,92 @@ public abstract class JNDIBasedJMSServiceTest extends JMSServiceTest {
     @Test
     public void stop() throws Exception {
 
-        throw new RuntimeException("RETURN HERE");
+        JNDIBasedJMSService s = getJNDIBasedJMSServiceToTest();
+
+        JMSLoadStrategy ls = getMatchingLoadStrategyToTest(s);
+
+        s.setLoadStrategy(ls);
+
+        s.start();
+
+        assertTrue(s.isStarted());
+        assertTrue(ls.isStarted());
+
+        MockConnection c = (MockConnection)s.getConnection();
+        assertTrue(c.isClosed());
+
+        s.stop();
+
+        assertFalse(s.isStarted());
+        assertFalse(ls.isStarted());
+        assertTrue(c.isClosed());
+
+        //
+        // idempotence
+        //
+
+        s.stop();
+
+        assertFalse(s.isStarted());
+        assertFalse(ls.isStarted());
+        assertTrue(c.isClosed());
     }
 
     // resolveDestination() -------------------------------------------------------------------------------------------
 
     @Test
+    public void resolveDestination_NullDestination() throws Exception {
+
+        JNDIBasedJMSService s = getJNDIBasedJMSServiceToTest();
+
+        try {
+
+            s.resolveDestination(null);
+            fail("should have thrown exceptions");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("null destination"));
+        }
+    }
+
+    @Test
+    public void resolveDestination_NoSuchDestinationInJNDI() throws Exception {
+
+        JNDIBasedJMSService s = getJNDIBasedJMSServiceToTest();
+
+        s.setNamingInitialContextFactoryClassName(MockInitialContextFactory.class.getName());
+        s.setJndiUrl("mock://something");
+
+        s.initializeJNDI();
+
+        Queue q = new Queue("I-am-pretty-sure-there-is-no-such-queue-in-JNDI");
+
+        javax.jms.Destination result = s.resolveDestination(q);
+
+        assertNull(result);
+    }
+
+    @Test
     public void resolveDestination() throws Exception {
 
-        throw new RuntimeException("RETURN HERE");
+        JNDIBasedJMSService s = getJNDIBasedJMSServiceToTest();
+
+        String destinationJndiName = "/mock-queue";
+        MockQueue mq = new MockQueue();
+
+        MockInitialContextFactory.install(destinationJndiName, mq);
+
+        s.setNamingInitialContextFactoryClassName(MockInitialContextFactory.class.getName());
+        s.setJndiUrl("mock://something");
+
+        s.initializeJNDI();
+
+        Queue q = new Queue(destinationJndiName);
+
+        javax.jms.Destination result = s.resolveDestination(q);
+        assertEquals(mq, result);
     }
 
     // resolveConnectionFactory() --------------------------------------------------------------------------------------
@@ -378,7 +421,7 @@ public abstract class JNDIBasedJMSServiceTest extends JMSServiceTest {
         JNDIBasedJMSService s = getJNDIBasedJMSServiceToTest();
 
         String connectionFactoryJNDIName = "some-mock-connection-factory";
-        MockConnectionFactory mcf = new MockConnectionFactory();
+        MockConnectionFactory mcf = new MockConnectionFactory(null, null);
 
         MockInitialContextFactory.install(connectionFactoryJNDIName, mcf);
 
@@ -398,35 +441,32 @@ public abstract class JNDIBasedJMSServiceTest extends JMSServiceTest {
     @Override
     protected JMSService getJMSServiceToTest() throws Exception {
 
-        JNDIBasedJMSService jndiBasedJmsService = getJNDIBasedJMSServiceToTest();
+        return getJNDIBasedJMSServiceToTest();
+    }
 
-        //
-        // we need to configure it to work it properly
-        //
+    @Override
+    protected void createDestinationInContext(JMSService service, String destinationJndiName) throws Exception {
 
-        jndiBasedJmsService.setJndiUrl("mock://mock-jndi-server");
-        jndiBasedJmsService.setNamingInitialContextFactoryClassName(MockInitialContextFactory.class.getName());
-        jndiBasedJmsService.setConnectionFactoryName(testConnectionFactoryName);
+        MockQueue mq = new MockQueue();
+        MockInitialContextFactory.install(destinationJndiName, mq);
+    }
 
-        //
-        // install a mock connection factory in the mock JNDI
-        //
+    @Override
+    protected void removeDestinationFromContext(JMSService service, String destinationJndiName) throws Exception {
 
-        MockConnectionFactory mcf = new MockConnectionFactory();
-        MockInitialContextFactory.install(testConnectionFactoryName, mcf);
+        MockInitialContextFactory.getJndiSpace().remove(destinationJndiName);
+    }
 
-        return jndiBasedJmsService;
+    @Override
+    protected void createConnectionFactoryInContext(
+            JMSService service, String connectionFactoryJndiName, String username, String password)
+            throws Exception {
+
+        MockConnectionFactory mcf = new MockConnectionFactory(username, password);
+        MockInitialContextFactory.install(connectionFactoryJndiName, mcf);
     }
 
     protected abstract JNDIBasedJMSService getJNDIBasedJMSServiceToTest() throws Exception;
-
-    @Override
-    protected JMSLoadStrategy getMatchingLoadStrategy() {
-
-        MockJMSLoadStrategy ms = new MockJMSLoadStrategy();
-        ms.setConnectionFactoryName(testConnectionFactoryName);
-        return ms;
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

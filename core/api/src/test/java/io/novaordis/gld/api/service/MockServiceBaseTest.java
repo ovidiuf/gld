@@ -87,7 +87,7 @@ public class MockServiceBaseTest extends ServiceTest {
     }
 
     @Override
-    protected MockLoadStrategy getMatchingLoadStrategy() {
+    protected MockLoadStrategy getMatchingLoadStrategyToTest(Service s) {
 
         return new MockLoadStrategy();
     }

@@ -38,7 +38,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmbeddedSession implements Session {
+public class EmbeddedSession implements Session, TestableSession {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -68,6 +68,25 @@ public class EmbeddedSession implements Session {
         this.closed = false;
         this.createdProducers = new ArrayList<>();
         this.createdConsumers = new ArrayList<>();
+    }
+
+    // TestableSession ------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean isClosed() {
+
+        return closed;
+    }
+
+    public List<TestableMessageProducer> getCreatedProducers() {
+
+        List<TestableMessageProducer> result = new ArrayList<>();
+
+        for(EmbeddedMessageProducer p: createdProducers) {
+
+            result.add(p);
+        }
+        return result;
     }
 
     // Session implementation ------------------------------------------------------------------------------------------
@@ -269,16 +288,6 @@ public class EmbeddedSession implements Session {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public boolean isClosed() {
-
-        return closed;
-    }
-
-    public List<EmbeddedMessageProducer> getCreatedProducers() {
-
-        return createdProducers;
-    }
 
     public List<EmbeddedMessageConsumer> getCreatedConsumers() {
 

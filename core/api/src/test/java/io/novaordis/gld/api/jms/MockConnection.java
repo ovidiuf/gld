@@ -16,6 +16,8 @@
 
 package io.novaordis.gld.api.jms;
 
+import io.novaordis.gld.api.jms.embedded.TestableConnection;
+import io.novaordis.gld.api.jms.embedded.TestableSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,12 +30,14 @@ import javax.jms.JMSException;
 import javax.jms.ServerSessionPool;
 import javax.jms.Session;
 import javax.jms.Topic;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 9/7/17
  */
-public class MockConnection implements Connection {
+public class MockConnection implements Connection, TestableConnection {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -43,16 +47,40 @@ public class MockConnection implements Connection {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private boolean started;
+    private boolean closed;
+
+    private List<MockSession> createdSessions;
 
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public MockConnection() {
+
+        this.createdSessions = new ArrayList<>();
+    }
+
+    // TestableConnection implementation -------------------------------------------------------------------------------
+
+    @Override
+    public List<TestableSession> getCreatedSessions() {
+
+        List<TestableSession> result = new ArrayList<>();
+
+        for(MockSession s: createdSessions) {
+
+            result.add(s);
+        }
+
+        return result;
+    }
 
     // Connection implementation ---------------------------------------------------------------------------------------
 
     @Override
     public Session createSession(boolean transacted, int acknowledgeMode) throws JMSException {
 
-        return new MockSession();
+        MockSession s = new MockSession();
+        createdSessions.add(s);
+        return s;
     }
 
     @Override
@@ -83,19 +111,26 @@ public class MockConnection implements Connection {
     @Override
     public void start() throws JMSException {
 
-        this.started = true;
+        this.closed = true;
 
         log.info(this + " started");
     }
 
     @Override
     public void stop() throws JMSException {
+
         throw new RuntimeException("stop() NOT YET IMPLEMENTED");
     }
 
     @Override
     public void close() throws JMSException {
-        throw new RuntimeException("close() NOT YET IMPLEMENTED");
+
+        for(MockSession s: createdSessions) {
+
+            s.close();
+        }
+
+        log.info(this + " closed");
     }
 
     @Override
@@ -116,9 +151,9 @@ public class MockConnection implements Connection {
         return "MockConnection[" + Integer.toHexString(System.identityHashCode(this)) + "]";
     }
 
-    public boolean isStarted() {
+    public boolean isClosed() {
 
-        return started;
+        return closed;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

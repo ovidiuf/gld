@@ -19,7 +19,7 @@ package io.novaordis.gld.api.jms.embedded;
 import javax.jms.JMSException;
 import javax.jms.Queue;
 
-public class EmbeddedQueue extends EmbeddedDestination implements Queue {
+public class EmbeddedQueue extends EmbeddedDestination implements Queue, TestableQueue {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

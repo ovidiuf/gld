@@ -18,8 +18,10 @@ package io.novaordis.gld.api.jms.embedded;
 
 import io.novaordis.gld.api.jms.JMSService;
 import io.novaordis.gld.api.jms.JMSServiceTest;
+import io.novaordis.gld.api.jms.Queue;
 import io.novaordis.gld.api.jms.load.JMSLoadStrategy;
 import io.novaordis.gld.api.jms.load.MockJMSLoadStrategy;
+import io.novaordis.gld.api.service.Service;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -50,9 +52,61 @@ public class EmbeddedJMSServiceTest extends JMSServiceTest {
     }
 
     @Override
-    protected JMSLoadStrategy getMatchingLoadStrategy() {
+    protected JMSLoadStrategy getMatchingLoadStrategyToTest(Service s) throws Exception {
 
-        return new MockJMSLoadStrategy();
+        MockJMSLoadStrategy ms = new MockJMSLoadStrategy();
+
+        //
+        // create the associated JMS objects in context
+        //
+
+        String destinationName = ms.getDestination().getName();
+        createDestinationInContext((JMSService)s, destinationName);
+
+        String connectionFactoryName = ms.getConnectionFactoryName();
+        String username = ms.getUsername();
+        char[] ca = ms.getPassword();
+        String password = ca == null ? null : new String(ca);
+        createConnectionFactoryInContext((JMSService)s, connectionFactoryName, username, password);
+
+        return ms;
+    }
+
+    @Override
+    protected void placeTextMessageInQueue(JMSService service, String text, String queueNme) {
+
+        EmbeddedJMSService es = (EmbeddedJMSService)service;
+        es.addToDestination(queueNme, true, new EmbeddedTextMessage(text));
+    }
+
+    @Override
+    protected void createDestinationInContext(JMSService service, String destinationJndiName) throws Exception {
+
+        //
+        // create a queue
+        //
+
+        EmbeddedJMSService es = (EmbeddedJMSService)service;
+        es.createDestination(new Queue(destinationJndiName));
+    }
+
+    @Override
+    protected void removeDestinationFromContext(JMSService service, String destinationJndiName) throws Exception {
+
+        EmbeddedJMSService es = (EmbeddedJMSService)service;
+        es.removeDestination(destinationJndiName);
+    }
+
+    @Override
+    protected void createConnectionFactoryInContext(
+            JMSService service, String connectionFactoryJndiName, String username, String password) throws Exception {
+
+        //
+        // declare the connection factory
+        //
+
+        EmbeddedJMSService es = (EmbeddedJMSService)service;
+        es.installConnectionFactory(connectionFactoryJndiName, username, password);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

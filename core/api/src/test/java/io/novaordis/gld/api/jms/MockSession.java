@@ -16,25 +16,80 @@
 
 package io.novaordis.gld.api.jms;
 
-import javax.jms.*;
+import io.novaordis.gld.api.jms.embedded.TestableMessageProducer;
+import io.novaordis.gld.api.jms.embedded.TestableSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.jms.BytesMessage;
 import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.MapMessage;
+import javax.jms.Message;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
+import javax.jms.MessageProducer;
+import javax.jms.ObjectMessage;
 import javax.jms.Queue;
+import javax.jms.QueueBrowser;
+import javax.jms.Session;
+import javax.jms.StreamMessage;
+import javax.jms.TemporaryQueue;
+import javax.jms.TemporaryTopic;
+import javax.jms.TextMessage;
 import javax.jms.Topic;
+import javax.jms.TopicSubscriber;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 9/7/17
  */
-public class MockSession implements Session {
+public class MockSession implements Session, TestableSession {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(MockSession.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private boolean closed;
+
+    private List<MockMessageProducer> createdProducers;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public MockSession() {
+
+        this.closed = false;
+
+        this.createdProducers = new ArrayList<>();
+    }
+
+    // TestableSession implementation ----------------------------------------------------------------------------------
+
+    @Override
+    public boolean isClosed() {
+
+        return closed;
+    }
+
+    @Override
+    public List<TestableMessageProducer> getCreatedProducers() {
+
+        List<TestableMessageProducer> result = new ArrayList<>();
+
+        for(MockMessageProducer s: createdProducers) {
+
+            result.add(s);
+        }
+
+        return result;
+    }
 
     // Session implementation ------------------------------------------------------------------------------------------
 
@@ -75,7 +130,8 @@ public class MockSession implements Session {
 
     @Override
     public TextMessage createTextMessage(String text) throws JMSException {
-        throw new RuntimeException("createTextMessage() NOT YET IMPLEMENTED");
+
+        return new MockTextMessage(text);
     }
 
     @Override
@@ -100,7 +156,15 @@ public class MockSession implements Session {
 
     @Override
     public void close() throws JMSException {
-        throw new RuntimeException("close() NOT YET IMPLEMENTED");
+
+        for(MockMessageProducer p: createdProducers) {
+
+            p.close();
+        }
+
+        this.closed = true;
+
+        log.info(this + " closed");
     }
 
     @Override
@@ -125,12 +189,16 @@ public class MockSession implements Session {
 
     @Override
     public MessageProducer createProducer(Destination destination) throws JMSException {
-        throw new RuntimeException("createProducer() NOT YET IMPLEMENTED");
+
+        MockMessageProducer p = new MockMessageProducer(destination);
+        createdProducers.add(p);
+        return p;
     }
 
     @Override
     public MessageConsumer createConsumer(Destination destination) throws JMSException {
-        throw new RuntimeException("createConsumer() NOT YET IMPLEMENTED");
+
+        return new MockMessageConsumer(destination);
     }
 
     @Override
@@ -159,7 +227,8 @@ public class MockSession implements Session {
     }
 
     @Override
-    public TopicSubscriber createDurableSubscriber(Topic topic, String name, String messageSelector, boolean noLocal) throws JMSException {
+    public TopicSubscriber createDurableSubscriber(Topic topic, String name, String messageSelector, boolean noLocal)
+            throws JMSException {
         throw new RuntimeException("createDurableSubscriber() NOT YET IMPLEMENTED");
     }
 
@@ -189,6 +258,12 @@ public class MockSession implements Session {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+
+        return "MockSession[" + Integer.toHexString(System.identityHashCode(this)) + "]";
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

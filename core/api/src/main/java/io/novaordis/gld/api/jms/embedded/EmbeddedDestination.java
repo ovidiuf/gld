@@ -17,10 +17,12 @@
 package io.novaordis.gld.api.jms.embedded;
 
 import javax.jms.Message;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class EmbeddedDestination implements javax.jms.Destination {
+public class EmbeddedDestination implements javax.jms.Destination, TestableDestination {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -31,6 +33,7 @@ public class EmbeddedDestination implements javax.jms.Destination {
     private String name;
 
     private Queue<Message> messages;
+    private List<Message> messagesSent;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -38,6 +41,15 @@ public class EmbeddedDestination implements javax.jms.Destination {
 
         this.name = name;
         this.messages = new ConcurrentLinkedQueue<>();
+        this.messagesSent = new ArrayList<>();
+    }
+
+    // TestableDestination implementation ------------------------------------------------------------------------------
+
+    @Override
+    public List<Message> getMessagesSent() {
+
+        return messagesSent;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -50,6 +62,7 @@ public class EmbeddedDestination implements javax.jms.Destination {
     public void add(Message m) {
 
         messages.add(m);
+        messagesSent.add(m);
     }
 
     public Message get(long timeoutMs) {

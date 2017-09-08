@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
+import javax.naming.NamingException;
 import java.util.Properties;
 
 /**
@@ -76,6 +77,12 @@ public abstract class JNDIBasedJMSService extends JMSServiceBase {
 
             throw new IllegalArgumentException("not a JMS service configuration");
         }
+
+        //
+        // configure superclass first
+        //
+
+        super.configure(serviceConfiguration);
 
         //
         // we need the JNDI endpoint to connect to the EAP server
@@ -156,21 +163,44 @@ public abstract class JNDIBasedJMSService extends JMSServiceBase {
 
         log.debug("stopping JNDI-based JMS service base of " + this);
 
-        super.stop();
-
         synchronized (this) {
 
+            super.stop();
+
+            started = false;
         }
     }
 
     @Override
-    public javax.jms.Destination resolveDestination(Destination d) throws Exception {
+    public javax.jms.Destination resolveDestination(Destination d) throws JMSServiceException {
 
-        throw new RuntimeException("NYE");
+        if (d == null) {
+
+            throw new IllegalArgumentException("null destination");
+        }
+
+        String jndiName = d.getName();
+
+        try {
+
+            Object o = ic.lookup(jndiName);
+            return (javax.jms.Destination)o;
+        }
+        catch(NameNotFoundException e) {
+
+            log.debug(jndiName + " not bound in JNDI");
+
+            return null;
+        }
+        catch(NamingException e) {
+
+            throw new JMSServiceException(e);
+        }
     }
 
     @Override
-    public javax.jms.ConnectionFactory resolveConnectionFactory(String connectionFactoryName) throws Exception {
+    public javax.jms.ConnectionFactory resolveConnectionFactory(String connectionFactoryName)
+            throws JMSServiceException {
 
         if (connectionFactoryName == null) {
 
@@ -187,6 +217,10 @@ public abstract class JNDIBasedJMSService extends JMSServiceBase {
             log.debug(connectionFactoryName + " not bound in JNDI");
 
             return null;
+        }
+        catch(NamingException e) {
+
+            throw new JMSServiceException(e);
         }
     }
 

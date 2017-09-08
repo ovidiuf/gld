@@ -157,20 +157,23 @@ public abstract class JMSLoadStrategyBase extends LoadStrategyBase implements JM
         // optional username
         //
 
-        this.username = jmsSc.remove(String.class,
+        String s = jmsSc.remove(String.class,
                 ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JMSLoadStrategy.USERNAME_LABEL);
+
+        setUsername(s);
 
         //
         // optional password
         //
 
-        String s = jmsSc.remove(String.class,
+        s = jmsSc.remove(String.class,
                 ServiceConfiguration.LOAD_STRATEGY_CONFIGURATION_LABEL, JMSLoadStrategy.PASSWORD_LABEL);
 
         if (s != null) {
 
-            this.password = new char[s.length()];
-            s.getChars(0, s.length(), this.password, 0);
+            char[] ca = new char[s.length()];
+            s.getChars(0, s.length(), ca, 0);
+            setPassword(ca);
         }
 
         //
@@ -239,6 +242,16 @@ public abstract class JMSLoadStrategyBase extends LoadStrategyBase implements JM
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public void setUsername(String s) {
+
+        this.username = s;
+    }
+
+    public void setPassword(char[] ca) {
+
+        this.password = ca;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

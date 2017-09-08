@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-package io.novaordis.gld.api.cache.embedded;
-
-import io.novaordis.gld.api.LoadStrategy;
-import io.novaordis.gld.api.cache.CacheServiceTest;
-import io.novaordis.gld.api.cache.load.WriteThenReadLoadStrategy;
-import io.novaordis.gld.api.service.Service;
+package io.novaordis.gld.api.jms;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 12/4/16
+ * @since 9/7/17
  */
-public class EmbeddedCacheServiceTest extends CacheServiceTest {
+public class JMSServiceException extends Exception {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -35,21 +30,19 @@ public class EmbeddedCacheServiceTest extends CacheServiceTest {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public JMSServiceException(String s) {
+
+        super(s);
+    }
+
+    public JMSServiceException(Throwable cause) {
+
+        super(cause);
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
-
-    @Override
-    protected EmbeddedCacheService getServiceToTest() throws Exception {
-
-        return new EmbeddedCacheService();
-    }
-
-    @Override
-    protected LoadStrategy getMatchingLoadStrategyToTest(Service s) {
-
-        return new WriteThenReadLoadStrategy();
-    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

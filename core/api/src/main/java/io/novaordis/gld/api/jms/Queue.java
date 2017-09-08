@@ -16,6 +16,9 @@
 
 package io.novaordis.gld.api.jms;
 
+/**
+ * TODO clarify whether the name is JNDI name or not. Some tests are already using it as JNDI name.
+ */
 public class Queue extends DestinationBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
@@ -26,8 +29,8 @@ public class Queue extends DestinationBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public Queue(String name)
-    {
+    public Queue(String name) {
+
         super(name);
     }
 

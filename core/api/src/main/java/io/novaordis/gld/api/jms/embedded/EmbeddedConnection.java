@@ -29,7 +29,7 @@ import javax.jms.Topic;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmbeddedConnection implements Connection {
+public class EmbeddedConnection implements Connection, TestableConnection {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -68,6 +68,21 @@ public class EmbeddedConnection implements Connection {
         this.createdSessions = new ArrayList<>();
         this.sessionCounter = 0;
         this.username = username;
+    }
+
+    // TestableConnection implementation -------------------------------------------------------------------------------
+
+    public List<TestableSession> getCreatedSessions() {
+
+        List<TestableSession> result = new ArrayList<>();
+
+        //noinspection Convert2streamapi
+        for(EmbeddedSession s: createdSessions) {
+
+            result.add(s);
+        }
+
+        return result;
     }
 
     // Connection implementation ---------------------------------------------------------------------------------------
@@ -144,11 +159,6 @@ public class EmbeddedConnection implements Connection {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public List<EmbeddedSession> getCreatedSessions()
-    {
-        return createdSessions;
-    }
 
     /**
      * May return an empty list if there were no message sent, or the queue does not exist.

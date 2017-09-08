@@ -32,7 +32,16 @@ public class MockConnectionFactory implements javax.jms.ConnectionFactory {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String validUser;
+    private String validPassword;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public MockConnectionFactory(String validUser, String validPassword) {
+
+        this.validUser = validUser;
+        this.validPassword = validPassword;
+    }
 
     // ConnectionFactory implementation --------------------------------------------------------------------------------
 
@@ -45,7 +54,17 @@ public class MockConnectionFactory implements javax.jms.ConnectionFactory {
     @Override
     public Connection createConnection(String userName, String password) throws JMSException {
 
-        throw new RuntimeException("createConnection() NOT YET IMPLEMENTED");
+        if (validUser == null) {
+
+            throw new JMSException("AUTHENTICATION FAILURE");
+        }
+
+        if (validUser.equals(userName) && validPassword.equals(password)) {
+
+            return new MockConnection();
+        }
+
+        throw new JMSException("AUTHENTICATION FAILURE");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

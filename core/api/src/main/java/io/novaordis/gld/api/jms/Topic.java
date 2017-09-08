@@ -16,6 +16,9 @@
 
 package io.novaordis.gld.api.jms;
 
+/**
+ * TODO clarify whether the name is JNDI name or not. Some tests are already using it as JNDI name.
+ */
 public class Topic extends DestinationBase {
 
     // Constants -------------------------------------------------------------------------------------------------------

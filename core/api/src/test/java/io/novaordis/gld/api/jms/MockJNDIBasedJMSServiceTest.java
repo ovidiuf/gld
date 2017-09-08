@@ -39,9 +39,31 @@ public class MockJNDIBasedJMSServiceTest extends JNDIBasedJMSServiceTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected MockJNDIBasedJMSService getJNDIBasedJMSServiceToTest() throws Exception {
+    protected JNDIBasedJMSService getJNDIBasedJMSServiceToTest() {
 
-        return new MockJNDIBasedJMSService();
+        MockJNDIBasedJMSService service = new MockJNDIBasedJMSService();
+
+        //
+        // configure it minimally so it can be started with the correct LoadStrategy
+        //
+
+        service.setJndiUrl("mock://mock-jndi-server");
+        service.setNamingInitialContextFactoryClassName(MockInitialContextFactory.class.getName());
+
+        return service;
+    }
+
+    @Override
+    protected void placeTextMessageInQueue(JMSService service, String text, String queueNme) {
+
+        MockQueue queue = (MockQueue)MockInitialContextFactory.getJndiSpace().get(queueNme);
+        if (queue == null) {
+
+            queue = new MockQueue();
+            MockInitialContextFactory.getJndiSpace().put(queueNme, queue);
+        }
+
+        queue.addMessage(new MockTextMessage(text));
     }
 
     // Private ---------------------------------------------------------------------------------------------------------
