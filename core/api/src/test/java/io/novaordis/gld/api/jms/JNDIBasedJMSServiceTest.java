@@ -23,6 +23,7 @@ import io.novaordis.gld.api.jms.load.JMSLoadStrategy;
 import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;
 
+import javax.naming.CommunicationException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.io.File;
@@ -154,6 +155,7 @@ public abstract class JNDIBasedJMSServiceTest extends JMSServiceTest {
         JNDIBasedJMSService s = getJNDIBasedJMSServiceToTest();
 
         s.setJndiUrl(null);
+
         assertNull(s.getJndiUrl());
 
         try {
@@ -174,6 +176,7 @@ public abstract class JNDIBasedJMSServiceTest extends JMSServiceTest {
         JNDIBasedJMSService s = getJNDIBasedJMSServiceToTest();
 
         s.setNamingInitialContextFactoryClassName(null);
+
         assertNull(s.getNamingInitialContextFactoryClassName());
 
         s.setJndiUrl("mock://something");
@@ -187,6 +190,31 @@ public abstract class JNDIBasedJMSServiceTest extends JMSServiceTest {
 
             String msg = e.getMessage();
             assertTrue(msg.contains("initial context factory not initialized"));
+        }
+    }
+
+    @Test
+    public void start_NobodyListensAtJndiUrl() throws Exception {
+
+        JNDIBasedJMSService s = getJNDIBasedJMSServiceToTest();
+
+        s.setJndiUrl("mock://invalid-server");
+
+        MockInitialContextFactory.setValidJndiUrl("mock://valid-server");
+
+        try {
+
+            s.start();
+            fail("should have thrown exception");
+        }
+        catch(UserErrorException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("Failed to connect to any server"));
+            assertTrue(msg.contains("mock://invalid-server"));
+
+            Throwable cause = e.getCause();
+            assertTrue(cause instanceof CommunicationException);
         }
     }
 

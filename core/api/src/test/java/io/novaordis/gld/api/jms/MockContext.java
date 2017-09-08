@@ -17,6 +17,7 @@
 package io.novaordis.gld.api.jms;
 
 import javax.naming.Binding;
+import javax.naming.CommunicationException;
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NameClassPair;
@@ -117,6 +118,8 @@ public class MockContext implements Context {
     @Override
     public NamingEnumeration<NameClassPair> list(Name name) throws NamingException {
 
+        checkValidJndiUrl();
+
         if (listFails) {
 
             throw new NamingException("SYNTHETIC");
@@ -127,6 +130,8 @@ public class MockContext implements Context {
 
     @Override
     public NamingEnumeration<NameClassPair> list(String name) throws NamingException {
+
+        checkValidJndiUrl();
 
         if (listFails) {
 
@@ -265,6 +270,25 @@ public class MockContext implements Context {
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private void checkValidJndiUrl() throws NamingException {
+
+        String validJndiUrl = MockInitialContextFactory.getValidJndiUrl();
+
+        if (validJndiUrl == null) {
+
+            //
+            // noop
+            //
+
+            return;
+        }
+
+        if (!validJndiUrl.equals(getProviderUrl())) {
+
+            throw new CommunicationException("Failed to connect to any server. Servers tried: [" + providerUrl + "]");
+        }
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

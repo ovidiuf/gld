@@ -22,6 +22,8 @@ import javax.naming.spi.InitialContextFactory;
 import java.util.Hashtable;
 import java.util.Map;
 
+import static org.junit.Assert.fail;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 9/6/17
@@ -32,12 +34,9 @@ public class MockInitialContextFactory implements InitialContextFactory {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    private static boolean listFails;
-
-    private static final Map<String, Object> jndiSpace = new Hashtable<>();
-
     public static void reset() {
 
+        validJndiUrl = null;
         listFails = false;
         jndiSpace.clear();
     }
@@ -60,7 +59,23 @@ public class MockInitialContextFactory implements InitialContextFactory {
         return jndiSpace;
     }
 
+    public static void setValidJndiUrl(String s) {
+
+        validJndiUrl = s;
+    }
+
+    public static String getValidJndiUrl() {
+
+        return validJndiUrl;
+    }
+
     // Attributes ------------------------------------------------------------------------------------------------------
+
+    private static boolean listFails;
+
+    private static final Map<String, Object> jndiSpace = new Hashtable<>();
+
+    private static String validJndiUrl;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -70,6 +85,15 @@ public class MockInitialContextFactory implements InitialContextFactory {
     public Context getInitialContext(Hashtable<?, ?> environment) throws NamingException {
 
         String providerUrl = (String)environment.get(Context.PROVIDER_URL);
+
+        if (providerUrl == null) {
+
+            fail("no '" + Context.PROVIDER_URL + "' found in the JNDI environment map");
+        }
+
+        //
+        // we don't check here whether the JNDI URL is valid, it will be checked in MockContext operations
+        //
 
         MockContext mc = new MockContext(providerUrl, jndiSpace);
 
