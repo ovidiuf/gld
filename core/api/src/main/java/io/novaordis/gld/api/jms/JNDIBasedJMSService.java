@@ -258,11 +258,6 @@ public abstract class JNDIBasedJMSService extends JMSServiceBase {
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    String getJndiUrl() {
-
-        return jndiUrl;
-    }
-
     void setJndiUrl(String s) {
 
         this.jndiUrl = s;
@@ -315,6 +310,11 @@ public abstract class JNDIBasedJMSService extends JMSServiceBase {
     }
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected String getJndiUrl() {
+
+        return jndiUrl;
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 
