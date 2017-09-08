@@ -16,19 +16,25 @@
 
 package io.novaordis.gld.extensions.jboss.eap.jms;
 
-import io.novaordis.gld.api.jms.JmsServiceBase;
+import io.novaordis.gld.api.jms.JNDIBasedJMSService;
 import io.novaordis.utilities.version.VersionUtilities;
-
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 9/5/17
  */
-public class JBossEap6JmsService extends JmsServiceBase {
+public class JBossEap6JmsService extends JNDIBasedJMSService {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(JBossEap6JmsService.class);
+
+    public static final String
+            DEFAULT_INITIAL_CONTEXT_FACTORY_CLASS_NAME = "org.jboss.naming.remote.client.InitialContextFactory";
+
+    public static final String JNDI_URL_PREFIX = "remote://";
 
     public static final String EXTENSION_VERSION_METADATA_FILE_NAME = "jboss-eap-6-jms-extension-version";
 
@@ -38,18 +44,19 @@ public class JBossEap6JmsService extends JmsServiceBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // JmsServiceBase overrides ----------------------------------------------------------------------------------------
+    public JBossEap6JmsService() {
 
-    @Override
-    public Destination resolveDestination(io.novaordis.gld.api.jms.Destination d) throws Exception {
+        setNamingInitialContextFactoryClassName(DEFAULT_INITIAL_CONTEXT_FACTORY_CLASS_NAME);
 
-        throw new RuntimeException("resolveDestination() NOT YET IMPLEMENTED");
+        log.debug(this + " constructed");
     }
 
-    @Override
-    public ConnectionFactory resolveConnectionFactory(String connectionFactoryName) throws Exception {
+    // JNDIBasedJMSService overrides -----------------------------------------------------------------------------------
 
-        throw new RuntimeException("resolveConnectionFactory() NOT YET IMPLEMENTED");
+    @Override
+    protected String getJndiUrlPrefix() {
+
+        return JNDI_URL_PREFIX;
     }
 
     @Override
@@ -63,7 +70,20 @@ public class JBossEap6JmsService extends JmsServiceBase {
     @Override
     public String toString() {
 
-        return "JBoss EAP 6 JMS Service[" + getConnectionFactoryName() + "]";
+        String s = "EAP6 JMS ";
+
+        String jndiUrl = getJndiUrl();
+
+        if (jndiUrl == null) {
+
+            s += " (UNCONFIGURED)";
+        }
+        else {
+
+            s += jndiUrl;
+        }
+
+        return s;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

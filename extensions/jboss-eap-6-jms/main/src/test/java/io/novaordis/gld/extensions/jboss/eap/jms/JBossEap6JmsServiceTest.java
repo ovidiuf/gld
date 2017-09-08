@@ -16,6 +16,7 @@
 
 package io.novaordis.gld.extensions.jboss.eap.jms;
 
+import io.novaordis.gld.api.service.ServiceFactory;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -53,6 +54,17 @@ public class JBossEap6JmsServiceTest {
         String mavenInjectedProjectVersion = System.getProperty("maven.injected.project.version");
         assertNotNull(mavenInjectedProjectVersion);
         assertEquals(mavenInjectedProjectVersion, version);
+    }
+
+    // extensionNameToExtensionServiceFullyQualifiedClassName() --------------------------------------------------------
+
+    @Test
+    public void extensionNameToExtensionServiceFullyQualifiedClassName() throws Exception {
+
+        String extensionName = "jboss-eap-6-jms";
+        String className = ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName(extensionName);
+
+        assertEquals("io.novaordis.gld.extensions.jboss.eap.jms.JBossEap6JmsService", className);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

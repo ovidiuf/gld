@@ -8,7 +8,7 @@
 
     <groupId>io.novaordis.gld.extensions.jboss-eap-jms</groupId>
     <artifactId>jboss-eap-6-root</artifactId>
-    <version>1.0.0-SNAPSHOT-7</version>
+    <version>1.0.0-SNAPSHOT-8</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -22,10 +22,8 @@
             Dependencies
         -->
 
+        <gld.api.version>1.1.2-SNAPSHOT-16</gld.api.version>
         <novaordis.utilities.version>4.7.11-SNAPSHOT-5</novaordis.utilities.version>
-
-        <gld.api.version>1.1.2-SNAPSHOT-6</gld.api.version>
-
         <slf4j.version>1.7.6</slf4j.version>
         <junit.version>4.11</junit.version>
 
@@ -33,7 +31,7 @@
             Dependencies required at runtime
         -->
 
-        <wildfly.client.all.version>7.0.4.GA-redhat-2</wildfly.client.all.version>
+        <jboss.eap.version>6.4.15.GA</jboss.eap.version>
 
         <!--
             End of Dependencies
@@ -42,8 +40,6 @@
         <!--
              Property used by various paths within this file and release assembly file.
         -->
-
-        <jboss.eap.version>6.4.15</jboss.eap.version>
 
         <source.java.version>1.8</source.java.version>
         <target.java.version>1.8</target.java.version>
@@ -64,7 +60,7 @@
             <dependency>
                 <groupId>org.jboss.bom</groupId>
                 <artifactId>eap6-supported-artifacts</artifactId>
-                <version>6.4.15.GA</version>
+                <version>${jboss.eap.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
