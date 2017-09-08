@@ -16,45 +16,27 @@
 
 package io.novaordis.gld.extensions.jboss.eap.jms;
 
-import io.novaordis.gld.api.configuration.ServiceConfiguration;
-import io.novaordis.gld.api.jms.JmsServiceBase;
-import io.novaordis.gld.api.jms.JmsServiceConfiguration;
-import io.novaordis.utilities.UserErrorException;
+import io.novaordis.gld.api.jms.JNDIBasedJMSService;
 import io.novaordis.utilities.version.VersionUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NameNotFoundException;
-import java.util.Properties;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/20/17
  */
-public class JBossEap7JmsService extends JmsServiceBase {
+public class JBossEap7JmsService extends JNDIBasedJMSService {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = LoggerFactory.getLogger(JBossEap7JmsService.class);
 
-    public static final String DEFAULT_INITIAL_CONTEXT_FACTORY_CLASS_NAME =
-            "org.jboss.naming.remote.client.InitialContextFactory";
+    public static final String
+            DEFAULT_INITIAL_CONTEXT_FACTORY_CLASS_NAME = "org.jboss.naming.remote.client.InitialContextFactory";
+
+    public static final String JNDI_URL_PREFIX = "http-remoting://";
 
     public static final String EXTENSION_VERSION_METADATA_FILE_NAME = "jboss-eap-7-jms-extension-version";
-
-    public static final String JNDI_URL_LABEL = "jndi-url";
-
-    private String initialContextFactoryClassName;
-
-    // the JNDI URL including the protocol part
-    private String jndiUrl;
-
-    // an active, verified InitialContext into the server's JNDI space
-    private InitialContext ic;
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -64,7 +46,15 @@ public class JBossEap7JmsService extends JmsServiceBase {
 
     public JBossEap7JmsService() {
 
-        setInitialContextFactoryClassName(DEFAULT_INITIAL_CONTEXT_FACTORY_CLASS_NAME);
+        setNamingInitialContextFactoryClassName(DEFAULT_INITIAL_CONTEXT_FACTORY_CLASS_NAME);
+
+        log.debug(this + " constructed");
+    }
+
+    @Override
+    protected String getJndiUrlPrefix() {
+
+        return JNDI_URL_PREFIX;
     }
 
     // JmsServiceBase overrides ----------------------------------------------------------------------------------------
@@ -73,125 +63,6 @@ public class JBossEap7JmsService extends JmsServiceBase {
     public String getVersion() {
 
         return VersionUtilities.getVersion(EXTENSION_VERSION_METADATA_FILE_NAME);
-    }
-
-    @Override
-    public void configure(ServiceConfiguration serviceConfiguration) throws UserErrorException {
-
-        if (!(serviceConfiguration instanceof JmsServiceConfiguration)) {
-
-            throw new IllegalArgumentException("not a JMS service configuration");
-        }
-
-        //
-        // we need the JNDI endpoint to connect to the EAP server
-        //
-
-        String rawJndiUrl;
-
-        try {
-
-            rawJndiUrl = serviceConfiguration.get(
-                    String.class, ServiceConfiguration.IMPLEMENTATION_CONFIGURATION_LABEL, JNDI_URL_LABEL);
-        }
-        catch(IllegalStateException e) {
-
-            throw new UserErrorException(e);
-        }
-
-        if (rawJndiUrl == null) {
-
-            throw new UserErrorException("missing required '" + JNDI_URL_LABEL + "' configuration element");
-        }
-
-        if (!rawJndiUrl.contains("://")) {
-
-            rawJndiUrl = "http-remoting://" + rawJndiUrl;
-        }
-
-        setJndiUrl(rawJndiUrl);
-    }
-
-    @Override
-    public void start() throws Exception {
-
-        //
-        // we first attempt to connect to the JNDI service before initializing the JMS machinery in the superclass.
-        //
-
-        if (jndiUrl == null) {
-
-            throw new IllegalStateException("JNDI URL was not initialized");
-        }
-
-        Properties p = new Properties();
-        p.put(Context.INITIAL_CONTEXT_FACTORY, getInitialContextFactoryClassName());
-        p.put(Context.PROVIDER_URL, jndiUrl);
-
-        try {
-
-            ic = new InitialContext(p);
-
-            //
-            // make a noop lookup to insure valid connectivity
-            //
-
-            ic.list("");
-
-            //
-            // at this point we have a valid initial context
-            //
-        }
-        catch(Exception e) {
-
-            throw new UserErrorException(e);
-        }
-
-        super.start();
-
-        log.debug("service " + this + " started");
-
-    }
-
-    @Override
-    public Destination resolveDestination(io.novaordis.gld.api.jms.Destination d) throws Exception {
-
-        if (d == null) {
-
-            throw new IllegalArgumentException("null destination specification");
-        }
-
-        try {
-
-            Object o = ic.lookup(d.getName());
-            return (Destination)o;
-        }
-        catch(NameNotFoundException e) {
-
-            log.debug((d.isQueue() ? "queue " : "topic ") + d.getName() + " not bound in JNDI");
-            return null;
-        }
-    }
-
-    @Override
-    public ConnectionFactory resolveConnectionFactory(String connectionFactoryName) throws Exception {
-
-        if (connectionFactoryName == null) {
-
-            throw new IllegalArgumentException("null connection factory");
-        }
-
-        try {
-
-            Object o = ic.lookup(connectionFactoryName);
-            return (ConnectionFactory)o;
-        }
-        catch(NameNotFoundException e) {
-
-            log.debug(connectionFactoryName + " not bound in JNDI");
-
-            return null;
-        }
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -216,26 +87,6 @@ public class JBossEap7JmsService extends JmsServiceBase {
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
-
-    String getJndiUrl() {
-
-        return jndiUrl;
-    }
-
-    void setJndiUrl(String s) {
-
-        this.jndiUrl = s;
-    }
-
-    String getInitialContextFactoryClassName() {
-
-        return initialContextFactoryClassName;
-    }
-
-    void setInitialContextFactoryClassName(String s) {
-
-        this.initialContextFactoryClassName = s;
-    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

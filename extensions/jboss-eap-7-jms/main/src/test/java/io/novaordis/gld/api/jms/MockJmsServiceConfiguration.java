@@ -23,7 +23,7 @@ import java.util.Map;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 2/7/17
  */
-public class MockJmsServiceConfiguration extends JmsServiceConfigurationImpl {
+public class MockJmsServiceConfiguration extends JMSServiceConfigurationImpl {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -33,8 +33,9 @@ public class MockJmsServiceConfiguration extends JmsServiceConfigurationImpl {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockJmsServiceConfiguration(Map<String, Object> rawConfiguration, File configurationDirectory)
-            throws Exception {
+    public MockJmsServiceConfiguration(
+            Map<String, Object> rawConfiguration, File configurationDirectory) throws Exception {
+
         super(rawConfiguration, configurationDirectory);
     }
 

@@ -22,8 +22,8 @@
             Dependencies
         -->
 
-        <gld.api.version>1.1.2-SNAPSHOT-6</gld.api.version>
-        <novaordis.utilities.version>4.5</novaordis.utilities.version>
+        <gld.api.version>1.1.2-SNAPSHOT-15</gld.api.version>
+        <novaordis.utilities.version>4.7.11-SNAPSHOT-5</novaordis.utilities.version>
         <slf4j.version>1.7.6</slf4j.version>
 
         <!--
@@ -46,17 +46,6 @@
         <maven.build.timestamp.format>MM/dd/yy</maven.build.timestamp.format>
         <release_date>${maven.build.timestamp}</release_date>
     </properties>
-
-    <repositories>
-        <repository>
-            <id>jboss-eap-repository</id>
-            <url>file:///Users/ovidiu/runtime/jboss-eap-7.0.0.GA-maven-repository/maven-repository</url>
-        </repository>
-        <repository>
-            <id>jboss-eap-repository-2</id>
-            <url>file:///Users/ovidiu/runtime/jboss-eap-${jboss.eap.version}-maven-repository/maven-repository</url>
-        </repository>
-    </repositories>
 
     <modules>
         <module>main</module>

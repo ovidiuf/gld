@@ -41,7 +41,7 @@ import static org.junit.Assert.fail;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/20/17
  */
-public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
+public class JBossEap7JmsServiceTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -97,7 +97,7 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
     @Test
     public void configure_JndiUrlIsMissing() throws Exception {
 
-        JBossEap7JmsService s = getJmsServiceBaseToTest();
+        JBossEap7JmsService s = new JBossEap7JmsService();
 
         MockJmsServiceConfiguration msc = new MockJmsServiceConfiguration(new HashMap<>(), new File("."));
 
@@ -109,7 +109,6 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
         catch(UserErrorException e) {
 
             String msg = e.getMessage();
-            log.info(msg);
             assertTrue(msg.matches("missing required 'jndi-url' configuration element"));
         }
     }
@@ -119,7 +118,7 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
     @Test
     public void start_JndiUrlNotInitialized() throws Exception {
 
-        JBossEap7JmsService s = getJmsServiceBaseToTest();
+        JBossEap7JmsService s = new JBossEap7JmsService();
 
         assertNull(s.getJndiUrl());
 
@@ -132,18 +131,18 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
         catch(IllegalStateException e) {
 
             String msg = e.getMessage();
-            log.info(msg);
             assertTrue(msg.contains("JNDI"));
+            assertTrue(msg.contains("not initialized"));
         }
     }
 
     @Test
     public void start_NobodyListensAtJndiUrl() throws Exception {
 
-        JBossEap7JmsService s = getJmsServiceBaseToTest();
+        JBossEap7JmsService s = new JBossEap7JmsService();
 
         s.setJndiUrl("mock://invalid-server");
-        s.setInitialContextFactoryClassName(MockInitialContextFactory.class.getName());
+        s.setNamingInitialContextFactoryClassName(MockInitialContextFactory.class.getName());
         MockInitialContextFactory.setValidJndiUrl("mock://valid-server");
 
         try {
@@ -155,7 +154,6 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
         catch(UserErrorException e) {
 
             String msg = e.getMessage();
-            log.info(msg);
             assertTrue(msg.contains("mock://invalid-server"));
 
             Throwable cause = e.getCause();
@@ -166,13 +164,13 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
     @Test
     public void start_NoSuchConnectionFactory() throws Exception {
 
-        JBossEap7JmsService s = getJmsServiceBaseToTest();
+        JBossEap7JmsService s = new JBossEap7JmsService();
 
         s.setLoadStrategy(new SendLoadStrategy());
 
         String validJndiUrl = "mock://valid-server";
         s.setJndiUrl(validJndiUrl);
-        s.setInitialContextFactoryClassName(MockInitialContextFactory.class.getName());
+        s.setNamingInitialContextFactoryClassName(MockInitialContextFactory.class.getName());
         MockInitialContextFactory.setValidJndiUrl(validJndiUrl);
 
         s.setConnectionFactoryName("/something");
@@ -187,20 +185,20 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertTrue(msg.contains("Connection factory /something not bound in JNDI"));
+            assertTrue(msg.contains("connection factory /something not bound in JNDI"));
         }
     }
 
     @Test
     public void lifecycle() throws Exception {
 
-        JBossEap7JmsService s = getJmsServiceBaseToTest();
+        JBossEap7JmsService s = new JBossEap7JmsService();
 
         s.setLoadStrategy(new SendLoadStrategy());
 
         String validJndiUrl = "mock://valid-server";
         s.setJndiUrl(validJndiUrl);
-        s.setInitialContextFactoryClassName(MockInitialContextFactory.class.getName());
+        s.setNamingInitialContextFactoryClassName(MockInitialContextFactory.class.getName());
         MockInitialContextFactory.setValidJndiUrl(validJndiUrl);
 
         s.setConnectionFactoryName("/MockConnectionFactory");
@@ -220,10 +218,11 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
     @Test
     public void resolveConnectionFactory_NullConnectionFactoryName() throws Exception {
 
-        JBossEap7JmsService s = getJmsServiceBaseToTest();
+        JBossEap7JmsService s = new JBossEap7JmsService();
 
         try {
 
+            //noinspection ConstantConditions
             s.resolveConnectionFactory(null);
 
             fail("should have thrown exception");
@@ -231,7 +230,7 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
         catch(IllegalArgumentException e) {
 
             String msg = e.getMessage();
-            log.info(msg);
+            assertTrue(msg.contains("null connection factory name"));
         }
     }
 
@@ -240,10 +239,11 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
     @Test
     public void resolveConnectionFactory_NullDestination() throws Exception {
 
-        JBossEap7JmsService s = getJmsServiceBaseToTest();
+        JBossEap7JmsService s = new JBossEap7JmsService();
 
         try {
 
+            //noinspection ConstantConditions
             s.resolveDestination(null);
 
             fail("should have thrown exception");
@@ -251,19 +251,13 @@ public class JBossEap7JmsServiceTest extends JmsServiceBaseTest {
         catch(IllegalArgumentException e) {
 
             String msg = e.getMessage();
-            log.info(msg);
+            assertTrue(msg.contains("null destination"));
         }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected JBossEap7JmsService getJmsServiceBaseToTest() throws Exception {
-
-        return new JBossEap7JmsService();
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 
