@@ -115,6 +115,8 @@ public class Extensions implements Command {
      */
     static String inferExtensionVersion(String extensionName) {
 
+        log.debug("attempting to infer the extension version for " + extensionName);
+
         try {
 
             String className = ServiceFactory.extensionNameToExtensionServiceFullyQualifiedClassName(extensionName);

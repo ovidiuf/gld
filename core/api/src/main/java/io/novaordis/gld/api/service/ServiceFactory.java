@@ -130,7 +130,11 @@ public class ServiceFactory {
 
         className += "Service";
 
-        return packageName + "." + className;
+        String fqcn = packageName + "." + className;
+
+        log.debug("extension " + extensionName + " will use " + fqcn + " as service implementation");
+
+        return fqcn;
     }
 
     /**
