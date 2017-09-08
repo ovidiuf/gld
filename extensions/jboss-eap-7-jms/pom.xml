@@ -8,7 +8,7 @@
 
     <groupId>io.novaordis.gld.extensions.jboss-eap-jms</groupId>
     <artifactId>jboss-eap-7-root</artifactId>
-    <version>1.0.1-SNAPSHOT-2</version>
+    <version>1.0.1-SNAPSHOT-3</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -25,6 +25,8 @@
         <gld.api.version>1.1.2-SNAPSHOT-16</gld.api.version>
         <novaordis.utilities.version>4.7.11-SNAPSHOT-5</novaordis.utilities.version>
         <slf4j.version>1.7.6</slf4j.version>
+        <junit.version>4.11</junit.version>
+
 
         <!--
             Dependencies required at runtime
@@ -89,7 +91,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <!--

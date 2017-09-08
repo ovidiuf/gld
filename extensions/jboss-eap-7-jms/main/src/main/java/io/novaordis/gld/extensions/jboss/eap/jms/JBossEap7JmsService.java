@@ -51,13 +51,13 @@ public class JBossEap7JmsService extends JNDIBasedJMSService {
         log.debug(this + " constructed");
     }
 
+    // JNDIBasedJMSService overrides -----------------------------------------------------------------------------------
+
     @Override
     protected String getJndiUrlPrefix() {
 
         return JNDI_URL_PREFIX;
     }
-
-    // JmsServiceBase overrides ----------------------------------------------------------------------------------------
 
     @Override
     public String getVersion() {
