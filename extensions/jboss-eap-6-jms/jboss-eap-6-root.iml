@@ -17,10 +17,17 @@
     <orderEntry type="library" name="Maven: org.hornetq:hornetq-core-client:2.3.25.SP18-redhat-1" level="project" />
     <orderEntry type="library" name="Maven: org.jgroups:jgroups:3.2.16.Final-redhat-1" level="project" />
     <orderEntry type="library" name="Maven: org.hornetq:hornetq-commons:2.3.25.SP18-redhat-1" level="project" />
-    <orderEntry type="library" name="Maven: org.jboss.logging:jboss-logging:3.1.4.GA-redhat-2" level="project" />
     <orderEntry type="library" name="Maven: org.hornetq:hornetq-journal:2.3.25.SP18-redhat-1" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty:3.6.10.Final-redhat-1" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.spec.javax.jms:jboss-jms-api_1.1_spec:1.0.1.Final-redhat-3" level="project" />
+    <orderEntry type="library" name="Maven: org.jboss:jboss-remote-naming:1.0.13.Final-redhat-1" level="project" />
+    <orderEntry type="library" name="Maven: org.jboss:jboss-ejb-client:1.0.39.Final-redhat-1" level="project" />
+    <orderEntry type="library" name="Maven: org.jboss.marshalling:jboss-marshalling:1.4.10.Final-redhat-1" level="project" />
+    <orderEntry type="library" name="Maven: org.jboss.marshalling:jboss-marshalling-river:1.4.10.Final-redhat-1" level="project" />
+    <orderEntry type="library" name="Maven: org.jboss.xnio:xnio-api:3.0.16.GA-redhat-1" level="project" />
+    <orderEntry type="library" name="Maven: org.jboss.remoting3:jboss-remoting:3.3.9.Final-redhat-1" level="project" />
+    <orderEntry type="library" name="Maven: org.jboss.sasl:jboss-sasl:1.0.5.Final-redhat-1" level="project" />
+    <orderEntry type="library" name="Maven: org.jboss.logging:jboss-logging:3.1.4.GA-redhat-2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.slf4j:slf4j-log4j12:1.7.6" level="project" />
