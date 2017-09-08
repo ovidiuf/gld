@@ -246,6 +246,13 @@ public abstract class JNDIBasedJMSService extends JMSServiceBase {
         log.debug(this + " set initial context factory class name to " + namingInitialContextFactoryClassName);
     }
 
+    public void setJndiUrl(String s) {
+
+        this.jndiUrl = s;
+
+        log.debug(this + " set JNDI URL to " + jndiUrl);
+    }
+
     public String getJndiUrl() {
 
         return jndiUrl;
@@ -263,12 +270,6 @@ public abstract class JNDIBasedJMSService extends JMSServiceBase {
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    void setJndiUrl(String s) {
-
-        this.jndiUrl = s;
-
-        log.debug(this + " set JNDI URL to " + jndiUrl);
-    }
 
     /**
      *  We first attempt to connect to the JNDI service before initializing the JMS machinery in the superclass.
