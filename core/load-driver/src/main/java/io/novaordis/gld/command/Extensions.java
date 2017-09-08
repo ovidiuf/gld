@@ -71,11 +71,11 @@ public class Extensions implements Command {
 
         while(st.hasMoreTokens()) {
 
-            String cpElement = st.nextToken();
+            String classPathElement = st.nextToken();
 
             String markerFragment = "/extensions/";
 
-            int i = cpElement.indexOf(markerFragment);
+            int i = classPathElement.indexOf(markerFragment);
 
             //
             // this is how the class path fragment looks like:
@@ -84,26 +84,21 @@ public class Extensions implements Command {
 
             if (i == -1) {
 
-                log.debug("'" + cpElement + "' does not contain the marker fragment '" + markerFragment + "'");
+                log.debug("'" + classPathElement + "' does not contain the '" + markerFragment + "' marker");
                 continue;
             }
 
-            String s = cpElement.substring(i + markerFragment.length());
+            String s = classPathElement.substring(i + markerFragment.length());
             String extensionName = s.substring(0, s.indexOf('/'));
-
-            log.debug("extension name: " + extensionName);
 
             ExtensionInfo ei = extensionInfos.get(extensionName);
 
             if (ei == null) {
 
-                log.debug("extension info: " + extensionName);
-
-
                 ei = new ExtensionInfo(extensionName);
                 extensionInfos.put(extensionName, ei);
+                log.debug("identified extension " + ei);
             }
-
         }
 
         return new HashSet<>(extensionInfos.values());
